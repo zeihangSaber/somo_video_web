@@ -5,12 +5,13 @@ import App from './App'
 import router from './router'
 import {server} from './http/http-service.js'
 import md5 from 'js-md5';
-import {add_js} from './assets/js/whole_situation.js'
+import add_js from './assets/js/whole_situation.js'
+import axios from 'axios';
 
 
 const items_version = '1.0.0'//项目版本号
 
-
+Vue.prototype.$axios1=axios;
 Vue.prototype.$items_version = items_version;
 Vue.prototype.$md5 = md5;
 Vue.prototype.$axios=server;

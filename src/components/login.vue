@@ -13,7 +13,7 @@
 			return {
 				password: '123456', //密码
 				type_version: [], //机型和版本号
-				account: 'QAtest027', //账号
+				account: 'QAtest028', //账号
 				uid: '',
 				cookie: '',
 				mid_:'',
@@ -28,12 +28,13 @@
 			console.log(this.$add_js.browserORverinfo())
 			this.type_version = this.$add_js.browserORverinfo()
 			this.login()
-      console.log(this.$route.query);
-    },
+		},
 
 		methods: {
 			// 加入会议的函数
 			join: function() {
+				var device = this.$add_js.uuid()
+				localStorage.setItem('device',device)
 				let mid = {
 					uid: this.uid,
 					dt: 2,
@@ -49,50 +50,74 @@
 								uid: this.uid,
 								dt: 2,
 								os: 3,
-								device: this.$add_js.uuid(),
+								device: device,
 								cookie: this.cookie
 							}
 							this.$axios.join(join_data).then(data_ => {
 								if (data_.code == 0) {
 									console.log(data_.data)
 									var join_data = JSON.stringify(data_.data)
+									// console.log(join_data)
+									var dat = {
+										conference_num:this.mid_,//获取会议号
+										mid:data_.data.mid,
+										servers:data_.data.vmt.servers,
+										login_uid:this.uid,//用户登录时登录接口获取的本人uid
+										cookie: this.cookie,//用户登录时登录接口获取的本人cookie
+										name:this.name,
+										device:device,
+										users:data_.data.users,
+										video_url:data_.data.vmt.video_url,
+										ppt_url:data_.data.vmt.ppt_url
+									}
 									this.$router.push({
 									    //跳转的页面
-									    path: '/index',
+									    path: '/index_1',
 									    //跳转传出的参数
 									    query: {
-									        join_data:join_data,
-											login_uid:this.uid
-									    }
+											dat:JSON.stringify(dat)
+										}
 									})
-
+									// this.$router.push({
+									//     //跳转的页面
+									//     path: '/index',
+									//     //跳转传出的参数
+									//     query: {
+									//         join_data:join_data,
+									// 		login_uid:this.uid,
+									// 		cookie: this.cookie,
+									// 		conference_num:this.mid_,
+									// 		name:this.name
+									//     }
+									// })
+									
 								}
-
+							
 							})
 						}
-
+						
 				})
-
+				
 			},
 			//创建会议
-			found: function() {
-				let found_data = {
-					uid: this.uid,
-					dt: 2,
-					os: 3,
-					device: this.$add_js.uuid(),
-					cookie: this.cookie
-				}
-				this.$axios.found(found_data).then(data => {
-					if (data.code == 0) {
-						console.log(data)
-						this.mid_ = data.data.code
-						this.join()
-					}
-
-				})
-
-			},
+			// found: function() {
+			// 	let found_data = {
+			// 		uid: this.uid,
+			// 		dt: 2,
+			// 		os: 3,
+			// 		device: this.$add_js.uuid(),
+			// 		cookie: this.cookie
+			// 	}
+			// 	this.$axios.found(found_data).then(data => {
+			// 		if (data.code == 0) {
+			// 			console.log(data)
+			// 			this.mid_ = data.data.code
+			// 			this.join()
+			// 		}
+			
+			// 	})
+			
+			// },
 			// 登陆的函数
 			login: function() {
 				let paramObj = {
@@ -114,6 +139,7 @@
 						this.uid = data.data.uid
 						this.cookie = data.data.cookie
 						this.tenant = data.data.tenant
+						this.name = data.data.name
 						console.log(this.cookie)
 					}
 				})

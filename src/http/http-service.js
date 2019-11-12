@@ -1,6 +1,7 @@
 import axios from 'axios';
 const udbBaseApi = 'https://udb.video.somo.tech/api/v1/udb/'
 const vmtBaseApi = 'https://vmt.video.somo.tech/api/v1/vmt/'
+const vmtBaseApi_1 = 'http://39.107.43.237:8090/api/v1/vmt/'
 // const billBaseApi = "https://billing.video.somo.tech/api/v1/";
 
 
@@ -86,9 +87,9 @@ axios.interceptors.response.use(response => {
 
 
 
-export function fetch(url,params={}){
+export function get(url,params={}){
   return new Promise((resolve,reject) => {
-    axios.get(url,{
+    axios.get(url,{ 
       params:params
     })
     .then(response => {
@@ -166,6 +167,18 @@ export function put(url,data = {}){
 */
 
 export const server = {
+	// 实时获取会议的参会人员
+	users: function(paramObj){
+	    return get(paramObj);
+	},
+	// 获取会议室人名的接口
+	meetingName: function(paramObj){
+	    return post(udbBaseApi + 'uinfo/query',paramObj);
+	},
+	// 发送消息的接口
+	sendAmessage: function(paramObj){
+	    return post(vmtBaseApi + 'im/broadcast',paramObj);
+	},
 	// 走接口的3秒轮询ping
 	ping: function(paramObj){
 	    return post(vmtBaseApi + 'ping',paramObj);

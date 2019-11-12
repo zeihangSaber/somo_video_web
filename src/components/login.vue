@@ -28,7 +28,8 @@
 			console.log(this.$add_js.browserORverinfo())
 			this.type_version = this.$add_js.browserORverinfo()
 			this.login()
-		},
+      console.log(this.$route.query);
+    },
 
 		methods: {
 			// 加入会议的函数
@@ -64,14 +65,14 @@
 											login_uid:this.uid
 									    }
 									})
-									
+
 								}
-							
+
 							})
 						}
-						
+
 				})
-				
+
 			},
 			//创建会议
 			found: function() {
@@ -88,9 +89,9 @@
 						this.mid_ = data.data.code
 						this.join()
 					}
-			
+
 				})
-			
+
 			},
 			// 登陆的函数
 			login: function() {

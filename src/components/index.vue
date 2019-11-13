@@ -1,6 +1,6 @@
 <template>
 	<div class="bigbox">
-		<videoPlayer ref="videoPlayer" :options="videoOptions" />
+		<!-- <videoPlayer ref="videoPlayer" :options="videoOptions" /> -->
 		<!-- <video autoplay id="aa"></video> -->
 		<div class="right_box">
 			<div class="conference_num" v-if="chat_status != 1">
@@ -53,6 +53,31 @@
 				</div>
 			</div>
 		</div>
+<!-- ============================================================		 -->
+		<div id="div_device" class="panel panel-default">
+			<div class="select">
+				<label for="audioSource">Audio source: </label><select id="audioSource"></select>
+			</div>
+			<div class="select">
+				<label for="videoSource">Video source: </label><select id="videoSource"></select>
+			</div>
+		</div>
+		
+		<div id="div_join" class="panel panel-default">
+			<div class="panel-body">
+				App ID: <input id="appId" type="text" value="" size="36"></input>
+				Channel: <input id="channel" type="text" value="1000" size="4"></input>
+				Host: <input id="video" type="checkbox" checked></input>
+				<button id="join" class="btn btn-primary" onclick="join()">Join</button>
+				<button id="leave" class="btn btn-primary" onclick="leave()">Leave</button>
+				<button id="publish" class="btn btn-primary" onclick="publish()">Publish</button>
+				<button id="unpublish" class="btn btn-primary" onclick="unpublish()">Unpublish</button>
+			</div>
+		</div>
+		<div id="video" style="margin:0 auto;">
+			<div id="agora_local" style="float:right;width:210px;height:147px;display:inline-block;"></div>
+		</div>
+<!-- ============================================================		 -->
 	</div>
 </template>
 
@@ -111,7 +136,144 @@
 		// 	chat_status: '_conceal_message'
 		// },
 		methods:{
-			
+			voice_band:function(mid){
+				// alert(mid.toString())
+				// console.log(this.$route.query.uid,5555555555555555555555555555555555555555555555555)
+				var that = this
+				var client, localStream, camera, microphone;
+				var channel_key = null;
+				var num = mid.toString()
+				var audioSelect = document.querySelector('select#audioSource');
+				var videoSelect = document.querySelector('select#videoSource');
+				client = AgoraRTC.createClient({//创建客户端。
+					mode: 'live'
+				});
+				// 初始化客户端对象。
+				client.init(that.$appid, function() {
+					console.log(that.$route.query.uid,'自己的uid打印')
+					// join;加入 AgoraRTC 频道。
+					client.join(channel_key, num, that.$route.query.uid, function(uid) {
+						console.log(uid + "join channel successfully");
+						if (document.getElementById("video").checked) {
+							camera = videoSource.value;
+							microphone = audioSource.value;
+							localStream = AgoraRTC.createStream({//创建音视频流对象。
+								streamID: that.$route.query.uid,
+								audio: true,
+								cameraId: camera,
+								microphoneId: microphone,
+								video: document.getElementById("video").checked,
+								screen: false
+							});
+							AgoraRTC.getDevices(function(devices) {
+								for (var i = 0; i !== devices.length; ++i) {
+									var device = devices[i];
+									var option = document.createElement('option');
+									option.value = device.deviceId;
+									if (device.kind === 'audioinput') {
+										option.text = device.label || 'microphone ' + (audioSelect.length + 1);
+										audioSelect.appendChild(option);
+									} else if (device.kind === 'videoinput') {
+										option.text = device.label || 'camera ' + (videoSelect.length + 1);
+										videoSelect.appendChild(option);
+									} else {
+										console.log('Some other kind of source/device: ', device);
+									}
+								}
+							});
+							
+							
+							//localStream = AgoraRTC.createStream({streamID: uid, audio: false, cameraId: camera, microphoneId: microphone, video: false, screen: true, extensionId: 'minllpmhdgpndnkomcoccfekfegnlikg'});
+							if (document.getElementById("video").checked) {
+								localStream.setVideoProfile('720p_3');//设置视频属性。
+				
+							}
+				
+							// The user has granted access to the camera and mic.
+							localStream.on("accessAllowed", function() {
+								console.log("accessAllowed");
+							});
+				
+							// The user has denied access to the camera and mic.
+							localStream.on("accessDenied", function() {
+								console.log("accessDenied");
+							});
+				
+							localStream.init(function() {
+								console.log("getUserMedia successfully");
+								localStream.play('agora_local');//播放音视频流。
+				
+								client.publish(localStream, function(err) {//发布本地音视频流至 SD-RTN。
+									console.log("Publish local stream error: " + err);
+								});
+				
+								client.on('stream-published', function(evt) {
+									console.log("Publish local stream successfully");
+								});
+							}, function(err) {
+								console.log("getUserMedia failed", err);
+							});
+						}
+						
+						
+					}, function(err) {
+						console.log("Join channel failed", err);
+					});
+				}, function(err) {
+					console.log("AgoraRTC client init failed", err);
+				});
+				
+				// channelKey = "";
+				// // 监听报错
+				// client.on('error', function(err) {
+				// 	console.log("Got error msg:", err.reason);
+				// 	if (err.reason === 'DYNAMIC_KEY_TIMEOUT') {
+				// 		client.renewChannelKey(channelKey, function() {
+				// 			console.log("Renew channel key successfully");
+				// 		}, function(err) {
+				// 			console.log("Renew channel key failed: ", err);
+				// 		});
+				// 	}
+				// });
+				//监听新人加入的事件
+				client.on('stream-added', function(evt) {
+					alert("加入新人")
+					console.log(evt)
+					var stream = evt.stream;
+					console.log("New stream added: " + stream.getId());
+					console.log("Subscribe ", stream);
+					client.subscribe(stream, function(err) {
+						console.log("Subscribe stream failed", err);
+					});
+				});
+				//订阅远程流(获取会议室内的视频音频流)
+				client.on('stream-subscribed', function(evt) {
+					var stream = evt.stream;
+					console.log("Subscribe remote stream successfully: " + stream.getId());
+					if ($('div#video #agora_remote' + stream.getId()).length === 0) {
+						$('div#video').append('<div id="agora_remote' + stream.getId() +
+							'" style="float:left; width:810px;height:607px;display:inline-block;"></div>');
+					}
+					stream.play('agora_remote' + stream.getId());
+				});
+				
+				client.on('stream-removed', function(evt) {
+					var stream = evt.stream;
+					stream.stop();
+					$('#agora_remote' + stream.getId()).remove();//stream.getId();获取stream音视频流 ID
+					console.log("Remote stream is removed " + stream.getId());
+				});
+				// 退出会议
+				client.on('peer-leave', function(evt) {
+					alert('退出会议')
+					var stream = evt.stream;
+					if (stream) {
+						stream.stop();
+						$('#agora_remote' + stream.getId()).remove();
+						console.log(evt.uid + " leaved from this channel");
+					}
+				});
+			},
 			// 加入接口
 			join: function() {
 				this.device = this.$add_js.uuid()
@@ -127,7 +289,7 @@
 							this.join_mid = data.data.id
 							this.path = 'wss://vmtws.video.somo.tech/api/v1/vmt/ws'//WebSocket的连接地址
 							this.init()
-							
+							this.voice_band(data.data.id)
 							console.log(data.data)
 							let join_data = {
 								mid: data.data.id,
@@ -343,6 +505,7 @@
 				if(eventStatus){
 					console.log("event, id/type=" + event.id + "/" + event.event)
 					if(event.event == 2){//加入会议
+					this.agora()
 						this.filtration_name(event.uid).then(data =>{
 							alert(data + "加入会议")
 						})
@@ -495,7 +658,6 @@
 		mounted() {
 			this.login_uid = this.$route.query.uid
 			this.join()
-			
 			this.conference_num = this.$route.query.mid //获取会议号
 // ==============机型和版本号=================================================
 			this.type_version = this.$add_js.browserORverinfo()

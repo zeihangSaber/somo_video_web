@@ -23,7 +23,7 @@ module.exports = {
       : config.dev.assetsPublicPath
   },
   externals: {
-    AgoraRTC: 'AgoraRTC'
+    agora: 'AgoraRTC'
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],

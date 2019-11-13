@@ -60,6 +60,7 @@
 	import 'video.js/dist/video-js.css'
 	import {videoPlayer} from 'vue-video-player'
 	import 'videojs-flash'
+  import agora from 'agora'
 	export default{
 		data () {
 			return{
@@ -111,7 +112,7 @@
 		// 	chat_status: '_conceal_message'
 		// },
 		methods:{
-			
+
 			// 加入接口
 			join: function() {
 				this.device = this.$add_js.uuid()
@@ -127,7 +128,7 @@
 							this.join_mid = data.data.id
 							this.path = 'ws://' + data.data.servers + '/api/v1/vmt/ws'//WebSocket的连接地址
 							this.init()
-							
+
 							console.log(data.data)
 							let join_data = {
 								mid: data.data.id,
@@ -150,13 +151,13 @@
 									}
 									this.videoOptions.sources[0].src = data_.data.vmt.video_url + data_.data.mid + 'U' + this.uid
 								}
-							
+
 							})
 							this._users()
 						}
-						
+
 				})
-				
+
 			},
 			// websocket的初始化
 			init: function() {
@@ -225,7 +226,7 @@
 			},
 			// 获取用户名称的函数
 			get_name(e) {
-				
+
 	// ======================================================================
 				// console.log(this.users)
 				// var all_uid = []
@@ -282,7 +283,7 @@
 							// alert(data.data.uinfos[0].name + "加入会议")
 						}
 					})
-					
+
 				})
 				// console.log(this.staff_name)
 				// for (var i = 0; i < this.staff_name.length; i++) {
@@ -291,7 +292,7 @@
 				// 	}
 				// }
 			},
-			//实时获取会议中的所有参会人员 
+			//实时获取会议中的所有参会人员
 			_users:function(){
 				var that = this
 				that.users = []
@@ -304,7 +305,7 @@
 								// console.log(that.users)
 							})
 					}
-						
+
 				})
 			},
 			ceshi:function(e){
@@ -355,8 +356,8 @@
 						this.filtration_name(event.uid).then(data =>{
 							alert(data + "退出会议")
 						})
-					
-					
+
+
 					}else if(event.event == 6){//设置角色
 						var role = JSON.parse(event.data).role
 						if(role == 4){
@@ -376,7 +377,7 @@
 								alert(data + "退出会议")
 							})
 						}
-						
+
 					}else if(event.event == 8){//会议锁定
 						alert('当前会议已锁定,其他人不能继续加入')
 					}else if(event.event == 9){//会议解锁
@@ -428,7 +429,7 @@
 						}
 						this.all_incident.push(event)
 					}
-				
+
 			},
 			// 发消息的函数
 			_sendAmessage: function() {
@@ -451,7 +452,7 @@
 						this.message_content = ''
 						console.log(this.history_message)
 					}
-			
+
 				})
 			},
 			// 聊天块的动画显示隐藏
@@ -475,9 +476,9 @@
 					paixu.forEach((e) => {
 					  this.incident_dispose(e)
 					})
-					
+
 				})
-			
+
 			},
 			// 实时获取当前电脑时间
 			_time: function() {
@@ -488,12 +489,12 @@
 				this.time = hour + ':' + minu
 				// console.log(this.time)
 			},
-			
+
 		},
 		mounted() {
+		    console.log(agora)
 			this.login_uid = this.$route.query.uid
 			this.join()
-			
 			this.conference_num = this.$route.query.mid //获取会议号
 // ==============机型和版本号=================================================
 			this.type_version = this.$add_js.browserORverinfo()
@@ -501,7 +502,7 @@
 			// navigator.mediaDevices.getDisplayMedia().then(e => {
 			// 	document.getElementById("aa").srcObject = e
 			// })
-			
+
 			// console.log(navigator.mediaDevices.getDisplayMedia(videoPlayer))
 // ==============监听回车键的按下=================================================
 			document.onkeydown = function(ev) {
@@ -520,14 +521,14 @@
 				that.videoOptions.width = window.innerWidth
 				that.videoOptions.height = window.innerHeight
 			}
-// ============================================================================			
-			
-			
-			
-			
+// ============================================================================
+
+
+
+
 			// this.cookie = this.router_data.cookie
 			// this.login_uid = this.router_data.login_uid
-			
+
 			console.log(this)
 			setInterval(() => {//websocket的10秒ping一次
 				this.send(1)
@@ -540,8 +541,8 @@
 			}, 1000)
 		}
 	}
-	
-	
+
+
 </script>
 
 <style scoped>
@@ -560,7 +561,7 @@
 		font-weight: 400;
 		color: rgba(153, 153, 153, 1);
 	}
-	
+
 	.scroll_bar_line {
 		width: 100%;
 		height: calc(75% - 1px);
@@ -572,7 +573,7 @@
 		right: 0;
 		z-index: 10;
 	}
-	
+
 	.scroll_bar {
 		width: 20px;
 		height: 100%;
@@ -581,38 +582,38 @@
 		top: 0;
 		right: 0;
 	}
-	
+
 	.spokesman_message_me {
 		text-align: right;
 		margin-bottom: 27px;
 		text-justify: newspaper;
 		word-break: break-all;
 	}
-	
+
 	.spokesman_message {
 		margin-bottom: 27px;
 	}
-	
+
 	.message {
 		font-size: 18px;
 		font-family: PingFangSC-Regular, PingFang SC;
 		font-weight: 400;
 		color: rgba(30, 33, 38, 1);
 	}
-	
+
 	.spokesman {
 		font-size: 14px;
 		font-family: PingFangSC-Regular, PingFang SC;
 		font-weight: 400;
 		color: rgba(102, 102, 102, 1);
 	}
-	
+
 	.message_icon_box>img {
 		width: 90px;
 		height: 90px;
 		margin-bottom: 12px;
 	}
-	
+
 	.message_icon_box {
 		text-align: center;
 		font-size: 16upx;
@@ -620,25 +621,25 @@
 		font-weight: 400;
 		color: rgba(204, 204, 204, 1);
 	}
-	
+
 	.dummy-status {
 		height: 100%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 	}
-	
+
 	.video_box2 {
 		width: 30vw;
 		margin-left: 5vw;
 	}
-	
+
 	.video_box1 {
 		width: 60vw;
 		height: 50px;
 		border: 5px solid red;
 	}
-	
+
 	.btn {
 		width: 90px;
 		height: 30px;
@@ -654,7 +655,7 @@
 		text-align: center;
 		line-height: 30px;
 	}
-	
+
 	textarea {
 		width: 100%;
 		height: 75%;
@@ -667,13 +668,13 @@
 		font-family: PingFangSC-Regular, PingFang SC;
 		font-weight: 400;
 	}
-	
+
 	.message_main_2 {
 		width: 100%;
 		height: 24%;
 		position: relative;
 	}
-	
+
 	/* .message_main_1::-webkit-scrollbar {display:none} */
 	.message_main_1 {
 		width: 100%;
@@ -686,7 +687,7 @@
 		border-bottom: 1px solid rgba(204, 204, 204, 1);
 		/* position: relative; */
 	}
-	
+
 	.message_main {
 		height: calc(100vh - 146px);
 		background: rgba(255, 255, 255, 1);
@@ -694,7 +695,7 @@
 		border: 1px solid rgba(204, 204, 204, 1);
 		position: relative;
 	}
-	
+
 	.message_title {
 		height: 23px;
 		margin: 10px 0 16px 18px;
@@ -703,29 +704,29 @@
 		font-weight: 400;
 		color: rgba(30, 33, 38, 1);
 	}
-	
+
 	@keyframes myfirst {
 		0% {
 			right: -395px;
 		}
-	
+
 		100% {
 			right: 0px;
-	
+
 		}
 	}
-	
+
 	@keyframes myfirst_1 {
 		0% {
 			right: 0px;
 		}
-	
+
 		100% {
 			right: -400px;
-	
+
 		}
 	}
-	
+
 	.chat_box>img,
 	.chat_box_active>img,
 	.chat_box_active_1>img {
@@ -735,7 +736,7 @@
 		top: calc(50% - 65px);
 		left: -30px;
 	}
-	
+
 	.chat_box_active_1 {
 		width: 100%;
 		height: calc(100% - 72px);
@@ -748,7 +749,7 @@
 		padding: 12px;
 		box-sizing: border-box;
 	}
-	
+
 	.chat_box_active {
 		width: 100%;
 		height: calc(100% - 72px);
@@ -761,7 +762,7 @@
 		padding: 12px;
 		box-sizing: border-box;
 	}
-	
+
 	.chat_box {
 		width: 100%;
 		height: calc(100% - 72px);
@@ -772,7 +773,7 @@
 		padding: 12px;
 		box-sizing: border-box;
 	}
-	
+
 	.message_icon>div {
 		width: 20px;
 		height: 20px;
@@ -789,18 +790,18 @@
 		top: -5px;
 		right: -5px;
 	}
-	
+
 	.message_icon>img {
 		width: 34px;
 		height: 34px;
-	
+
 	}
-	
+
 	.message_icon {
 		position: relative;
 		margin-left: 45px;
 	}
-	
+
 	.conference_num_active {
 		width: 399px;
 		height: 72px;
@@ -817,7 +818,7 @@
 		animation: myfirst 0.5s;
 		animation-fill-mode: forwards;
 	}
-	
+
 	.conference_num {
 		width: 399px;
 		height: 72px;
@@ -832,7 +833,7 @@
 		justify-content: center;
 		align-items: center;
 	}
-	
+
 	.right_box {
 		width: 399px;
 		height: 100vh;

@@ -147,7 +147,7 @@
 				var audioSelect = document.querySelector('select#audioSource');
 				var videoSelect = document.querySelector('select#videoSource');
 				client = AgoraRTC.createClient({//创建客户端。
-					mode: 'live'
+					mode: 'rtc'
 				});
 				// 初始化客户端对象。
 				client.init(that.$appid, function() {
@@ -155,7 +155,8 @@
 					// join;加入 AgoraRTC 频道。
 					client.join(channel_key, num, that.$route.query.uid, function(uid) {
 						console.log(uid + "join channel successfully");
-						if (document.getElementById("video").checked) {
+						//if (document.getElementById("video").checked) {
+						{
 							camera = videoSource.value;
 							microphone = audioSource.value;
 							localStream = AgoraRTC.createStream({//创建音视频流对象。
@@ -637,6 +638,8 @@
 					tick: this.tick++
 				}
 				this.$axios.ping(ping).then(data => {
+					if( data.data == null || data.data.events == null || data.data.events.size == 0 )
+						return;
 					var paixu = this.$add_js.sortKey(data.data.events, 'id')
 					paixu.forEach((e) => {
 					  this.incident_dispose(e)

@@ -85,7 +85,7 @@
 	import 'video.js/dist/video-js.css'
 	import {videoPlayer} from 'vue-video-player'
 	import 'videojs-flash'
-  import agora from 'agora'
+  //import agora from 'agora'
 	export default{
 		data () {
 			return{
@@ -139,7 +139,7 @@
 		methods:{
 			voice_band:function(mid){
 				// alert(mid.toString())
-				// console.log(this.$route.query.uid,5555555555555555555555555555555555555555555555555)
+				console.log("start voice logic, uid/mid=" + this.$route.query.uid + "/" + mid)
 				var that = this
 				var client, localStream, camera, microphone;
 				var channel_key = null;
@@ -239,13 +239,13 @@
 				// });
 				//监听新人加入的事件
 				client.on('stream-added', function(evt) {
-					alert("加入新人")
-					console.log(evt)
+					//alert("加入新人")
+					//console.log("peer stream add, uid=" + evt.stream)
 					var stream = evt.stream;
-					console.log("New stream added: " + stream.getId());
-					console.log("Subscribe ", stream);
+					console.log("new stream added: " + stream.getId());
+					console.log("subscribe ", stream);
 					client.subscribe(stream, function(err) {
-						console.log("Subscribe stream failed", err);
+						console.log("subscribe stream failed", err);
 					});
 				});
 				//订阅远程流(获取会议室内的视频音频流)
@@ -267,7 +267,8 @@
 				});
 				// 退出会议
 				client.on('peer-leave', function(evt) {
-					alert('退出会议')
+					//alert('退出会议')
+					console.log("peer leave meeting, peer=" + evt.stream.getId())
 					var stream = evt.stream;
 					if (stream) {
 						stream.stop();
@@ -507,20 +508,23 @@
 				if(eventStatus){
 					console.log("event, id/type=" + event.id + "/" + event.event)
 					if(event.event == 2){//加入会议
-					this.agora()
+						//this.voice_band()
 						this.filtration_name(event.uid).then(data =>{
-							alert(data + "加入会议")
+							//alert(data + "加入会议")
+							console.log("join meeting, uid=" + event.uid)
 						})
 					}else if(event.event == 3){//离开会议
 						if(this.speaker == event.uid){//当前离开的是主讲人
 							this.videoOptions.sources[0].src = ''
 						}
 						this.filtration_name(event.uid).then(data =>{
-							alert(data + "离开会议")
+							//alert(data + "离开会议")
+							console.log("leave meeting, uid=" + event.uid)
 						})
 					}else if(event.event == 4){//退出会议（自动踢除掉线的）
 						this.filtration_name(event.uid).then(data =>{
-							alert(data + "退出会议")
+							//alert(data + "退出会议")
+							console.log("leave meeting, uid=" + event.uid)
 						})
 
 
@@ -528,19 +532,22 @@
 						var role = JSON.parse(event.data).role
 						if(role == 4){
 							if(this.$route.query.uid == event.uid){
-								alert('您被设为主持人')
+								//alert('您被设为主持人')
+								console.log("because admin, uid=" + event.uid)
 							}else{
 								this.filtration_name(event.uid).then(data =>{
-									alert(data + "被设为主持人")
+									console.log("because admin, uid=" + event.uid)
 								})
 							}
 						}
 					}else if(event.event == 7){//退出会议（主动踢除）
 						if(event.uid == this.$route.query.uid){
-							alert('您已被主持人移除会议')
+							//alert('您已被主持人移除会议')
+							console.log("user kicked, uid=" + event.uid)
 						}else{
 							this.filtration_name(event.uid).then(data =>{
-								alert(data + "退出会议")
+								//alert(data + "退出会议")
+								console.log("leave meeting, uid=" + event.uid)
 							})
 						}
 
@@ -553,14 +560,16 @@
 						var mic = JSON.parse(event.data).mic
 						if(mic == 1){
 							if(event.uid == this.$route.query.uid){
-								alert('您已被主持人静音')
+								//alert('您已被主持人静音')
+								console.log("mute!, uid" + event.uid)
 							}
 						}
 					}else if(event.event == 23){//规则变化
 						// mic == 1静音;0开启;
 						var value = JSON.parse(event.data).value
 						if(value == 2){//全体静音
-							alert('您已被主持人静音')
+							//alert('您已被主持人静音')
+							console.log("silence all!!!")
 						}
 					}else if(event.event == 25){//主讲人
 						this.speaker = event.uid
@@ -569,10 +578,12 @@
 							this.videoOptions.sources[0].src = this.video_url + event.mid + 'U' + event.uid
 							console.log(this.videoOptions.sources[0].src)
 							if(this.$route.query.uid == event.uid){
-								alert('您被设为主讲人')
+								//alert('您被设为主讲人')
+								console.log("became speaker, uid=" + event.uid)
 							}else{
 								this.filtration_name(event.uid).then(data =>{
-									alert(data + "被设为主讲人")
+									//alert(data + "被设为主讲人")
+									console.log("became speaker, uid=" + event.uid)
 								})
 							}
 						}
@@ -660,7 +671,7 @@
 
 		},
 		mounted() {
-		    console.log(agora)
+		    //console.log(voice_band)
 			this.login_uid = this.$route.query.uid
 			this.join()
 			this.conference_num = this.$route.query.mid //获取会议号

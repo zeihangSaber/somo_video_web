@@ -126,7 +126,7 @@
 				this.$axios.code(mid_).then(data => {
 					if (data.code == 0) {
 							this.join_mid = data.data.id
-							this.path = 'ws://' + data.data.servers + '/api/v1/vmt/ws'//WebSocket的连接地址
+							this.path = 'wss://vmtws.video.somo.tech/api/v1/vmt/ws'//WebSocket的连接地址
 							this.init()
 
 							console.log(data.data)
@@ -164,6 +164,7 @@
 				if (typeof(WebSocket) === "undefined") {
 					alert("您的浏览器不支持socket")
 				} else {
+					console.log("websocket path=" + this.path)
 					this.socket = new WebSocket(this.path)// 实例化socket
 					this.socket.onopen = this.open// 监听socket连接
 					this.socket.onerror = this.error// 监听socket错误信息
@@ -341,6 +342,7 @@
 				  this.all_incident = []
 				}
 				if(eventStatus){
+					console.log("event, id/type=" + event.id + "/" + event.event)
 					if(event.event == 2){//加入会议
 						this.filtration_name(event.uid).then(data =>{
 							alert(data + "加入会议")

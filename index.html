@@ -4,16 +4,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>web</title>
+
 	<script src="./static/jquery.js" type="text/javascript" charset="utf-8"></script>
 	<script src="./static/AgoraRTCSDK-2.9.0.js" type="text/javascript" charset="utf-8"></script>
+	<!-- <script src="src/assets/js/base64.js" type="text/javascript" charset="utf-8"></script> -->
   </head>
   <body>
     <div id="app"></div>
     <!-- built files will be auto injected -->
-	
-	
-	<!-- encode转成base64
-	decode把base64转成正常 -->
+
+
+
 	<script type="text/javascript">
 		/*
 		 * $Id: base64.js,v 2.15 2014/04/05 12:58:57 dankogai Exp dankogai $
@@ -25,9 +26,9 @@
 		 *    http://en.wikipedia.org/wiki/Base64
 		 */
 			'use strict';
-		
+
 			var global = global || {};
-		
+
 			// existing version for noConflict()
 			var _Base64 = global.Base64;
 			var version = "2.1.9";
@@ -40,7 +41,7 @@
 			    } catch (err) {}
 			}
 			*/
-		
+
 			// constants
 			var b64chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 			var b64tab = function(bin) {

@@ -265,7 +265,7 @@
 				// 退出会议
 				client.on('peer-leave', function(evt) {
 					//alert('退出会议')
-					console.log("peer leave meeting, peer=" + evt.stream.getId())
+					console.log("peer leave meeting, peer=" + evt.uid)
 					var stream = evt.stream;
 					if (stream) {
 						stream.stop();

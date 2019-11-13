@@ -147,76 +147,72 @@
 				var audioSelect = document.querySelector('select#audioSource');
 				var videoSelect = document.querySelector('select#videoSource');
 				client = AgoraRTC.createClient({//创建客户端。
-					mode: 'rtc'
+					mode: 'rtc',
+					codec: 'h264'
 				});
 				// 初始化客户端对象。
 				client.init(that.$appid, function() {
-					console.log(that.$route.query.uid,'自己的uid打印')
+					//console.log(that.$route.query.uid,'自己的uid打印')
 					// join;加入 AgoraRTC 频道。
 					client.join(channel_key, num, that.$route.query.uid, function(uid) {
-						console.log(uid + "join channel successfully");
-						//if (document.getElementById("video").checked) {
-						{
-							camera = videoSource.value;
-							microphone = audioSource.value;
-							localStream = AgoraRTC.createStream({//创建音视频流对象。
-								streamID: that.$route.query.uid,
-								audio: true,
-								cameraId: camera,
-								microphoneId: microphone,
-								video: document.getElementById("video").checked,
-								screen: false
-							});
-							AgoraRTC.getDevices(function(devices) {
-								for (var i = 0; i !== devices.length; ++i) {
-									var device = devices[i];
-									var option = document.createElement('option');
-									option.value = device.deviceId;
-									if (device.kind === 'audioinput') {
-										option.text = device.label || 'microphone ' + (audioSelect.length + 1);
-										audioSelect.appendChild(option);
-									} else if (device.kind === 'videoinput') {
-										option.text = device.label || 'camera ' + (videoSelect.length + 1);
-										videoSelect.appendChild(option);
-									} else {
-										console.log('Some other kind of source/device: ', device);
-									}
+						console.log("join channel successfully, uid=" + uid);
+
+						AgoraRTC.getDevices(function(devices) {
+							for (var i = 0; i !== devices.length; ++i) {
+								var device = devices[i];
+								var option = document.createElement('option');
+								option.value = device.deviceId;
+								if (device.kind === 'audioinput') {
+									option.text = device.label || 'microphone ' + (audioSelect.length + 1);
+									audioSelect.appendChild(option);
+								} else if (device.kind === 'videoinput') {
+									option.text = device.label || 'camera ' + (videoSelect.length + 1);
+									videoSelect.appendChild(option);
+								} else {
+									console.log('Some other kind of source/device: ', device);
 								}
-							});
-							
-							
-							//localStream = AgoraRTC.createStream({streamID: uid, audio: false, cameraId: camera, microphoneId: microphone, video: false, screen: true, extensionId: 'minllpmhdgpndnkomcoccfekfegnlikg'});
-							if (document.getElementById("video").checked) {
-								localStream.setVideoProfile('720p_3');//设置视频属性。
-				
 							}
-				
-							// The user has granted access to the camera and mic.
-							localStream.on("accessAllowed", function() {
-								console.log("accessAllowed");
-							});
-				
-							// The user has denied access to the camera and mic.
-							localStream.on("accessDenied", function() {
-								console.log("accessDenied");
-							});
-				
-							localStream.init(function() {
-								console.log("getUserMedia successfully");
-								localStream.play('agora_local');//播放音视频流。
-				
-								client.publish(localStream, function(err) {//发布本地音视频流至 SD-RTN。
-									console.log("Publish local stream error: " + err);
-								});
-				
-								client.on('stream-published', function(evt) {
-									console.log("Publish local stream successfully");
-								});
-							}, function(err) {
-								console.log("getUserMedia failed", err);
-							});
-						}
+						});
+						camera = videoSource.value;
+						microphone = audioSource.value;
+						localStream = AgoraRTC.createStream({//创建音视频流对象。
+							streamID: that.$route.query.uid,
+							audio: true,
+							//cameraId: camera,
+							//microphoneId: microphone,
+							//video: document.getElementById("video").checked,
+							video: true,
+							screen: false
+						});
 						
+						//if (document.getElementById("video").checked) {
+							//localStream.setVideoProfile('720p_3');//设置视频属性。
+						//}
+			
+						// The user has granted access to the camera and mic.
+						localStream.on("accessAllowed", function() {
+							console.log("accessAllowed");
+						});
+			
+						// The user has denied access to the camera and mic.
+						localStream.on("accessDenied", function() {
+							console.log("accessDenied");
+						});
+			
+						localStream.init(function() {
+							console.log("getUserMedia successfully");
+							localStream.play('agora_local');//播放音视频流。
+			
+							client.publish(localStream, function(err) {//发布本地音视频流至 SD-RTN。
+								console.log("Publish local stream error: " + err);
+							});
+			
+							client.on('stream-published', function(evt) {
+								console.log("Publish local stream successfully");
+							});
+						}, function(err) {
+							console.log("getUserMedia failed", err);
+						});
 						
 					}, function(err) {
 						console.log("Join channel failed", err);
@@ -242,8 +238,7 @@
 					//alert("加入新人")
 					//console.log("peer stream add, uid=" + evt.stream)
 					var stream = evt.stream;
-					console.log("new stream added: " + stream.getId());
-					console.log("subscribe ", stream);
+					console.log("subscribe new stream, stream=" + stream.getId());
 					client.subscribe(stream, function(err) {
 						console.log("subscribe stream failed", err);
 					});
@@ -251,11 +246,13 @@
 				//订阅远程流(获取会议室内的视频音频流)
 				client.on('stream-subscribed', function(evt) {
 					var stream = evt.stream;
-					console.log("Subscribe remote stream successfully: " + stream.getId());
+					console.log("stream subscribed, stream=" + stream.getId())
 					if ($('div#video #agora_remote' + stream.getId()).length === 0) {
 						$('div#video').append('<div id="agora_remote' + stream.getId() +
 							'" style="float:left; width:810px;height:607px;display:inline-block;"></div>');
 					}
+
+					console.log("play remote stream, stream=" + stream.getId());
 					stream.play('agora_remote' + stream.getId());
 				});
 				

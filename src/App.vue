@@ -5,8 +5,12 @@
 </template>
 
 <script>
+	// import somo from 'somo-client'
 export default {
-  name: 'App'
+  name: 'App',
+	// created() {
+	// 	somo()
+	// }
 }
 </script>
 

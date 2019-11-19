@@ -1,23 +1,102 @@
+
 var all_export = {
-	init: function() {
-		if (typeof(WebSocket) === "undefined") {
-			alert("您的浏览器不支持socket")
-		} else {
-			// 实例化socket
-			this.socket = new WebSocket(this.path)
-			// console.log(this.socket)
-			// console.log(this.socket.onmessage)
-			// 监听socket连接
-			this.socket.onopen = this.open
-			// 监听socket错误信息
-			this.socket.onerror = this.error
-			// 监听socket消息
-			this.socket.onmessage = this.getMessage
-			// 监听socket断开连接
-			this.socket.onclose = this.close
-		}
-	},
+	//接入声网的函数
+	voice_band:function(mid,appid,_uid){
+		// alert(mid.toString())
+		// console.log("start voice logic, uid/mid=" + this.router_data.uid + "/" + mid)
+		var that = this
+		var client, localStream, camera, microphone;
+		var channel_key = null;
+		var num = mid.toString()
+		client = AgoraRTC.createClient({//创建客户端。
+			mode: 'rtc',
+			codec: 'h264'
+		});
+		// 初始化客户端对象。
+		client.init(appid, function() {
+			//console.log(that.$route.query.uid,'自己的uid打印')
+			// join;加入 AgoraRTC 频道。
+			client.join(channel_key, num, _uid, function(uid) {
+				// console.log("join channel successfully, uid=" + uid);
+				AgoraRTC.getDevices(function(devices) {
+					
+				});
+				localStream = AgoraRTC.createStream({//创建音视频流对象。
+					streamID: _uid,
+					audio: true,
+					//cameraId: camera,
+					//microphoneId: microphone,
+					//video: document.getElementById("video").checked,
+					video: true,
+					screen: false
+				});
+				localStream.init(function() {
+					console.log("getUserMedia successfully");
+					localStream.play('agora_local');//播放音视频流。
 	
+					client.publish(localStream, function(err) {//发布本地音视频流至 SD-RTN。
+						console.log("Publish local stream error: " + err);
+					});
+	
+					client.on('stream-published', function(evt) {
+						alert('发布本地音视频流成功')
+						console.log("Publish local stream successfully");
+					});
+				}, function(err) {
+					console.log("getUserMedia failed", err);
+				});
+				
+			}, function(err) {
+				console.log("Join channel failed", err);
+			});
+		}, function(err) {
+			console.log("AgoraRTC client init failed", err);
+		});
+		//监听新人加入的事件
+		client.on('stream-added', function(evt) {
+			alert("加入新人")
+			//console.log("peer stream add, uid=" + evt.stream)
+			var stream = evt.stream;
+			console.log("subscribe new stream, stream=" + stream.getId());
+			client.subscribe(stream, function(err) {
+				
+				console.log("subscribe stream failed", err);
+			});
+			
+			
+		});
+		//订阅远程流(获取会议室内的视频音频流)
+		client.on('stream-subscribed', function(evt) {
+			console.log('获取订阅远程音视频流',evt)
+			var stream = evt.stream;
+			console.log("stream subscribed, stream=" + stream.getId())
+			if ($('div#video #agora_remote' + stream.getId()).length === 0) {
+				$('div#video').append('<div id="agora_remote' + stream.getId() +
+					'" style="float:left; width:810px;height:607px;display:inline-block;"></div>');
+			}
+	
+			console.log("play remote stream, stream=" + stream.getId());
+			stream.play('agora_remote' + stream.getId());
+		});
+		
+		client.on('stream-removed', function(evt) {
+			var stream = evt.stream;
+			stream.stop();
+			$('#agora_remote' + stream.getId()).remove();//stream.getId();获取stream音视频流 ID
+			console.log("Remote stream is removed " + stream.getId());
+		});
+		// 退出会议
+		client.on('peer-leave', function(evt) {
+			//alert('退出会议')
+			console.log("peer leave meeting, peer=" + evt.uid)
+			var stream = evt.stream;
+			if (stream) {
+				stream.stop();
+				$('#agora_remote' + stream.getId()).remove();
+				console.log(evt.uid + " leaved from this channel");
+			}
+		});
+	},
 	// 数组中对象的排序
 	 sortKey:function (array, key) {
 		return array.sort(function(a, b) {
@@ -49,7 +128,6 @@ var all_export = {
 		return s.join('')
 	}
 }
-
 // 获取当前是什么浏览器和当前版本号
 	function getBrowserInfo() {
 		var agent = navigator.userAgent.toLowerCase();
@@ -75,6 +153,30 @@ var all_export = {
 		}
 	
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 export default all_export
 

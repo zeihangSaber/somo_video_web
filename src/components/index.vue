@@ -1,6 +1,6 @@
 <template>
 	<div class="bigbox">
-		<!-- <videoPlayer ref="videoPlayer" :options="videoOptions" /> -->
+		<videoPlayer ref="videoPlayer" :options="videoOptions" />
 		<!-- <video autoplay id="aa"></video> -->
 		<div class="right_box">
 			<div class="conference_num" v-if="chat_status != 1">
@@ -30,12 +30,12 @@
 							<div class="time" v-if="history_message.length > 0">{{time}}</div>
 							<div v-for="item in history_message" v-if="history_message.length > 0">
 								<!-- 他人发的消息 -->
-								<div class="spokesman_message" v-if="item.uid != login_uid">
+								<div class="spokesman_message" v-if="item.uid != router_data.uid">
 									<div class="spokesman">{{item.name}}</div>
 									<div class="message">{{item.text}}</div>
 								</div>
 								<!-- 自己发的消息 -->
-								<div class="spokesman_message_me" v-if="item.uid == login_uid">
+								<div class="spokesman_message_me" v-if="item.uid == router_data.uid">
 									<div class="spokesman">{{item.name}}</div>
 									<div class="message">{{item.text}}</div>
 								</div>
@@ -53,31 +53,14 @@
 				</div>
 			</div>
 		</div>
+<!-- ====================声网dom========================================		 -->
+			<div id="video" style="margin:0 auto;">
+				<div id="agora_local" style="float:right;width:210px;height:147px;display:inline-block;"></div>
+			</div>
 <!-- ============================================================		 -->
-		<div id="div_device" class="panel panel-default">
-			<div class="select">
-				<label for="audioSource">Audio source: </label><select id="audioSource"></select>
-			</div>
-			<div class="select">
-				<label for="videoSource">Video source: </label><select id="videoSource"></select>
-			</div>
+		<div class="no_keynote_speaker" v-if="keynote_speaker ==1">
+			<img src="../assets/16.png" alt="">
 		</div>
-		
-		<div id="div_join" class="panel panel-default">
-			<div class="panel-body">
-				App ID: <input id="appId" type="text" value="" size="36"></input>
-				Channel: <input id="channel" type="text" value="1000" size="4"></input>
-				Host: <input id="video" type="checkbox" checked></input>
-				<button id="join" class="btn btn-primary" onclick="join()">Join</button>
-				<button id="leave" class="btn btn-primary" onclick="leave()">Leave</button>
-				<button id="publish" class="btn btn-primary" onclick="publish()">Publish</button>
-				<button id="unpublish" class="btn btn-primary" onclick="unpublish()">Unpublish</button>
-			</div>
-		</div>
-		<div id="video" style="margin:0 auto;">
-			<div id="agora_local" style="float:right;width:210px;height:147px;display:inline-block;"></div>
-		</div>
-<!-- ============================================================		 -->
 	</div>
 </template>
 
@@ -89,6 +72,7 @@
 	export default{
 		data () {
 			return{
+				keynote_speaker:1,//没有主讲人页面的显示状态
 				path:'',//WebSocket的连接地址
 				router_data:{},//页面传值的对象
 				eventId:'',
@@ -123,10 +107,11 @@
 				type_version: [], //机型和版本号
 				device:'',
 				conference_num:'',//获取会议号
-				login_uid:'',//登陆的uid
+				// login_uid:'',//登陆的uid
 				join_mid:'',//加入接口返回的mid(会议号)
 				users:[],//加入接口返回的参会人员
 				video_url:'',//主讲人(没有投屏的前缀)
+				ppt_url:'',//主讲人(投屏的前缀)
 				speaker:'',//主讲人的uid
 			}
 		},
@@ -137,173 +122,38 @@
 		// 	chat_status: '_conceal_message'
 		// },
 		methods:{
-			voice_band:function(mid){
-				// alert(mid.toString())
-				console.log("start voice logic, uid/mid=" + this.$route.query.uid + "/" + mid)
-				var that = this
-				var client, localStream, camera, microphone;
-				var channel_key = null;
-				var num = mid.toString()
-				var audioSelect = document.querySelector('select#audioSource');
-				var videoSelect = document.querySelector('select#videoSource');
-				client = AgoraRTC.createClient({//创建客户端。
-					mode: 'rtc',
-					codec: 'h264'
-				});
-				// 初始化客户端对象。
-				client.init(that.$appid, function() {
-					//console.log(that.$route.query.uid,'自己的uid打印')
-					// join;加入 AgoraRTC 频道。
-					client.join(channel_key, num, that.$route.query.uid, function(uid) {
-						console.log("join channel successfully, uid=" + uid);
-
-						AgoraRTC.getDevices(function(devices) {
-							for (var i = 0; i !== devices.length; ++i) {
-								var device = devices[i];
-								var option = document.createElement('option');
-								option.value = device.deviceId;
-								if (device.kind === 'audioinput') {
-									option.text = device.label || 'microphone ' + (audioSelect.length + 1);
-									audioSelect.appendChild(option);
-								} else if (device.kind === 'videoinput') {
-									option.text = device.label || 'camera ' + (videoSelect.length + 1);
-									videoSelect.appendChild(option);
-								} else {
-									console.log('Some other kind of source/device: ', device);
-								}
-							}
-						});
-						camera = videoSource.value;
-						microphone = audioSource.value;
-						localStream = AgoraRTC.createStream({//创建音视频流对象。
-							streamID: that.$route.query.uid,
-							audio: true,
-							//cameraId: camera,
-							//microphoneId: microphone,
-							//video: document.getElementById("video").checked,
-							video: true,
-							screen: false
-						});
-						
-						//if (document.getElementById("video").checked) {
-							//localStream.setVideoProfile('720p_3');//设置视频属性。
-						//}
-			
-						// The user has granted access to the camera and mic.
-						localStream.on("accessAllowed", function() {
-							console.log("accessAllowed");
-						});
-			
-						// The user has denied access to the camera and mic.
-						localStream.on("accessDenied", function() {
-							console.log("accessDenied");
-						});
-			
-						localStream.init(function() {
-							console.log("getUserMedia successfully");
-							localStream.play('agora_local');//播放音视频流。
-			
-							client.publish(localStream, function(err) {//发布本地音视频流至 SD-RTN。
-								console.log("Publish local stream error: " + err);
-							});
-			
-							client.on('stream-published', function(evt) {
-								console.log("Publish local stream successfully");
-							});
-						}, function(err) {
-							console.log("getUserMedia failed", err);
-						});
-						
-					}, function(err) {
-						console.log("Join channel failed", err);
-					});
-				}, function(err) {
-					console.log("AgoraRTC client init failed", err);
-				});
-				
-				// channelKey = "";
-				// // 监听报错
-				// client.on('error', function(err) {
-				// 	console.log("Got error msg:", err.reason);
-				// 	if (err.reason === 'DYNAMIC_KEY_TIMEOUT') {
-				// 		client.renewChannelKey(channelKey, function() {
-				// 			console.log("Renew channel key successfully");
-				// 		}, function(err) {
-				// 			console.log("Renew channel key failed: ", err);
-				// 		});
-				// 	}
-				// });
-				//监听新人加入的事件
-				client.on('stream-added', function(evt) {
-					//alert("加入新人")
-					//console.log("peer stream add, uid=" + evt.stream)
-					var stream = evt.stream;
-					console.log("subscribe new stream, stream=" + stream.getId());
-					client.subscribe(stream, function(err) {
-						console.log("subscribe stream failed", err);
-					});
-				});
-				//订阅远程流(获取会议室内的视频音频流)
-				client.on('stream-subscribed', function(evt) {
-					var stream = evt.stream;
-					console.log("stream subscribed, stream=" + stream.getId())
-					if ($('div#video #agora_remote' + stream.getId()).length === 0) {
-						$('div#video').append('<div id="agora_remote' + stream.getId() +
-							'" style="float:left; width:810px;height:607px;display:inline-block;"></div>');
-					}
-
-					console.log("play remote stream, stream=" + stream.getId());
-					stream.play('agora_remote' + stream.getId());
-				});
-				
-				client.on('stream-removed', function(evt) {
-					var stream = evt.stream;
-					stream.stop();
-					$('#agora_remote' + stream.getId()).remove();//stream.getId();获取stream音视频流 ID
-					console.log("Remote stream is removed " + stream.getId());
-				});
-				// 退出会议
-				client.on('peer-leave', function(evt) {
-					//alert('退出会议')
-					console.log("peer leave meeting, peer=" + evt.uid)
-					var stream = evt.stream;
-					if (stream) {
-						stream.stop();
-						$('#agora_remote' + stream.getId()).remove();
-						console.log(evt.uid + " leaved from this channel");
-					}
-				});
-			},
 			// 加入接口
 			join: function() {
 				this.device = this.$add_js.uuid()
 				let mid_ = {
-					uid: this.$route.query.uid,
-					dt: 2,
-					cookie: this.$route.query.cookie,
-					code: this.$route.query.mid,
-					tenant: +this.$route.query.tenant
+					uid: this.router_data.uid,
+					dt: 3,
+					cookie: this.router_data.cookie,
+					code: this.router_data.mid,
+					tenant: +this.router_data.tenant
 				}
 				this.$axios.code(mid_).then(data => {
 					if (data.code == 0) {
 							this.join_mid = data.data.id
+							console.log(data.data.servers)
 							this.path = 'wss://vmtws.video.somo.tech/api/v1/vmt/ws'//WebSocket的连接地址
+							// this.path = 'ws://' + data.data.servers + '/api/v1/vmt/ws'//WebSocket的连接地址
 							this.init()
-							this.voice_band(data.data.id)
-							console.log(data.data)
+							// this.WebSocket_init(path,this.router_data.uid,this.device,)
+							// 接入声网的函数
+							this.$add_js.voice_band(data.data.id,this.$appid,this.$route.query.uid)
 							let join_data = {
 								mid: data.data.id,
-								uid: this.$route.query.uid,
+								uid: this.router_data.uid,
 								dt: 2,
 								os: 3,
 								device: this.device,
-								cookie: this.$route.query.cookie
+								cookie: this.router_data.cookie
 							}
 							this.$axios.join(join_data).then(data_ => {
 								if (data_.code == 0) {
 									this.video_url = data_.data.vmt.video_url
-									// this.users = data_.data.users
-									// this.get_name()
+									this.ppt_url = data_.data.vmt.ppt_url
 									for (var i = 0; i < data_.data.users.length; i++) {
 										console.log(data_.data.users[i])
 										if (data_.data.users[i].speaker == 1) {
@@ -316,7 +166,6 @@
 							})
 							this._users()
 						}
-
 				})
 
 			},
@@ -347,11 +196,11 @@
 				//WebSocket 10秒ping一次
 				if (e == 1) {
 					var data = {
-						uid: this.$route.query.uid,
+						uid: this.router_data.uid,
 						dt: 2,
 						device: this.device,
 						mid: this.join_mid,
-						cookie: this.$route.query.cookie
+						cookie: this.router_data.cookie
 					}
 					// console.log(data)
 					var dat = JSON.stringify({
@@ -361,11 +210,11 @@
 					this.socket.send(dat)
 				} else if (e == 2) { //接收到消息时event_ack的回传
 					var data = {
-						uid: this.$route.query.uid,
+						uid: this.router_data.uid,
 						dt: 2,
 						device: this.device,
 						mid: this.join_mid,
-						cookie: this.$route.query.cookie,
+						cookie: this.router_data.cookie,
 						event: this.eventId
 					}
 					var dat = JSON.stringify({
@@ -378,52 +227,13 @@
 			// 接收WebSocket消息
 			getMessage:function(msg){
 				var Message = JSON.parse(msg.data)
-				var Message_data = JSON.parse(decode(Message.data))
+				var Message_data = JSON.parse(Base64.decode(Message.data))
 				var speaker = JSON.parse(Message_data.data).speaker //判断当前有没有设置主讲人speaker=1有，0没有
 				// console.log(Message)
 				// console.log(Message_data)
 				this.eventId = Message.eventId
 				this.incident_dispose(Message_data)
 				this.send(2)
-			},
-			// 获取用户名称的函数
-			get_name(e) {
-
-	// ======================================================================
-				// console.log(this.users)
-				// var all_uid = []
-				// this.uid_name = []//所有参会人员的uid，初始置空
-				// for (var i = 0; i < this.users.length; i++) {
-				// 	this.uid_name.push(this.users[i].uid)
-				// }
-				// console.log(all_uid)
-				// let meetingName_data = {
-				// 	uid: this.$route.query.uid,
-				// 	seq: 3,
-				// 	uids: this.uid_name,
-				// 	cookie: this.$route.query.cookie
-				// }
-				// this.$axios.meetingName(meetingName_data).then(data => {
-				// 	if (data.code == 0) {
-				// 		this.staff_name = data.data.uinfos
-				// 		console.log(this.staff_name)
-				// 	}
-				// })
-				var name = [e]
-				console.log(name)
-				let meetingName_data = {
-					uid: this.$route.query.uid,
-					seq: 3,
-					uids: name,
-					cookie: this.$route.query.cookie
-				}
-				this.$axios.meetingName(meetingName_data).then(data => {
-					if (data.code == 0) {
-						this.staff_name = data.data.uinfos
-						console.log(this.staff_name)
-						return this.staff_name
-					}
-				})
 			},
 			// 过滤名称
 			filtration_name:function(e,cancel){
@@ -432,10 +242,10 @@
 					var name_ = []
 					name_.push(e)
 					let meetingName_data = {
-						uid: this.$route.query.uid,
+						uid: this.router_data.uid,
 						seq: 3,
 						uids: name_,
-						cookie: this.$route.query.cookie
+						cookie: this.router_data.cookie
 					}
 					this.$axios.meetingName(meetingName_data).then(data => {
 						if (data.code == 0) {
@@ -458,37 +268,24 @@
 			_users:function(){
 				var that = this
 				that.users = []
-				var aa = 'https://vmt.video.somo.tech/api/v1/vmt/'+ that.join_mid + '/users'
-				that.$axios.users(aa).then(data => {
+				var url = 'https://vmt.video.somo.tech/api/v1/vmt/'+ that.join_mid + '/users'
+				that.$axios.users(url).then(data => {
 					if (data.code == 0) {
 							data.data.users.forEach((e)=>{
-								// console.log(e)
 								that.users.push(e)
+								console.log(e.speaker)
+								if(e.speaker == 1){
+									this.keynote_speaker = 0
+									return
+								}
 								// console.log(that.users)
+								
 							})
 					}
 
 				})
 			},
-			ceshi:function(e){
-				var name = []
-				let aa = ''
-				name.push(e)
-				let meetingName_data = {
-					uid: this.$route.query.uid,
-					seq: 3,
-					uids: name,
-					cookie: this.$route.query.cookie
-				}
-				this.$axios.meetingName(meetingName_data).then(data => {
-					if (data.code == 0) {
-						console.log(data.data.uinfos[0])
-						aa = data.data.uinfos[0].name
-						// alert(data.data.uinfos[0].name + "离开会议")
-					}
-				})
-				return aa
-			},
+			// 功能事件的处理函数
 			incident_dispose:function(event){
 				this._users()
 				var eventStatus = true
@@ -505,9 +302,10 @@
 				if(eventStatus){
 					console.log("event, id/type=" + event.id + "/" + event.event)
 					if(event.event == 2){//加入会议
-						//this.voice_band()
+						// this.voice_band()
+						this.$add_js.voice_band(data.data.id,this.$appid,this.$route.query.uid)
 						this.filtration_name(event.uid).then(data =>{
-							//alert(data + "加入会议")
+							// alert(data + "加入会议")
 							console.log("join meeting, uid=" + event.uid)
 						})
 					}else if(event.event == 3){//离开会议
@@ -515,12 +313,12 @@
 							this.videoOptions.sources[0].src = ''
 						}
 						this.filtration_name(event.uid).then(data =>{
-							//alert(data + "离开会议")
+							// alert(data + "离开会议")
 							console.log("leave meeting, uid=" + event.uid)
 						})
 					}else if(event.event == 4){//退出会议（自动踢除掉线的）
 						this.filtration_name(event.uid).then(data =>{
-							//alert(data + "退出会议")
+							// alert(data + "自己掉线的")
 							console.log("leave meeting, uid=" + event.uid)
 						})
 
@@ -528,7 +326,7 @@
 					}else if(event.event == 6){//设置角色
 						var role = JSON.parse(event.data).role
 						if(role == 4){
-							if(this.$route.query.uid == event.uid){
+							if(this.router_data.uid == event.uid){
 								//alert('您被设为主持人')
 								console.log("because admin, uid=" + event.uid)
 							}else{
@@ -538,8 +336,9 @@
 							}
 						}
 					}else if(event.event == 7){//退出会议（主动踢除）
-						if(event.uid == this.$route.query.uid){
-							//alert('您已被主持人移除会议')
+						if(event.uid == this.router_data.uid){
+							alert('您已被移除会议')
+							window.location.href = 'http://www.somo.tech/'
 							console.log("user kicked, uid=" + event.uid)
 						}else{
 							this.filtration_name(event.uid).then(data =>{
@@ -552,11 +351,15 @@
 						alert('当前会议已锁定,其他人不能继续加入')
 					}else if(event.event == 9){//会议解锁
 						alert('该会议已解锁')
+					}else if(event.event == 10){//开始分享
+						this.videoOptions.sources[0].src = this.ppt_url + event.mid + 'U' + event.uid
+					}else if(event.event == 11){//结束分享
+						this.videoOptions.sources[0].src = this.video_url + event.mid + 'U' + event.uid
 					}else if(event.event == 20){//麦克风设置
 						// mic == 1静音;0开启;
 						var mic = JSON.parse(event.data).mic
 						if(mic == 1){
-							if(event.uid == this.$route.query.uid){
+							if(event.uid == this.router_data.uid){
 								//alert('您已被主持人静音')
 								console.log("mute!, uid" + event.uid)
 							}
@@ -569,12 +372,13 @@
 							console.log("silence all!!!")
 						}
 					}else if(event.event == 25){//主讲人
+						console.log(event)
 						this.speaker = event.uid
 						var speaker = JSON.parse(event.data).speaker
 						if (speaker == 1) {//判断当前有没有设置主讲人speaker=1有，0没有
 							this.videoOptions.sources[0].src = this.video_url + event.mid + 'U' + event.uid
-							console.log(this.videoOptions.sources[0].src)
-							if(this.$route.query.uid == event.uid){
+							// console.log(this.videoOptions.sources[0].src)
+							if(this.router_data.uid == event.uid){
 								//alert('您被设为主讲人')
 								console.log("became speaker, uid=" + event.uid)
 							}else{
@@ -583,9 +387,11 @@
 									console.log("became speaker, uid=" + event.uid)
 								})
 							}
+						}else if(speaker == 0){
+							this.keynote_speaker = 1
 						}
 					}else if(event.event == 41){
-							var text = decode(JSON.parse(event.data).text)
+							var text = Base64.decode(JSON.parse(event.data).text)
 							this.filtration_name(event.uid).then(data =>{
 								message_box.name = data
 							})
@@ -603,24 +409,23 @@
 						}
 						this.all_incident.push(event)
 					}
-
 			},
 			// 发消息的函数
 			_sendAmessage: function() {
 				let message_data = {
-					uid: this.$route.query.uid,//当前用户的识别id
+					uid: this.router_data.uid,//当前用户的识别id
 					dt: 2,
 					device: this.device,//随机码
 					mid: this.join_mid, //加入接口返回的（会议id）
 					text: encode(this.message_content), //消息内容，需要把字符串转换为base64格式
-					cookie: this.$route.query.cookie
+					cookie: this.router_data.cookie
 				}
 				this.$axios.sendAmessage(message_data).then(data => {
 					if (data.code == 0) {
 						var message_box = {
 							text: this.message_content,
-							uid: this.$route.query.uid,
-							name: this.$route.query.name
+							uid: this.router_data.uid,
+							name: this.router_data.name
 						}
 						this.history_message.push(message_box)
 						this.message_content = ''
@@ -639,7 +444,7 @@
 			// 3秒ping一下的请求函数
 			ping: function() {
 				let ping = {
-					uid: +this.$route.query.uid,
+					uid: +this.router_data.uid,
 					dt: 2,
 					device: this.device,
 					mid: +this.join_mid,
@@ -668,10 +473,11 @@
 
 		},
 		mounted() {
-		    //console.log(voice_band)
-			this.login_uid = this.$route.query.uid
+			this.router_data = JSON.parse(Base64.decode(this.$route.query.data))
+		    console.log(JSON.parse(Base64.decode(this.$route.query.data)))
+			// this.login_uid = this.router_data.uid
 			this.join()
-			this.conference_num = this.$route.query.mid //获取会议号
+			this.conference_num = this.router_data.mid //获取会议号
 // ==============机型和版本号=================================================
 			this.type_version = this.$add_js.browserORverinfo()
 // =========================================================================
@@ -698,13 +504,6 @@
 				that.videoOptions.height = window.innerHeight
 			}
 // ============================================================================
-
-
-
-
-			// this.cookie = this.router_data.cookie
-			// this.login_uid = this.router_data.login_uid
-
 			console.log(this)
 			setInterval(() => {//websocket的10秒ping一次
 				this.send(1)
@@ -722,6 +521,21 @@
 </script>
 
 <style scoped>
+	.no_keynote_speaker>img{
+		width: 438px;
+		height: 156px;
+	}
+	.no_keynote_speaker{
+		width: 100vw;
+		height: 100vh;
+		background: #02101C;
+		position: fixed;
+		top: 0;
+		left: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 	.time {
 		width: 100%;
 		height: 30px;

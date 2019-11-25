@@ -1,7 +1,29 @@
-## somo_video_web
+# aaa
 
-web会议客户端
+## Project setup
+```
+yarn install
+```
 
-http://localhost:1111/#/?cookie=MTAwMDAwNTAtMTU2MjU3MTg0MDIzNy01MDk0MzQ0&name=111&uid=10000050&mobile=18559657700&mid=14808&tenant=0
+### Compiles and hot-reloads for development
+```
+yarn serve
+```
 
-http://localhost:1111/#/?cookie=MTAwMDAwNTItMTU2MDczNTYxODQzNC0yMzYxNTY4&name=111&uid=10000052&mobile=18559657700&mid=14808&tenant=0
+### Compiles and minifies for production
+```
+yarn build
+```
+
+### Run your unit tests
+```
+yarn test:unit
+```
+
+### Lints and fixes files
+```
+yarn lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).

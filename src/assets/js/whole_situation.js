@@ -18,9 +18,6 @@ var all_export = {
 			// join;加入 AgoraRTC 频道。
 			client.join(channel_key, num, _uid, function(uid) {
 				// console.log("join channel successfully, uid=" + uid);
-				AgoraRTC.getDevices(function(devices) {
-					
-				});
 				localStream = AgoraRTC.createStream({//创建音视频流对象。
 					streamID: _uid,
 					audio: true,
@@ -33,11 +30,11 @@ var all_export = {
 				localStream.init(function() {
 					console.log("getUserMedia successfully");
 					localStream.play('agora_local');//播放音视频流。
-	
+
 					client.publish(localStream, function(err) {//发布本地音视频流至 SD-RTN。
 						console.log("Publish local stream error: " + err);
 					});
-	
+
 					client.on('stream-published', function(evt) {
 						alert('发布本地音视频流成功')
 						console.log("Publish local stream successfully");
@@ -45,7 +42,7 @@ var all_export = {
 				}, function(err) {
 					console.log("getUserMedia failed", err);
 				});
-				
+
 			}, function(err) {
 				console.log("Join channel failed", err);
 			});
@@ -59,11 +56,11 @@ var all_export = {
 			var stream = evt.stream;
 			console.log("subscribe new stream, stream=" + stream.getId());
 			client.subscribe(stream, function(err) {
-				
+
 				console.log("subscribe stream failed", err);
 			});
-			
-			
+
+
 		});
 		//订阅远程流(获取会议室内的视频音频流)
 		client.on('stream-subscribed', function(evt) {
@@ -74,11 +71,11 @@ var all_export = {
 				$('div#video').append('<div id="agora_remote' + stream.getId() +
 					'" style="float:left; width:810px;height:607px;display:inline-block;"></div>');
 			}
-	
+
 			console.log("play remote stream, stream=" + stream.getId());
 			stream.play('agora_remote' + stream.getId());
 		});
-		
+
 		client.on('stream-removed', function(evt) {
 			var stream = evt.stream;
 			stream.stop();
@@ -130,11 +127,11 @@ var all_export = {
 }
 // 获取当前是什么浏览器和当前版本号
 	function getBrowserInfo() {
-		var agent = navigator.userAgent.toLowerCase();
-		var regStr_ie = /msie [\d.]+;/gi;
-		var regStr_ff = /firefox\/[\d.]+/gi;
-		var regStr_chrome = /chrome\/[\d.]+/gi;
-		var regStr_saf = /safari\/[\d.]+/gi;
+		let agent = navigator.userAgent.toLowerCase();
+		let regStr_ie = /msie [\d.]+;/gi;
+		let regStr_ff = /firefox\/[\d.]+/gi;
+		let regStr_chrome = /chrome\/[\d.]+/gi;
+		let regStr_saf = /safari\/[\d.]+/gi;
 		//IE
 		if (agent.indexOf("msie") > 0) {
 			return agent.match(regStr_ie);
@@ -151,32 +148,31 @@ var all_export = {
 		if (agent.indexOf("chrome") > 0) {
 			return agent.match(regStr_chrome);
 		}
-	
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export default all_export
 

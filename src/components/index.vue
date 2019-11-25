@@ -229,8 +229,6 @@
 				var Message = JSON.parse(msg.data)
 				var Message_data = JSON.parse(Base64.decode(Message.data))
 				var speaker = JSON.parse(Message_data.data).speaker //判断当前有没有设置主讲人speaker=1有，0没有
-				// console.log(Message)
-				// console.log(Message_data)
 				this.eventId = Message.eventId
 				this.incident_dispose(Message_data)
 				this.send(2)
@@ -279,7 +277,7 @@
 									return
 								}
 								// console.log(that.users)
-								
+
 							})
 					}
 

@@ -1,3 +1,7 @@
 module.exports = {
-  configureWebpack: {}
+  configureWebpack: {
+    externals: {
+      agora: "AgoraRTC"
+    }
+  }
 };

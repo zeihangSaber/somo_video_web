@@ -1,11 +1,27 @@
 <template>
-  <div>123</div>
+  <div>
+    {{ msg }}
+    Hello world
+  </div>
 </template>
-<script>
-export default {
-  name: "Home",
-  mounted() {
-    console.log(this.$somo);
+
+<script lang="ts">
+// @ is an alias to /src
+import HeaderTab from "@/components/HeaderTab.vue";
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
+@Component({
+  components: {
+    HeaderTab
   }
-};
+})
+export default class Home extends Vue {
+  name: string = "home";
+  created() {
+    console.log(this);
+    // this.$somo.join();
+  }
+}
 </script>
+
+<style lang="less" scoped></style>

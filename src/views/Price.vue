@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <div>Pirce页面</div>
 </template>
 
 <script lang="ts">

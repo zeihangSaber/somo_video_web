@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <div>download页面</div>
 </template>
 
 <script lang="ts">

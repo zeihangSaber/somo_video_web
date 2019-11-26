@@ -9104,10 +9104,24 @@ sockjs@0.3.19:
     faye-websocket "^0.10.0"
     uuid "^3.0.1"
 
+<<<<<<< HEAD
 somo-fir@^1.1.5:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/somo-fir/-/somo-fir-1.1.5.tgz#7da0053f7c5efb6bd6a0ce8b96b09426c4245c36"
   integrity sha512-cY3XbG7vnTP+ldxxFYp4rva8US60mAzWOZW13FmS2Q8nz2/zWiAEXv6Ae0mWn8077yXycPGBpjFg7JBjyRrpGg==
+=======
+<<<<<<< HEAD
+somo-fir@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/somo-fir/-/somo-fir-1.0.9.tgz#e1350fe5db6f8e2cef8270e9ff378d230bef35ab"
+  integrity sha512-8zS6Dh/jjeifErWeKNlB5s9DA+jX7bP5li/Z8wE55ZWisyehl8udsA7LJmDE7R8V4Pj1ZjMONWvHznnd6rsksg==
+=======
+somo-fir@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/somo-fir/-/somo-fir-1.1.4.tgz#21c8d88d0523108d6cd39740f241fb9fc77e4727"
+  integrity sha512-hwsMjD8x/qBNu21ZLPjNyHn9uMdW6KacxpTbbz4BWE9Lcnq8Y4TnRSqclvNTLg8hgcunccrbDYZNMD2Cgw51rw==
+>>>>>>> 83898f86f01f0df145cb1fbafedee196356582eb
+>>>>>>> 43d661fa705c9c0723f93c4beac957a80fb96e98
   dependencies:
     "@types/js-base64" "^2.3.1"
     axios "^0.19.0"

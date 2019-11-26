@@ -7,11 +7,13 @@
       @select="handleSelect"
       text-color="#f8f8f8"
       active-text-color="#f8f8f8"
-      router
-      :collapse-transition="false"
     >
-      <el-menu-item index="home">首页</el-menu-item>
-      <el-menu-item>产品</el-menu-item>
+      <el-menu-item index="home">
+        <a href="/home">首页</a>
+      </el-menu-item>
+      <el-menu-item index="activity">
+        <a href="/activity">产品</a>
+      </el-menu-item>
       <el-menu-item index="price">价格</el-menu-item>
       <el-menu-item index="download">下载</el-menu-item>
       <el-menu-item index="about">我们</el-menu-item>
@@ -20,12 +22,14 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { State } from "vuex-class";
 @Component
 export default class HeaderTab extends Vue {
-  activeIndex: string = "home";
-  handleSelect(key: any, path: any): void {
-    console.log(key, path);
+  @State activeIndex: any;
+  created() {
+    console.log(this.activeIndex);
   }
+  handleSelect(key: string, path: any): void {}
 }
 </script>
 <style lang="less" scoped>
@@ -37,9 +41,14 @@ export default class HeaderTab extends Vue {
   width: 100%;
   .tab_menu {
     background: rgba(4, 88, 204, 0.8);
+    .el-menu-item {
+      border: 0;
+    }
+    .el-menu-item:hover {
+      background-color: #033f95;
+    }
     .el-menu-item.is-active {
-      border-bottom: 0;
-      //   background-color:
+      background-color: #033f95;
     }
   }
 }

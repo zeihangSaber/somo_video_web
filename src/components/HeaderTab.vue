@@ -8,7 +8,7 @@
       text-color="#f8f8f8"
       active-text-color="#f8f8f8"
     >
-      <el-menu-item index="home"> 首页</el-menu-item>
+      <el-menu-item index="home">首页</el-menu-item>
       <el-menu-item>产品</el-menu-item>
       <el-menu-item index="price">价格</el-menu-item>
       <el-menu-item index="download">下载</el-menu-item>

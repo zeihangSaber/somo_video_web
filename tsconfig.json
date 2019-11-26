@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "strictPropertyInitialization": false,
     "target": "esnext",
     "module": "esnext",
     "strict": true,
@@ -7,9 +8,11 @@
     "importHelpers": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,
+    "strictFunctionTypes":false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
+    "pretty": true,
     "baseUrl": ".",
     "types": [
       "webpack-env",

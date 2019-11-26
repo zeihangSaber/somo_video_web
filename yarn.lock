@@ -1054,6 +1054,11 @@
   resolved "https://registry.yarnpkg.com/@types/js-base64/-/js-base64-2.3.1.tgz#c39f14f129408a3d96a1105a650d8b2b6eeb4168"
   integrity sha512-4RKbhIDGC87s4EBy2Cp2/5S2O6kmCRcZnD5KRCq1q9z2GhBte1+BdsfVKCpG8yKpDGNyEE2G6IqFIh6W2YwWPA==
 
+"@types/js-md5@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@types/js-md5/-/js-md5-0.4.2.tgz#95b39911e2081bf2915436e61cc345e12459e5bb"
+  integrity sha512-FUPoQkpQTzA5wz9ebrdVRjsjQsFehr+cW1CVhLcI2UwD/SO/4NHPO1esrXPPbx7ux762U0POmWFSrUjQq2ophw==
+
 "@types/json-schema@^7.0.3":
   version "7.0.3"
   resolved "https://registry.npm.taobao.org/@types/json-schema/download/@types/json-schema-7.0.3.tgz#bdfd69d61e464dcc81b25159c270d75a73c1a636"
@@ -6070,6 +6075,11 @@ js-levenshtein@^1.1.3:
   resolved "https://registry.npm.taobao.org/js-levenshtein/download/js-levenshtein-1.1.6.tgz#c6cee58eb3550372df8deb85fad5ce66ce01d59d"
   integrity sha1-xs7ljrNVA3LfjeuF+tXOZs4B1Z0=
 
+js-md5@^0.7.3:
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/js-md5/-/js-md5-0.7.3.tgz#b4f2fbb0b327455f598d6727e38ec272cd09c3f2"
+  integrity sha512-ZC41vPSTLKGwIRjqDh8DfXoCrdQIyBgspJVPXHBGu4nZlAEvG3nf+jO9avM9RmLiGakg7vz974ms99nEV0tmTQ==
+
 js-message@1.0.5:
   version "1.0.5"
   resolved "https://registry.npm.taobao.org/js-message/download/js-message-1.0.5.tgz#2300d24b1af08e89dd095bc1a4c9c9cfcb892d15"
@@ -9094,10 +9104,17 @@ sockjs@0.3.19:
     faye-websocket "^0.10.0"
     uuid "^3.0.1"
 
+<<<<<<< HEAD
 somo-fir@^1.0.9:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/somo-fir/-/somo-fir-1.0.9.tgz#e1350fe5db6f8e2cef8270e9ff378d230bef35ab"
   integrity sha512-8zS6Dh/jjeifErWeKNlB5s9DA+jX7bP5li/Z8wE55ZWisyehl8udsA7LJmDE7R8V4Pj1ZjMONWvHznnd6rsksg==
+=======
+somo-fir@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/somo-fir/-/somo-fir-1.1.4.tgz#21c8d88d0523108d6cd39740f241fb9fc77e4727"
+  integrity sha512-hwsMjD8x/qBNu21ZLPjNyHn9uMdW6KacxpTbbz4BWE9Lcnq8Y4TnRSqclvNTLg8hgcunccrbDYZNMD2Cgw51rw==
+>>>>>>> 83898f86f01f0df145cb1fbafedee196356582eb
   dependencies:
     "@types/js-base64" "^2.3.1"
     axios "^0.19.0"

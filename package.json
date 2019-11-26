@@ -6,12 +6,13 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "eslint --fix --ext .js,.vue src"
   },
   "dependencies": {
     "core-js": "^3.3.2",
     "element-ui": "^2.12.0",
     "rtmp-streamer": "^1.0.2",
+    "somo-fir": "^1.0.7",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
     "vue-property-decorator": "^8.3.0",

@@ -11,7 +11,7 @@ import Vue from "vue";
 
 // Vue.prototype.$somo = new Somo(1, 2);
 // console.log(Somo.send);
-export default {
+const obj: any = {
   name: "App",
   created() {
     const { dt, os, osver, model, device, version } = Somo.defaultParameter;
@@ -28,12 +28,13 @@ export default {
         device,
         version
       }
-    }).then(res => {
+    }).then((res: any) => {
       const { cookie, uid } = res;
       Vue.prototype.$somo = new Somo(uid, cookie);
       this.$somo.postInit(post);
     });
   }
 };
+export default obj;
 </script>
 <style lang="less"></style>

@@ -1,18 +1,32 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+  <div>
+    {{ msg }}
+    Hello world
   </div>
 </template>
 
-<script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+@Component
+export default class Home extends Vue {
+  // 初始化数据
+  msg: number = 123;
 
-export default {
-  name: "home",
-  components: {
-    HelloWorld
+  // 声明周期钩子
+  mounted() {
+    this.greet();
   }
-};
+
+  // 计算属性
+  get computedMsg() {
+    return "computed " + this.msg;
+  }
+
+  // 方法
+  greet() {
+    console.log("greeting: " + this.msg);
+  }
+}
 </script>
+
+<style lang="less" scoped></style>

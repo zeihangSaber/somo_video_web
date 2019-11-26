@@ -13,6 +13,7 @@ import Somo from "somo-fir";
 import Vue from "vue";
 
 Vue.prototype.$somo = new Somo(1, 2);
+console.log(Somo.send);
 export default {
   name: "App"
 };

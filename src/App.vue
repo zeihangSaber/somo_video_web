@@ -31,6 +31,7 @@ const obj: any = {
     }).then((res: any) => {
       const { cookie, uid } = res;
       Vue.prototype.$somo = new Somo(uid, cookie);
+      console.log("App", this.$somo);
       this.$somo.postInit(post);
     });
   }

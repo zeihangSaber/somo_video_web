@@ -1,6 +1,6 @@
 <template>
   <div>
-    {{ msg }}
+    <HeaderTab />
     Hello world
   </div>
 </template>
@@ -10,6 +10,7 @@
 import HeaderTab from "@/components/HeaderTab.vue";
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
+
 @Component({
   components: {
     HeaderTab
@@ -18,7 +19,8 @@ import { Component } from "vue-property-decorator";
 export default class Home extends Vue {
   name: string = "home";
   created() {
-    console.log(this);
+    // this.$somo.actList();
+    // console.log(this.$somo);
     // this.$somo.join();
   }
 }

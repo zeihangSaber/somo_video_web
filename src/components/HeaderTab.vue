@@ -7,10 +7,8 @@
       @select="handleSelect"
       text-color="#f8f8f8"
       active-text-color="#f8f8f8"
-      router
-      :collapse-transition="false"
     >
-      <el-menu-item index="home">首页</el-menu-item>
+      <el-menu-item index="home"> 首页</el-menu-item>
       <el-menu-item>产品</el-menu-item>
       <el-menu-item index="price">价格</el-menu-item>
       <el-menu-item index="download">下载</el-menu-item>
@@ -39,7 +37,7 @@ export default class HeaderTab extends Vue {
     background: rgba(4, 88, 204, 0.8);
     .el-menu-item.is-active {
       border-bottom: 0;
-      //   background-color:
+      background-color: #033f95;
     }
   }
 }

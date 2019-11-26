@@ -1,5 +1,8 @@
 <template>
-  <div>about页面</div>
+  <div>
+    <HeaderTab />
+    about页面
+  </div>
 </template>
 
 <script lang="ts">

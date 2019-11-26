@@ -9,10 +9,10 @@
   </div>
 </template>
 <script>
-import somo from "somo-fir";
+import Somo from "somo-fir";
 import Vue from "vue";
 
-Vue.prototype.$somo = somo;
+Vue.prototype.$somo = new Somo(1, 2);
 export default {
   name: "App"
 };

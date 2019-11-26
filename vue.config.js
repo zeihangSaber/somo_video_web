@@ -14,7 +14,7 @@ module.exports = {
       }
     },
     externals: {
-      agora: "AgoraRTC"
+      arg: "AgoraRTC"
     }
   }
 };

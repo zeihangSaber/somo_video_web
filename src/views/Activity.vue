@@ -1,5 +1,8 @@
 <template>
-  <div>about页面</div>
+  <div>
+    <HeaderTab />
+    <h2>活动页面</h2>
+  </div>
 </template>
 
 <script lang="ts">
@@ -10,7 +13,7 @@ import { Component, Vue } from "vue-property-decorator";
     HeaderTab
   }
 })
-export default class About extends Vue {}
+export default class Activity extends Vue {}
 </script>
 
 <style lang="less" scoped></style>

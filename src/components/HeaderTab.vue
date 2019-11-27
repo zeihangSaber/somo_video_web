@@ -13,6 +13,7 @@
             <el-menu-item index="price">价格</el-menu-item>
             <el-menu-item index="download">下载</el-menu-item>
             <el-menu-item index="about">我们</el-menu-item>
+            <el-menu-item index="personalCenter">个人中心</el-menu-item>
         </el-menu>
     </div>
 </template>

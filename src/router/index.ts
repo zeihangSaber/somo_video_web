@@ -5,6 +5,7 @@ import Price from "../views/Price.vue";
 import Download from "../views/Download.vue";
 import About from "../views/About.vue";
 import Activity from "../views/Activity.vue";
+import PersonalCenter from "../views/PersonalCenter.vue";
 
 Vue.use(VueRouter);
 
@@ -37,6 +38,11 @@ const routes = [
         path: "/activity",
         name: "activity",
         component: Activity
+    },
+    {
+        path: "/personalCenter",
+        name: "personalCenter",
+        component: PersonalCenter
     }
 ];
 

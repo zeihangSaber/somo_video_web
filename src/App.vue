@@ -11,7 +11,6 @@
 import ajax from "@/utils/ajax";
 import HeaderTab from "@/components/HeaderTab.vue";
 import { Component, Vue } from "vue-property-decorator";
-import "@/common/common.less";
 @Component({
     components: {
         HeaderTab
@@ -19,4 +18,12 @@ import "@/common/common.less";
 })
 export default class App extends Vue {}
 </script>
-<style lang="less"></style>
+<style lang="less">
+@import "./common/common";
+#app {
+    background-color: @red;
+}
+.saber {
+    color: red;
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="saber">
         about页面
     </div>
 </template>

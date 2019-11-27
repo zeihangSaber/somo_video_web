@@ -123,7 +123,6 @@ import { Component, Vue } from "vue-property-decorator";
 @Component
 export default class Download extends Vue {}
 </script>
-
 <style lang="less" scoped>
 @import "../common/common";
 .inthemiddle {

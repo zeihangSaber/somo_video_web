@@ -41,7 +41,8 @@ export default class HeaderTab extends Vue {
     @State activeIndex: string;
     @Action setActiveIndex: (value: string) => void;
     created() {
-        console.log(this.activeIndex);
+        console.log(this.$store);
+        this.$store.commit("bbb", 123);
     }
     handleSelect(key: string, path: any): void {
         if (key !== this.activeIndex) {

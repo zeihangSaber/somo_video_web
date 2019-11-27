@@ -1,18 +1,17 @@
 <template>
     <div class="home-page">
         <section class="banner">
-            <div class="h2">蓝猫微会，新一代视频会议</div>
-            <div class="h3">
+            <div class="h2 wow fadeInUp">蓝猫微会，新一代视频会议</div>
+            <div class="h3 wow fadeInUp">
                 简单易用，稳定可靠，价格厚道的视频会议产品
             </div>
             <button type="button" class="btn">
                 立即注册，免费试用
             </button>
         </section>
-
         <section class="first_column">
             <div class="con">
-                <div class="first_content">
+                <div class="first_content wow fadeInLeft">
                     <h2>支持全平台的云会议室</h2>
                     <p>
                         支持手机、iPad、电脑、电视、小程序等多终端接入 <br />
@@ -21,10 +20,9 @@
                 </div>
             </div>
         </section>
-
         <section class="second_column">
             <div class="con">
-                <div class="second_content">
+                <div class="second_content wow fadeInRight">
                     <h2>高品质的硬件</h2>
                     <p>
                         视频会议主机和摄像头集成，无需拉专线 <br />
@@ -36,10 +34,9 @@
                 </div>
             </div>
         </section>
-
         <section class="thirdly_column">
             <div class="con">
-                <div class="thirdly_content">
+                <div class="thirdly_content wow fadeInLeft">
                     <h2>极简的使用体验</h2>
                     <p>
                         从开箱到开会5分钟 <br />
@@ -49,7 +46,6 @@
                 </div>
             </div>
         </section>
-
         <section class="fourthly_column">
             <h2>为什么选择蓝猫微会</h2>
             <ul>
@@ -73,7 +69,6 @@
                 </li>
             </ul>
         </section>
-
         <section class="fifth_column">
             <h2 class="wow fadeInDown">马上体验，发起一场视频会议</h2>
             <button type="button wow fadeInUp" class="btn" id="go-register2">
@@ -88,13 +83,25 @@
 import HeaderTab from "@/components/HeaderTab.vue";
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
+import { State, Action } from "vuex-class";
 @Component
 export default class Home extends Vue {
-    name: string = "home";
-    created() {
-        // this.$somo.actList();
-        // console.log(this.$somo);
-        // this.$somo.join();
+    @State activeIndex: string;
+    @Action setActiveIndex: (value: string) => void;
+    mounted() {
+        window.addEventListener("scroll", this.handleScroll, true);
+    }
+    handleScroll(): void {
+        const scroll: number =
+            document.documentElement.scrollTop || document.body.scrollTop;
+        if (scroll >= 600 && scroll < 2000) {
+            this.setActiveIndex("product");
+        } else {
+            this.setActiveIndex("home");
+        }
+    }
+    destroyed() {
+        window.removeEventListener("scroll", this.handleScroll);
     }
 }
 </script>
@@ -258,6 +265,7 @@ export default class Home extends Vue {
         transition: 0.3s;
         border: 0px;
         text-decoration: none;
+        outline: none;
     }
     .btn:hover {
         background: #f58b0e;

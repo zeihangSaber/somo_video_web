@@ -1,7 +1,7 @@
 <template>
     <div id="headerTab">
         <div class="con">
-            <div class="logo"><img src="../assets/logo.png" /></div>
+            <div class="logo"><img src="../assets/headerTab/logo.png" /></div>
             <el-menu
                 class="tab_menu con"
                 :default-active="activeIndex"
@@ -13,7 +13,7 @@
                 <el-menu-item class="tab_menu_item" index="home"
                     >首页</el-menu-item
                 >
-                <el-menu-item class="tab_menu_item" index="activity"
+                <el-menu-item class="tab_menu_item" index="product"
                     >产品</el-menu-item
                 >
                 <el-menu-item class="tab_menu_item" index="price"
@@ -41,12 +41,29 @@ export default class HeaderTab extends Vue {
     @State activeIndex: string;
     @Action setActiveIndex: (value: string) => void;
     created() {
-        console.log(this.$store);
-        this.$store.commit("bbb", 123);
+        const activeIndex: string = this.$route.name ? this.$route.name : "";
+        this.setActiveIndex(activeIndex);
+    }
+    mounted() {
+        if (this.$route.name === "product") {
+            window.scroll({
+                top: 600,
+                behavior: "smooth"
+            });
+        }
     }
     handleSelect(key: string, path: any): void {
-        if (key !== this.activeIndex) {
-            this.$router.push({ name: key });
+        if (key === "product") {
+            if (this.$route.name === "home") {
+                window.scroll({
+                    top: 600,
+                    behavior: "smooth"
+                });
+            } else {
+                window.location.pathname = `${key}`;
+            }
+        } else {
+            window.location.pathname = `${key}`;
         }
         this.setActiveIndex(key);
     }
@@ -72,6 +89,7 @@ export default class HeaderTab extends Vue {
             display: flex;
             flex: 1;
             .el-menu-item {
+                background: rgba(4, 88, 204, 0);
                 border: 0;
             }
             .el-menu-item:hover {

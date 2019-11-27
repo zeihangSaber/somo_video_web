@@ -5,6 +5,7 @@ import Price from "../views/Price.vue";
 import Download from "../views/Download.vue";
 import About from "../views/About.vue";
 import Activitys from "../views/Activitys.vue";
+import Register from "../views/Register.vue";
 // import PersonalCenter from "../views/PersonalCenter.vue";
 
 Vue.use(VueRouter);
@@ -17,6 +18,11 @@ const routes = [
     {
         path: "/home",
         name: "home",
+        component: Home
+    },
+    {
+        path: "/product",
+        name: "product",
         component: Home
     },
     {
@@ -38,6 +44,11 @@ const routes = [
         path: "/activitys",
         name: "activitys",
         component: Activitys
+    },
+    {
+        path: "/register",
+        name: "register",
+        component: Register
     }
     // {
     //     path: "/personalCenter",

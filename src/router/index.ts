@@ -4,14 +4,14 @@ import Home from "../views/Home.vue";
 import Price from "../views/Price.vue";
 import Download from "../views/Download.vue";
 import About from "../views/About.vue";
-import Activity from "../views/Activity.vue";
+import Activitys from "../views/Activitys.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
     {
         path: "/",
-        redirect: "/activity"
+        redirect: "/activitys"
     },
     {
         path: "/home",
@@ -34,9 +34,9 @@ const routes = [
         component: About
     },
     {
-        path: "/activity",
-        name: "activity",
-        component: Activity
+        path: "/activitys",
+        name: "activitys",
+        component: Activitys
     }
 ];
 

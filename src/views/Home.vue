@@ -10,7 +10,6 @@
 import HeaderTab from "@/components/HeaderTab.vue";
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-
 @Component({
     components: {
         HeaderTab

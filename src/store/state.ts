@@ -3,7 +3,7 @@ export interface States {
 }
 
 const state: States = {
-    activeIndex: "456"
+    activeIndex: "home"
 };
 
 export default state;

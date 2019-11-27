@@ -2,7 +2,7 @@
     <div>
         <div class="personage">
             <div class="personal_information">
-                <img class="head_img" src="../assets/logo.png" alt="" />
+                <img class="head_img" src="../assets/icon_management.png" />
                 <div>白羽</div>
                 <div class="personal_number">1211561655</div>
                 <div class="personage_tab">
@@ -14,14 +14,17 @@
     </div>
 </template>
 
-<script></script>
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+@Component
+export default class PersonalCenter extends Vue {}
+</script>
 
-<style lang="less">
+<style lang="less" scoped>
 .personage {
     width: 1200px;
     border: 1px solid red;
     margin: 0 auto;
-
     .personage_tab {
         height: 46px;
         padding-left: 14px;

@@ -43,6 +43,8 @@ export default class HeaderTab extends Vue {
     z-index: 10;
     width: 100%;
     .tab_menu {
+        width: 1200px;
+        margin: 0 auto;
         background: rgba(4, 88, 204, 0.8);
         .el-menu-item {
             border: 0;

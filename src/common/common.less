@@ -1,1 +1,20 @@
 @red: "#ff0000";
+
+//定义宽高
+.box(@width, @height) {
+    width: @width;
+    height: @height;
+}
+//定义背景图片
+.backgroundImg(@url) {
+    background: url(@url) no-repeat;
+    background-position: center center;
+    background-size: 100% 100%;
+}
+//定义flex布局
+.flex-option(@flex-direction:row,@justify-content:flex-start,@align-items:flex-start) {
+    display: flex;
+    flex-direction: @flex-direction;
+    justify-content: @justify-content;
+    align-items: @align-items;
+}

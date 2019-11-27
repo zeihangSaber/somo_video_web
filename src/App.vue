@@ -11,7 +11,7 @@
 import ajax from "@/utils/ajax";
 import HeaderTab from "@/components/HeaderTab.vue";
 import { Component, Vue } from "vue-property-decorator";
-import "@/common/common.less";
+// import "@/common/common.less";
 @Component({
     components: {
         HeaderTab

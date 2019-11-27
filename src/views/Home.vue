@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <HeaderTab />
-    Hello world
-  </div>
+    <div>
+        <HeaderTab />
+        Hello world
+    </div>
 </template>
 
 <script lang="ts">
@@ -12,17 +12,17 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 
 @Component({
-  components: {
-    HeaderTab
-  }
+    components: {
+        HeaderTab
+    }
 })
 export default class Home extends Vue {
-  name: string = "home";
-  created() {
-    // this.$somo.actList();
-    // console.log(this.$somo);
-    // this.$somo.join();
-  }
+    name: string = "home";
+    created() {
+        // this.$somo.actList();
+        // console.log(this.$somo);
+        // this.$somo.join();
+    }
 }
 </script>
 

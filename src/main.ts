@@ -10,7 +10,7 @@ Vue.prototype.$somo = Somo;
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
 new Vue({
-  router,
-  store,
-  render: h => h(App)
+    router,
+    store,
+    render: h => h(App)
 }).$mount("#app");

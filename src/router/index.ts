@@ -9,41 +9,41 @@ import Activity from "../views/Activity.vue";
 Vue.use(VueRouter);
 
 const routes = [
-  {
-    path: "/",
-    redirect: "/activity"
-  },
-  {
-    path: "/home",
-    name: "home",
-    component: Home
-  },
-  {
-    path: "/price",
-    name: "price",
-    component: Price
-  },
-  {
-    path: "/download",
-    name: "download",
-    component: Download
-  },
-  {
-    path: "/about",
-    name: "about",
-    component: About
-  },
-  {
-    path: "/activity",
-    name: "activity",
-    component: Activity
-  }
+    {
+        path: "/",
+        redirect: "/activity"
+    },
+    {
+        path: "/home",
+        name: "home",
+        component: Home
+    },
+    {
+        path: "/price",
+        name: "price",
+        component: Price
+    },
+    {
+        path: "/download",
+        name: "download",
+        component: Download
+    },
+    {
+        path: "/about",
+        name: "about",
+        component: About
+    },
+    {
+        path: "/activity",
+        name: "activity",
+        component: Activity
+    }
 ];
 
 const router = new VueRouter({
-  mode: "history",
-  base: process.env.BASE_URL,
-  routes
+    mode: "history",
+    base: process.env.BASE_URL,
+    routes
 });
 
 export default router;

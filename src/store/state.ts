@@ -1,9 +1,9 @@
 export interface States {
-  activeIndex: string;
+    activeIndex: string;
 }
 
 const state: States = {
-  activeIndex: ""
+    activeIndex: "456"
 };
 
 export default state;

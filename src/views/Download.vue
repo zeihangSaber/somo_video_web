@@ -10,4 +10,9 @@ import { Component, Vue } from "vue-property-decorator";
 export default class Download extends Vue {}
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+@import "../common/common";
+div {
+    background: @red;
+}
+</style>

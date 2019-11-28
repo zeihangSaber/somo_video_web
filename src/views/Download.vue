@@ -166,31 +166,37 @@
                 功能使用说明书 <img src="../assets/download/dow.png" alt="" />
             </a>
         </div>
-        <div id="qrcode" ref="qrCodeUrl">441515</div>
+        <qrcode-vue :value="url" :size="size" level="H"></qrcode-vue>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import QRCode from "qrcodejs2"; // 引入qrcode
+import QrcodeVue from "qrcode.vue";
+@Component({
+    components: {
+        QrcodeVue
+    }
+})
 export default class Download extends Vue {
+    url = "www.baidu.com";
     show = 0;
     installation_show = 0;
-    mounted() {
-        this.qrcode();
-    }
-    qrcode() {
-        setTimeout(() => {
-            let qrcode = new QRCode("qrcode", {
-                width: 132,
-                height: 132,
-                text: "https://www.baidu.com", // 二维码地址
-                colorDark: "#000",
-                colorLight: "#fff"
-            });
-        }, 1000);
-    }
-    details(e) {
+    // mounted() {
+    //     this.qrcode();
+    // }
+    // qrcode() {
+    //     setTimeout(() => {
+    //         let qrcode = new QRCode("qrcode", {
+    //             width: 132,
+    //             height: 132,
+    //             text: "https://www.baidu.com", // 二维码地址
+    //             colorDark: "#000",
+    //             colorLight: "#fff"
+    //         });
+    //     }, 1000);
+    // }
+    details(e: number) {
         this.installation_show = e;
     }
     // 移出
@@ -198,7 +204,7 @@ export default class Download extends Vue {
         this.show = 0;
     }
     // 移入
-    mouseOver(e) {
+    mouseOver(e: any) {
         this.show = e;
         console.log(e);
     }

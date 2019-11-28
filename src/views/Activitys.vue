@@ -14,7 +14,7 @@ export default class Activitys extends Vue {
             tenant: 0,
             start: new Date().getTime() - 3600 * 1000 * 24 * 30,
             end: new Date().getTime() + 3600 * 1000 * 24 * 30
-        }).then((res: string[]) => {
+        }).then((res: string[]): void => {
             console.log("获取全部活动数据列表", res);
         });
     }

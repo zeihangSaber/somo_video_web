@@ -19,7 +19,13 @@
                             class="platform"
                             src="../assets/download/iPhone.svg"
                         />
-                        <img class="download-icon mobile-qrcode" />
+                        <qrcode-vue
+                            class="download-icon mobile-qrcode"
+                            :value="url"
+                            :size="size"
+                            level="H"
+                        ></qrcode-vue>
+                        <!-- <img class="download-icon mobile-qrcode" /> -->
                         <p class="hover-message">扫描二维码下载</p>
                     </div>
                     <p>iPhone 版（支持iPad）</p>
@@ -35,7 +41,13 @@
                             class="platform"
                             src="../assets/download/Android.svg"
                         />
-                        <img class="download-icon mobile-qrcode" />
+                        <qrcode-vue
+                            class="download-icon mobile-qrcode"
+                            :value="url"
+                            :size="size"
+                            level="H"
+                        ></qrcode-vue>
+                        <!-- <img class="download-icon mobile-qrcode" /> -->
                         <p class="hover-message">扫描二维码下载</p>
                     </div>
                     <p>Android 版</p>
@@ -166,7 +178,6 @@
                 功能使用说明书 <img src="../assets/download/dow.png" alt="" />
             </a>
         </div>
-        <qrcode-vue :value="url" :size="size" level="H"></qrcode-vue>
     </div>
 </template>
 
@@ -179,23 +190,10 @@ import QrcodeVue from "qrcode.vue";
     }
 })
 export default class Download extends Vue {
-    url = "www.baidu.com";
+    url = "http://www.somo.tech/mobile";
     show = 0;
+    size = 160;
     installation_show = 0;
-    // mounted() {
-    //     this.qrcode();
-    // }
-    // qrcode() {
-    //     setTimeout(() => {
-    //         let qrcode = new QRCode("qrcode", {
-    //             width: 132,
-    //             height: 132,
-    //             text: "https://www.baidu.com", // 二维码地址
-    //             colorDark: "#000",
-    //             colorLight: "#fff"
-    //         });
-    //     }, 1000);
-    // }
     details(e: number) {
         this.installation_show = e;
     }

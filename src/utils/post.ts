@@ -12,6 +12,10 @@ const post: Post = {
     register: {
         url: "udb/user/reg",
         defaultData: []
+    },
+    queryMid: {
+        url: "/vmt/code/query",
+        defaultData: ["uid", "dt", "cookie", "tenant"]
     }
 };
 export default post;

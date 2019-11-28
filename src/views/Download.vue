@@ -502,7 +502,7 @@ export default class Download extends Vue {
                 right: 36px;
                 top: 50%;
                 transform: translateY(-50%);
-                background-image: url("../assets/somo_installation_close.png");
+                background-image: url("../assets/download/somo_installation_close.png");
                 background-size: 100% 100%;
             }
         }

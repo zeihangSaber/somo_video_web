@@ -6,6 +6,7 @@ import Download from "../views/Download.vue";
 import About from "../views/About.vue";
 import Activitys from "../views/Activitys.vue";
 import Register from "../views/Register.vue";
+import JoinConference from "../views/JoinConference.vue";
 // import PersonalCenter from "../views/PersonalCenter.vue";
 
 Vue.use(VueRouter);
@@ -49,6 +50,11 @@ const routes = [
         path: "/register",
         name: "register",
         component: Register
+    },
+    {
+        path: "/joinConference",
+        name: "joinConference",
+        component: JoinConference
     }
     // {
     //     path: "/personalCenter",

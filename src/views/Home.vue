@@ -94,7 +94,10 @@ export default class Home extends Vue {
     @State activeIndex: string;
     @Action setActiveIndex: (value: string) => void;
     mounted() {
-        window.addEventListener("scroll", this.handleScroll, true);
+        window.addEventListener("scroll", this.handleScroll);
+        // setTimeout(() => {
+        //     window.removeEventListener("scroll", this.handleScroll);
+        // }, 5000);
     }
     //滚轮
     handleScroll(): void {

@@ -19,6 +19,7 @@
                         type="text"
                         autocomplete="off"
                         placeholder="请输入中文、英文和数字"
+                        v-model="name"
                     />
                 </label>
             </div>
@@ -31,6 +32,7 @@
                         type="text"
                         autocomplete="off"
                         placeholder="请输入手机号码或者邮箱"
+                        v-model="account"
                     />
                 </label>
             </div>
@@ -44,14 +46,19 @@
                             type="text"
                             autocomplete="off"
                             placeholder="验证码"
+                            v-model="code"
                         />
                     </label>
-                    <button id="get-code" class="get-codeBtn">
-                        获取验证码
-                    </button>
+                    <button
+                        id="get-code"
+                        class="get-codeBtn"
+                        @click="getCode($event)"
+                        v-text="getCodeText"
+                        :class="countdown < 60 ? 'countdown' : ''"
+                    ></button>
                 </div>
             </div>
-            <a id="commit">
+            <a id="commit" @click="register">
                 立即试用
                 <img src="../assets/register/right.png" />
             </a>
@@ -63,9 +70,138 @@
 </template>
 
 <script lang="ts">
+import Somo_ajax from "@/utils/ajax";
 import { Component, Vue } from "vue-property-decorator";
 @Component
-export default class Register extends Vue {}
+export default class Register extends Vue {
+    private name: string = "";
+    private account: any = "";
+    private code: string = "";
+    private accountKid: string = "";
+    private getCodeText: string = "获取验证码";
+    private countdown: number = 60;
+    private countDownTime: number = 0;
+
+    //账号验证
+    accoutReg(account: any) {
+        if (account == "" || account == undefined) {
+            alert("手机号码或者邮箱不能为空！");
+            return false;
+        }
+        if (account.indexOf("@") >= 0 || !account.match(/^\d/)) {
+            if (
+                !account.match(
+                    /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+                )
+            ) {
+                alert("邮箱格式有错！");
+                return false;
+            }
+            this.accountKid = "email";
+            console.log("邮箱");
+        } else {
+            if (
+                !account.match(/^\d{11}$/) &&
+                !account.match(/^[0-9]{4}'\-'?[0-9]{7}$/) &&
+                !account.match(/^[0-9]{3}'\-'?[0-9]{8}$/)
+            ) {
+                alert("手机号不正确！");
+                return false;
+            } else {
+                this.accountKid = "mobile";
+            }
+        }
+    }
+    //获取验证码
+    getCode(e: any): void {
+        this.accoutReg(this.account);
+        if (this.accountKid === "email") {
+            Somo_ajax.regCode({
+                email: this.account
+            })
+                .then((res: object): void => {
+                    alert("验证码已发送成功！");
+                    this.countDown(e);
+                })
+                .catch((): void => {
+                    alert("验证码发送失败，请重新发送");
+                });
+        } else if (this.accountKid === "mobile") {
+            Somo_ajax.regCode({
+                mobile: this.account
+            })
+                .then((res: object): void => {
+                    alert("验证码已发送成功！");
+                    this.countDown(e);
+                })
+                .catch((): void => {
+                    alert("验证码发送失败，请重新发送");
+                });
+        }
+    }
+    //注册
+    register() {
+        if (this.name == "" || this.name == undefined) {
+            alert("姓名不能为空！");
+            return false;
+        }
+        if (this.account == "" || this.account == undefined) {
+            alert("手机号或邮箱不能为空！");
+            return false;
+        }
+        if (this.code == "" || this.code == undefined) {
+            alert("验证码不能为空！");
+            return false;
+        }
+        if (this.accountKid === "email") {
+            Somo_ajax.register({
+                name: this.name,
+                email: this.account,
+                code: this.code
+            })
+                .then((res: object): void => {
+                    alert("注册成功！");
+                    console.log(res);
+                })
+                .catch(() => {
+                    alert("验证码错误或已过期");
+                });
+        } else if (this.accountKid === "mobile") {
+            Somo_ajax.register({
+                name: this.name,
+                mobile: this.account,
+                code: this.code
+            })
+                .then((res: object): void => {
+                    alert("注册成功！");
+                    console.log(res);
+                })
+                .catch(() => {
+                    alert("验证码错误或已过期");
+                });
+        }
+    }
+    //倒计时
+    countDown(e: any): void {
+        this.getCodeText = "59s";
+        --this.countdown;
+        e.target.disabled = true;
+        this.countDownTime = setInterval((): void => {
+            if (this.countdown === 1) {
+                this.getCodeText = "获取验证码";
+                this.countdown = 60;
+                e.target.disabled = false;
+                clearInterval(this.countDownTime);
+            } else {
+                --this.countdown;
+                this.getCodeText = `${this.countdown}s`;
+            }
+        }, 1000);
+    }
+    destroyed() {
+        clearInterval(this.countDownTime);
+    }
+}
 </script>
 
 <style lang="less" scoped>
@@ -119,6 +255,8 @@ export default class Register extends Vue {}
                 .flex-option(row, space-between, center);
                 width: 100%;
                 .get-codeBtn {
+                    cursor: pointer;
+                    outline: none;
                     border: 0;
                     width: 87px;
                     height: 40px;
@@ -131,6 +269,7 @@ export default class Register extends Vue {}
             }
         }
         #commit {
+            cursor: pointer;
             width: 190px;
             height: 45px;
             background-image: linear-gradient(#2f84fb, #2f84fb),

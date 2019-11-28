@@ -1,127 +1,146 @@
 <template>
     <div>
         <div>
-            <h1>
-                云会议室
-                <span class="rightText">CLOUD CONFERENCE ROOM</span>
-            </h1>
-            <el-table
-                :cell-style="cellStyle"
-                :header-cell-style="headerCellStyle"
-                :data="tableData"
-                stripe
-                style="width: 100%"
-            >
-                <el-table-column prop="items" label="特权项目">
-                    <template slot-scope="scope">
-                        <h2>{{ scope.row.items }}</h2>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="free" label="免费版">
-                    <template slot-scope="scope">
-                        <i
-                            v-if="scope.row.free === 'check'"
-                            class=" el-icon-check"
-                        ></i>
-                        <div
-                            v-else-if="scope.row.free[0] === '$'"
-                            v-html="scope.row.free.substr(1)"
-                        ></div>
-                        <span v-else>{{ scope.row.free }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="ten" label="10方">
-                    <template slot-scope="scope">
-                        <i
-                            v-if="scope.row.ten === 'check'"
-                            class=" el-icon-check"
-                        ></i>
-                        <div
-                            v-else-if="scope.row.ten[0] === '$'"
-                            v-html="scope.row.ten.substr(1)"
-                        ></div>
-                        <span v-else>{{ scope.row.ten }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="twentyFive" label="25方">
-                    <template slot-scope="scope">
-                        <i
-                            v-if="scope.row.twentyFive === 'check'"
-                            class=" el-icon-check"
-                        ></i>
-                        <div
-                            v-else-if="scope.row.twentyFive[0] === '$'"
-                            v-html="scope.row.twentyFive.substr(1)"
-                        ></div>
-                        <span v-else>{{ scope.row.twentyFive }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="fifty" label="50方">
-                    <template slot-scope="scope">
-                        <i
-                            v-if="scope.row.fifty === 'check'"
-                            class=" el-icon-check"
-                        ></i>
-                        <div
-                            v-else-if="scope.row.fifty[0] === '$'"
-                            v-html="scope.row.fifty.substr(1)"
-                        ></div>
-                        <span v-else>{{ scope.row.fifty }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="hundred" label="100方">
-                    <template slot-scope="scope">
-                        <i
-                            v-if="scope.row.hundred === 'check'"
-                            class=" el-icon-check"
-                        ></i>
-                        <div
-                            v-else-if="scope.row.hundred[0] === '$'"
-                            v-html="scope.row.hundred.substr(1)"
-                        ></div>
-                        <span v-else>{{ scope.row.hundred }}</span>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <div class="remarkBox">
-                <div>备注：</div>
-                <div>
-                    <p class="remark">1、注册即送120分钟100方会议时长；</p>
-                    <p class="remark">
-                        2、120分钟免费时长用完后，每次可免费开30分钟100方会议。
-                    </p>
+            <div class="content">
+                <h1>
+                    云会议室
+                    <span class="rightText">CLOUD CONFERENCE ROOM</span>
+                </h1>
+                <el-table
+                    :cell-style="cellStyle"
+                    :header-cell-style="headerCellStyle"
+                    :data="tableData"
+                    stripe
+                    border
+                    style="width: 100%"
+                >
+                    <el-table-column
+                        class-name="items"
+                        prop="items"
+                        label="特权项目"
+                    >
+                        <template slot-scope="scope">
+                            <h2>{{ scope.row.items }}</h2>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="free" label="免费版">
+                        <template slot-scope="scope">
+                            <i
+                                v-if="scope.row.free === 'check'"
+                                class=" el-icon-check"
+                            ></i>
+                            <div
+                                v-else-if="scope.row.free[0] === '$'"
+                                v-html="scope.row.free.substr(1)"
+                            ></div>
+                            <span v-else>{{ scope.row.free }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="ten" label="10方">
+                        <template slot-scope="scope">
+                            <i
+                                v-if="scope.row.ten === 'check'"
+                                class=" el-icon-check"
+                            ></i>
+                            <div
+                                v-else-if="scope.row.ten[0] === '$'"
+                                v-html="scope.row.ten.substr(1)"
+                            ></div>
+                            <span v-else>{{ scope.row.ten }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="twentyFive" label="25方">
+                        <template slot-scope="scope">
+                            <i
+                                v-if="scope.row.twentyFive === 'check'"
+                                class=" el-icon-check"
+                            ></i>
+                            <div
+                                v-else-if="scope.row.twentyFive[0] === '$'"
+                                v-html="scope.row.twentyFive.substr(1)"
+                            ></div>
+                            <span v-else>{{ scope.row.twentyFive }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="fifty" label="50方">
+                        <template slot-scope="scope">
+                            <i
+                                v-if="scope.row.fifty === 'check'"
+                                class=" el-icon-check"
+                            ></i>
+                            <div
+                                v-else-if="scope.row.fifty[0] === '$'"
+                                v-html="scope.row.fifty.substr(1)"
+                            ></div>
+                            <span v-else>{{ scope.row.fifty }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="hundred" label="100方">
+                        <template slot-scope="scope">
+                            <i
+                                v-if="scope.row.hundred === 'check'"
+                                class=" el-icon-check"
+                            ></i>
+                            <div
+                                v-else-if="scope.row.hundred[0] === '$'"
+                                v-html="scope.row.hundred.substr(1)"
+                            ></div>
+                            <span v-else>{{ scope.row.hundred }}</span>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <div class="remarkBox">
+                    <div>备注：</div>
+                    <div>
+                        <p class="remark">1、注册即送120分钟100方会议时长；</p>
+                        <p class="remark">
+                            2、120分钟免费时长用完后，每次可免费开30分钟100方会议。
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
-        <div>
-            <h1>
-                硬件产品
-                <span class="rightText">HARDWARE PRODUCTS</span>
-            </h1>
-            <div>
-                <div class="proBox">
-                    <p class="blue">中小会议室之选</p>
-                    <p class="big">智能一体机</p>
-                    <p class="price">6999 <span>元/台</span></p>
-                    <img src="" alt="pro" />
-                    <p class="hot">热线：400-692-0206</p>
-                    <p>支持有线和WIFI联网</p>
-                    <p>普通行政人员5分钟可以完成安装部署</p>
-                    <p>
-                        搭配基于安卓7.1.2系统定制的SOMO智能视频会议操作系统软件
-                    </p>
-                    <p>内置ROCKCHIP高性能、高扩展、全能型的旗舰芯片RK3399</p>
-                </div>
-                <div class="proBox">
-                    <p class="blue">8米拾音距离</p>
-                    <p class="big">全向麦克风</p>
-                    <p class="price">1599 <span>元/台</span></p>
-                    <img src="" alt="pro" />
-                    <p class="hot">热线：400-692-0206</p>
-                    <p>8米高清拾音，适应10-30平米会议室使用</p>
-                    <p>内置NS、AEC算法，有效抑制环境噪音，回声消除</p>
-                    <p>自动增益控制，随意走动，音质如一</p>
-                    <p>无驱兼容Windows&Mac平台主机，与SOMO主机搭配体验更佳</p>
+        <div class="hardware">
+            <div class="content">
+                <h1>
+                    硬件产品
+                    <span class="rightText">HARDWARE PRODUCTS</span>
+                </h1>
+                <div class="proDad">
+                    <div class="proBox">
+                        <p class="blue">中小会议室之选</p>
+                        <p class="big">智能一体机</p>
+                        <p class="price">6999 <span>元/台</span></p>
+                        <img src="" alt="pro" />
+                        <br />
+                        <p class="hot">热线：400-692-0206</p>
+                        <div class="boxText">
+                            <p>支持有线和WIFI联网</p>
+                            <p>普通行政人员5分钟可以完成安装部署</p>
+                            <p>
+                                搭配基于安卓7.1.2系统定制的SOMO智能视频会议操作系统软件
+                            </p>
+                            <p>
+                                内置ROCKCHIP高性能、高扩展、全能型的旗舰芯片RK3399
+                            </p>
+                        </div>
+                    </div>
+                    <div class="proBox">
+                        <p class="blue">8米拾音距离</p>
+                        <p class="big">全向麦克风</p>
+                        <p class="price">1599 <span>元/台</span></p>
+                        <img src="" alt="pro" />
+                        <br />
+                        <p class="hot">热线：400-692-0206</p>
+                        <div class="boxText">
+                            <p>8米高清拾音，适应10-30平米会议室使用</p>
+                            <p>内置NS、AEC算法，有效抑制环境噪音，回声消除</p>
+                            <p>自动增益控制，随意走动，音质如一</p>
+                            <p>
+                                无驱兼容Windows&Mac平台主机，与SOMO主机搭配体验更佳
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -270,18 +289,37 @@ export default class Price extends Vue {
         textAlign: "center",
         fontSize: "20px",
         fontWeight: "bolder",
+        backgroundColor: "#f6f8fb",
         color: "#000"
     };
+    mounted() {
+        const doms: any = document.getElementsByClassName("items");
+        this.$nextTick(() => {
+            [...doms].forEach(dom => {
+                dom.style.background = "#f6f8fb";
+            });
+        });
+    }
 }
 </script>
 
 <style lang="less" scoped>
 @import "../common/common";
+.content {
+    width: 80%;
+    margin: 0 auto;
+}
 h1 {
     .fontStyle(36px, #2f84fb);
     span {
         .fontStyle(14px, #333);
     }
+    margin-bottom: 40px;
+    padding-top: 30px;
+}
+h2 {
+    /*background: #f1f4fa;*/
+    font-size: 14px;
 }
 .rightText {
     .fontStyle(14px #a0a1a2);
@@ -293,29 +331,50 @@ h1 {
     .flex();
     margin-left: 50px;
     margin-top: 20px;
+    margin-bottom: 30px;
 }
 .remark {
     .fontStyle(16px, #666);
 }
-.proBox {
-    .fontStyle(18px, #333);
-    .blue {
-        .fontStyle(22px, #fff);
-        .radius(19px, 38px, 189px, #2f84fb);
-    }
-
-    .big {
-        .fontStyle(46px, #262a33, bolder);
-    }
-    .price {
-        .fontStyle(46px, #2f84fb, bolder);
-        span {
-            .fontStyle(18px, #666);
+.hardware {
+    background-color: #f7f7f7;
+    .proDad {
+        .flex(center);
+        .proBox {
+            background-color: #fff;
+            text-align: center;
+            .fontStyle(18px, #333);
+            margin: 0 10px 150px;
+            padding: 50px 30px;
+            img {
+                margin-bottom: 20px;
+            }
+            .blue {
+                .fontStyle(22px, #fff);
+                .radius(19px, 38px, 189px, #2f84fb);
+                margin-bottom: 30px;
+            }
+            .big {
+                .fontStyle(46px, #262a33, bolder);
+                margin-bottom: 30px;
+            }
+            .price {
+                .fontStyle(46px, #2f84fb, bolder);
+                span {
+                    .fontStyle(18px, #666);
+                }
+                margin-bottom: 20px;
+            }
+            .hot {
+                .fontStyle(20px, #fff);
+                .radius(12px, 52px, 219px, #f5a00e);
+                margin-bottom: 30px;
+            }
+            .boxText {
+                text-align: left;
+                line-height: 30px;
+            }
         }
-    }
-    .hot {
-        .fontStyle(20px, #fff);
-        .radius(12px, 52px, 219px, #f5a00e);
     }
 }
 </style>

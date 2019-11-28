@@ -7,6 +7,7 @@ import About from "../views/About.vue";
 import Activitys from "../views/Activitys.vue";
 import Register from "../views/Register.vue";
 import JoinConference from "../views/JoinConference.vue";
+import Test from "@/components/createAct.vue";
 // import PersonalCenter from "../views/PersonalCenter.vue";
 
 Vue.use(VueRouter);
@@ -14,7 +15,8 @@ Vue.use(VueRouter);
 const routes = [
     {
         path: "/",
-        redirect: "/activitys"
+        name: "test",
+        component: Test
     },
     {
         path: "/home",

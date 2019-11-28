@@ -1,7 +1,7 @@
 <template>
     <div id="headerTab">
         <div class="con">
-            <div class="logo"><img src="../assets/logo.png" /></div>
+            <div class="logo"><img src="../assets/head/logo.png" /></div>
             <el-menu
                 class="tab_menu con"
                 :default-active="activeIndex"

@@ -10,33 +10,55 @@
             <div class="mobile">
                 <p class="title">移动端下载</p>
                 <div class="download-iPhone downloads">
-                    <div id="download-mobile" class="img-wrapper">
-                        <img class="platform" src="../assets/iPhone.svg" />
+                    <div
+                        id="download-mobile"
+                        class="img-wrapper"
+                        @mouseover="mouseOver(1)"
+                        @mouseleave="mouseLeave"
+                    >
+                        <img
+                            class="platform"
+                            src="../assets/download/iPhone.svg"
+                        />
                         <img class="download-icon mobile-qrcode" />
                         <p class="hover-message">扫描二维码下载</p>
                     </div>
                     <p>iPhone 版（支持iPad）</p>
-                    <h3>（支持iOS 9.0及以上系统）</h3>
+                    <h3 v-if="show == 1">（支持iOS 9.0及以上系统）</h3>
                 </div>
                 <div class="download-Android downloads">
-                    <div class="img-wrapper">
-                        <img class="platform" src="../assets/Android.svg" />
+                    <div
+                        class="img-wrapper"
+                        @mouseover="mouseOver(2)"
+                        @mouseleave="mouseLeave"
+                    >
+                        <img
+                            class="platform"
+                            src="../assets/download/Android.svg"
+                        />
                         <img class="download-icon mobile-qrcode" />
                         <p class="hover-message">扫描二维码下载</p>
                     </div>
                     <p>Android 版</p>
-                    <h3>（支持Android 5.0及以上系统）</h3>
+                    <h3 v-if="show == 2">（支持Android 5.0及以上系统）</h3>
                 </div>
             </div>
             <div class="pc">
                 <p class="title">PC端下载</p>
                 <div class="download-Mac downloads">
-                    <div class="img-wrapper">
-                        <img class="platform" src="../assets/Mac.svg" />
+                    <div
+                        class="img-wrapper"
+                        @mouseover="mouseOver(3)"
+                        @mouseleave="mouseLeave"
+                    >
+                        <img
+                            class="platform"
+                            src="../assets/download/Mac.svg"
+                        />
                         <a target="blank" id="macAddress">
                             <img
                                 class="download-icon"
-                                src="../assets/download.svg"
+                                src="../assets/download/download.svg"
                             />
                         </a>
                         <p class="hover-message">点击直接下载</p>
@@ -47,18 +69,25 @@
                     >
                         <p>Mac 版</p>
                     </a>
-                    <h3>
+                    <h3 v-if="show == 3">
                         （用户第一次安装蓝猫微会后，需要在系统偏好设置的“安全性与隐私”中信任客户端。
                         <span id="checking">查看详细说明</span>）
                     </h3>
                 </div>
                 <div class="download-Windows downloads">
-                    <div class="img-wrapper ">
-                        <img class="platform" src="../assets/Windows.svg" />
+                    <div
+                        class="img-wrapper "
+                        @mouseover="mouseOver(4)"
+                        @mouseleave="mouseLeave"
+                    >
+                        <img
+                            class="platform"
+                            src="../assets/download/Windows.svg"
+                        />
                         <a target="blank" id="winAddress">
                             <img
                                 class="download-icon"
-                                src="../assets/download.svg"
+                                src="../assets/download/download.svg"
                             />
                         </a>
                         <p class="hover-message">点击直接下载</p>
@@ -69,11 +98,12 @@
                     >
                         <p>Windows 版</p>
                     </a>
-                    <h3>（支持Windows7 64位及以上操作系统）</h3>
+                    <h3 v-if="show == 4">
+                        （支持Windows7 64位及以上操作系统）
+                    </h3>
                 </div>
             </div>
         </div>
-
         <div id="installation">
             <div class="installation-mask"></div>
             <div class="installation-menu">
@@ -97,22 +127,21 @@
 				</div> -->
             </div>
         </div>
-
         <div class="foo2">
             <a
                 href="http://somo-video-update.oss-cn-beijing.aliyuncs.com/web_file/somo_install_guide.pdf"
             >
-                客户端安装指南 <img src="../assets/dow.png" href="" />
+                客户端安装指南 <img src="../assets/download/dow.png" href="" />
             </a>
             <a
                 href="http://somo-video-update.oss-cn-beijing.aliyuncs.com/web_file/somo_imp_plan.pdf"
             >
-                设备安装指南 <img src="../assets/dow.png" alt="" />
+                设备安装指南 <img src="../assets/download/dow.png" alt="" />
             </a>
             <a
                 href="http://somo-video-update.oss-cn-beijing.aliyuncs.com/web_file/somo_use_book.pdf"
             >
-                功能使用说明书 <img src="../assets/dow.png" alt="" />
+                功能使用说明书 <img src="../assets/download/dow.png" alt="" />
             </a>
         </div>
     </div>
@@ -121,10 +150,23 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 @Component
-export default class Download extends Vue {}
+export default class Download extends Vue {
+    show = 0;
+    // 移出
+    mouseLeave() {
+        this.show = 0;
+    }
+    // 移入
+    mouseOver(e) {
+        this.show = e;
+        console.log(e);
+    }
+}
 </script>
+
 <style lang="less" scoped>
 @import "../common/common";
+
 .inthemiddle {
     left: 50%;
     transform: translate(-50%, 0);
@@ -137,8 +179,8 @@ export default class Download extends Vue {}
 }
 
 .content(@rgba: rgba(0, 0, 0, 0.54), @size: 18px, @height: 25px) {
-    font-size: @rgba;
-    color: @size;
+    font-size: @size;
+    color: @rgba;
     line-height: @height;
 }
 
@@ -163,12 +205,14 @@ export default class Download extends Vue {}
     margin: 68px auto;
     margin-bottom: 0px;
     text-align: center;
+
     h1 {
         font-size: 30px;
         font-weight: normal;
         font-stretch: normal;
         color: #5482f8;
     }
+
     h2 {
         font-size: 14px;
         font-weight: normal;
@@ -183,6 +227,7 @@ export default class Download extends Vue {}
         float: left;
         width: 50%;
         text-align: center;
+
         h1 {
             font-size: 24px;
             font-weight: normal;
@@ -190,21 +235,25 @@ export default class Download extends Vue {}
             color: #282828;
             margin-bottom: 50px;
         }
+
         &:first-child {
             .f2 {
                 border-right: 1px solid #ddd;
             }
         }
     }
+
     .f2 {
         display: flex;
         align-items: center;
         justify-content: center;
+
         a {
             margin: 0 47px;
             display: block;
         }
     }
+
     p {
         font-size: 18px;
         font-weight: normal;
@@ -213,11 +262,14 @@ export default class Download extends Vue {}
         margin-top: 15px;
     }
 }
+
 .download {
     display: flex;
     justify-content: center;
-    align-items: center;
+    // align-items: center;
+
     .mobile {
+        height: 500px !important;
         &::after {
             content: "";
             background: rgba(0, 0, 0, 0.1);
@@ -228,6 +280,7 @@ export default class Download extends Vue {}
             // margin-left: 40px;
             right: 0px;
         }
+
         // border-right: 1px solid rgba(0, 0, 0, 0.1);
     }
 
@@ -237,16 +290,18 @@ export default class Download extends Vue {}
         position: relative;
         // display: inline-block;
         display: flex;
+
         p.title {
             .content (rgba(0, 0, 0, 0.87), 24px, 32px);
             .inthemiddle ();
             position: absolute;
-            top: 64px;
+            top: 80px;
         }
 
         div {
             .box (50%, 100%);
             display: inline-block;
+
             .img-wrapper {
                 .box (160px, 160px);
                 box-sizing: border-box;
@@ -273,9 +328,10 @@ export default class Download extends Vue {}
                     .download-icon {
                         visibility: visible;
                     }
+
                     border: none;
                     background-color: #118bfb;
-                    filter: progid:dximagetransform.microsoft.gradient(startColorstr='#27bffd',endColorstr='#118bfb',GradientType=0);
+                    filter: progid:dximagetransform.microsoft.gradient(startColorstr='#27bffd', endColorstr='#118bfb', GradientType=0);
                     filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
                     background: linear-gradient(
                         -90deg,
@@ -316,7 +372,7 @@ export default class Download extends Vue {}
             }
 
             h3 {
-                opacity: 0;
+                // opacity: 0;
                 margin-left: 30px;
                 margin-top: 35px;
                 max-width: 200px;
@@ -328,16 +384,19 @@ export default class Download extends Vue {}
                 line-height: 24px;
                 text-align: left;
                 transition: opacity 0.5s;
+
                 span {
                     color: #0359d5;
                     text-decoration: underline;
                     cursor: pointer;
                 }
             }
+
             .show {
                 opacity: 1;
             }
         }
+
         // .download-iPhone {
         //   position: relative;
         //   top: -24px;
@@ -351,6 +410,7 @@ export default class Download extends Vue {}
 
 #installation {
     display: none;
+
     .installation-mask {
         position: fixed;
         left: 0;
@@ -363,6 +423,7 @@ export default class Download extends Vue {}
         z-index: 100;
         transition: all 0.2 ease-in-out;
     }
+
     .installation-menu {
         width: 1170px;
         z-index: 101;
@@ -372,12 +433,14 @@ export default class Download extends Vue {}
         left: 50%;
         top: 10%;
         transform: translateX(-50%);
+
         .installation-menu-header {
             width: 100%;
             height: 60px;
             background: #f2f2f2;
             position: relative;
             text-align: left;
+
             .header-left {
                 margin-left: 40px;
                 font-size: 20px;
@@ -385,6 +448,7 @@ export default class Download extends Vue {}
                 color: rgba(153, 153, 153, 1);
                 line-height: 60px;
             }
+
             .header-right {
                 cursor: pointer;
                 width: 17px;
@@ -397,12 +461,15 @@ export default class Download extends Vue {}
                 background-size: 100% 100%;
             }
         }
+
         .installation-menu-content {
             padding: 50px 145px 0 110px;
             max-height: 800px;
             overflow-y: auto;
+
             .menu-content {
                 margin-bottom: 70px;
+
                 .content-title {
                     text-align: left;
                     font-size: 22px;
@@ -416,13 +483,13 @@ export default class Download extends Vue {}
 }
 
 .foo2 {
-    width: 100vw;
     background: #ededed;
     display: flex;
     justify-content: center;
     height: 100px;
     align-items: center;
     margin-top: 150px;
+
     a {
         display: flex;
         align-items: center;
@@ -431,6 +498,7 @@ export default class Download extends Vue {}
         font-stretch: normal;
         color: #666666;
         margin: 0 30px;
+
         img {
             height: 14px;
             margin-left: 10px;

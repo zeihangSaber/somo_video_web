@@ -59,7 +59,7 @@ body {
 
 #about {
     .lbanner {
-        background: url(../assets/q.png) no-repeat;
+        background: url(../assets/we/q.png) no-repeat;
         height: 233px;
         background-position: center center;
         background-size: cover;
@@ -92,7 +92,7 @@ body {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            background: url(../assets/ewm.png) no-repeat;
+            background: url(../assets/we/ewm.png) no-repeat;
             background-position: left center;
             padding-left: 100px;
         }

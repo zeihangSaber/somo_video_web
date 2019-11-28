@@ -6,6 +6,7 @@ import Download from "../views/Download.vue";
 import About from "../views/About.vue";
 import Activitys from "../views/Activitys.vue";
 import Register from "../views/Register.vue";
+import Test from "@/components/createAct.vue";
 // import PersonalCenter from "../views/PersonalCenter.vue";
 
 Vue.use(VueRouter);
@@ -13,7 +14,8 @@ Vue.use(VueRouter);
 const routes = [
     {
         path: "/",
-        redirect: "/activitys"
+        name: "test",
+        component: Test
     },
     {
         path: "/home",

@@ -3,18 +3,20 @@
         <el-container>
             <el-header height="89px"><HeaderTab /></el-header>
             <el-main class="main"><router-view /></el-main>
-            <el-footer></el-footer>
+            <el-footer class="footer" height="150px"><Footer /></el-footer>
         </el-container>
     </div>
 </template>
 <script lang="ts">
 import ajax from "@/utils/ajax";
 import HeaderTab from "@/components/HeaderTab.vue";
+import Footer from "@/components/Footer.vue";
 import { Component, Vue } from "vue-property-decorator";
 // import "@/common/common.less";
 @Component({
     components: {
-        HeaderTab
+        HeaderTab,
+        Footer
     }
 })
 export default class App extends Vue {}
@@ -68,6 +70,9 @@ th {
     margin: 0 auto;
 }
 .main {
+    padding: 0px !important;
+}
+.footer {
     padding: 0px !important;
 }
 </style>

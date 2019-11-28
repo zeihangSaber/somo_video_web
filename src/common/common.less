@@ -1,4 +1,21 @@
-@red: "#ff0000";
+.flex(@j: normal, @a: normal) {
+    justify-content: @j;
+    align-items: @a;
+    display: flex;
+}
+.fontStyle(@s: 14px, @c: #000, @w: normal) {
+    font-size: @s;
+    color: @c;
+    font-weight: @w;
+}
+.radius(@r, @h, @w, @b) {
+    line-height: @h;
+    border-radius: @r;
+    background: @b;
+    display: inline-block;
+    text-align: center;
+    width: @w;
+}
 
 //定义宽高
 .box(@width, @height) {

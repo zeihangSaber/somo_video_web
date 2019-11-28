@@ -72,7 +72,17 @@ body {
         margin: 68px auto;
         margin-bottom: 100px;
         .title {
+            color: #2f84fb;
+            font-weight: normal;
             margin-bottom: 50px;
+            font-size: 36px;
+            span {
+                color: #a0a1a2;
+                font-size: 14px;
+                position: relative;
+                top: 3px;
+                margin-left: 11px;
+            }
         }
         .txt {
             font-size: 14px;

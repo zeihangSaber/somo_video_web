@@ -5,9 +5,13 @@ const post: Post = {
         url: "/vmt/act/list",
         defaultData: []
     },
-    queryMid: {
-        url: "/vmt/code/query",
-        defaultData: ["uid", "dt", "cookie", "tenant"]
+    regCode: {
+        url: "/udb/user/reg/code",
+        defaultData: ["device"]
+    },
+    register: {
+        url: "udb/user/reg",
+        defaultData: []
     }
 };
 export default post;

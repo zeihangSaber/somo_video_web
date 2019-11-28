@@ -5,7 +5,7 @@
             <div class="h3 wow fadeInUp">
                 简单易用，稳定可靠，价格厚道的视频会议产品
             </div>
-            <button type="button" class="btn">
+            <button type="button" class="btn" @click="register">
                 立即注册，免费试用
             </button>
         </section>
@@ -71,7 +71,12 @@
         </section>
         <section class="fifth_column">
             <h2 class="wow fadeInDown">马上体验，发起一场视频会议</h2>
-            <button type="button wow fadeInUp" class="btn" id="go-register2">
+            <button
+                type="button wow fadeInUp"
+                class="btn"
+                id="go-register2"
+                @click="register"
+            >
                 立即注册，免费试用
             </button>
         </section>
@@ -94,6 +99,7 @@ export default class Home extends Vue {
         //     window.removeEventListener("scroll", this.handleScroll);
         // }, 5000);
     }
+    //滚轮
     handleScroll(): void {
         const scroll: number =
             document.documentElement.scrollTop || document.body.scrollTop;
@@ -102,6 +108,10 @@ export default class Home extends Vue {
         } else {
             this.setActiveIndex("home");
         }
+    }
+    //注册
+    register(): void {
+        this.$router.push({ name: "register" });
     }
     destroyed() {
         window.removeEventListener("scroll", this.handleScroll);
@@ -257,6 +267,7 @@ export default class Home extends Vue {
         }
     }
     .btn {
+        cursor: pointer;
         width: 366px;
         height: 58px;
         background: #f5a00e;

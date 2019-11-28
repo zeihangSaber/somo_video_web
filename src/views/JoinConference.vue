@@ -66,15 +66,19 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import Somo from "somo-fir";
+import ajax from "../utils/ajax";
 export default class JoinConference extends Vue {
     conference_num = "";
     conference_password = "";
     conference_name = "";
 
     JoinConference_btn() {
-        new Somo({});
-        // queryMid
+        console.log(22222222);
+        //       ajax.queryMid({
+        // })
+    }
+    mounted() {
+        console.log(123);
     }
 }
 </script>

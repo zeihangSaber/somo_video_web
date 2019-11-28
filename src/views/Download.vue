@@ -144,20 +144,27 @@
                 功能使用说明书 <img src="../assets/download/dow.png" alt="" />
             </a>
         </div>
+        <qrcode-vue :value="url" :size="size" level="H"></qrcode-vue>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-@Component
+import QrcodeVue from "qrcode.vue";
+@Component({
+    components: {
+        QrcodeVue
+    }
+})
 export default class Download extends Vue {
+    url = "www.baidu.com";
     show = 0;
     // 移出
     mouseLeave() {
         this.show = 0;
     }
     // 移入
-    mouseOver(e) {
+    mouseOver(e: any) {
         this.show = e;
         console.log(e);
     }

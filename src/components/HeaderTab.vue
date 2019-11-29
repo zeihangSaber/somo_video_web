@@ -13,17 +13,18 @@
                 <el-menu-item class="tab_menu_item" index="home"
                     >首页</el-menu-item
                 >
-                <el-menu-item class="tab_menu_item" index="product"
-                    >产品</el-menu-item
-                >
+
                 <el-menu-item class="tab_menu_item" index="price"
-                    >价格</el-menu-item
+                    >产品</el-menu-item
                 >
                 <el-menu-item class="tab_menu_item" index="download"
                     >下载</el-menu-item
                 >
                 <el-menu-item class="tab_menu_item" index="about"
                     >我们</el-menu-item
+                >
+                <el-menu-item class="tab_menu_item" index="activitys"
+                    >活动</el-menu-item
                 >
                 <!-- <el-menu-item class="tab_menu_item" index="personalCenter"
                     >个人中心</el-menu-item
@@ -38,7 +39,7 @@
             </div>
             <div class="loginSuccess" v-show="login_status">
                 <span class="loginName">{{ userName }}</span>
-                <span class="tryToExit" id="loginOut">退出</span>
+                <span class="tryToExit" @click="loginOut">退出</span>
             </div>
             <Login />
         </div>
@@ -59,6 +60,8 @@ export default class HeaderTab extends Vue {
     @State userName: string;
     @Action setActiveIndex: (value: string) => void;
     @Action setLoginShow: (value: boolean) => void;
+    @Action setLoginStatus: (value: boolean) => void;
+    @Action setUserName: (value: string) => void;
     created() {
         const activeIndex: string = this.$route.name ? this.$route.name : "";
         this.setActiveIndex(activeIndex);
@@ -72,24 +75,20 @@ export default class HeaderTab extends Vue {
         }
     }
     handleSelect(key: string, path: any): void {
-        if (key === "product") {
-            if (this.$route.name === "home") {
-                window.scroll({
-                    top: 600,
-                    behavior: "smooth"
-                });
-            } else {
-                this.$router.push({ name: key });
-                // window.location.pathname = `${key}`;
-            }
-        } else {
+        if (this.$route.name !== key) {
             this.$router.push({ name: key });
-            // window.location.pathname = `${key}`;
+            this.setActiveIndex(key);
         }
-        this.setActiveIndex(key);
     }
+    //登录按钮显示
     login() {
         this.setLoginShow(true);
+    }
+    //退出登录
+    loginOut() {
+        this.setLoginStatus(false);
+        this.setUserName("");
+        window.location.pathname = "home";
     }
     joinConference() {
         this.$router.push({ name: "joinConference" });

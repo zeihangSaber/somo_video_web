@@ -26,6 +26,8 @@ export default class App extends Vue {
 	@State login_status: boolean;
 	footShow: boolean = true;
 	beforeCreate() {
+		ajax.setUid(JSON.parse(localStorage.getItem("vuex")).uid as string);
+		ajax.setCookie(JSON.parse(localStorage.getItem("vuex")).cookie as string);
 		this.$router.beforeEach((to, from, next) => {
 			console.log("登录状态", this.login_status);
 			this.footShow = needFooter.includes(to.name as string);

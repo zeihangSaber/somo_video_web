@@ -11,7 +11,9 @@ export default new Vuex.Store({
 			reducer(state) {
 				return {
 					login_status: state.login_status,
-					userName: state.userName
+					userName: state.userName,
+					cookie: state.cookie,
+					uid: state.uid
 				};
 			}
 		})

@@ -8,6 +8,8 @@ import Activitys from "../views/Activitys.vue";
 import Register from "../views/Register.vue";
 import JoinConference from "../views/JoinConference.vue";
 import Test from "@/views/manageAct.vue";
+import MeetingPage from "@/views/MeetingPage.vue";
+
 // import PersonalCenter from "../views/PersonalCenter.vue";
 
 Vue.use(VueRouter);
@@ -57,7 +59,13 @@ const routes = [
 		path: "/joinConference",
 		name: "joinConference",
 		component: JoinConference
+	},
+	{
+		path: "/meetingPage",
+		name: "meetingPage",
+		component: MeetingPage
 	}
+
 	// {
 	//     path: "/personalCenter",
 	//     name: "personalCenter",

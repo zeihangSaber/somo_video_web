@@ -21,7 +21,7 @@
 									<div class="icon_meetingNUM">
 										<img src="../assets/JoinConference/2.png" alt="" />
 									</div>
-									<input type="text" placeholder="请输入会议号" />
+									<input type="text" placeholder="请输入会议号" v-model="conference_num" />
 								</div>
 								<div class="required_"><span style="color: #FF6059;">*</span>必填</div>
 							</div>
@@ -34,7 +34,7 @@
 											alt=""
 										/>
 									</div>
-									<input type="text" placeholder="请输入会议密码" />
+									<input type="text" placeholder="请输入会议密码" v-model="conference_password" />
 								</div>
 							</div>
 							<div class="encryption">如会议未加密，则无需输入</div>
@@ -47,7 +47,7 @@
 											alt=""
 										/>
 									</div>
-									<input type="text" placeholder="请输入会议中的昵称" />
+									<input type="text" placeholder="请输入会议中的昵称" v-model="conference_name" />
 								</div>
 								<div class="required_"><span style="color: #FF6059;">*</span>必填</div>
 							</div>
@@ -66,7 +66,7 @@
 								</div>
 							</div>
 							<div class="hint">所有错误提示具体文案详见产品文档，样式见此</div>
-							<div class="join_btn">加入会议</div>
+							<div class="join_btn" @click="JoinConference_btn()">加入会议</div>
 						</div>
 						<div v-if="tab_status == 1">
 							<div class="sponsor_meeting">
@@ -99,22 +99,24 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import Somo_ajax from "../utils/ajax";
+import Somo from "somo-fir";
 import { State } from "vuex-class";
 @Component
 export default class JoinConference extends Vue {
-	private conference_num = "";
-	private conference_password = "";
-	private conference_name = "";
-	private conference_name = "";
-	private tab_status = 1;
+	private conference_num = ""; //会议号
+	private conference_password = ""; //会议密码
+	private conference_name = ""; //会议内自己的昵称
+	private tab_status = 1; //加入会议和发起会议的tab切换
 	private radio_1: boolean = true;
 	private radio_2: boolean = true;
 	private radio_3: boolean = true;
 	private radio_4: boolean = true;
-	@State login_status: boolean;
+	@State login_status: boolean; //判断是否登录
 	$md5: (str: string) => string;
+	// let Somo = new Somo();
 	created() {
-		console.log("vue=", this.$md5);
+		console.log();
+		this.conference_name = JSON.parse(localStorage.getItem("vuex")).userName;
 	}
 	radio(radio_status) {
 		if (radio_status == 1) {
@@ -131,24 +133,33 @@ export default class JoinConference extends Vue {
 		this.tab_status = tab_status;
 	}
 	JoinConference_btn() {
-		console.log(this.$store.state.login_status);
+		console.log(this.login_status);
 		// this.$store.commit("login_status", true);
-		if (this.login_status) {
+		if (!this.login_status) {
 			alert("请先登录");
+			return;
 		} else {
 			if (this.conference_num == "") {
 				alert("请填写会议号");
+				return;
+			} else if (this.conference_name == "") {
+				alert("会议昵称不能为空");
+				return;
 			}
+			console.log(Somo_ajax.defaultParameter);
 			Somo_ajax.queryMid({
-				// "uid",
-				// "dt",
-				// "cookie",
-				// "tenant",
 				os: 3,
-				// "device",
-				mid: this.conference_num
+				code: this.conference_num
 			}).then(res => {
-				console.log(res);
+				if (res.code == 2001) {
+					alert("会议号输入有误，请重新输入");
+					return;
+				} else {
+					// Somo.join({
+					// 	"mid": ,
+					// })
+				}
+				console.log(res.code);
 			});
 		}
 	}
@@ -157,20 +168,24 @@ export default class JoinConference extends Vue {
 
 <style lang="less" scoped>
 @import "../common/common.less";
+
 .sponsor_btn {
 	margin: 0 auto;
 	margin-top: 70px;
 }
+
 .sponsor_img > img {
 	width: 100%;
 	height: 100%;
 }
+
 .sponsor_img {
 	width: 140px;
 	height: 140px;
 	margin: 0 auto;
 	margin-bottom: 10px;
 }
+
 .sponsor_meeting {
 	font-size: 14px;
 	font-family: PingFangSC-Light, PingFang SC;
@@ -178,6 +193,7 @@ export default class JoinConference extends Vue {
 	color: rgba(42, 80, 130, 1);
 	text-align: center;
 }
+
 .join_btn {
 	width: 369px;
 	height: 58px;
@@ -196,6 +212,7 @@ export default class JoinConference extends Vue {
 	justify-content: center !important;
 	align-items: center;
 }
+
 .hint {
 	font-size: 14px;
 	font-family: PingFangSC-Regular, PingFang SC;
@@ -204,12 +221,14 @@ export default class JoinConference extends Vue {
 	margin-left: 40px;
 	margin-bottom: 27px;
 }
+
 .set > div {
 	.flex(center, center);
 	font-size: 14px;
 	color: #999999;
 	margin-right: 70px;
 }
+
 .set {
 	display: flex;
 	justify-content: flex-start;
@@ -217,20 +236,24 @@ export default class JoinConference extends Vue {
 	margin: 23px 0;
 	margin-left: 40px;
 }
+
 .radio > img {
 	width: 100%;
 	height: 100%;
 }
+
 .radio_active {
 	border: 1px solid #cccccc !important;
 	background: #ffffff !important;
 }
+
 .radio {
 	width: 14px;
 	height: 14px;
 	background: #3083fb;
 	margin-right: 3px;
 }
+
 .encryption {
 	font-size: 14px;
 	font-family: PingFangSC-Regular, PingFang SC;
@@ -239,6 +262,7 @@ export default class JoinConference extends Vue {
 	margin-left: 40px;
 	margin-bottom: 27px;
 }
+
 .required_ {
 	font-size: 14px;
 	font-family: PingFangSC-Medium, PingFang SC;
@@ -269,6 +293,7 @@ export default class JoinConference extends Vue {
 			background-repeat: no-repeat;
 			background-size: 100% 100%;
 		}
+
 		.left_img_ {
 			width: 339px;
 			height: 100%;
@@ -324,6 +349,7 @@ export default class JoinConference extends Vue {
 				.meeting_tab {
 					.flex(space-between, center);
 					margin: 58px 0;
+
 					.meeting_btn {
 						width: 50%;
 						height: 55px;
@@ -356,6 +382,7 @@ export default class JoinConference extends Vue {
 input {
 	outline: none;
 }
+
 input::-webkit-input-placeholder {
 	color: #999999;
 	font-size: 18px;

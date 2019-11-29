@@ -95,6 +95,8 @@ export default class Login extends Vue {
 	@Action setLoginShow: (value: boolean) => void;
 	@Action setLoginStatus: (value: boolean) => void;
 	@Action setUserName: (value: string) => void;
+	@Action setUid: (value: string) => void;
+	@Action setCookie: (value: string) => void;
 	//登录方式切换
 	private inputBoxShow: boolean = true;
 	//账号类型(手机或邮箱)
@@ -242,11 +244,14 @@ export default class Login extends Vue {
 		this.setLoginStatus(true);
 		this.setLoginShow(false);
 		this.setUserName(data.name);
+		this.setUid(data.uid);
+		this.setCookie(data.cookie);
 		Somo_ajax.setTenant(data.tenant as number);
 		Somo_ajax.setUid(data.uid as number);
 		Somo_ajax.setRole(data.role as number);
 		Somo_ajax.setCookie(data.cookie as string);
 		console.log(Somo_ajax.defaultParameter);
+		// this.$router.go(0);
 	}
 }
 </script>

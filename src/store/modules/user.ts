@@ -3,7 +3,9 @@ import { Moudles } from "@/Types";
 export default <Moudles>{
 	state: {
 		login_status: false,
-		userName: ""
+		userName: "",
+		uid: "",
+		cookie: ""
 	},
 	getters: {},
 	mutations: {
@@ -12,6 +14,12 @@ export default <Moudles>{
 		},
 		UserName(state: any, userName: string): void {
 			state.userName = userName;
+		},
+		Uid(state: any, uid: string): void {
+			state.uid = uid;
+		},
+		Cookie(state: any, cookie: string): void {
+			state.cookie = cookie;
 		}
 	},
 	actions: {
@@ -20,6 +28,12 @@ export default <Moudles>{
 		},
 		setUserName({ commit }, value: string): void {
 			commit("UserName", value);
+		},
+		setUid({ commit }, value: string): void {
+			commit("Uid", value);
+		},
+		setCookie({ commit }, value: string): void {
+			commit("Cookie", value);
 		}
 	}
 };

@@ -3,7 +3,7 @@
         <el-header height="89px">
             <HeaderTab />
         </el-header>
-        <el-main ref="elMain" id="elMain">
+        <el-main ref="elMain" id="elMain" :class="elMain">
             <router-view />
             <Footer v-if="footShow" height="150px" />
         </el-main>
@@ -23,6 +23,7 @@ const needFooter = ["home", "price", "about", "download", "product"];
 })
 export default class App extends Vue {
     footShow: boolean = true;
+    elMain = "active";
     beforeCreate() {
         this.$router.beforeEach((to, from, next) => {
             this.footShow = needFooter.includes(to.name as string);
@@ -39,7 +40,7 @@ export default class App extends Vue {
 @import "./common/base";
 @import "./common/common";
 .myScroll(el-main);
-.el-main {
+.el-main.active {
     overflow: inherit !important;
 }
 </style>

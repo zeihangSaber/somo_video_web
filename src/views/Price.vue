@@ -120,7 +120,7 @@
 import { Component, Vue } from "vue-property-decorator";
 @Component
 export default class Price extends Vue {
-	tableData = [
+	tableData: any = [
 		{
 			items: "价格",
 			free: `$<p style="color: #2f84fb;font-size: 18px;font-weight: bolder;">￥0</p>`,

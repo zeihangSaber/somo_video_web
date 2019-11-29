@@ -44,10 +44,6 @@ const post: Post = {
     queryMid: {
         url: "/vmt/code/query",
         defaultData: ["uid", "dt", "cookie", "tenant"]
-    },
-    login: {
-        url: "/udb/login",
-        defaultData: []
     }
 };
 export default post;

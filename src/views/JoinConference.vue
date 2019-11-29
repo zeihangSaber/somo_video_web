@@ -66,25 +66,21 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import ajax from "../utils/ajax";
+import Somo_ajax from "../utils/ajax";
 @Component
 export default class JoinConference extends Vue {
     conference_num = "";
     conference_password = "";
     conference_name = "";
+    $md5: any;
     created() {
-        console.log(22222);
+        console.log("vue=", this.$md5);
     }
     JoinConference_btn() {
-        ajax.login({
+        Somo_ajax.login({
             account: "QAtest030", //账号
-            password: this.$md5("123456"), //密码
-            dt: 2, //设备类型
-            os: 3, //设备OS
-            osver: "r5", //手机或者浏览器的版本号等等
-            model: "oppo", //机型(什么手机||什么浏览器等等)
-            version: "1.0.0" //项目版本号
-        }).then(res => {
+            password: this.$md5("123456") //密码
+        }).then((res: any) => {
             console.log(this.$store);
             this.$store.commit("login_status", 1);
             console.log(this.$store.state.login_status);

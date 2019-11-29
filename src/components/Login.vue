@@ -125,6 +125,7 @@ export default class Login extends Vue {
         code: "",
         checked: false
     };
+    $md5: (str: string) => string;
     //账号验证
     accoutVerify(account: any) {
         if (account == "" || account == undefined) {
@@ -186,7 +187,7 @@ export default class Login extends Vue {
         if (from.type === "account") {
             Somo_ajax.login({
                 account: from.account,
-                password: from.password
+                password: this.$md5(from.password as string)
             }).then((res: object): void => {
                 console.log(res);
             });

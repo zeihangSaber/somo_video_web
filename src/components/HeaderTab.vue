@@ -29,7 +29,9 @@
                     >个人中心</el-menu-item
                 > -->
             </el-menu>
-            <div class="jionMetting"><span>加入一场会议</span></div>
+            <div class="jionMetting" @click="joinConference">
+                <span>加入一场会议</span>
+            </div>
             <div class="tel">热线：<span>400-692-0206</span></div>
             <div class="loginBtn" @click="login">登录</div>
             <Login v-show="loginShow" />
@@ -80,6 +82,9 @@ export default class HeaderTab extends Vue {
     }
     login() {
         this.loginShow = true;
+    }
+    joinConference() {
+        this.$router.push({ name: "joinConference" });
     }
 }
 </script>

@@ -29,15 +29,24 @@
                     >个人中心</el-menu-item
                 > -->
             </el-menu>
+            <div class="jionMetting"><span>加入一场会议</span></div>
             <div class="tel">热线：<span>400-692-0206</span></div>
+            <div class="loginBtn" @click="login">登录</div>
+            <Login v-show="loginShow" />
         </div>
     </div>
 </template>
 <script lang="ts">
+import Login from "./Login.vue";
 import { Component, Vue } from "vue-property-decorator";
 import { State, Action } from "vuex-class";
-@Component
+@Component({
+    components: {
+        Login
+    }
+})
 export default class HeaderTab extends Vue {
+    private loginShow: boolean = false;
     @State activeIndex: string;
     @Action setActiveIndex: (value: string) => void;
     created() {
@@ -60,12 +69,17 @@ export default class HeaderTab extends Vue {
                     behavior: "smooth"
                 });
             } else {
-                window.location.pathname = `${key}`;
+                this.$router.push({ name: key });
+                // window.location.pathname = `${key}`;
             }
         } else {
-            window.location.pathname = `${key}`;
+            this.$router.push({ name: key });
+            // window.location.pathname = `${key}`;
         }
         this.setActiveIndex(key);
+    }
+    login() {
+        this.loginShow = true;
     }
 }
 </script>
@@ -79,9 +93,10 @@ export default class HeaderTab extends Vue {
     width: 100%;
     background: rgba(4, 88, 204, 0.8);
     .con {
+        width: 1400px;
         .flex-option(row, flex-start, flex-end);
         .logo {
-            margin-right: 119px;
+            margin-right: 50px;
             padding-bottom: 17px;
         }
         .tab_menu {
@@ -109,16 +124,43 @@ export default class HeaderTab extends Vue {
                 box-sizing: border-box;
             }
         }
+        .jionMetting {
+            cursor: pointer;
+            margin: 0 60px 11px 30px;
+            border: 1px solid rgba(255, 255, 255, 1);
+            border-radius: 18px;
+            width: 140px;
+            height: 36px;
+            text-align: left;
+            span {
+                display: inline-block;
+                font-size: 16px;
+                line-height: 36px;
+                font-family: Microsoft YaHei;
+                font-weight: 400;
+                color: rgba(248, 248, 248, 1);
+                position: relative;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
         .tel {
             font-size: 20px;
             color: #f8f8f8;
             padding-bottom: 14px;
-            margin-left: 80px;
+            margin-right: 65px;
             span {
                 font-weight: bold;
                 color: #f5a00e;
                 font-size: 30px;
             }
+        }
+        .loginBtn {
+            cursor: pointer;
+            margin-bottom: 19px;
+            font-size: 18px;
+            font-weight: 400;
+            color: rgba(248, 248, 248, 1);
         }
     }
 }

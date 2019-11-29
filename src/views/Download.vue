@@ -204,7 +204,6 @@ export default class Download extends Vue {
     // 移入
     mouseOver(e: any) {
         this.show = e;
-        console.log(e);
     }
 }
 </script>
@@ -245,7 +244,6 @@ export default class Download extends Vue {
     background-position: center center;
     background-size: cover;
 }
-
 .t1 {
     margin: 68px auto;
     margin-bottom: 0px;
@@ -312,7 +310,6 @@ export default class Download extends Vue {
     display: flex;
     justify-content: center;
     // align-items: center;
-
     .mobile {
         height: 500px !important;
         &::after {

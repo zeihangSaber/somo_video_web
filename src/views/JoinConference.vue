@@ -114,7 +114,7 @@ export default class JoinConference extends Vue {
 	@State login_status: boolean; //判断是否登录
 	@State userName: string;
 	$md5: (str: string) => string;
-	// let Somo = new Somo();
+	private Somo = new Somo();
 	created() {
 		console.log();
 		this.conference_name = this.userName;

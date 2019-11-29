@@ -43,7 +43,7 @@ const post: Post = {
     },
     queryMid: {
         url: "/vmt/code/query",
-        defaultData: ["uid", "dt", "cookie", "tenant"]
+        defaultData: ["uid", "dt", "cookie", "tenant", "device"]
     }
 };
 export default post;

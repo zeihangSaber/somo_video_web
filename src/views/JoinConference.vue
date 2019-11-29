@@ -79,10 +79,20 @@ export default class JoinConference extends Vue {
         console.log("vue=", this.$md5);
     }
     JoinConference_btn() {
-        if (this.login_status) {
-            console.log("可以加入");
-        } else {
+        console.log(this.$store.state.login_status);
+        // this.$store.commit("login_status", true);
+        if (!this.login_status) {
             alert("请先登录");
+        } else {
+            Somo_ajax.queryMid({
+                // "uid",
+                // "dt",
+                // "cookie",
+                // "tenant",
+                os: 3,
+                // "device",
+                mid: this.conference_num
+            }).then(res => {});
         }
     }
 }

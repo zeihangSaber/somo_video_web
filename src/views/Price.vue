@@ -306,7 +306,7 @@ export default class Price extends Vue {
 <style lang="less" scoped>
 @import "../common/common";
 .content {
-    width: 80%;
+    width: 1200px;
     margin: 0 auto;
 }
 h1 {
@@ -341,6 +341,7 @@ h2 {
     .proDad {
         .flex(center);
         .proBox {
+            width: 595px;
             background-color: #fff;
             text-align: center;
             .fontStyle(18px, #333);

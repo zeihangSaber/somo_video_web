@@ -9119,10 +9119,10 @@ sockjs@0.3.19:
     faye-websocket "^0.10.0"
     uuid "^3.0.1"
 
-somo-fir@^1.1.7:
-  version "1.1.7"
-  resolved "https://registry.yarnpkg.com/somo-fir/-/somo-fir-1.1.7.tgz#c45272bea11eea1039d755e08be612d98f9c4496"
-  integrity sha512-/ujRirwJ+yVe+d/Am7oGke2UsbdnuwCZeibxUJIxGYCUX3ZQEKajFBhLwQglzh8d//doC8mhadDtW/wc78qbrA==
+somo-fir@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/somo-fir/-/somo-fir-1.2.1.tgz#697d80bac61779c5863b7c7b5cf08a933b729251"
+  integrity sha512-fruxmFpikY3nwe5ruRR2L//WLFWZyeE9No6bQY6LNxyAeTN7PVFy1oVl0zVFl4b9XQWa5zWuhKkL8DTR8yC8aw==
   dependencies:
     "@types/js-base64" "^2.3.1"
     axios "^0.19.0"
@@ -10174,6 +10174,11 @@ vue-class-component@^7.0.2, vue-class-component@^7.1.0:
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/vue-class-component/-/vue-class-component-7.1.0.tgz#b33efcb10e17236d684f70b1e96f1946ec793e87"
   integrity sha512-G9152NzUkz0i0xTfhk0Afc8vzdXxDR1pfN4dTwE72cskkgJtdXfrKBkMfGvDuxUh35U500g5Ve4xL8PEGdWeHg==
+
+vue-cropper@^0.4.9:
+  version "0.4.9"
+  resolved "https://registry.yarnpkg.com/vue-cropper/-/vue-cropper-0.4.9.tgz#fe650f32516ecf29014bbd4a9079191c8dc5a5ae"
+  integrity sha512-Uf1i/sCh+ZqSM9hb2YTGRENzJFH+mvDuv8N2brGLjK7UBuF7XDP7zbis8g/dcqZiMojAcBDtObFCn4ERFbRMxQ==
 
 vue-eslint-parser@^5.0.0:
   version "5.0.0"

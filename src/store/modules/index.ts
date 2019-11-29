@@ -1,7 +1,7 @@
-import activity from "@/store/modules/activity";
+import headerTab from "@/store/modules/headerTab";
 import user from "@/store/modules/user";
 import { Moudles } from "@/Types";
-const modules: Moudles[] = [activity, user];
+const modules: Moudles[] = [headerTab, user];
 
 const option = {
     state: {},

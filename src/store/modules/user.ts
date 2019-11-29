@@ -2,11 +2,11 @@ import { Moudles } from "@/Types";
 
 export default <Moudles>{
     state: {
-        login_status: ""
+        login_status: false
     },
     getters: {},
     mutations: {
-        login_status(state: any, status: any): void {
+        login_status(state: any, status: boolean): void {
             state.login_status = status;
         }
     },

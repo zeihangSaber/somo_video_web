@@ -67,35 +67,24 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import Somo_ajax from "../utils/ajax";
+import { State } from "vuex-class";
 @Component
 export default class JoinConference extends Vue {
-    conference_num = "";
-    conference_password = "";
-    conference_name = "";
-    $md5: any;
+    private conference_num = "";
+    private conference_password = "";
+    private conference_name = "";
+    @State login_status: boolean;
+    $md5: (str: string) => string;
     created() {
         console.log("vue=", this.$md5);
     }
     JoinConference_btn() {
-        Somo_ajax.login({
-            account: "QAtest030", //账号
-            password: this.$md5("123456") //密码
-        }).then((res: any) => {
-            console.log(this.$store);
-            this.$store.commit("login_status", 1);
-            console.log(this.$store.state.login_status);
-            if (res.code == 2001) {
-                alert("会议号输入有误，请重新输入");
-            }
-            // ajax.queryMid({});
-        });
-        // if (!$.cookie("somo_uid")) {
-        //     alert("请先登录");
-        // }
+        if (this.login_status) {
+            console.log("可以加入");
+        } else {
+            alert("请先登录");
+        }
     }
-    // mounted() {
-    //     console.log(123);
-    // }
 }
 </script>
 

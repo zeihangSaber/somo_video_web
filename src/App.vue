@@ -1,13 +1,13 @@
 <template>
-    <el-container direction="vertical">
-        <el-header height="89px">
-            <HeaderTab />
-        </el-header>
-        <el-main>
-            <router-view />
-            <Footer v-if="footShow" height="150px" />
-        </el-main>
-    </el-container>
+	<el-container direction="vertical">
+		<el-header height="89px">
+			<HeaderTab />
+		</el-header>
+		<el-main>
+			<router-view />
+			<Footer v-if="footShow" height="150px" />
+		</el-main>
+	</el-container>
 </template>
 <script lang="ts">
 import ajax from "@/utils/ajax";
@@ -17,25 +17,25 @@ import { Component, Vue } from "vue-property-decorator";
 import { State } from "vuex-class";
 const needFooter = ["home", "price", "about", "download", "product"];
 @Component({
-    components: {
-        HeaderTab,
-        Footer
-    }
+	components: {
+		HeaderTab,
+		Footer
+	}
 })
 export default class App extends Vue {
-    @State loginShow: boolean;
-    footShow: boolean = true;
-    beforeCreate() {
-        this.$router.beforeEach((to, from, next) => {
-            console.log("登录状态", this.loginShow);
-            this.footShow = needFooter.includes(to.name as string);
-            next();
-        });
-    }
-    created() {
-        this.footShow = needFooter.includes(this.$route.name as string);
-    }
-    mounted() {}
+	@State loginShow: boolean;
+	footShow: boolean = true;
+	beforeCreate() {
+		this.$router.beforeEach((to, from, next) => {
+			console.log("登录状态", this.loginShow);
+			this.footShow = needFooter.includes(to.name as string);
+			next();
+		});
+	}
+	created() {
+		this.footShow = needFooter.includes(this.$route.name as string);
+	}
+	mounted() {}
 }
 </script>
 <style lang="less">

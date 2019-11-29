@@ -2,5 +2,6 @@ module.exports = {
     // 缩进
     tabWidth: 4,
     // 使用空格缩进
-    useTabs: false
+    useTabs: true,
+	printWidth: 120
 };

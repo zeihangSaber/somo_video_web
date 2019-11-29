@@ -1,11 +1,11 @@
 <template>
-	<div class="activity"></div>
+	<div></div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 @Component
-export default class HeaderTab extends Vue {}
+export default class MeetingPage extends Vue {}
 </script>
 
 <style lang="less" scoped></style>

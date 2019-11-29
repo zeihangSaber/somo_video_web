@@ -75,9 +75,6 @@ export default class JoinConference extends Vue {
     private conference_name = "";
     @State login_status: boolean;
     $md5: (str: string) => string;
-    created() {
-        console.log("vue=", this.$md5);
-    }
     JoinConference_btn() {
         console.log(this.$store.state.login_status);
         // this.$store.commit("login_status", true);
@@ -85,14 +82,9 @@ export default class JoinConference extends Vue {
             alert("请先登录");
         } else {
             Somo_ajax.queryMid({
-                // "uid",
-                // "dt",
-                // "cookie",
-                // "tenant",
                 os: 3,
-                // "device",
                 mid: this.conference_num
-            }).then(res => {});
+            }).then((res: any) => {});
         }
     }
 }

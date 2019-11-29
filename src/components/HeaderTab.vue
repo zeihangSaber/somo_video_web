@@ -33,7 +33,13 @@
                 <span>加入一场会议</span>
             </div>
             <div class="tel">热线：<span>400-692-0206</span></div>
-            <div class="loginBtn" @click="login">登录</div>
+            <div class="loginBtn" v-show="!login_status" @click="login">
+                登录
+            </div>
+            <div class="loginSuccess" v-show="login_status">
+                <span class="loginName">{{ userName }}</span>
+                <span class="tryToExit" id="loginOut">退出</span>
+            </div>
             <Login />
         </div>
     </div>
@@ -49,6 +55,8 @@ import { State, Action } from "vuex-class";
 })
 export default class HeaderTab extends Vue {
     @State activeIndex: string;
+    @State login_status: boolean;
+    @State userName: string;
     @Action setActiveIndex: (value: string) => void;
     @Action setLoginShow: (value: boolean) => void;
     created() {
@@ -166,6 +174,22 @@ export default class HeaderTab extends Vue {
             font-size: 18px;
             font-weight: 400;
             color: rgba(248, 248, 248, 1);
+        }
+        .loginSuccess {
+            margin-bottom: 19px;
+            .loginName {
+                margin-right: 19px;
+                font-size: 18px;
+                font-weight: 400;
+                color: rgba(248, 248, 248, 1);
+            }
+            .tryToExit {
+                cursor: pointer;
+                font-size: 18px;
+                font-weight: 400;
+                color: rgba(248, 248, 248, 1);
+                opacity: 0.5;
+            }
         }
     }
 }

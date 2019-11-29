@@ -11,8 +11,8 @@ export default <Moudles>{
         }
     },
     actions: {
-        setActiveIndex({ commit }, value: string): void {
-            commit("activeIndex", value);
+        setLoginStatus({ commit }, value: boolean): void {
+            commit("login_status", value);
         }
     }
 };

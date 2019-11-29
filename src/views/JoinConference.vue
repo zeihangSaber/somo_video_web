@@ -67,11 +67,14 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import ajax from "../utils/ajax";
+@Component
 export default class JoinConference extends Vue {
     conference_num = "";
     conference_password = "";
     conference_name = "";
-
+    created() {
+        console.log(22222);
+    }
     JoinConference_btn() {
         ajax.login({
             account: "QAtest030", //账号

@@ -10,9 +10,5 @@ export default <Moudles>{
             state.login_status = status;
         }
     },
-    actions: {
-        setActiveIndex({ commit }, value: string): void {
-            commit("activeIndex", value);
-        }
-    }
+    actions: {}
 };

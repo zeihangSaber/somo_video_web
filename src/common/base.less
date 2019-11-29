@@ -43,13 +43,18 @@ th {
     font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
         "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
+html,
+body,
+.el-container {
+    height: 100%;
+}
+.el-container {
+    .el-main,
+    .el-footer {
+        padding: 0;
+    }
+}
 .con {
     width: 1200px;
     margin: 0 auto;
-}
-.main {
-    padding: 0px !important;
-}
-.footer {
-    padding: 0px !important;
 }

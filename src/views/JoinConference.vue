@@ -72,6 +72,7 @@ export default class JoinConference extends Vue {
     conference_num = "";
     conference_password = "";
     conference_name = "";
+    $md5: (str: string) => string;
     created() {
         console.log(22222);
     }
@@ -84,7 +85,7 @@ export default class JoinConference extends Vue {
             osver: "r5", //手机或者浏览器的版本号等等
             model: "oppo", //机型(什么手机||什么浏览器等等)
             version: "1.0.0" //项目版本号
-        }).then(res => {
+        }).then((res: any) => {
             console.log(this.$store);
             this.$store.commit("login_status", 1);
             console.log(this.$store.state.login_status);

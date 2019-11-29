@@ -1,8 +1,8 @@
 <template>
-    <div class="login">
+    <div class="login" v-show="loginShow">
         <div class="login_mask"></div>
         <div class="login_content">
-            <div class="loginClose" id="loginClose"></div>
+            <div class="loginClose" @click="loginClose"></div>
             <div class="loginMethod QR"></div>
             <div class="login_titleImg"></div>
             <div class="login_inputBox">
@@ -107,9 +107,12 @@ interface LoginForm {
     checked: boolean;
 }
 import Somo_ajax from "@/utils/ajax";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Prop } from "vue-property-decorator";
+import { State, Action } from "vuex-class";
 @Component
 export default class Login extends Vue {
+    @State loginShow: boolean;
+    @Action setLoginShow: (value: boolean) => void;
     private inputBoxShow: boolean = true;
     //账号类型(手机或邮箱)
     private accountKid: string = "";
@@ -125,6 +128,7 @@ export default class Login extends Vue {
         code: "",
         checked: false
     };
+    $md5: (str: string) => string;
     //账号验证
     accoutVerify(account: any) {
         if (account == "" || account == undefined) {
@@ -186,7 +190,7 @@ export default class Login extends Vue {
         if (from.type === "account") {
             Somo_ajax.login({
                 account: from.account,
-                password: from.password
+                password: this.$md5(from.password as string)
             }).then((res: object): void => {
                 console.log(res);
             });
@@ -210,6 +214,9 @@ export default class Login extends Vue {
     }
     changeInputBox() {
         this.inputBoxShow = !this.inputBoxShow;
+    }
+    loginClose() {
+        this.setLoginShow(false);
     }
 }
 </script>

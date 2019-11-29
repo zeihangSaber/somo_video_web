@@ -29,10 +29,12 @@
                     >个人中心</el-menu-item
                 > -->
             </el-menu>
-            <div class="jionMetting"><span>加入一场会议</span></div>
+            <div class="jionMetting" @click="joinConference">
+                <span>加入一场会议</span>
+            </div>
             <div class="tel">热线：<span>400-692-0206</span></div>
             <div class="loginBtn" @click="login">登录</div>
-            <Login v-show="loginShow" />
+            <Login />
         </div>
     </div>
 </template>
@@ -46,9 +48,9 @@ import { State, Action } from "vuex-class";
     }
 })
 export default class HeaderTab extends Vue {
-    private loginShow: boolean = false;
     @State activeIndex: string;
     @Action setActiveIndex: (value: string) => void;
+    @Action setLoginShow: (value: boolean) => void;
     created() {
         const activeIndex: string = this.$route.name ? this.$route.name : "";
         this.setActiveIndex(activeIndex);
@@ -79,7 +81,10 @@ export default class HeaderTab extends Vue {
         this.setActiveIndex(key);
     }
     login() {
-        this.loginShow = true;
+        this.setLoginShow(true);
+    }
+    joinConference() {
+        this.$router.push({ name: "joinConference" });
     }
 }
 </script>

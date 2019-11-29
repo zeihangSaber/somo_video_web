@@ -3,9 +3,9 @@
 		<div class="login_mask"></div>
 		<div class="login_content">
 			<div class="loginClose" @click="loginClose"></div>
-			<div class="loginMethod QR"></div>
+			<div class="loginMethod " :class="qrcodeShow ? '' : 'QR'" @click="changeLogin"></div>
 			<div class="login_titleImg"></div>
-			<div class="login_inputBox">
+			<div class="login_inputBox" v-show="!qrcodeShow">
 				<el-form
 					ref="accountForm"
 					class="login_content_input"
@@ -21,7 +21,9 @@
 					></el-input>
 					<el-input type="password" placeholder="请输入密码" v-model="accountForm.password"></el-input>
 					<div class="inputCheckbox ">
-						<el-checkbox size="small" v-model="accountForm.checked">记住我</el-checkbox>
+						<!-- <el-checkbox size="small" v-model="accountForm.checked"
+                            >记住我</el-checkbox
+                        > -->
 						<div class="verification" @click="changeInputBox">
 							验证码登录
 						</div>
@@ -44,7 +46,9 @@
 						获取验证码
 					</button>
 					<div class="inputCheckbox ">
-						<el-checkbox size="small" v-model="codeForm.checked">记住我</el-checkbox>
+						<!-- <el-checkbox size="small" v-model="codeForm.checked"
+                            >记住我</el-checkbox
+                        > -->
 						<div class="verification" @click="changeInputBox">
 							账号密码登录
 						</div>
@@ -55,8 +59,8 @@
 				</el-form>
 				<div class="login_foot">登录即代表你同意 <a href="">《SOMO服务协议》</a></div>
 			</div>
-			<div class="login_QRcontent">
-				<img src="" id="login_qrcode" />
+			<div class="login_QRcontent" v-show="qrcodeShow">
+				<qrcode-vue :value="qrUrl" :size="260" level="H"></qrcode-vue>
 				<div class="login_qrcode_title">使用蓝猫微会App扫码登录</div>
 				<div class="login_method">
 					<span class="login_account" id="login_account">账号密码登录</span>
@@ -77,13 +81,21 @@ interface LoginForm {
 	code?: string;
 	checked: boolean;
 }
+import QrcodeVue from "qrcode.vue";
 import Somo_ajax from "@/utils/ajax";
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { State, Action } from "vuex-class";
-@Component
+@Component({
+	components: {
+		QrcodeVue
+	}
+})
 export default class Login extends Vue {
 	@State loginShow: boolean;
 	@Action setLoginShow: (value: boolean) => void;
+	@Action setLoginStatus: (value: boolean) => void;
+	@Action setUserName: (value: string) => void;
+	//登录方式切换
 	private inputBoxShow: boolean = true;
 	//账号类型(手机或邮箱)
 	private accountKid: string = "";
@@ -99,7 +111,10 @@ export default class Login extends Vue {
 		code: "",
 		checked: false
 	};
-	$md5: (str: string) => string;
+	private qrcodeShow: boolean = false;
+	private qrUrl: string = "http://www.somo.tech";
+	private qrcodeTimetimer: any = "";
+	public $md5: (str: string) => string;
 	//账号验证
 	accoutVerify(account: any) {
 		if (account == "" || account == undefined) {
@@ -158,7 +173,8 @@ export default class Login extends Vue {
 			Somo_ajax.login({
 				account: from.account,
 				password: this.$md5(from.password as string)
-			}).then((res: object): void => {
+			}).then((res: any): void => {
+				this.setData(res);
 				console.log(res);
 			});
 		} else if (from.type === "code") {
@@ -166,24 +182,71 @@ export default class Login extends Vue {
 				Somo_ajax.emailLogin({
 					email: from.account,
 					code: from.code
-				}).then((res: object): void => {
+				}).then((res: any): void => {
+					this.setData(res);
 					console.log(res);
 				});
 			} else if (this.accountKid === "mobile") {
 				Somo_ajax.mobileLogin({
 					mobile: from.account,
 					code: from.code
-				}).then((res: object): void => {
+				}).then((res: any): void => {
+					this.setData(res);
 					console.log(res);
 				});
 			}
 		}
 	}
+	//账号登录方式切换
 	changeInputBox() {
 		this.inputBoxShow = !this.inputBoxShow;
 	}
+	//二维码，账号方式切换
+	changeLogin() {
+		this.qrcodeShow = !this.qrcodeShow;
+		clearInterval(this.qrcodeTimetimer);
+		if (this.qrcodeShow) {
+			Somo_ajax.qrcodeCode().then((res: any) => {
+				this.qrUrl = `somo://loginqrcode?uuid=${res.code}`;
+				this.qrcodeTime(res.code);
+			});
+		}
+	}
+	//登录按钮关闭
 	loginClose() {
+		this.qrcodeShow = false;
 		this.setLoginShow(false);
+		clearInterval(this.qrcodeTimetimer);
+	}
+
+	//二维码登录时间
+	qrcodeTime(code: string) {
+		this.qrcodeTimetimer = setInterval(() => {
+			Somo_ajax.qrcodeQuery({ code }).then((res: any): void => {
+				if (res.code && +res.code === 1013) {
+					alert("二维码已失效");
+					clearInterval(this.qrcodeTimetimer);
+					window.location.pathname = "/";
+					return;
+				}
+				if (!res.code) {
+					clearInterval(this.qrcodeTimetimer);
+					this.setData(res);
+					window.location.pathname = "/";
+				}
+				console.log(res);
+			});
+		}, 1000);
+	}
+	setData(data: any) {
+		this.setLoginStatus(true);
+		this.setLoginShow(false);
+		this.setUserName(data.name);
+		Somo_ajax.setTenant(data.tenant as number);
+		Somo_ajax.setUid(data.uid as number);
+		Somo_ajax.setRole(data.role as number);
+		Somo_ajax.setCookie(data.cookie as string);
+		console.log(Somo_ajax.defaultParameter);
 	}
 }
 </script>
@@ -359,7 +422,6 @@ export default class Login extends Vue {
 			}
 		}
 		.login_QRcontent {
-			display: none;
 			text-align: center;
 			#login_qrcode {
 				.box(260px, 260px);

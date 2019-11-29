@@ -14,6 +14,7 @@ import ajax from "@/utils/ajax";
 import HeaderTab from "@/components/HeaderTab.vue";
 import Footer from "@/components/Footer.vue";
 import { Component, Vue } from "vue-property-decorator";
+import { State } from "vuex-class";
 const needFooter = ["home", "price", "about", "download", "product"];
 @Component({
 	components: {
@@ -22,17 +23,19 @@ const needFooter = ["home", "price", "about", "download", "product"];
 	}
 })
 export default class App extends Vue {
+	@State login_status: boolean;
 	footShow: boolean = true;
 	beforeCreate() {
 		this.$router.beforeEach((to, from, next) => {
+			console.log("登录状态", this.login_status);
 			this.footShow = needFooter.includes(to.name as string);
-			console.log(this.footShow);
 			next();
 		});
 	}
 	created() {
 		this.footShow = needFooter.includes(this.$route.name as string);
 	}
+	mounted() {}
 }
 </script>
 <style lang="less">

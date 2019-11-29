@@ -76,13 +76,30 @@ export default class JoinConference extends Vue {
         console.log(22222);
     }
     JoinConference_btn() {
-        console.log(22222222);
-        //       ajax.queryMid({
-        // })
+        ajax.login({
+            account: "QAtest030", //账号
+            password: this.$md5("123456"), //密码
+            dt: 2, //设备类型
+            os: 3, //设备OS
+            osver: "r5", //手机或者浏览器的版本号等等
+            model: "oppo", //机型(什么手机||什么浏览器等等)
+            version: "1.0.0" //项目版本号
+        }).then(res => {
+            console.log(this.$store);
+            this.$store.commit("login_status", 1);
+            console.log(this.$store.state.login_status);
+            if (res.code == 2001) {
+                alert("会议号输入有误，请重新输入");
+            }
+            // ajax.queryMid({});
+        });
+        // if (!$.cookie("somo_uid")) {
+        //     alert("请先登录");
+        // }
     }
-    mounted() {
-        console.log(123);
-    }
+    // mounted() {
+    //     console.log(123);
+    // }
 }
 </script>
 

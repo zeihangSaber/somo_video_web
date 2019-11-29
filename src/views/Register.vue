@@ -77,6 +77,7 @@ export default class Register extends Vue {
     private name: string = "";
     private account: any = "";
     private code: string = "";
+    //账号类型(手机或邮箱)
     private accountKid: string = "";
     private getCodeText: string = "获取验证码";
     private countdown: number = 60;

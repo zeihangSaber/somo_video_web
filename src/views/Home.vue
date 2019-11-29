@@ -89,7 +89,7 @@ export default class Home extends Vue {
 	@State activeIndex: string;
 	@Action setActiveIndex: (value: string) => void;
 	mounted() {
-		window.addEventListener("scroll", this.handleScroll, false);
+		// window.addEventListener("scroll", this.handleScroll, true);
 	}
 	//滚轮
 	handleScroll(): void {
@@ -105,7 +105,7 @@ export default class Home extends Vue {
 		this.$router.push({ name: "register" });
 	}
 	destroyed() {
-		window.removeEventListener("scroll", this.handleScroll, false);
+		// window.removeEventListener("scroll", this.handleScroll, true);
 	}
 }
 </script>

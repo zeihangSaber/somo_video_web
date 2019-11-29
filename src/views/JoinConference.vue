@@ -79,6 +79,7 @@ export default class JoinConference extends Vue {
         console.log("vue=", this.$md5);
     }
     JoinConference_btn() {
+        console.log("xxx", this.login_status);
         if (this.login_status) {
             console.log("可以加入");
         } else {

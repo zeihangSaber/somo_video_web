@@ -1,5 +1,5 @@
 <template>
-    <div class="content"></div>
+	<div class="content"></div>
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
@@ -10,7 +10,7 @@ export default class ManageAct extends Vue {}
 <style lang="less">
 @import "../common/common";
 .content {
-    width: 1200px;
-    margin: 0 auto;
+	width: 1200px;
+	margin: 0 auto;
 }
 </style>

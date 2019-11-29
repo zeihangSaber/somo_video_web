@@ -17,14 +17,8 @@
                         />
                         <span class="required">*必填</span>
                     </div>
-                    <div
-                        class="conference_num"
-                        style="justify-content: flex-start;"
-                    >
-                        <img
-                            style="width: 30px;height: 30px;"
-                            src="../assets/JoinConference/3.png"
-                        />
+                    <div class="conference_num" style="justify-content: flex-start;">
+                        <img style="width: 30px;height: 30px;" src="../assets/JoinConference/3.png" />
                         <div class="conference_password">
                             <input
                                 id="conference_password"
@@ -38,10 +32,7 @@
                         </div>
                     </div>
                     <div class="conference_num">
-                        <img
-                            style="width: 30px;height: 30px;"
-                            src="../assets/JoinConference/4.png"
-                        />
+                        <img style="width: 30px;height: 30px;" src="../assets/JoinConference/4.png" />
                         <input
                             id="conference_name"
                             v-model="conference_name"

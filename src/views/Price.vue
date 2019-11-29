@@ -14,47 +14,28 @@
                     border
                     style="width: 100%"
                 >
-                    <el-table-column
-                        class-name="items"
-                        prop="items"
-                        label="特权项目"
-                    >
+                    <el-table-column class-name="items" prop="items" label="特权项目">
                         <template slot-scope="scope">
                             <h2>{{ scope.row.items }}</h2>
                         </template>
                     </el-table-column>
                     <el-table-column prop="free" label="免费版">
                         <template slot-scope="scope">
-                            <i
-                                v-if="scope.row.free === 'check'"
-                                class=" el-icon-check"
-                            ></i>
-                            <div
-                                v-else-if="scope.row.free[0] === '$'"
-                                v-html="scope.row.free.substr(1)"
-                            ></div>
+                            <i v-if="scope.row.free === 'check'" class=" el-icon-check"></i>
+                            <div v-else-if="scope.row.free[0] === '$'" v-html="scope.row.free.substr(1)"></div>
                             <span v-else>{{ scope.row.free }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="ten" label="10方">
                         <template slot-scope="scope">
-                            <i
-                                v-if="scope.row.ten === 'check'"
-                                class=" el-icon-check"
-                            ></i>
-                            <div
-                                v-else-if="scope.row.ten[0] === '$'"
-                                v-html="scope.row.ten.substr(1)"
-                            ></div>
+                            <i v-if="scope.row.ten === 'check'" class=" el-icon-check"></i>
+                            <div v-else-if="scope.row.ten[0] === '$'" v-html="scope.row.ten.substr(1)"></div>
                             <span v-else>{{ scope.row.ten }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="twentyFive" label="25方">
                         <template slot-scope="scope">
-                            <i
-                                v-if="scope.row.twentyFive === 'check'"
-                                class=" el-icon-check"
-                            ></i>
+                            <i v-if="scope.row.twentyFive === 'check'" class=" el-icon-check"></i>
                             <div
                                 v-else-if="scope.row.twentyFive[0] === '$'"
                                 v-html="scope.row.twentyFive.substr(1)"
@@ -64,27 +45,15 @@
                     </el-table-column>
                     <el-table-column prop="fifty" label="50方">
                         <template slot-scope="scope">
-                            <i
-                                v-if="scope.row.fifty === 'check'"
-                                class=" el-icon-check"
-                            ></i>
-                            <div
-                                v-else-if="scope.row.fifty[0] === '$'"
-                                v-html="scope.row.fifty.substr(1)"
-                            ></div>
+                            <i v-if="scope.row.fifty === 'check'" class=" el-icon-check"></i>
+                            <div v-else-if="scope.row.fifty[0] === '$'" v-html="scope.row.fifty.substr(1)"></div>
                             <span v-else>{{ scope.row.fifty }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="hundred" label="100方">
                         <template slot-scope="scope">
-                            <i
-                                v-if="scope.row.hundred === 'check'"
-                                class=" el-icon-check"
-                            ></i>
-                            <div
-                                v-else-if="scope.row.hundred[0] === '$'"
-                                v-html="scope.row.hundred.substr(1)"
-                            ></div>
+                            <i v-if="scope.row.hundred === 'check'" class=" el-icon-check"></i>
+                            <div v-else-if="scope.row.hundred[0] === '$'" v-html="scope.row.hundred.substr(1)"></div>
                             <span v-else>{{ scope.row.hundred }}</span>
                         </template>
                     </el-table-column>

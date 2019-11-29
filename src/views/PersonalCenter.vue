@@ -2,17 +2,11 @@
     <div>
         <div class="personage">
             <div class="personal_information">
-                <img
-                    class="head_img"
-                    src="../assets/personal_center/icon_management.png"
-                />
+                <img class="head_img" src="../assets/personal_center/icon_management.png" />
                 <div>白羽</div>
                 <div class="personal_number">1211561655</div>
                 <div class="personage_tab">
-                    <img
-                        src="../assets/personal_center/icon_management.png"
-                        alt=""
-                    />
+                    <img src="../assets/personal_center/icon_management.png" alt="" />
                     <span>活动管理</span>
                 </div>
             </div>

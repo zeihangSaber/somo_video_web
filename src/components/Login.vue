@@ -19,23 +19,14 @@
                         placeholder="请输入账号/手机号/邮箱号"
                         v-model="accountForm.account"
                     ></el-input>
-                    <el-input
-                        type="password"
-                        placeholder="请输入密码"
-                        v-model="accountForm.password"
-                    ></el-input>
+                    <el-input type="password" placeholder="请输入密码" v-model="accountForm.password"></el-input>
                     <div class="inputCheckbox ">
-                        <el-checkbox size="small" v-model="accountForm.checked"
-                            >记住我</el-checkbox
-                        >
+                        <el-checkbox size="small" v-model="accountForm.checked">记住我</el-checkbox>
                         <div class="verification" @click="changeInputBox">
                             验证码登录
                         </div>
                     </div>
-                    <button
-                        class="login_Btn"
-                        @click.prevent="login(accountForm)"
-                    >
+                    <button class="login_Btn" @click.prevent="login(accountForm)">
                         登录
                     </button>
                 </el-form>
@@ -47,29 +38,13 @@
                     v-show="inputBoxShow"
                 >
                     <div class="login_inputTitile">验证码登录</div>
-                    <el-input
-                        type="text"
-                        placeholder="请输入手机号/邮箱号"
-                        v-model="codeForm.account"
-                    ></el-input>
-                    <el-input
-                        maxlength="10"
-                        type="text"
-                        placeholder="请输入验证码"
-                        v-model="codeForm.code"
-                    >
-                    </el-input>
-                    <button
-                        class="authCode"
-                        id="authCode"
-                        @click.prevent="getCode(codeForm.account)"
-                    >
+                    <el-input type="text" placeholder="请输入手机号/邮箱号" v-model="codeForm.account"></el-input>
+                    <el-input maxlength="10" type="text" placeholder="请输入验证码" v-model="codeForm.code"> </el-input>
+                    <button class="authCode" id="authCode" @click.prevent="getCode(codeForm.account)">
                         获取验证码
                     </button>
                     <div class="inputCheckbox ">
-                        <el-checkbox size="small" v-model="codeForm.checked"
-                            >记住我</el-checkbox
-                        >
+                        <el-checkbox size="small" v-model="codeForm.checked">记住我</el-checkbox>
                         <div class="verification" @click="changeInputBox">
                             账号密码登录
                         </div>
@@ -78,17 +53,13 @@
                         登录
                     </button>
                 </el-form>
-                <div class="login_foot">
-                    登录即代表你同意 <a href="">《SOMO服务协议》</a>
-                </div>
+                <div class="login_foot">登录即代表你同意 <a href="">《SOMO服务协议》</a></div>
             </div>
             <div class="login_QRcontent">
                 <img src="" id="login_qrcode" />
                 <div class="login_qrcode_title">使用蓝猫微会App扫码登录</div>
                 <div class="login_method">
-                    <span class="login_account" id="login_account"
-                        >账号密码登录</span
-                    >
+                    <span class="login_account" id="login_account">账号密码登录</span>
                     <span class="cutOff">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
                     <span class="login_register" id="login_register">注册</span>
                 </div>
@@ -136,11 +107,7 @@ export default class Login extends Vue {
             return false;
         }
         if (account.indexOf("@") >= 0 || !account.match(/^\d/)) {
-            if (
-                !account.match(
-                    /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
-                )
-            ) {
+            if (!account.match(/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/)) {
                 alert("邮箱格式有错！");
                 return false;
             }

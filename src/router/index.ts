@@ -7,16 +7,24 @@ import About from "../views/About.vue";
 import Activitys from "../views/Activitys.vue";
 import Register from "../views/Register.vue";
 import JoinConference from "../views/JoinConference.vue";
-import Test from "@/views/manageAct.vue";
+import ManageAct from "@/views/manageAct/index.vue";
+import CreateAct from "@/views/manageAct/CreateAct.vue";
 // import PersonalCenter from "../views/PersonalCenter.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
     {
-        path: "/",
-        name: "test",
-        component: Test
+        path: "/manageAct",
+        name: "manageAct",
+        component: ManageAct,
+        children: [
+            {
+                path: "/manageAct/create",
+                name: "create",
+                component: CreateAct
+            }
+        ]
     },
     {
         path: "/home",

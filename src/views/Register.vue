@@ -90,11 +90,7 @@ export default class Register extends Vue {
             return false;
         }
         if (account.indexOf("@") >= 0 || !account.match(/^\d/)) {
-            if (
-                !account.match(
-                    /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
-                )
-            ) {
+            if (!account.match(/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/)) {
                 alert("邮箱格式有错！");
                 return false;
             }
@@ -273,8 +269,7 @@ export default class Register extends Vue {
             cursor: pointer;
             width: 190px;
             height: 45px;
-            background-image: linear-gradient(#2f84fb, #2f84fb),
-                linear-gradient(#009aff, #009aff);
+            background-image: linear-gradient(#2f84fb, #2f84fb), linear-gradient(#009aff, #009aff);
             background-blend-mode: normal, normal;
             border-radius: 10px;
             line-height: 45px;

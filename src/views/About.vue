@@ -45,9 +45,8 @@ body,
 }
 
 body {
-    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
-        "Heiti SC", "Microsoft YaHei", "微软雅黑", "San francisco", Arial,
-        sans-serif;
+    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei",
+        "微软雅黑", "San francisco", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
 }

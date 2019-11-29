@@ -9,6 +9,7 @@
                 立即注册，免费试用
             </button>
         </section>
+
         <section class="first_column">
             <div class="con">
                 <div class="first_content wow fadeInLeft">
@@ -20,6 +21,7 @@
                 </div>
             </div>
         </section>
+
         <section class="second_column">
             <div class="con">
                 <div class="second_content wow fadeInRight">
@@ -34,6 +36,7 @@
                 </div>
             </div>
         </section>
+
         <section class="thirdly_column">
             <div class="con">
                 <div class="thirdly_content wow fadeInLeft">
@@ -71,12 +74,7 @@
         </section>
         <section class="fifth_column">
             <h2 class="wow fadeInDown">马上体验，发起一场视频会议</h2>
-            <button
-                type="button wow fadeInUp"
-                class="btn"
-                id="go-register2"
-                @click="register"
-            >
+            <button type="button wow fadeInUp" class="btn" id="go-register2" @click="register">
                 立即注册，免费试用
             </button>
         </section>
@@ -93,13 +91,10 @@ import { State, Action } from "vuex-class";
 export default class Home extends Vue {
     @State activeIndex: string;
     @Action setActiveIndex: (value: string) => void;
-    mounted() {
-        window.addEventListener("scroll", this.handleScroll, false);
-    }
+    private dom: HTMLElement;
     //滚轮
     handleScroll(): void {
-        const scroll: number =
-            document.documentElement.scrollTop || document.body.scrollTop;
+        const scroll: number = this.dom.scrollTop;
         if (scroll >= 600 && scroll < 2000) {
             this.setActiveIndex("product");
         } else {
@@ -111,7 +106,7 @@ export default class Home extends Vue {
         this.$router.push({ name: "register" });
     }
     destroyed() {
-        window.removeEventListener("scroll", this.handleScroll, false);
+        this.dom.removeEventListener("scroll", this.handleScroll, false);
     }
 }
 </script>

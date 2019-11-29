@@ -10,21 +10,11 @@
                 text-color="#f8f8f8"
                 active-text-color="#f8f8f8"
             >
-                <el-menu-item class="tab_menu_item" index="home"
-                    >首页</el-menu-item
-                >
-                <el-menu-item class="tab_menu_item" index="product"
-                    >产品</el-menu-item
-                >
-                <el-menu-item class="tab_menu_item" index="price"
-                    >价格</el-menu-item
-                >
-                <el-menu-item class="tab_menu_item" index="download"
-                    >下载</el-menu-item
-                >
-                <el-menu-item class="tab_menu_item" index="about"
-                    >我们</el-menu-item
-                >
+                <el-menu-item class="tab_menu_item" index="home">首页</el-menu-item>
+                <el-menu-item class="tab_menu_item" index="product">产品</el-menu-item>
+                <el-menu-item class="tab_menu_item" index="price">价格</el-menu-item>
+                <el-menu-item class="tab_menu_item" index="download">下载</el-menu-item>
+                <el-menu-item class="tab_menu_item" index="about">我们</el-menu-item>
                 <!-- <el-menu-item class="tab_menu_item" index="personalCenter"
                     >个人中心</el-menu-item
                 > -->

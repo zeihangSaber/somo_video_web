@@ -1,3 +1,6 @@
+@fa: #fafafa;
+@dodgerBlue: #1890ff;
+
 .flex(@j: normal, @a: normal) {
     justify-content: @j;
     align-items: @a;
@@ -35,6 +38,7 @@
     justify-content: @justify-content;
     align-items: @align-items;
 }
+
 .myScroll(@params) {
     .@{params}::-webkit-scrollbar {
         width: 4px;
@@ -48,5 +52,31 @@
     .@{params}::-webkit-scrollbar-track {
         border-radius: 2px;
         background: aliceblue;
+    }
+}
+
+.uploadBox(@name, @w: 100px, @h: 100px) {
+    .@{name}-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    .@{name}-uploader .el-upload:hover {
+        border-color: #409eff;
+    }
+    .@{name}-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: @w;
+        height: @h;
+        line-height: @h !important;
+        text-align: center;
+    }
+    .@{name} {
+        width: @w;
+        height: @h;
+        display: block;
     }
 }

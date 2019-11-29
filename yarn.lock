@@ -9119,10 +9119,10 @@ sockjs@0.3.19:
     faye-websocket "^0.10.0"
     uuid "^3.0.1"
 
-somo-fir@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/somo-fir/-/somo-fir-1.2.1.tgz#697d80bac61779c5863b7c7b5cf08a933b729251"
-  integrity sha512-fruxmFpikY3nwe5ruRR2L//WLFWZyeE9No6bQY6LNxyAeTN7PVFy1oVl0zVFl4b9XQWa5zWuhKkL8DTR8yC8aw==
+somo-fir@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/somo-fir/-/somo-fir-1.2.2.tgz#1a0f722c8eee9b225f7035e1795df9c5a3984f3c"
+  integrity sha512-c76wqWBSGoUQZGj8zI+joXmKIIiQrNNmjvhNTR8lkzMtkadoWeby7DK5/scf7Cy0N/YP4ro66AEA7GbjKKCj1g==
   dependencies:
     "@types/js-base64" "^2.3.1"
     axios "^0.19.0"
@@ -10257,7 +10257,14 @@ vue-template-es2015-compiler@^1.6.0, vue-template-es2015-compiler@^1.9.0:
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
 
-vue@^2.6.10:
+vue-wow@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/vue-wow/-/vue-wow-1.2.0.tgz#3486172ee6bd3428c9e558c99f456c1c8e077a33"
+  integrity sha512-GeH6YSvzdnDgvxHbHx1KMmDyrlLFmy6ForVHfbSfATexXHzq8U1F3dkjsQwsk0j8QyRfXzFnt3kgivb3Yoo1yA==
+  dependencies:
+    vue "^2.5.2"
+
+vue@^2.5.2, vue@^2.6.10:
   version "2.6.10"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
   integrity sha512-ImThpeNU9HbdZL3utgMCq0oiMzAkt1mcgy3/E6zWC/G6AaQoeuFdsl9nDhTDU3X1R6FK7nsIUuRACVcjI+A2GQ==

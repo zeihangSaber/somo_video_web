@@ -9,16 +9,9 @@
         <div class="download con ck clear">
             <div class="mobile">
                 <p class="title">移动端下载</p>
-                <div
-                    class="download-iPhone downloads"
-                    @mouseover="mouseOver(1)"
-                    @mouseleave="mouseLeave"
-                >
+                <div class="download-iPhone downloads" @mouseover="mouseOver(1)" @mouseleave="mouseLeave">
                     <div id="download-mobile" class="img-wrapper">
-                        <img
-                            class="platform"
-                            src="../assets/download/iPhone.svg"
-                        />
+                        <img class="platform" src="../assets/download/iPhone.svg" />
                         <qrcode-vue
                             class="download-icon mobile-qrcode"
                             :value="url"
@@ -31,16 +24,9 @@
                     <p>iPhone 版（支持iPad）</p>
                     <h3 v-if="show == 1">（支持iOS 9.0及以上系统）</h3>
                 </div>
-                <div
-                    class="download-Android downloads"
-                    @mouseover="mouseOver(2)"
-                    @mouseleave="mouseLeave"
-                >
+                <div class="download-Android downloads" @mouseover="mouseOver(2)" @mouseleave="mouseLeave">
                     <div class="img-wrapper">
-                        <img
-                            class="platform"
-                            src="../assets/download/Android.svg"
-                        />
+                        <img class="platform" src="../assets/download/Android.svg" />
                         <qrcode-vue
                             class="download-icon mobile-qrcode"
                             :value="url"
@@ -56,25 +42,15 @@
             </div>
             <div class="pc">
                 <p class="title">PC端下载</p>
-                <div
-                    class="download-Mac downloads"
-                    @mouseover="mouseOver(3)"
-                    @mouseleave="mouseLeave"
-                >
+                <div class="download-Mac downloads" @mouseover="mouseOver(3)" @mouseleave="mouseLeave">
                     <a
                         href="http://somo-video-update.oss-cn-beijing.aliyuncs.com/release_all/SOMO_Installer.dmg"
                         style="text-decoration:none"
                     >
                         <div class="img-wrapper">
-                            <img
-                                class="platform"
-                                src="../assets/download/Mac.svg"
-                            />
+                            <img class="platform" src="../assets/download/Mac.svg" />
                             <a target="blank" id="macAddress">
-                                <img
-                                    class="download-icon"
-                                    src="../assets/download/download.svg"
-                                />
+                                <img class="download-icon" src="../assets/download/download.svg" />
                             </a>
                             <p class="hover-message">点击直接下载</p>
                         </div>
@@ -83,30 +59,18 @@
                     </a>
                     <h3 v-if="show == 3">
                         （用户第一次安装蓝猫微会后，需要在系统偏好设置的“安全性与隐私”中信任客户端。
-                        <span id="checking" @click="details(1)"
-                            >查看详细说明</span
-                        >）
+                        <span id="checking" @click="details(1)">查看详细说明</span>）
                     </h3>
                 </div>
-                <div
-                    class="download-Windows downloads"
-                    @mouseover="mouseOver(4)"
-                    @mouseleave="mouseLeave"
-                >
+                <div class="download-Windows downloads" @mouseover="mouseOver(4)" @mouseleave="mouseLeave">
                     <a
                         href="http://somo-video-update.oss-cn-beijing.aliyuncs.com/release_all/SOMO_Setup.exe"
                         style="text-decoration:none"
                     >
                         <div class="img-wrapper ">
-                            <img
-                                class="platform"
-                                src="../assets/download/Windows.svg"
-                            />
+                            <img class="platform" src="../assets/download/Windows.svg" />
                             <a target="blank" id="winAddress">
-                                <img
-                                    class="download-icon"
-                                    src="../assets/download/download.svg"
-                                />
+                                <img class="download-icon" src="../assets/download/download.svg" />
                             </a>
                             <p class="hover-message">点击直接下载</p>
                         </div>
@@ -124,57 +88,38 @@
             <div class="installation-menu">
                 <div class="installation-menu-header">
                     <span class="header-left">MAC版客户端安装指南</span>
-                    <span
-                        class="header-right"
-                        id="installation-close"
-                        @click="details(0)"
-                    ></span>
+                    <span class="header-right" id="installation-close" @click="details(0)"></span>
                 </div>
                 <div class="installation-menu-content">
                     <div class="menu-content">
                         <div class="content-title">
                             MAC系统第一次启动app，系统提示以下异常：拷贝
                         </div>
-                        <img
-                            class="content-img"
-                            src="../assets/download/somo_installation_content_img1.png"
-                        />
+                        <img class="content-img" src="../assets/download/somo_installation_content_img1.png" />
                     </div>
                     <div class="menu-content">
                         <div class="content-title">
                             需要在系统偏好设置中打开“安全与隐私”
                         </div>
-                        <img
-                            class="content-img"
-                            src="../assets/download/somo_installation_content_img2.png"
-                        />
+                        <img class="content-img" src="../assets/download/somo_installation_content_img2.png" />
                     </div>
                     <div class="menu-content">
                         <div class="content-title">
                             切换到“通用”标签页面，选择“仍要打开”
                         </div>
-                        <img
-                            class="content-img"
-                            src="../assets/download/somo_installation_content_img3.png"
-                        />
+                        <img class="content-img" src="../assets/download/somo_installation_content_img3.png" />
                     </div>
                 </div>
             </div>
         </div>
         <div class="foo2">
-            <a
-                href="http://somo-video-update.oss-cn-beijing.aliyuncs.com/web_file/somo_install_guide.pdf"
-            >
+            <a href="http://somo-video-update.oss-cn-beijing.aliyuncs.com/web_file/somo_install_guide.pdf">
                 客户端安装指南 <img src="../assets/download/dow.png" href="" />
             </a>
-            <a
-                href="http://somo-video-update.oss-cn-beijing.aliyuncs.com/web_file/somo_imp_plan.pdf"
-            >
+            <a href="http://somo-video-update.oss-cn-beijing.aliyuncs.com/web_file/somo_imp_plan.pdf">
                 设备安装指南 <img src="../assets/download/dow.png" alt="" />
             </a>
-            <a
-                href="http://somo-video-update.oss-cn-beijing.aliyuncs.com/web_file/somo_use_book.pdf"
-            >
+            <a href="http://somo-video-update.oss-cn-beijing.aliyuncs.com/web_file/somo_use_book.pdf">
                 功能使用说明书 <img src="../assets/download/dow.png" alt="" />
             </a>
         </div>
@@ -375,11 +320,7 @@ export default class Download extends Vue {
                     background-color: #118bfb;
                     filter: progid:dximagetransform.microsoft.gradient(startColorstr='#27bffd', endColorstr='#118bfb', GradientType=0);
                     filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
-                    background: linear-gradient(
-                        -90deg,
-                        #27bffd 0%,
-                        #118bfb 100%
-                    );
+                    background: linear-gradient(-90deg, #27bffd 0%, #118bfb 100%);
 
                     .platform {
                         visibility: hidden;

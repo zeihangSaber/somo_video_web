@@ -3,7 +3,7 @@
         <el-header height="89px">
             <HeaderTab />
         </el-header>
-        <el-main>
+        <el-main ref="elMain" id="elMain">
             <router-view />
             <Footer v-if="footShow" height="150px" />
         </el-main>
@@ -39,4 +39,7 @@ export default class App extends Vue {
 @import "./common/base";
 @import "./common/common";
 .myScroll(el-main);
+.el-main {
+    overflow: inherit !important;
+}
 </style>

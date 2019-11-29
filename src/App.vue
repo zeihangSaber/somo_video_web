@@ -33,7 +33,7 @@ export default class App extends Vue {
 	}
 	created() {
 		this.footShow = needFooter.includes(this.$route.name as string);
-		this.elMain = this.$route.name === "home" ? "active" : "";
+		this.elMain = this.$route.name === "home" ? "" : "active";
 	}
 }
 </script>

@@ -113,7 +113,7 @@ export default class JoinConference extends Vue {
 	private radio_4: boolean = true;
 	@State login_status: boolean; //判断是否登录
 	$md5: (str: string) => string;
-	// let Somo = new Somo();
+	private Somo = new Somo();
 	created() {
 		console.log();
 		this.conference_name = JSON.parse(localStorage.getItem("vuex")).userName;
@@ -150,7 +150,7 @@ export default class JoinConference extends Vue {
 			Somo_ajax.queryMid({
 				os: 3,
 				code: this.conference_num
-			}).then(res => {
+			}).then((res: any) => {
 				if (res.code == 2001) {
 					alert("会议号输入有误，请重新输入");
 					return;

@@ -27,7 +27,7 @@ export default class App extends Vue {
 	beforeCreate() {
 		this.$router.beforeEach((to, from, next) => {
 			this.footShow = needFooter.includes(to.name as string);
-			console.log(this.footShow);
+			this.elMain = this.$route.name === "home" ? "active" : "";
 			next();
 		});
 	}

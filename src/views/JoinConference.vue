@@ -327,6 +327,8 @@ export default class JoinConference extends Vue {
 
 				.join_meeting {
 					height: 35px;
+					padding-left: 30px;
+					box-sizing: border-box;
 				}
 
 				.join_meeting > div {

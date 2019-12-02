@@ -15,7 +15,7 @@ import HeaderTab from "@/components/HeaderTab.vue";
 import Footer from "@/components/Footer.vue";
 import { Component, Vue } from "vue-property-decorator";
 import { State } from "vuex-class";
-const needFooter = ["home", "price", "about", "download", "product"];
+const needFooter = ["home", "price", "about", "download", "product", "joinConference"];
 @Component({
 	components: {
 		HeaderTab,

@@ -156,12 +156,10 @@ export default class JoinConference extends Vue {
 				} else {
 					Somo.joinMid({
 						mid: res.id
-					})
-						.then((res_: any): void => {
-							console.log(123456);
-							this.$router.push({ path: "./MeetingPage" });
-						})
-						.catch(err => console.log(err));
+					}).then((res_: any): void => {
+						console.log(123456);
+						this.$router.push({ path: "./MeetingPage" });
+					});
 				}
 				// console.log(res.code);
 			});

@@ -154,6 +154,7 @@ export default class JoinConference extends Vue {
 					alert("会议号输入有误，请重新输入");
 					return;
 				} else {
+					Somo.setMid(res.id);
 					Somo.joinMid({
 						mid: res.id
 					}).then((res_: any): void => {

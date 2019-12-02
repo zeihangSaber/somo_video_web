@@ -26,7 +26,7 @@ const routes = [
 		component: ManageAct,
 		children: [
 			{
-				path: "/manageAct/createAct",
+				path: "/manageAct/create",
 				name: "createAct",
 				component: CreateAct
 			}

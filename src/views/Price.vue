@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div>
-			<div class="content">
+			<div class="constant">
 				<h1>
 					云会议室
 					<span class="rightText">CLOUD CONFERENCE ROOM</span>
@@ -70,7 +70,7 @@
 			</div>
 		</div>
 		<div class="hardware">
-			<div class="content">
+			<div class="constant">
 				<h1>
 					硬件产品
 					<span class="rightText">HARDWARE PRODUCTS</span>
@@ -120,7 +120,7 @@
 import { Component, Vue } from "vue-property-decorator";
 @Component
 export default class Price extends Vue {
-	tableData = [
+	tableData: any = [
 		{
 			items: "价格",
 			free: `$<p style="color: #2f84fb;font-size: 18px;font-weight: bolder;">￥0</p>`,
@@ -274,7 +274,7 @@ export default class Price extends Vue {
 
 <style lang="less" scoped>
 @import "../common/common";
-.content {
+.constant {
 	width: 1200px;
 	margin: 0 auto;
 }

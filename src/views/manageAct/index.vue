@@ -44,7 +44,7 @@ export default class ManageAct extends Vue {
 }
 </script>
 <style lang="less">
-@import "../common/common";
+@import "../../common/common";
 .content {
 	width: 1200px;
 	margin: 0 auto;
@@ -74,10 +74,10 @@ export default class ManageAct extends Vue {
 	}
 }
 .matter {
-	.myScroll(matter);
 	flex: 1;
 	background: @fa;
 	margin-left: 20px;
+	overflow-y: auto;
 }
 .myScroll(matter);
 </style>

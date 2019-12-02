@@ -112,13 +112,14 @@ export default class JoinConference extends Vue {
 	private radio_3: boolean = true;
 	private radio_4: boolean = true;
 	@State login_status: boolean; //判断是否登录
+	@State userName: string;
 	$md5: (str: string) => string;
-	private Somo = new Somo({});
+	private Somo = new Somo();
 	created() {
 		console.log();
-		this.conference_name = JSON.parse(localStorage.getItem("vuex")).userName;
+		this.conference_name = this.userName;
 	}
-	radio(radio_status) {
+	radio(radio_status: number) {
 		if (radio_status == 1) {
 			this.radio_1 = !this.radio_1;
 		} else if (radio_status == 2) {
@@ -129,7 +130,7 @@ export default class JoinConference extends Vue {
 			this.radio_4 = !this.radio_4;
 		}
 	}
-	tab(tab_status) {
+	tab(tab_status: number) {
 		this.tab_status = tab_status;
 	}
 	JoinConference_btn() {
@@ -150,7 +151,7 @@ export default class JoinConference extends Vue {
 			Somo_ajax.queryMid({
 				os: 3,
 				code: this.conference_num
-			}).then(res => {
+			}).then((res: any): void => {
 				if (res.code == 2001) {
 					alert("会议号输入有误，请重新输入");
 					return;

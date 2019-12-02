@@ -161,7 +161,6 @@ export default class JoinConference extends Vue {
 						this.$router.push({ path: "./MeetingPage" });
 					});
 				}
-				// console.log(res.code);
 			});
 		}
 	}

@@ -9119,10 +9119,10 @@ sockjs@0.3.19:
     faye-websocket "^0.10.0"
     uuid "^3.0.1"
 
-somo-fir@^1.2.4:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/somo-fir/-/somo-fir-1.2.4.tgz#c6db6490977e31d14afbfa1007352c6aee21088b"
-  integrity sha512-AL9s59QnCnw8lT22g7bnLndR9vEqRmcNWZtAeXMWXwOV9nk+s4cxFxBMwXjuf1KpKyw6OxJBPmOTnZI9uyqh3Q==
+somo-fir@^1.2.8:
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/somo-fir/-/somo-fir-1.2.8.tgz#286abc832d0e7aed7c51a0b7d79adec160289ec1"
+  integrity sha512-cp1PkHG5IPMIZr1I4kOOs96COZLcYoZ7HL8xgNoos6Ua0mCCA8Wx9v6g4v96jnrbiBoHt+dXmVSXcODqE9zOiw==
   dependencies:
     "@types/js-base64" "^2.3.1"
     axios "^0.19.0"

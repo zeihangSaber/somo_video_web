@@ -154,6 +154,7 @@ export default class JoinConference extends Vue {
 					alert("会议号输入有误，请重新输入");
 					return;
 				} else {
+					Somo.setMid(res.id);
 					Somo.joinMid({
 						mid: res.id
 					})
@@ -161,7 +162,7 @@ export default class JoinConference extends Vue {
 							console.log(123456);
 							this.$router.push({ path: "./MeetingPage" });
 						})
-						.catch(err => console.log(err));
+						.catch((err: any) => console.log(err));
 				}
 				// console.log(res.code);
 			});

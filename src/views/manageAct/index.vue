@@ -77,7 +77,5 @@ export default class ManageAct extends Vue {
 	flex: 1;
 	background: @fa;
 	margin-left: 20px;
-	overflow-y: auto;
 }
-.myScroll(matter);
 </style>

@@ -7,13 +7,11 @@ import Somo from "somo-fir";
 import "element-ui/lib/theme-chalk/index.css";
 import "animate.css";
 import md5 from "js-md5";
-import VueWow from "vue-wow";
 
 Vue.prototype.$md5 = md5;
 Vue.prototype.$somo = Somo;
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
-Vue.use(VueWow);
 new Vue({
 	router,
 	store,

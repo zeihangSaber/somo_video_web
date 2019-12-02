@@ -1,5 +1,6 @@
 <template>
 	<div class="constant">
+		<input type="file" id="img" />
 		<el-button class="backBtn" type="text" icon="el-icon-arrow-left">返回</el-button>
 		<el-form ref="form" :model="form" :rules="rules" label-width="80px">
 			<div class="smallTitle">
@@ -12,13 +13,7 @@
 				<span class="infoAct">活动信息</span>
 				<el-divider></el-divider>
 				<el-form-item label="活动海报">
-					<el-upload
-						class="poster-uploader"
-						action="/file"
-						:auto-upload="false"
-						:show-file-list="false"
-						:on-change="bannerSec"
-					>
+					<el-upload class="poster-uploader" action="/file" :show-file-list="false" :http-request="bannerSec">
 						<img v-if="form.desc.banner" :src="form.desc.banner" class="poster" />
 						<i v-else class="el-icon-plus poster-uploader-icon"></i>
 					</el-upload>
@@ -133,8 +128,14 @@ export default class HeaderTab extends Vue {
 	onSubmit() {
 		console.log("submit!");
 	}
-	bannerSec(res: any) {
+	bannerSec(res) {
+		// console.log(document.getElementById("img").files);
 		console.log(res);
+		let render = new FileReader();
+		render.readAsDataURL(res.file);
+		render.onload = res => {
+			console.log(render);
+		};
 	}
 }
 </script>

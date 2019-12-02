@@ -14,6 +14,7 @@ import ajax from "@/utils/ajax";
 import HeaderTab from "@/components/HeaderTab.vue";
 import Footer from "@/components/Footer.vue";
 import { Component, Vue } from "vue-property-decorator";
+import { State } from "vuex-class";
 const needFooter = ["home", "price", "about", "download", "product"];
 @Component({
 	components: {
@@ -24,6 +25,8 @@ const needFooter = ["home", "price", "about", "download", "product"];
 export default class App extends Vue {
 	footShow: boolean = true;
 	elMain = "active";
+	@State uid: number;
+	@State cookie: string;
 	beforeCreate() {
 		this.$router.beforeEach((to, from, next) => {
 			this.footShow = needFooter.includes(to.name as string);
@@ -34,6 +37,8 @@ export default class App extends Vue {
 	created() {
 		this.footShow = needFooter.includes(this.$route.name as string);
 		this.elMain = this.$route.name === "home" ? "active" : "";
+		ajax.setUid(this.uid as number);
+		ajax.setCookie(this.cookie as string);
 	}
 }
 </script>

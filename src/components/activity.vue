@@ -1,5 +1,5 @@
 <template>
-	<div class="activity">
+	<div class="activity" @click="toDetails(activity.id)">
 		<div class="activity_header">
 			<span class="activity_state activity_underway"></span>
 			<img :src="activity_desc.banner" alt="" />
@@ -27,6 +27,14 @@ export default class HeaderTab extends Vue {
 		this.activity_time = `${setTime(this.activity.start)}-${setTime(this.activity.end)}`;
 	}
 	mounted() {}
+	toDetails(actId: string) {
+		this.$router.push({
+			path: "/activitys/details",
+			query: {
+				actId
+			}
+		});
+	}
 }
 </script>
 

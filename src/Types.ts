@@ -15,3 +15,7 @@ export interface Moudles {
 	actions: ActionTree<Moudles["state"], any>;
 	mutations: MutationTree<any>;
 }
+export interface ImgLayout {
+	width: string;
+	height: string;
+}

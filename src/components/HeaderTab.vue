@@ -78,6 +78,7 @@ export default class HeaderTab extends Vue {
 	loginOut() {
 		this.setLoginStatus(false);
 		this.setUserName("");
+		localStorage.setItem("vuex", "");
 		window.location.pathname = "home";
 	}
 	joinConference() {

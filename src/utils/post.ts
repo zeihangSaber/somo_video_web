@@ -6,6 +6,11 @@ const post: Post = {
 		url: "/vmt/act/list",
 		defaultData: []
 	},
+	//查询用户的付费活动
+	singUpList: {
+		url: "/vmt/act/signup/list",
+		defaultData: ["device", "uid"]
+	},
 	//注册获取验证码
 	regCode: {
 		url: "/udb/user/reg/code",

@@ -38,6 +38,13 @@
 	justify-content: @justify-content;
 	align-items: @align-items;
 }
+//多行出现省略号  通过@line来控制行数
+.text-overflow(@line) {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: @line;
+	overflow: hidden;
+}
 
 .myScroll(@params) {
 	.@{params}::-webkit-scrollbar {

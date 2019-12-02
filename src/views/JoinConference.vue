@@ -157,14 +157,11 @@ export default class JoinConference extends Vue {
 					Somo.setMid(res.id);
 					Somo.joinMid({
 						mid: res.id
-					})
-						.then((res_: any): void => {
-							console.log(123456);
-							this.$router.push({ path: "./MeetingPage" });
-						})
-						.catch((err: any) => console.log(err));
+					}).then((res_: any): void => {
+						console.log(123456);
+						this.$router.push({ path: "./MeetingPage" });
+					});
 				}
-				// console.log(res.code);
 			});
 		}
 	}
@@ -330,6 +327,8 @@ export default class JoinConference extends Vue {
 
 				.join_meeting {
 					height: 35px;
+					padding-left: 30px;
+					box-sizing: border-box;
 				}
 
 				.join_meeting > div {

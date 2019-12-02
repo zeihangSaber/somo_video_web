@@ -2,10 +2,10 @@
 	<div class="constant">
 		<input type="file" id="img" />
 		<el-button class="backBtn" type="text" icon="el-icon-arrow-left">返回</el-button>
-		<el-form ref="form" :model="form" :rules="rules" label-width="80px">
+		<el-form ref="form" :model="form" :rules="rules" label-width="110px">
 			<div class="smallTitle">
 				<span class="titleAct">创建活动</span>
-				<el-button class="issueBtn" type="primary" icon="el-icon-s-promotion">
+				<el-button class="issueBtn" @click="submitForm('form')" type="primary" icon="el-icon-s-promotion">
 					主要按钮
 				</el-button>
 			</div>
@@ -29,14 +29,14 @@
 							type="date"
 							size="medium"
 							placeholder="选择日期"
-							v-model="form.date1"
+							v-model="form.date"
 							style="width: 100%;"
 						></el-date-picker>
 						<span>~</span>
 						<el-time-picker
 							is-range
 							placeholder="选择时间"
-							v-model="form.date2"
+							v-model="form.time"
 							range-separator="-"
 							start-placeholder="开始时间"
 							end-placeholder="结束时间"
@@ -73,24 +73,24 @@
 				</el-form-item>
 				<span class="infoAct">报名设置</span>
 				<el-divider></el-divider>
-				<el-form-item label="收费金额">
-					<el-input size="medium" v-model="form.name" placeholder="请输入活动地点"></el-input>
+				<el-form-item label="收费金额" prop="money">
+					<el-input-number v-model="form.money" size="medium" :min="0" :max="9999.99"></el-input-number>
 				</el-form-item>
-				<el-form-item label="层报名信息采集">
-					<el-checkbox-group v-model="form.type">
-						<el-checkbox label="姓名" name="type"></el-checkbox>
-						<el-checkbox label="手机号码" name="type"></el-checkbox>
-						<el-checkbox label="邮箱" name="type"></el-checkbox>
-						<el-checkbox label="公司名称" name="type"></el-checkbox>
-						<el-checkbox label="职务" name="type"></el-checkbox>
+				<el-form-item label="报名信息采集" prop="studentInfo">
+					<el-checkbox-group v-model="form.desc.studentInfo">
+						<el-checkbox label="name" disabled>姓名</el-checkbox>
+						<el-checkbox label="phone" disabled>手机号码</el-checkbox>
+						<el-checkbox label="mail">邮箱</el-checkbox>
+						<el-checkbox label="company">公司名称</el-checkbox>
+						<el-checkbox label="duty">职务</el-checkbox>
 					</el-checkbox-group>
 				</el-form-item>
 				<span class="infoAct">活动发布</span>
 				<el-divider></el-divider>
-				<el-form-item label="发布状态选择">
-					<el-radio-group v-model="form.resource">
-						<el-radio label="线上品牌商赞助"></el-radio>
-						<el-radio label="线下场地免费"></el-radio>
+				<el-form-item label="发布状态选择" prop="status">
+					<el-radio-group v-model="form.desc.status">
+						<el-radio :label="1">上架</el-radio>
+						<el-radio :label="2">下架</el-radio>
 					</el-radio-group>
 				</el-form-item>
 			</div>
@@ -100,15 +100,16 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { State, Action } from "vuex-class";
+import moment from "moment";
 @Component
 export default class HeaderTab extends Vue {
-	private ruleForm = {
-		name: ""
-	};
 	private rules = {
 		subject: [{ required: true, message: "请输入活动名称", trigger: "blur" }],
 		address: [{ required: true, message: "请输入活动地址", trigger: "blur" }],
-		topic: [{ required: true, message: "请输入话题内容", trigger: "blur" }]
+		topic: [{ required: true, message: "请输入话题内容", trigger: "blur" }],
+		money: [{ required: true, message: "请输入话题内容", trigger: "blur" }],
+		studentInfo: [{ required: true, message: "请输入话题内容", trigger: "change" }],
+		status: [{ type: "array", required: true, message: "请输入话题内容", trigger: "change" }]
 	};
 	private imageUrl: string = "";
 	private form = {
@@ -116,25 +117,40 @@ export default class HeaderTab extends Vue {
 		start: 0,
 		end: 0,
 		money: 0,
+		date: 0,
+		time: 0,
 		desc: {
 			address: "",
 			topic: "",
 			notice: "",
 			declare: "",
 			banner: "",
-			qr: ""
+			qr: "",
+			studentInfo: ["name", "phone"],
+			status: 2
 		}
 	};
-	onSubmit() {
-		console.log("submit!");
+	submitForm() {
+		let aaa = moment(this.form.time[0]).format("HH:mm:ss");
+		let bbb = moment(this.form.time[1]).format("HH:mm:ss");
+		let ccc = moment(this.form.date).format("YYYY-MM-DD");
+
+		console.log(moment(`${ccc} ${aaa}`).format("x"));
+
+		// this.$refs[formName].validate(valid => {
+		// 	if (valid) {
+		// 		alert("submit!");
+		// 	} else {
+		// 		console.log("error submit!!");
+		// 		return false;
+		// 	}
+		// });
 	}
-	bannerSec(res) {
-		// console.log(document.getElementById("img").files);
-		console.log(res);
+	bannerSec(res: any) {
 		let render = new FileReader();
 		render.readAsDataURL(res.file);
 		render.onload = res => {
-			console.log(render);
+			console.log(render.result);
 		};
 	}
 }

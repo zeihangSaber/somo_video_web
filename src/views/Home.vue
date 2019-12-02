@@ -80,7 +80,6 @@
 
 <script lang="ts">
 // @ is an alias to /src
-import HeaderTab from "@/components/HeaderTab.vue";
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { State, Action } from "vuex-class";

@@ -27,13 +27,14 @@ export default class App extends Vue {
 	beforeCreate() {
 		this.$router.beforeEach((to, from, next) => {
 			this.footShow = needFooter.includes(to.name as string);
-			this.elMain = this.$route.name === "home" ? "active" : "";
+			this.elMain = to.name === "home" ? "active" : "";
+			console.log(this.elMain, to.name);
 			next();
 		});
 	}
 	created() {
 		this.footShow = needFooter.includes(this.$route.name as string);
-		this.elMain = this.$route.name === "home" ? "" : "active";
+		this.elMain = this.$route.name === "home" ? "active" : "";
 	}
 }
 </script>

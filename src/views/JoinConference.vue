@@ -98,8 +98,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import Somo_ajax from "../utils/ajax";
-import Somo from "somo-fir";
+import Somo from "../utils/somo";
 import { State } from "vuex-class";
 @Component
 export default class JoinConference extends Vue {
@@ -114,7 +113,6 @@ export default class JoinConference extends Vue {
 	@State login_status: boolean; //判断是否登录
 	@State userName: string;
 	$md5: (str: string) => string;
-	private Somo = new Somo();
 	created() {
 		console.log();
 		this.conference_name = this.userName;
@@ -147,8 +145,8 @@ export default class JoinConference extends Vue {
 				alert("会议昵称不能为空");
 				return;
 			}
-			console.log(Somo_ajax.defaultParameter);
-			Somo_ajax.queryMid({
+			console.log(Somo.defaultParameter);
+			Somo.queryMid({
 				os: 3,
 				code: this.conference_num
 			}).then((res: any): void => {
@@ -156,11 +154,14 @@ export default class JoinConference extends Vue {
 					alert("会议号输入有误，请重新输入");
 					return;
 				} else {
-					// Somo.join({
-					// 	"mid": ,
-					// })
+					Somo.setMid(res.id);
+					Somo.joinMid({
+						mid: res.id
+					}).then((res_: any): void => {
+						console.log(123456);
+						this.$router.push({ path: "./MeetingPage" });
+					});
 				}
-				console.log(res.code);
 			});
 		}
 	}
@@ -326,6 +327,8 @@ export default class JoinConference extends Vue {
 
 				.join_meeting {
 					height: 35px;
+					padding-left: 30px;
+					box-sizing: border-box;
 				}
 
 				.join_meeting > div {

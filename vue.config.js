@@ -10,6 +10,9 @@ module.exports = {
 				},
 				"/bill": {
 					target: "https://billing.video.somo.tech/api/v1"
+				},
+				"/file": {
+					target: "https://file.video.somo.tech/api/v1/file/image/upload"
 				}
 			}
 		},

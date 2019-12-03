@@ -172,29 +172,27 @@ export default class JoinConference extends Vue {
 			alert("请先登录");
 			return;
 		}
-		Somo.create({}).then(
-			(res: any): viod => {
-				console.log(res);
+		Somo.create({}).then((res: any) => {
+			console.log(res);
 
-				Somo.joinMid({
-					mid: res.id
-				}).then((res_: any): void => {
-					this.$router.push({ path: "./MeetingPage" });
-				});
+			Somo.joinMid({
+				mid: res.id
+			}).then((res_: any): void => {
+				this.$router.push({ path: "./MeetingPage" });
+			});
 
-				// Somo.queryMid({
-				// 	os: 3,
-				// 	code: this.conference_num
-				// }).then((res: any): void => {
-				// 	Somo.setMid(res.id);
-				// 	Somo.joinMid({
-				// 		mid: res.id
-				// 	}).then((res_: any): void => {
-				// 		this.$router.push({ path: "./MeetingPage" });
-				// 	});
-				// });
-			}
-		);
+			// Somo.queryMid({
+			// 	os: 3,
+			// 	code: this.conference_num
+			// }).then((res: any): void => {
+			// 	Somo.setMid(res.id);
+			// 	Somo.joinMid({
+			// 		mid: res.id
+			// 	}).then((res_: any): void => {
+			// 		this.$router.push({ path: "./MeetingPage" });
+			// 	});
+			// });
+		});
 	}
 }
 </script>

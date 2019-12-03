@@ -49,7 +49,7 @@ import { State, Action } from "vuex-class";
 @Component
 export default class History extends Vue {
 	private date = "";
-	private height = "";
+	private height = 0;
 	private tableData = [
 		{
 			date: "2016-05-02",
@@ -78,8 +78,8 @@ export default class History extends Vue {
 		// console.log(document.body.clientHeight);
 	}
 
-	size(height) {
-		this.height = height * 0.4;
+	size(presentHeight: any) {
+		this.height = presentHeight * 0.4;
 		console.log(this.height);
 	}
 }
@@ -134,6 +134,7 @@ input::-webkit-input-placeholder {
 	background: #fafafa;
 	padding-left: 5px;
 	box-sizing: border-box;
+	outline: none;
 }
 
 .search_box {

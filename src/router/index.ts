@@ -38,7 +38,7 @@ const routes = [
 	{
 		path: "/home",
 		name: "home",
-		component: Home
+		component: MeetingPage
 	},
 	{
 		path: "/product",

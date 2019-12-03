@@ -38,7 +38,7 @@
 								</div>
 							</div>
 							<div class="encryption">如会议未加密，则无需输入</div>
-							<div>
+							<div style="margin-top: 40px;">
 								<div class="input_box">
 									<div class="icon_meetingNUM">
 										<img
@@ -51,30 +51,32 @@
 								</div>
 								<div class="required_"><span style="color: #FF6059;">*</span>必填</div>
 							</div>
-							<div class="set">
-								<div @click="radio(1)">
-									<div :class="radio_1 == true ? 'radio' : 'radio radio_active'">
-										<img v-if="radio_1" src="../assets/JoinConference/5.png" alt="" />
+							<span style="">
+								<div class="set">
+									<div @click="radio(1)" style="margin-right: 70px;">
+										<div :class="radio_1 == true ? 'radio' : 'radio radio_active'">
+											<img v-if="radio_1" src="../assets/JoinConference/5.png" alt="" />
+										</div>
+										<div>开启麦克风</div>
 									</div>
-									<div>开启麦克风</div>
-								</div>
-								<div @click="radio(2)">
-									<div :class="radio_2 == true ? 'radio' : 'radio radio_active'">
-										<img v-if="radio_2" src="../assets/JoinConference/5.png" alt="" />
+									<div @click="radio(2)">
+										<div :class="radio_2 == true ? 'radio' : 'radio radio_active'">
+											<img v-if="radio_2" src="../assets/JoinConference/5.png" alt="" />
+										</div>
+										<div>开启摄像头</div>
 									</div>
-									<div>开启摄像头</div>
 								</div>
-							</div>
-							<div class="hint">所有错误提示具体文案详见产品文档，样式见此</div>
-							<div class="join_btn" @click="JoinConference_btn()">加入会议</div>
+								<!-- <div class="hint">所有错误提示具体文案详见产品文档，样式见此</div> -->
+								<div class="join_btn" @click="JoinConference_btn()">加入会议</div>
+							</span>
 						</div>
 						<div v-if="tab_status == 1">
 							<div class="sponsor_meeting">
 								<div class="sponsor_img"><img src="../assets/JoinConference/7.png" alt="" /></div>
 								<div>非会员可免费体验40分钟</div>
 							</div>
-							<div class="set" style="margin-left: 95px;">
-								<div @click="radio(3)">
+							<div class="set">
+								<div @click="radio(3)" style="margin-right: 70px;">
 									<div :class="radio_3 == true ? 'radio' : 'radio radio_active'">
 										<img v-if="radio_3" src="../assets/JoinConference/5.png" alt="" />
 									</div>
@@ -87,7 +89,7 @@
 									<div>开启摄像头</div>
 								</div>
 							</div>
-							<div class="join_btn sponsor_btn">发起会议</div>
+							<div class="join_btn sponsor_btn" @click="sponsorMeeting()">发起会议</div>
 						</div>
 					</div>
 				</div>
@@ -165,6 +167,33 @@ export default class JoinConference extends Vue {
 			});
 		}
 	}
+	sponsorMeeting() {
+		if (!this.login_status) {
+			alert("请先登录");
+			return;
+		}
+		Somo.create({}).then((res: any) => {
+			console.log(res);
+
+			Somo.joinMid({
+				mid: res.id
+			}).then((res_: any): void => {
+				this.$router.push({ path: "./MeetingPage" });
+			});
+
+			// Somo.queryMid({
+			// 	os: 3,
+			// 	code: this.conference_num
+			// }).then((res: any): void => {
+			// 	Somo.setMid(res.id);
+			// 	Somo.joinMid({
+			// 		mid: res.id
+			// 	}).then((res_: any): void => {
+			// 		this.$router.push({ path: "./MeetingPage" });
+			// 	});
+			// });
+		});
+	}
 }
 </script>
 
@@ -213,6 +242,9 @@ export default class JoinConference extends Vue {
 	display: flex;
 	justify-content: center !important;
 	align-items: center;
+	position: absolute;
+	bottom: 50px;
+	left: calc(50% - 184.5px);
 }
 
 .hint {
@@ -228,20 +260,22 @@ export default class JoinConference extends Vue {
 	.flex(center, center);
 	font-size: 14px;
 	color: #999999;
-	margin-right: 70px;
 }
 
 .set {
+	width: 250px;
+	height: 50px;
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
-	margin: 23px 0;
-	margin-left: 40px;
+	position: absolute;
+	bottom: 120px;
+	left: calc(50% - 125px);
 }
 
 .radio > img {
-	width: 100%;
-	height: 100%;
+	width: 70%;
+	height: 70%;
 }
 
 .radio_active {
@@ -252,6 +286,9 @@ export default class JoinConference extends Vue {
 .radio {
 	width: 14px;
 	height: 14px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	background: #3083fb;
 	margin-right: 3px;
 }
@@ -261,8 +298,8 @@ export default class JoinConference extends Vue {
 	font-family: PingFangSC-Regular, PingFang SC;
 	font-weight: 400;
 	color: rgba(187, 187, 187, 1);
-	margin-left: 40px;
-	margin-bottom: 27px;
+	padding-left: 40px;
+	box-sizing: border-box;
 }
 
 .required_ {
@@ -287,7 +324,7 @@ export default class JoinConference extends Vue {
 		margin-top: 80px;
 		margin-bottom: 121px;
 		.flex(flex-start, center);
-
+		border-radius: 7px;
 		.left_img {
 			width: 339px;
 			height: 100%;
@@ -307,18 +344,21 @@ export default class JoinConference extends Vue {
 		.right_box {
 			width: calc(100% - 339px);
 			height: 100%;
-			padding: 0 136px 0 194px;
-			box-sizing: border-box;
+			// padding: 0 136px 0 194px;
+			// box-sizing: border-box;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 			.flex(center, center);
 
 			.meeting {
-				width: 100%;
-				height: 100%;
-
+				width: 530px;
+				height: 570px;
+				position: relative;
 				input {
 					width: 323px;
 					height: 35px;
-					border-bottom: 1.5px solid #cccccc;
+					border-bottom: 1px solid #cccccc;
 					font-size: 18px;
 					font-family: PingFangSC-Medium, PingFang SC;
 					font-weight: 500;
@@ -332,6 +372,8 @@ export default class JoinConference extends Vue {
 				}
 
 				.join_meeting > div {
+					width: 400px;
+					margin: 0 auto;
 					.input_box {
 						.flex(flex-start, center);
 					}
@@ -375,6 +417,7 @@ export default class JoinConference extends Vue {
 					}
 
 					.active {
+						font-weight: 500;
 						color: #3083fb;
 					}
 				}
@@ -390,5 +433,6 @@ input {
 input::-webkit-input-placeholder {
 	color: #999999;
 	font-size: 18px;
+	font-weight: 100;
 }
 </style>

@@ -10,6 +10,7 @@ import Register from "../views/Register.vue";
 import JoinConference from "../views/JoinConference.vue";
 import ManageAct from "@/views/manageAct.vue";
 import CreateAct from "@/views/manageAct/CreateAct.vue";
+import History from "@/views/manageAct/History.vue";
 import MeetingPage from "@/views/MeetingPage.vue";
 
 // import PersonalCenter from "../views/PersonalCenter.vue";
@@ -26,6 +27,11 @@ const routes = [
 				path: "/manageAct/create",
 				name: "createAct",
 				component: CreateAct
+			},
+			{
+				path: "/manageAct/history",
+				name: "createAct",
+				component: History
 			}
 		]
 	},

@@ -6,6 +6,10 @@ const post: Post = {
 		url: "/vmt/act/list",
 		defaultData: []
 	},
+	addAct: {
+		url: "/vmt/act/add",
+		defaultData: ["uid", "dt", "cookie", "tenant"]
+	},
 	//查询用户的付费活动
 	singUpList: {
 		url: "/vmt/act/signup/list",

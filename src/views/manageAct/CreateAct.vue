@@ -38,9 +38,23 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item label="活动时间" prop="time">
-					<el-date-picker v-model="form.start" type="datetime" placeholder="开始时间"> </el-date-picker>
+					<el-date-picker
+						v-model="form.start"
+						:default-value="new Date().getTime()"
+						:picker-options="pickerOptions"
+						type="datetime"
+						placeholder="开始时间"
+					>
+					</el-date-picker>
 					<span> ~ </span>
-					<el-date-picker v-model="form.end" type="datetime" placeholder="结束时间"> </el-date-picker>
+					<el-date-picker
+						v-model="form.end"
+						:default-value="new Date().getTime()"
+						:picker-options="pickerOptions"
+						type="datetime"
+						placeholder="结束时间"
+					>
+					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="活动地点" prop="address">
 					<el-input
@@ -119,20 +133,19 @@ export default class HeaderTab extends Vue {
 		time: [{ required: true, validator: this.checkTime, message: "请选择活动时间", trigger: "submit" }],
 		address: [{ required: true, validator: this.checkAddress, message: "请输入活动地址", trigger: "submit" }],
 		topic: [{ required: true, validator: this.checkTopic, message: "请输入活动话题", trigger: "submit" }],
-		studentInfo: [{ required: true, validator: () => true, message: "无", trigger: "submit" }],
-		status: [{ required: true, validator: () => true, message: "无", trigger: "submit" }],
-		money: [{ required: true, validator: () => true, message: "无", trigger: "submit" }]
+		studentInfo: [{ required: true, validator: this.check, message: "无", trigger: "submit" }],
+		status: [{ required: true, validator: this.check, message: "无", trigger: "submit" }],
+		money: [{ required: true, validator: this.check, message: "无", trigger: "submit" }]
 	};
 	private form = {
-		subject: "",
-		start: 0,
-		end: 0,
+		subject: "1",
+		start: new Date().getTime() + 3600 * 10,
+		end: new Date().getTime() + 3600 * 100,
 		money: 0,
-		time: 0,
 		desc: {
-			address: "",
-			topic: "",
-			notice: "",
+			address: "1",
+			topic: "1",
+			notice: "1",
 			declare: "",
 			banner: "",
 			qr: "",
@@ -141,12 +154,22 @@ export default class HeaderTab extends Vue {
 		}
 	};
 	private bannerFlag: boolean = false;
+	private pickerOptions = {
+		disabledDate(arg: Date) {
+			return arg.getTime() <= new Date().getTime();
+		}
+	};
 	submitForm(formName: string) {
+		console.log(223);
 		// @ts-ignore
-		this.$refs[formName].validate((valid: any) => {
-			console.log(valid);
-			if (valid) {
-				alert("submit!");
+		this.$refs[formName].validate((flag: boolean) => {
+			if (flag) {
+				const obj = { ...this.form };
+				// @ts-ignore
+				obj.desc = JSON.stringify(this.form.desc);
+				ajax.addAct(obj).then((res: any) => {
+					console.log(res);
+				});
 			} else {
 				console.log("error submit!!");
 				return false;
@@ -178,14 +201,16 @@ export default class HeaderTab extends Vue {
 			});
 		};
 	}
+	check(rule: any, value: any, callback: any) {
+		callback();
+	}
 	checkBanner(rule: any, value: any, callback: any) {
-		!this.bannerFlag && callback(new Error());
+		!this.bannerFlag ? callback(new Error()) : callback();
 	}
 	checkAddress(rule: any, value: any, callback: any) {
-		!this.form.desc.address.length && callback(new Error());
+		!this.form.desc.address.length ? callback(new Error()) : callback();
 	}
 	checkTime(rule: any, value: any, callback: any) {
-		console.log(rule);
 		//"活动时间太长啦"
 		if (this.form.end > this.form.start + 1000 * 60 * 60 * 24) {
 			rule.message = "活动时间太长啦";
@@ -201,9 +226,10 @@ export default class HeaderTab extends Vue {
 			rule.message = "活动开始时间距离现在太近了";
 			return callback(new Error());
 		}
+		callback();
 	}
 	checkTopic(rule: any, value: any, callback: any) {
-		!this.form.desc.topic.length && callback(new Error());
+		!this.form.desc.topic.length ? callback(new Error()) : callback();
 	}
 }
 </script>

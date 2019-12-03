@@ -21,7 +21,7 @@ export default class MeetingPage extends Vue {
 		(this.$refs.saber as HTMLElement).appendChild(somo.streamerDom);
 	}
 	push() {
-		somo.publish("rtmp://rtmp2.video.somo.tech", "10284390U10000435");
+		somo.publish("rtmp://rtmp1.video.somo.tech/video", "2000U1000");
 	}
 }
 </script>

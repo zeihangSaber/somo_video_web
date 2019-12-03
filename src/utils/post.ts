@@ -15,6 +15,11 @@ const post: Post = {
 		url: "/vmt/act/signup/list",
 		defaultData: ["dt", "uid", "cookie"]
 	},
+	//查询单个活动的付费情况
+	singUpCheck: {
+		url: "/vmt/act/signup/check",
+		defaultData: ["dt", "uid", "cookie"]
+	},
 	//注册获取验证码
 	regCode: {
 		url: "/udb/user/reg/code",

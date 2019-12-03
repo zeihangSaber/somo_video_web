@@ -1,5 +1,5 @@
 <template>
-	<div class="container">
+	<div class="container" v-loading="loading">
 		<div class="titile">
 			<h2>精选活动</h2>
 			<h3>Selected activities</h3>
@@ -7,6 +7,15 @@
 		<div class="activitys" v-show="activitysShow">
 			<Activity class="activity" v-for="activity in activityList" :key="activity.id" :activity="activity" />
 		</div>
+		<!-- <el-pagination
+			@size-change="handleSizeChange"
+			@current-change="handleCurrentChange"
+			:current-page.sync="currentPage1"
+			:page-size="100"
+			layout="total, prev, pager, next"
+			:total="1000"
+		>
+		</el-pagination> -->
 	</div>
 </template>
 
@@ -22,7 +31,9 @@ import { Component, Vue } from "vue-property-decorator";
 	}
 })
 export default class Activitys extends Vue {
+	private loading: boolean = true;
 	@State uid: string;
+	@State login_status: boolean;
 	@Action ActivityList: (value: []) => void;
 	public activityList: [any] = [""];
 	private activitysShow: boolean = false;
@@ -31,24 +42,30 @@ export default class Activitys extends Vue {
 			tenant: 0,
 			start: new Date().getTime() - 3600 * 1000 * 24 * 30,
 			end: new Date().getTime() + 3600 * 1000 * 24 * 30,
-			limit: 8
+			limit: 4
 		}).then((res: any): void => {
+			console.log("活动查询", res);
 			this.activityFilter(res.items);
 		});
 	}
 	//活动过滤
 	activityFilter(list: []) {
+		this.loading = false;
 		const newTime = new Date().getTime();
 		let activityList = list ? deepclone(list) : [];
 		activityList = activityList
 			.filter((activity: any): any => +activity.status === 1 && activity.end > newTime)
-			.sort((a: any, b: any) => b.start - a.start);
-		this.activityList = activityList;
-		this.ActivityList(activityList);
-		Somo_ajax.singUpList().then((res: any) => {
+			.sort((a: any, b: any) => a.start - b.start);
+		if (this.login_status) {
+			Somo_ajax.singUpList().then((res: any) => {
+				this.activitysShow = true;
+				res.acts && this.paidActivity(res.acts, activityList);
+			});
+		} else {
+			this.activityList = activityList;
 			this.activitysShow = true;
-			res.acts && this.paidActivity(res.acts, activityList);
-		});
+			this.ActivityList(activityList);
+		}
 	}
 	//活动支付过滤
 	paidActivity(activity: [], activityList: any) {

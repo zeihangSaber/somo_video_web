@@ -1,5 +1,5 @@
 <template>
-	<div class="container">
+	<div class="container" v-loading="loading">
 		<DetailHeader :imgLayout="imgLayout" :headerData="headerData" class="main_header">
 			<!-- <div class="slot_return">
 				<span class="icon_return"></span>
@@ -16,6 +16,7 @@
 </template>
 
 <script lang="ts">
+import Somo_ajax from "@/utils/ajax";
 import { ImgLayout, HeaderData, ContentData } from "@/Types";
 import { getNum, detailTime } from "@/common/common";
 import { Component, Vue } from "vue-property-decorator";
@@ -29,33 +30,48 @@ import DetailContent from "../components/ActivityDetails/content.vue";
 	}
 })
 export default class activityDetails extends Vue {
-	public headerData: HeaderData;
-	public contentData: ContentData;
+	private loading: boolean = true;
+	public headerData: HeaderData = {
+		subject: "",
+		bannerUrl: "",
+		address: "",
+		money: "",
+		paidState: false,
+		startTime: "",
+		endTime: "",
+		mettingCode: ""
+	};
+	public contentData: ContentData = {
+		topic: "",
+		notice: "",
+		declare: "",
+		qr: ""
+	};
 	private activityDetail: any = {}; //通过actId筛选出的活动数据
 	private imgLayout: ImgLayout;
+	private actId: string | number;
 	@State activityList: any;
+	@State login_status: boolean;
 	created() {
 		this.imgLayout = {
 			width: "280px",
 			height: "210px"
 		};
-		this.initData();
+		this.actId = this.$route.query.actId as string;
+		this.singUpCheck();
 	}
-	initData() {
-		const actId: string = this.$route.query.actId as string;
-		this.activityDetail = this.activityList.filter((item: any): any => +item.id === +actId)[0];
-		console.log("筛选出的活动", this.activityDetail);
+	initData(mettingCode: string | number = "", paidState: boolean = false) {
+		this.activityDetail = this.activityList.filter((item: any): any => +item.id === +this.actId)[0];
 		const desc = JSON.parse(this.activityDetail.desc);
-		console.log("筛选出的活动详情", desc);
 		this.headerData = {
 			subject: this.activityDetail.subject,
 			bannerUrl: desc.banner,
 			address: desc.address,
 			money: getNum(this.activityDetail.money) as string,
-			paidState: false,
+			paidState,
 			startTime: detailTime(this.activityDetail.start),
 			endTime: detailTime(this.activityDetail.end),
-			mettingCode: ""
+			mettingCode
 		};
 		this.contentData = {
 			topic: desc.topic,
@@ -63,7 +79,20 @@ export default class activityDetails extends Vue {
 			declare: desc.declare,
 			qr: desc.qr
 		};
-		console.log(this.headerData);
+		this.loading = false;
+	}
+	singUpCheck() {
+		if (this.login_status) {
+			Somo_ajax.singUpCheck({ actid: this.actId }).then((res: any): void => {
+				if (res.paid) {
+					this.initData(res.code, Boolean(res.paid));
+				} else {
+					this.initData();
+				}
+			});
+		} else {
+			this.initData();
+		}
 	}
 }
 </script>

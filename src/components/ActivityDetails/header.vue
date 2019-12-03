@@ -1,23 +1,23 @@
 <template>
-	<div class="header">
+	<div class="activityDetails_header">
 		<slot class="return"></slot>
 		<div class="header_container">
-			<img :src="desc.banner" :style="{ width: imgLayout.width, height: imgLayout.height }" />
+			<img :src="headerData.bannerUrl" :style="{ width: imgLayout.width, height: imgLayout.height }" />
 			<div class="header_right">
-				<h2>{{ activityDetail.subject }}</h2>
-				<h3>¥ {{ money }}</h3>
+				<h2>{{ headerData.subject }}</h2>
+				<h3>¥ {{ headerData.money }}</h3>
 				<div class="TimetoAddress">
 					<span class="icon icon_time"></span>
-					<span class="container">2019年10月27日13:00-2019年10月28日17:00</span>
+					<span class="container">{{ `${headerData.startTime} - ${headerData.endTime}` }}</span>
 				</div>
 				<div class="TimetoAddress">
 					<span class="icon icon_address"></span>
-					<span class="container">福建厦门思明区望海路65号701-3</span>
+					<span class="container">{{ headerData.address }}</span>
 				</div>
 				<el-button type="primary" class="button">加入会议</el-button>
-				<div class="mettingCode" v-show="mettingCode">
+				<div class="mettingCode" v-show="headerData.mettingCode">
 					<span class="left">会议号</span>
-					<span class="right">{{ mettingCode }}</span>
+					<span class="right">{{ headerData.mettingCode }}</span>
 				</div>
 			</div>
 		</div>
@@ -25,33 +25,18 @@
 </template>
 
 <script lang="ts">
-import { ImgLayout } from "@/Types";
-import { getNum } from "@/common/common";
+import { ImgLayout, HeaderData } from "@/Types";
 import { Component, Vue, Prop } from "vue-property-decorator";
-import { State, Action } from "vuex-class";
 @Component
-export default class header extends Vue {
-	private activityDetail: any = {};
-	private actId: string = "";
-	private desc: any = "";
-	private money: any = "";
+export default class activityDetails_header extends Vue {
 	@Prop() imgLayout: ImgLayout;
-	@Prop() mettingCode: string;
-	@State activityList: any;
-	created() {
-		this.actId = this.$route.query.actId as string;
-		this.activityDetail = this.activityList.filter((item: any): any => +item.id === +this.actId)[0];
-		this.desc = JSON.parse(this.activityDetail.desc);
-		this.money = getNum(this.activityDetail.money);
-		console.log(this.imgLayout);
-		console.log(this.mettingCode);
-	}
+	@Prop() headerData: HeaderData;
 }
 </script>
 
 <style lang="less" scoped>
 @import "../../common/common.less";
-.header {
+.activityDetails_header {
 	width: 100%;
 	padding: 30px 0 30px 40px;
 	background: rgba(250, 250, 250, 1);

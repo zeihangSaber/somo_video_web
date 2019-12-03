@@ -1,8 +1,8 @@
 <template>
-	<div class="activityDetails_header">
+	<div class="activityDetails_header" :class="{ activityDetailsHeader: headerData.type === 1 }">
 		<slot class="return"></slot>
-		<div class="header_container">
-			<img :src="headerData.bannerUrl" :style="{ width: imgLayout.width, height: imgLayout.height }" />
+		<div class="header_container" v-show="headerData">
+			<img :src="headerData.bannerUrl" :style="{ width: headerData.width, height: headerData.height }" />
 			<div class="header_right">
 				<h2>{{ headerData.subject }}</h2>
 				<h3>¥ {{ headerData.money }}</h3>
@@ -27,11 +27,10 @@
 </template>
 
 <script lang="ts">
-import { ImgLayout, HeaderData } from "@/Types";
+import { HeaderData } from "@/Types";
 import { Component, Vue, Prop } from "vue-property-decorator";
 @Component
 export default class activityDetails_header extends Vue {
-	@Prop() imgLayout: ImgLayout;
 	@Prop() headerData: HeaderData;
 }
 </script>
@@ -117,5 +116,8 @@ export default class activityDetails_header extends Vue {
 			}
 		}
 	}
+}
+.activityDetailsHeader {
+	padding: 30px 0 30px 170px;
 }
 </style>

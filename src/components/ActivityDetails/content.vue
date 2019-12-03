@@ -1,5 +1,5 @@
 <template>
-	<div class="activityDetails_content">
+	<div class="activityDetails_content" :class="{ activityDetailsContent: contentData.type === 1 }">
 		<slot></slot>
 		<div class="activity_gambit activity_detail">
 			<h4>探讨话题</h4>
@@ -50,6 +50,7 @@ export default class activityDetails_content extends Vue {
 			margin-bottom: 8px;
 		}
 		.text {
+			text-align: left;
 			font-size: 14px;
 			font-weight: 400;
 			color: rgba(51, 51, 51, 1);
@@ -84,6 +85,20 @@ export default class activityDetails_content extends Vue {
 			font-weight: 400;
 			color: rgba(153, 153, 153, 1);
 			line-height: 17px;
+		}
+	}
+}
+.activityDetailsContent {
+	padding: 45px 170px 50px 170px;
+	text-align: center;
+	.activity_detail {
+		margin-bottom: 45px;
+		h4 {
+			font-size: 16px;
+			font-weight: 600;
+			color: rgba(51, 51, 51, 1);
+			line-height: 22px;
+			margin-bottom: 20px;
 		}
 	}
 }

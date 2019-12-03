@@ -1,23 +1,23 @@
 <template>
 	<div class="container" v-loading="loading">
-		<DetailHeader :imgLayout="imgLayout" :headerData="headerData" class="main_header">
+		<DetailHeader :headerData="headerData" class="main_header">
 			<!-- <div class="slot_return">
 				<span class="icon_return"></span>
 				<span>返回</span>
 			</div> -->
 		</DetailHeader>
-		<DetailContent class="main_content" :contentData="contentData">
-			<div class="title">
+		<DetailContent :contentData="contentData" class="main_content">
+			<!-- <div class="title">
 				<h3>活动详情</h3>
 				<el-divider></el-divider>
-			</div>
+			</div> -->
 		</DetailContent>
 	</div>
 </template>
 
 <script lang="ts">
 import Somo_ajax from "@/utils/ajax";
-import { ImgLayout, HeaderData, ContentData } from "@/Types";
+import { HeaderData, ContentData } from "@/Types";
 import { getNum, detailTime } from "@/common/common";
 import { Component, Vue } from "vue-property-decorator";
 import { State, Action } from "vuex-class";
@@ -39,31 +39,31 @@ export default class activityDetails extends Vue {
 		paidState: false,
 		startTime: "",
 		endTime: "",
-		mettingCode: ""
+		mettingCode: "",
+		width: "280px",
+		height: "210px",
+		type: 1
 	};
 	public contentData: ContentData = {
 		topic: "",
 		notice: "",
 		declare: "",
-		qr: ""
+		qr: "",
+		type: 1
 	};
+	private activityDetails: boolean = true;
 	private activityDetail: any = {}; //通过actId筛选出的活动数据
-	private imgLayout: ImgLayout;
 	private actId: string | number;
 	@State activityList: any;
 	@State login_status: boolean;
 	created() {
-		this.imgLayout = {
-			width: "280px",
-			height: "210px"
-		};
 		this.actId = this.$route.query.actId as string;
 		this.singUpCheck();
 	}
 	initData(mettingCode: string | number = "", paidState: boolean = false) {
 		this.activityDetail = this.activityList.filter((item: any): any => +item.id === +this.actId)[0];
 		const desc = JSON.parse(this.activityDetail.desc);
-		this.headerData = {
+		this.headerData = Object.assign(this.headerData, {
 			subject: this.activityDetail.subject,
 			bannerUrl: desc.banner,
 			address: desc.address,
@@ -72,13 +72,13 @@ export default class activityDetails extends Vue {
 			startTime: detailTime(this.activityDetail.start),
 			endTime: detailTime(this.activityDetail.end),
 			mettingCode
-		};
-		this.contentData = {
+		});
+		this.contentData = Object.assign(this.contentData, {
 			topic: desc.topic,
 			notice: desc.notice,
 			declare: desc.declare,
 			qr: desc.qr
-		};
+		});
 		this.loading = false;
 	}
 	singUpCheck() {
@@ -125,7 +125,6 @@ export default class activityDetails extends Vue {
 		}
 	}
 	.main_content {
-		width: 890px;
 		.title {
 			h3 {
 				font-size: 18px;

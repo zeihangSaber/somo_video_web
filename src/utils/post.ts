@@ -59,6 +59,10 @@ const post: Post = {
 	qrcodeQuery: {
 		url: "/udb/login/qrcode/query",
 		defaultData: ["dt", "device"]
+	},
+	uploadImg: {
+		url: "/file/image/upload",
+		defaultData: ["uid", "cookie", "device", "dt"]
 	}
 };
 export default post;

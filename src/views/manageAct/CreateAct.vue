@@ -29,14 +29,14 @@
 							type="date"
 							size="medium"
 							placeholder="选择日期"
-							v-model="form.date"
+							v-model="form.start"
 							style="width: 100%;"
 						></el-date-picker>
 						<span>~</span>
 						<el-time-picker
 							is-range
 							placeholder="选择时间"
-							v-model="form.time"
+							v-model="form.end"
 							range-separator="-"
 							start-placeholder="开始时间"
 							end-placeholder="结束时间"
@@ -117,8 +117,6 @@ export default class HeaderTab extends Vue {
 		start: 0,
 		end: 0,
 		money: 0,
-		date: 0,
-		time: 0,
 		desc: {
 			address: "",
 			topic: "",
@@ -131,20 +129,11 @@ export default class HeaderTab extends Vue {
 		}
 	};
 	submitForm() {
-		let aaa = moment(this.form.time[0]).format("HH:mm:ss");
-		let bbb = moment(this.form.time[1]).format("HH:mm:ss");
-		let ccc = moment(this.form.date).format("YYYY-MM-DD");
-
-		console.log(moment(`${ccc} ${aaa}`).format("x"));
-
-		// this.$refs[formName].validate(valid => {
-		// 	if (valid) {
-		// 		alert("submit!");
-		// 	} else {
-		// 		console.log("error submit!!");
-		// 		return false;
-		// 	}
-		// });
+		// let aaa = moment(this.form.end[0]).format("HH:mm:ss");
+		// let bbb = moment(this.form.end[1]).format("HH:mm:ss");
+		// let ccc = moment(this.form.start).format("YYYY-MM-DD");
+		//
+		// console.log(moment(`${ccc} ${aaa}`).format("x"));
 	}
 	bannerSec(res: any) {
 		let render = new FileReader();

@@ -17,10 +17,6 @@ Vue.use(VueRouter);
 
 const routes = [
 	{
-		path: "/",
-		redirect: "/home"
-	},
-	{
 		path: "/manageAct",
 		name: "manageAct",
 		component: ManageAct,
@@ -35,7 +31,7 @@ const routes = [
 	{
 		path: "/home",
 		name: "home",
-		component: Home
+		component: MeetingPage
 	},
 	{
 		path: "/product",

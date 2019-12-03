@@ -9,7 +9,7 @@ const post: Post = {
 	//查询用户的付费活动
 	singUpList: {
 		url: "/vmt/act/signup/list",
-		defaultData: ["device", "uid"]
+		defaultData: ["dt", "uid", "cookie"]
 	},
 	//注册获取验证码
 	regCode: {

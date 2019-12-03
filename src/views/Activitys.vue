@@ -33,21 +33,51 @@ export default class Activitys extends Vue {
 			end: new Date().getTime() + 3600 * 1000 * 24 * 30,
 			limit: 8
 		}).then((res: any): void => {
-			this.ActivityList(res.items);
-			this.activitysShow = true;
-			this.activityList = res.items;
 			this.activityFilter(res.items);
 		});
 	}
+	//活动过滤
 	activityFilter(list: []) {
-		console.log(this.uid);
 		const newTime = new Date().getTime();
 		let activityList = list ? deepclone(list) : [];
 		activityList = activityList
 			.filter((activity: any): any => +activity.status === 1 && activity.end > newTime)
-			.sort((a: any, b: any) => a.start - b.start);
-		console.log("未过期的活动数据列表", activityList);
-		Somo_ajax.singUpList().then((res: any) => console.log(res));
+			.sort((a: any, b: any) => b.start - a.start);
+		this.activityList = activityList;
+		this.ActivityList(activityList);
+		Somo_ajax.singUpList().then((res: any) => {
+			this.activitysShow = true;
+			res.acts && this.paidActivity(res.acts, activityList);
+		});
+	}
+	//活动支付过滤
+	paidActivity(activity: [], activityList: any) {
+		let paidIdList = activity.filter((item: any) => +item.paid === 1).map((item: any) => item.actid);
+		const noPaidId = activity.map((item: any) => item.actid);
+		for (let item of activityList) {
+			if (paidIdList.includes(item.id)) {
+				item.paid = 1;
+			} else if (noPaidId.includes(item.id) && item.money === 0) {
+				item.paid = 1;
+			} else {
+				item.paid = 0;
+			}
+		}
+		const [paidActivitys, nopaidActivitys] = activityList.reduce(
+			(activityState: any, activity: any) => {
+				if (activity.paid === 1) {
+					activityState[0].push(activity);
+				}
+				if (activity.paid === 0) {
+					activityState[1].push(activity);
+				}
+				return activityState;
+			},
+			[[], []]
+		);
+		activityList = [...paidActivitys, ...nopaidActivitys];
+		this.activityList = activityList;
+		this.ActivityList(activityList);
 	}
 }
 </script>
@@ -58,6 +88,7 @@ export default class Activitys extends Vue {
 	margin: 0 auto;
 	width: 1080px;
 	margin-bottom: 140px;
+	min-height: 600px;
 	.titile {
 		margin: 85px 0 30px 30px;
 		h2 {

@@ -5,6 +5,7 @@ import Price from "../views/Price.vue";
 import Download from "../views/Download.vue";
 import About from "../views/About.vue";
 import Activitys from "../views/Activitys.vue";
+import ActivityDetails from "../views/ActivityDetails.vue";
 import Register from "../views/Register.vue";
 import JoinConference from "../views/JoinConference.vue";
 import ManageAct from "@/views/manageAct.vue";
@@ -17,10 +18,6 @@ import MeetingPage from "@/views/MeetingPage.vue";
 Vue.use(VueRouter);
 
 const routes = [
-	{
-		path: "/",
-		redirect: "/home"
-	},
 	{
 		path: "/manageAct",
 		name: "manageAct",
@@ -41,7 +38,7 @@ const routes = [
 	{
 		path: "/home",
 		name: "home",
-		component: Home
+		component: MeetingPage
 	},
 	{
 		path: "/product",
@@ -67,6 +64,11 @@ const routes = [
 		path: "/activitys",
 		name: "activitys",
 		component: Activitys
+	},
+	{
+		path: "/activitys/details",
+		name: "activityDetails",
+		component: ActivityDetails
 	},
 	{
 		path: "/register",

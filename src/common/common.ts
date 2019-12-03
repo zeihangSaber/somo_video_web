@@ -19,7 +19,7 @@ let getNum = (x: any): string | boolean => {
 };
 
 //设置活动时间
-const setTime = (time: any): string => {
+const setTime = (time: number): string => {
 	// 获取当前日期
 	const date = new Date(time);
 
@@ -40,4 +40,23 @@ const setTime = (time: any): string => {
 	// 最后拼接字符串，得到一个格式为(yyyy-MM-dd)的日期
 	return `${nowMonth}/${strDate} ${hours}:${minutes}`;
 };
-export { getNum, setTime };
+const detailTime = (time: number): string => {
+	// 获取当前日期
+	const date = new Date(time);
+
+	// 获取当前月份
+	const nowMonth = `0${date.getMonth() + 1}`.slice(-2);
+
+	// 获取当前是几号
+	const strDate = `0${date.getDate()}`.slice(-2);
+
+	// 时
+	const hours = `0${date.getHours()}`.slice(-2);
+
+	// 分
+	const minutes = `0${date.getMinutes()}`.slice(-2);
+
+	// 最后拼接字符串，得到一个格式为(yyyy-MM-dd)的日期
+	return `${date.getFullYear()}年${nowMonth}月${strDate}日${hours}:${minutes}`;
+};
+export { getNum, setTime, detailTime };

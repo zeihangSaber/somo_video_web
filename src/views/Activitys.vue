@@ -88,6 +88,7 @@ export default class Activitys extends Vue {
 	margin: 0 auto;
 	width: 1080px;
 	margin-bottom: 140px;
+	min-height: 600px;
 	.titile {
 		margin: 85px 0 30px 30px;
 		h2 {

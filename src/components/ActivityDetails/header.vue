@@ -14,7 +14,9 @@
 					<span class="icon icon_address"></span>
 					<span class="container">{{ headerData.address }}</span>
 				</div>
-				<el-button type="primary" class="button">加入会议</el-button>
+				<el-button type="primary" class="button">{{
+					headerData.paidState ? "加入会议" : "报名参会"
+				}}</el-button>
 				<div class="mettingCode" v-show="headerData.mettingCode">
 					<span class="left">会议号</span>
 					<span class="right">{{ headerData.mettingCode }}</span>

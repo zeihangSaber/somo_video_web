@@ -1,7 +1,11 @@
 <template>
 	<div class="activity" @click="toDetails(activity.id)">
 		<div class="activity_header">
-			<span class="activity_state activity_underway"></span>
+			<span class="activity_paid" v-show="activity_paid"> </span>
+			<span
+				class="activity_state "
+				:class="[activity_state ? 'activity_underway' : 'activity_notStarted']"
+			></span>
 			<img :src="activity_desc.banner" alt="" />
 		</div>
 
@@ -20,8 +24,17 @@ export default class HeaderTab extends Vue {
 	private activity_desc: object = {};
 	private activity_time: string = "";
 	private activity_money: any = "";
+	private activity_state: boolean = false;
+	private activity_paid: boolean = false;
 	@Prop() activity: any | undefined;
 	created() {
+		const newTime = new Date().getTime();
+		if (this.activity.start <= newTime) {
+			this.activity_state = true;
+		} else {
+			this.activity_state = false;
+		}
+		this.activity_paid = Boolean(this.activity.paid);
 		this.activity_money = getNum(this.activity.money);
 		this.activity_desc = this.activity && JSON.parse(this.activity.desc);
 		this.activity_time = `${setTime(this.activity.start)}-${setTime(this.activity.end)}`;
@@ -48,10 +61,18 @@ export default class HeaderTab extends Vue {
 	.activity_header {
 		box-sizing: border-box;
 		position: relative;
+		.activity_paid {
+			position: absolute;
+			top: -2px;
+			left: -1px;
+			width: 60px;
+			height: 60px;
+			.backgroundImg("../assets/activity/activity-paid.png");
+		}
 		.activity_state {
 			position: absolute;
 			top: 5px;
-			left: 7px;
+			right: 7px;
 			width: 70px;
 			height: 24px;
 		}

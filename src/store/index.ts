@@ -13,7 +13,8 @@ export default new Vuex.Store({
 					login_status: state.login_status,
 					userName: state.userName,
 					cookie: state.cookie,
-					uid: state.uid
+					uid: state.uid,
+					Mcode: state.Mcode
 				};
 			}
 		})

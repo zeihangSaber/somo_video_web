@@ -101,7 +101,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import Somo from "../utils/somo";
-import { State } from "vuex-class";
+import { State, Action } from "vuex-class";
 @Component
 export default class JoinConference extends Vue {
 	private conference_num = ""; //会议号
@@ -114,9 +114,13 @@ export default class JoinConference extends Vue {
 	private radio_4: boolean = true;
 	@State login_status: boolean; //判断是否登录
 	@State userName: string;
+	@State Mcode: number;
+	@Action setMeetingMcode: (value: number) => void;
 	$md5: (str: string) => string;
 	created() {
-		console.log();
+		console.log("1", this.Mcode);
+		this.setMeetingMcode("1111");
+
 		this.conference_name = this.userName;
 	}
 	radio(radio_status: number) {
@@ -160,7 +164,9 @@ export default class JoinConference extends Vue {
 					Somo.joinMid({
 						mid: res.id
 					}).then((res_: any): void => {
-						console.log(123456);
+						this.setMeetingMcode(res.id);
+						console.log("2", this.Mcode);
+						// this.
 						this.$router.push({ path: "./MeetingPage" });
 					});
 				}

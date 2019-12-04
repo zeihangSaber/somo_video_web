@@ -125,6 +125,7 @@ import { VueCropper } from "vue-cropper";
 import { State, Action } from "vuex-class";
 import ajax from "@/utils/ajax";
 import moment from "moment";
+
 @Component
 export default class HeaderTab extends Vue {
 	private rules = {
@@ -258,6 +259,12 @@ export default class HeaderTab extends Vue {
 	.flex(space-between, center);
 	width: 100%;
 	padding: 0 40px;
+	.titleAct {
+		.fontStyle(20px, #000, bolder);
+	}
+	.issueBtn {
+		.fontStyle(14px, #fff);
+	}
 }
 .fromMain {
 	margin-top: 32px;
@@ -277,12 +284,6 @@ export default class HeaderTab extends Vue {
 			}
 		}
 	}
-}
-.titleAct {
-	.fontStyle(20px, #000, bolder);
-}
-.issueBtn {
-	.fontStyle(14px, #fff);
 }
 .infoAct {
 	.fontStyle(16px, @dodgerBlue);

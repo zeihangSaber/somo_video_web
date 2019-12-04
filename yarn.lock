@@ -10764,3 +10764,14 @@ yorkie@^2.0.0:
     is-ci "^1.0.10"
     normalize-path "^1.0.0"
     strip-indent "^2.0.0"
+
+zeihang_saber@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/zeihang_saber/-/zeihang_saber-0.0.2.tgz#92640caf304d4d0af37113bbc75518daf08d870d"
+  integrity sha512-9UT2xiOvrjAX95TrNMZ4c6aotpA5y130tlqCqQ027HmqZ28IYyuef68iu9RYL3qy4+vVKnWYe9YT5ZzYiP2qpQ==
+  dependencies:
+    "@types/js-base64" "^2.3.1"
+    axios "^0.19.0"
+    js-base64 "^2.5.1"
+    rtmp-streamer "^1.0.2"
+    ts-loader "^6.2.1"

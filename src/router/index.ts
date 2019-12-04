@@ -34,6 +34,11 @@ const routes = [
 				component: CreateAct
 			},
 			{
+				path: "/manageAct/status",
+				name: "statusAct",
+				component: StatusAct
+			},
+			{
 				path: "/manageAct/history",
 				name: "history",
 				component: History
@@ -104,7 +109,7 @@ const routes = [
 ];
 
 const router = new VueRouter({
-	mode: "history",
+	mode: "hash",
 	base: process.env.BASE_URL,
 	routes
 });

@@ -4,7 +4,7 @@
 			<el-avatar :size="80" :src="avatarUrl" icon="el-icon-user-solid"></el-avatar>
 			<p class="nickName">{{ nickName }}</p>
 			<p class="account">{{ account }}</p>
-			<el-menu text-color="#333">
+			<el-menu text-color="#333" router>
 				<el-menu-item v-for="item in menuList" :index="item.name" :key="item.name">
 					<i :class="item.icon"></i>
 					<span class="menuTitle" slot="title">{{ item.title }}</span>
@@ -28,7 +28,7 @@ export default class ManageAct extends Vue {
 		{
 			icon: "el-icon-s-management",
 			title: "活动管理",
-			name: "management"
+			name: "status"
 		},
 		{
 			icon: "el-icon-goods",
@@ -38,7 +38,7 @@ export default class ManageAct extends Vue {
 		{
 			icon: "el-icon-s-order",
 			title: "历史订单",
-			name: "order"
+			name: "history"
 		}
 	];
 }
@@ -77,5 +77,8 @@ export default class ManageAct extends Vue {
 	flex: 1;
 	background: @fa;
 	margin-left: 20px;
+}
+.el-menu-item {
+	text-align: left;
 }
 </style>

@@ -15,10 +15,6 @@ export interface Moudles {
 	actions: ActionTree<Moudles["state"], any>;
 	mutations: MutationTree<any>;
 }
-export interface ImgLayout {
-	width: string; //图片宽度
-	height: string; //图片高度
-}
 
 export interface HeaderData {
 	bannerUrl: string; //图片地址
@@ -29,6 +25,9 @@ export interface HeaderData {
 	startTime: string; //开始时间
 	endTime: string; //结束时间
 	address: string; //活动地址
+	width: string; //图片宽度
+	height: string; //图片高度
+	type: number; //1改变原样式，0表示不改变
 }
 
 export interface ContentData {
@@ -36,4 +35,5 @@ export interface ContentData {
 	notice: string; //报名须知
 	declare: string; //特殊说明
 	qr: string; //二维码地址
+	type: number; //1改变原样式，0表示不改变
 }

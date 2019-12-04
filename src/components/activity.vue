@@ -71,7 +71,7 @@ export default class HeaderTab extends Vue {
 		}
 		.activity_state {
 			position: absolute;
-			top: 5px;
+			bottom: 10px;
 			right: 7px;
 			width: 70px;
 			height: 24px;

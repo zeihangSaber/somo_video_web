@@ -8,8 +8,9 @@ import Activitys from "../views/Activitys.vue";
 import ActivityDetails from "../views/ActivityDetails.vue";
 import Register from "../views/Register.vue";
 import JoinConference from "../views/JoinConference.vue";
-import ManageAct from "@/views/manageAct.vue";
+import ManageAct from "@/views/manageAct/index.vue";
 import CreateAct from "@/views/manageAct/CreateAct.vue";
+import StatusAct from "@/views/manageAct/StatusAct.vue";
 import History from "@/views/manageAct/History.vue";
 import MeetingPage from "@/views/MeetingPage.vue";
 
@@ -29,8 +30,13 @@ const routes = [
 				component: CreateAct
 			},
 			{
+				path: "/manageAct/status",
+				name: "statusAct",
+				component: StatusAct
+			},
+			{
 				path: "/manageAct/history",
-				name: "createAct",
+				name: "history",
 				component: History
 			}
 		]
@@ -94,7 +100,7 @@ const routes = [
 ];
 
 const router = new VueRouter({
-	mode: "history",
+	mode: "hash",
 	base: process.env.BASE_URL,
 	routes
 });

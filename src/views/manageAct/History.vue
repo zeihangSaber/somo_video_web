@@ -23,8 +23,8 @@
 		</div>
 		<div class="table">
 			<el-table
+				max-height="500"
 				:data="tableData"
-				:height="height"
 				stripe
 				style="width: 100%;border: 1px solid #e6e6e6;"
 				class="share_table"
@@ -37,9 +37,9 @@
 				<el-table-column prop="address" label="支付方式"> </el-table-column>
 			</el-table>
 		</div>
-		<div class="paging">
+		<!-- <div class="paging">
 			<el-pagination :background="true" layout="prev, pager, next" :total="1000"></el-pagination>
-		</div>
+		</div> -->
 	</div>
 </template>
 
@@ -49,8 +49,22 @@ import { State, Action } from "vuex-class";
 @Component
 export default class History extends Vue {
 	private date = "";
-	private height = 0;
 	private tableData = [
+		{
+			date: "2016-05-02",
+			name: "王小虎",
+			address: "上海市普陀区金沙"
+		},
+		{
+			date: "2016-05-02",
+			name: "王小虎",
+			address: "上海市普陀区金沙"
+		},
+		{
+			date: "2016-05-02",
+			name: "王小虎",
+			address: "上海市普陀区金沙"
+		},
 		{
 			date: "2016-05-02",
 			name: "王小虎",
@@ -68,20 +82,18 @@ export default class History extends Vue {
 		}
 	];
 	mounted() {
-		let that = this;
-		that.size(document.body.clientHeight);
-		window.onresize = function() {
-			console.log(123);
-			that.size(document.body.clientHeight);
-		};
-
+		// let that = this;
+		// that.size(document.body.clientHeight);
+		// window.onresize = function() {
+		// 	that.size(document.body.clientHeight);
+		// };
 		// console.log(document.body.clientHeight);
 	}
 
-	size(presentHeight: any) {
-		this.height = presentHeight * 0.4;
-		console.log(this.height);
-	}
+	// size(presentHeight: any) {
+	// 	this.height = presentHeight * 0.4;
+	// 	console.log(this.height);
+	// }
 }
 </script>
 

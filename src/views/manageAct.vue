@@ -74,6 +74,7 @@ export default class ManageAct extends Vue {
 	}
 }
 .matter {
+	min-height: 800px;
 	.myScroll(matter);
 	flex: 1;
 	background: @fa;

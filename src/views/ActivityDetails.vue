@@ -1,5 +1,5 @@
 <template>
-	<div class="container" v-loading="loading">
+	<div class="container" v-show="activityDetailsShow">
 		<DetailHeader :headerData="headerData" class="main_header">
 			<!-- <div class="slot_return">
 				<span class="icon_return"></span>
@@ -30,7 +30,6 @@ import DetailContent from "../components/ActivityDetails/content.vue";
 	}
 })
 export default class activityDetails extends Vue {
-	private loading: boolean = true;
 	public headerData: HeaderData = {
 		subject: "",
 		bannerUrl: "",
@@ -51,7 +50,7 @@ export default class activityDetails extends Vue {
 		qr: "",
 		type: 1
 	};
-	private activityDetails: boolean = true;
+	private activityDetailsShow: boolean = false;
 	private activityDetail: any = {}; //通过actId筛选出的活动数据
 	private actId: string | number;
 	@State activityList: any;
@@ -79,7 +78,7 @@ export default class activityDetails extends Vue {
 			declare: desc.declare,
 			qr: desc.qr
 		});
-		this.loading = false;
+		this.activityDetailsShow = true;
 	}
 	singUpCheck() {
 		if (this.login_status) {

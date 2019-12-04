@@ -2,10 +2,16 @@
 	<div class="content">
 		<div class="aside">
 			<el-avatar :size="80" :src="avatarUrl" icon="el-icon-user-solid"></el-avatar>
-			<p class="nickName">{{ nickName }}</p>
-			<p class="account">{{ account }}</p>
-			<el-menu text-color="#333">
-				<el-menu-item v-for="item in menuList" :index="item.name" :key="item.name">
+			<p class="nickName">{{ userName }}</p>
+			<p class="account">{{ uid }}</p>
+			<el-menu text-color="#333" router style="border-right:0px">
+				<el-menu-item
+					class="item"
+					v-for="item in menuList"
+					:index="item.name"
+					:key="item.name"
+					:route="item.url"
+				>
 					<i :class="item.icon"></i>
 					<span class="menuTitle" slot="title">{{ item.title }}</span>
 				</el-menu-item>
@@ -17,28 +23,39 @@
 	</div>
 </template>
 <script lang="ts">
+import { State } from "vuex-class";
 import { Component, Vue } from "vue-property-decorator";
 const needFooter = ["home", "price", "about", "download", "product"];
 @Component
 export default class ManageAct extends Vue {
 	private avatarUrl: string = "";
-	private nickName: string = "sss";
 	private account: string = "ddd";
+	@State uid: string;
+	@State userName: string;
 	private menuList = [
 		{
 			icon: "el-icon-s-management",
 			title: "活动管理",
-			name: "management"
+			name: "management",
+			url: {
+				path: "/manageAct/create"
+			}
 		},
 		{
 			icon: "el-icon-goods",
 			title: "已购买",
-			name: "goods"
+			name: "goods",
+			url: {
+				path: "/manageAct/paidActivity"
+			}
 		},
 		{
 			icon: "el-icon-s-order",
 			title: "历史订单",
-			name: "order"
+			name: "order",
+			url: {
+				path: "/manageAct/history"
+			}
 		}
 	];
 }
@@ -63,6 +80,12 @@ export default class ManageAct extends Vue {
 	.nickName {
 		.fontStyle(20px);
 		margin-top: 20px;
+		line-height: 28px;
+	}
+	.account {
+		font-size: 16px;
+		line-height: 24px;
+		margin-bottom: 28px;
 	}
 	.el-menu-item {
 		background-color: #fafafa;
@@ -82,4 +105,8 @@ export default class ManageAct extends Vue {
 	position: relative;
 }
 .myScroll(matter);
+.item {
+	.flex-option();
+	align-items: center;
+}
 </style>

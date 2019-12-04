@@ -1,19 +1,24 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
-import Price from "../views/Price.vue";
-import Download from "../views/Download.vue";
-import About from "../views/About.vue";
-import Activitys from "../views/Activitys.vue";
-import ActivityDetails from "../views/ActivityDetails.vue";
-import Register from "../views/Register.vue";
-import JoinConference from "../views/JoinConference.vue";
+import Home from "@/views/Home.vue";
+import Price from "@/views/Price.vue";
+import Download from "@/views/Download.vue";
+import About from "@/views/About.vue";
+import Activitys from "@/views/Activitys.vue";
+import ActivityDetails from "@/views/ActivityDetails.vue";
+import Register from "@/views/Register.vue";
+import JoinConference from "@/views/JoinConference.vue";
 import ManageAct from "@/views/manageAct.vue";
 import CreateAct from "@/views/manageAct/CreateAct.vue";
+import PaidActivity from "@/views/manageAct/PaidActivity.vue";
 import History from "@/views/manageAct/History.vue";
 import MeetingPage from "@/views/MeetingPage.vue";
 
 // import PersonalCenter from "../views/PersonalCenter.vue";
+const originalPush: any = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location: any): any {
+	return originalPush.call(this, location).catch((err: any): any => err);
+};
 
 Vue.use(VueRouter);
 
@@ -30,8 +35,13 @@ const routes = [
 			},
 			{
 				path: "/manageAct/history",
-				name: "createAct",
+				name: "history",
 				component: History
+			},
+			{
+				path: "/manageAct/paidActivity",
+				name: "paidActivity",
+				component: PaidActivity
 			}
 		]
 	},

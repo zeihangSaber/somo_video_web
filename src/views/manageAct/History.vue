@@ -29,11 +29,11 @@
 				style="width: 100%;border: 1px solid #e6e6e6;"
 				class="share_table"
 			>
-				<el-table-column prop="date" label="序号" width="160"> </el-table-column>
-				<el-table-column prop="name" label="订单号" width="160"> </el-table-column>
-				<el-table-column prop="address" label="支付时间" width="160"> </el-table-column>
-				<el-table-column prop="date" label="项目名称" width="160"> </el-table-column>
-				<el-table-column prop="name" label="支付金额" width="160"> </el-table-column>
+				<el-table-column prop="date" label="序号"> </el-table-column>
+				<el-table-column prop="name" label="订单号"> </el-table-column>
+				<el-table-column prop="address" label="支付时间"> </el-table-column>
+				<el-table-column prop="date" label="项目名称"> </el-table-column>
+				<el-table-column prop="name" label="支付金额"> </el-table-column>
 				<el-table-column prop="address" label="支付方式"> </el-table-column>
 			</el-table>
 		</div>
@@ -51,32 +51,32 @@ export default class History extends Vue {
 	private date = "";
 	private tableData = [
 		{
-			date: "2016-05-02",
+			date: "01",
 			name: "王小虎",
 			address: "上海市普陀区金沙"
 		},
 		{
-			date: "2016-05-02",
+			date: "01",
 			name: "王小虎",
 			address: "上海市普陀区金沙"
 		},
 		{
-			date: "2016-05-02",
+			date: "01",
 			name: "王小虎",
 			address: "上海市普陀区金沙"
 		},
 		{
-			date: "2016-05-02",
+			date: "01",
 			name: "王小虎",
 			address: "上海市普陀区金沙"
 		},
 		{
-			date: "2016-05-04",
+			date: "01",
 			name: "王小虎",
 			address: "上海市普陀区金沙"
 		},
 		{
-			date: "2016-05-04",
+			date: "01",
 			name: "王小虎",
 			address: "上海市普陀区金沙"
 		}
@@ -114,6 +114,9 @@ input::-webkit-input-placeholder {
 .table {
 	padding: 0 20px;
 	box-sizing: border-box;
+	.share_table {
+		border-radius: 8px;
+	}
 }
 
 .head_box {

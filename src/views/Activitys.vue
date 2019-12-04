@@ -5,7 +5,12 @@
 			<h3>Selected activities</h3>
 		</div>
 		<div class="activitys" v-show="activitysShow">
-			<Activity class="activity" v-for="activity in activityList" :key="activity.id" :activity="activity" />
+			<Activity
+				class="activity"
+				v-for="activity in activityList"
+				:key="`${activity.id}${+active.paid}`"
+				:activity="activity"
+			/>
 		</div>
 		<!-- <el-pagination
 			@size-change="handleSizeChange"
@@ -20,10 +25,11 @@
 </template>
 
 <script lang="ts">
+import { actItem } from "@/Types";
 import deepclone from "../../public/deepclone";
 import Activity from "@/components/activity.vue";
 import Somo_ajax from "@/utils/ajax";
-import { State, Action } from "vuex-class";
+import { State, Action, Mutation } from "vuex-class";
 import { Component, Vue } from "vue-property-decorator";
 @Component({
 	components: {
@@ -32,39 +38,36 @@ import { Component, Vue } from "vue-property-decorator";
 })
 export default class Activitys extends Vue {
 	private loading: boolean = true;
+	@State activityList: actItem;
 	@State uid: string;
 	@State login_status: boolean;
-	@Action ActivityList: (value: []) => void;
-	public activityList: [any] = [""];
+	@Action ActivityList: () => void;
+	@Mutation setActivityList: (value: actItem) => void;
 	private activitysShow: boolean = false;
-	created() {
-		Somo_ajax.actList({
-			tenant: 0,
-			start: new Date().getTime() - 3600 * 1000 * 24 * 30,
-			end: new Date().getTime() + 3600 * 1000 * 24 * 30,
-			limit: 4
-		}).then((res: any): void => {
-			console.log("活动查询", res);
-			this.activityFilter(res.items);
-		});
+	async created() {
+		await this.ActivityList();
+		this.activityFilter();
 	}
 	//活动过滤
-	activityFilter(list: []) {
-		this.loading = false;
+	activityFilter() {
 		const newTime = new Date().getTime();
-		let activityList = list ? deepclone(list) : [];
-		activityList = activityList
+		let list = this.activityList ? deepclone(this.activityList) : [];
+		list = list
 			.filter((activity: any): any => +activity.status === 1 && activity.end > newTime)
 			.sort((a: any, b: any) => a.start - b.start);
 		if (this.login_status) {
 			Somo_ajax.singUpList().then((res: any) => {
-				this.activitysShow = true;
-				res.acts && this.paidActivity(res.acts, activityList);
+				if (res.acts) {
+					this.paidActivity(res.acts, list);
+				} else {
+					this.loading = false;
+					this.activitysShow = true;
+				}
 			});
 		} else {
-			this.activityList = activityList;
+			this.setActivityList(list);
 			this.activitysShow = true;
-			this.ActivityList(activityList);
+			this.loading = false;
 		}
 	}
 	//活动支付过滤
@@ -80,6 +83,7 @@ export default class Activitys extends Vue {
 				item.paid = 0;
 			}
 		}
+		console.log(activityList);
 		const [paidActivitys, nopaidActivitys] = activityList.reduce(
 			(activityState: any, activity: any) => {
 				if (activity.paid === 1) {
@@ -93,8 +97,9 @@ export default class Activitys extends Vue {
 			[[], []]
 		);
 		activityList = [...paidActivitys, ...nopaidActivitys];
-		this.activityList = activityList;
-		this.ActivityList(activityList);
+		this.setActivityList(activityList);
+		this.loading = false;
+		this.activitysShow = true;
 	}
 }
 </script>

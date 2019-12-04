@@ -17,6 +17,7 @@
 	</div>
 </template>
 <script lang="ts">
+import { actItem } from "@/Types";
 import { getNum, setTime } from "@/common/common";
 import { Component, Vue, Prop } from "vue-property-decorator";
 @Component
@@ -25,8 +26,8 @@ export default class HeaderTab extends Vue {
 	private activity_time: string = "";
 	private activity_money: any = "";
 	private activity_state: boolean = false;
-	private activity_paid: boolean = false;
-	@Prop() activity: any | undefined;
+	private activity_paid: boolean = true;
+	@Prop() activity: actItem;
 	created() {
 		const newTime = new Date().getTime();
 		if (this.activity.start <= newTime) {
@@ -34,6 +35,7 @@ export default class HeaderTab extends Vue {
 		} else {
 			this.activity_state = false;
 		}
+		console.log(this.activity.paid);
 		this.activity_paid = Boolean(this.activity.paid);
 		this.activity_money = getNum(this.activity.money);
 		this.activity_desc = this.activity && JSON.parse(this.activity.desc);

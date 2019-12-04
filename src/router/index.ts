@@ -13,6 +13,7 @@ import CreateAct from "@/views/manageAct/CreateAct.vue";
 import PaidActivity from "@/views/manageAct/PaidActivity.vue";
 import History from "@/views/manageAct/History.vue";
 import MeetingPage from "@/views/MeetingPage.vue";
+import StatusAct from "@/views/manageAct/StatusAct.vue";
 
 // import PersonalCenter from "../views/PersonalCenter.vue";
 const originalPush: any = VueRouter.prototype.push;
@@ -109,7 +110,7 @@ const routes = [
 ];
 
 const router = new VueRouter({
-	mode: "hash",
+	mode: "history",
 	base: process.env.BASE_URL,
 	routes
 });

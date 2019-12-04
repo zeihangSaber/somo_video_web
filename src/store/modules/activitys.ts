@@ -1,17 +1,6 @@
 import { Moudles } from "@/Types";
 import ajax from "@/utils/ajax";
-
-interface actItem {
-	id: number;
-	tenant: number;
-	subject: string;
-	desc: string;
-	money: number;
-	start: number;
-	end: number;
-	bid: number;
-	status: number;
-}
+import { actItem } from "@/Types";
 
 type actList = actItem[];
 
@@ -30,7 +19,7 @@ export default <Moudles>{
 		}
 	},
 	actions: {
-		async activityList({ commit }): Promise<any> {
+		async ActivityList({ commit }): Promise<any> {
 			const { items }: { items: actList } = await ajax.actList({
 				tenant: 0,
 				start: new Date().getTime() - 3600 * 1000 * 24 * 30,

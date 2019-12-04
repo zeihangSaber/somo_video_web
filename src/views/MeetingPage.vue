@@ -22,12 +22,6 @@ export default class MeetingPage extends Vue {
 		});
 	}
 	mounted() {
-		window.onbeforeunload = function(event) {
-			console.log(1111111111111);
-			this.setMeetingconnectStatus(1);
-			// this.leave_meeting();
-		};
-		console.log(this.connectStatus);
 		(this.$refs.saber as HTMLElement).appendChild(somo.streamerDom);
 	}
 	leave_meeting() {

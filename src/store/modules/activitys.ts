@@ -1,6 +1,8 @@
 import { Moudles } from "@/Types";
 import ajax from "@/utils/ajax";
-import { actList } from "@/Types";
+import { actItem } from "@/Types";
+
+type actList = actItem[];
 
 export default <Moudles>{
 	state: {
@@ -17,12 +19,15 @@ export default <Moudles>{
 		}
 	},
 	actions: {
-		async activityList({ commit }): Promise<any> {
-			let { items }: { items: actList } = await ajax.actList({
+		async ActivityList({ commit }): Promise<any> {
+			const { items }: { items: actList } = await ajax.actList({
 				tenant: 0,
 				start: new Date().getTime() - 3600 * 1000 * 24 * 30,
 				end: new Date().getTime() + 3600 * 1000 * 24 * 30,
 				limit: 4
+			});
+			items.map(item => {
+				return (item.paid = 0);
 			});
 			commit("setActivityList", items);
 			if (ajax.defaultParameter.tenant) {

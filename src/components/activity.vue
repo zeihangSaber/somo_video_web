@@ -1,7 +1,7 @@
 <template>
 	<div class="activity" @click="toDetails(activity.id)">
 		<div class="activity_header">
-			<span class="activity_paid" v-show="activity_paid"> </span>
+			<span class="activity_paid" v-show="+this.activity.paid === 1"> </span>
 			<span
 				class="activity_state "
 				:class="[activity_state ? 'activity_underway' : 'activity_notStarted']"
@@ -17,16 +17,16 @@
 	</div>
 </template>
 <script lang="ts">
+import { actItem } from "@/Types";
 import { getNum, setTime } from "@/common/common";
-import { Component, Vue, Prop } from "vue-property-decorator";
+import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 @Component
 export default class HeaderTab extends Vue {
 	private activity_desc: object = {};
 	private activity_time: string = "";
 	private activity_money: any = "";
 	private activity_state: boolean = false;
-	private activity_paid: boolean = false;
-	@Prop() activity: any | undefined;
+	@Prop() activity: actItem;
 	created() {
 		const newTime = new Date().getTime();
 		if (this.activity.start <= newTime) {
@@ -34,7 +34,6 @@ export default class HeaderTab extends Vue {
 		} else {
 			this.activity_state = false;
 		}
-		this.activity_paid = Boolean(this.activity.paid);
 		this.activity_money = getNum(this.activity.money);
 		this.activity_desc = this.activity && JSON.parse(this.activity.desc);
 		this.activity_time = `${setTime(this.activity.start)}-${setTime(this.activity.end)}`;

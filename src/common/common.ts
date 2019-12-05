@@ -1,5 +1,22 @@
+let checkout = (code): number => {
+	if (code === 2001) {
+		return alert("会议不存在");
+	}
+	if (code === 2002) {
+		return alert("加入失败，会议已结束");
+	}
+	if (code === 2003) {
+		return alert("加入失败，人员已满");
+	}
+	if (code === 2004) {
+		return alert("加入失败，会议已锁定");
+	}
+	if (code === 2008) {
+		return alert("余额不足，请关注【蓝猫微会】公众号联系客服及时续费");
+	}
+};
+//保留两位小数
 import moment from "moment";
-
 // 保留两位小数
 let getNum = (x: any): string | boolean => {
 	x = x / 100;
@@ -65,4 +82,4 @@ const detailTime = (time: number): string => {
 	// 最后拼接字符串，得到一个格式为(yyyy-MM-dd)的日期
 	return `${date.getFullYear()}年${nowMonth}月${strDate}日${hours}:${minutes}`;
 };
-export { getNum, setTime, detailTime, format };
+export { getNum, setTime, detailTime, checkout, format };

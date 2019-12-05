@@ -48,6 +48,5 @@ export interface actItem {
 	end: number;
 	bid: number;
 	status: number;
+	paid?: number;
 }
-
-export type actList = actItem[];

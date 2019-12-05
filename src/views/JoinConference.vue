@@ -76,15 +76,15 @@
 								<div>非会员可免费体验40分钟</div>
 							</div>
 							<div class="set">
-								<div @click="radio(3)" style="margin-right: 70px;">
-									<div :class="radio_3 == true ? 'radio' : 'radio radio_active'">
-										<img v-if="radio_3" src="../assets/JoinConference/5.png" alt="" />
+								<div @click="radio(1)" style="margin-right: 70px;">
+									<div :class="radio_1 == true ? 'radio' : 'radio radio_active'">
+										<img v-if="radio_1" src="../assets/JoinConference/5.png" alt="" />
 									</div>
 									<div>开启麦克风</div>
 								</div>
-								<div @click="radio(4)">
-									<div :class="radio_4 == true ? 'radio' : 'radio radio_active'">
-										<img v-if="radio_4" src="../assets/JoinConference/5.png" alt="" />
+								<div @click="radio(2)">
+									<div :class="radio_2 == true ? 'radio' : 'radio radio_active'">
+										<img v-if="radio_2" src="../assets/JoinConference/5.png" alt="" />
 									</div>
 									<div>开启摄像头</div>
 								</div>
@@ -102,6 +102,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import Somo from "../utils/somo";
 import { State, Action } from "vuex-class";
+import { checkout } from "../common/common";
 @Component
 export default class JoinConference extends Vue {
 	private conference_num = ""; //会议号
@@ -110,17 +111,17 @@ export default class JoinConference extends Vue {
 	private tab_status = 1; //加入会议和发起会议的tab切换
 	private radio_1: boolean = true;
 	private radio_2: boolean = true;
-	private radio_3: boolean = true;
-	private radio_4: boolean = true;
+	private mid: number;
 	@State login_status: boolean; //判断是否登录
-	@State userName: string;
-	@State Mcode: number;
-	@Action setMeetingMcode: (value: number) => void;
+	@State userName: string; //用户名称
+	@State Mcode: number; //mid
+	@Action setMeetingMcode: (value: number | string) => void; //赋值mid
+	@Action setMeetingmicrophone: (value: number) => void; //麦克风设置
+	@Action setMeetingcamera: (value: number) => void; //摄像头设置
 	$md5: (str: string) => string;
 	created() {
-		console.log("1", this.Mcode);
-		this.setMeetingMcode("1111");
-
+		// console.log("1", this.Mcode);
+		// this.setMeetingMcode(1111);
 		this.conference_name = this.userName;
 	}
 	radio(radio_status: number) {
@@ -128,14 +129,12 @@ export default class JoinConference extends Vue {
 			this.radio_1 = !this.radio_1;
 		} else if (radio_status == 2) {
 			this.radio_2 = !this.radio_2;
-		} else if (radio_status == 3) {
-			this.radio_3 = !this.radio_3;
-		} else if (radio_status == 4) {
-			this.radio_4 = !this.radio_4;
 		}
 	}
 	tab(tab_status: number) {
 		this.tab_status = tab_status;
+		this.radio_1 = true;
+		this.radio_2 = true;
 	}
 	JoinConference_btn() {
 		console.log(this.login_status);
@@ -156,19 +155,25 @@ export default class JoinConference extends Vue {
 				os: 3,
 				code: this.conference_num
 			}).then((res: any): void => {
-				if (res.code == 2001) {
-					alert("会议号输入有误，请重新输入");
-					return;
-				} else {
+				console.log(res.code);
+				console.log(res);
+				if (res.id) {
 					Somo.setMid(res.id);
 					Somo.joinMid({
 						mid: res.id
 					}).then((res_: any): void => {
+						console.log(res.id);
 						this.setMeetingMcode(res.id);
 						console.log("2", this.Mcode);
-						// this.
+						if (!this.radio_1) {
+							this.setMeetingmicrophone(0);
+						} else if (!this.radio_2) {
+							this.setMeetingcamera(0);
+						}
 						this.$router.push({ path: "./MeetingPage" });
 					});
+				} else {
+					checkout(res.code);
 				}
 			});
 		}

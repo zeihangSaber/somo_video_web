@@ -16,6 +16,8 @@ let checkout = (code): number => {
 	}
 };
 //保留两位小数
+import moment from "moment";
+// 保留两位小数
 let getNum = (x: any): string | boolean => {
 	x = x / 100;
 	let f: any = parseFloat(x);
@@ -33,6 +35,10 @@ let getNum = (x: any): string | boolean => {
 		s += "0";
 	}
 	return s;
+};
+// 按照格式过滤时间
+const format = (value: any, arg: string = "YYYY/MM/DD HH:mm:ss"): string => {
+	return moment(value).format(arg);
 };
 
 //设置活动时间
@@ -76,4 +82,4 @@ const detailTime = (time: number): string => {
 	// 最后拼接字符串，得到一个格式为(yyyy-MM-dd)的日期
 	return `${date.getFullYear()}年${nowMonth}月${strDate}日${hours}:${minutes}`;
 };
-export { getNum, setTime, detailTime, checkout };
+export { getNum, setTime, detailTime, checkout, format };

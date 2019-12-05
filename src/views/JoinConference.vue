@@ -120,8 +120,6 @@ export default class JoinConference extends Vue {
 	@Action setMeetingcamera: (value: number) => void; //摄像头设置
 	$md5: (str: string) => string;
 	created() {
-		// console.log("1", this.Mcode);
-		// this.setMeetingMcode(1111);
 		this.conference_name = this.userName;
 	}
 	radio(radio_status: number) {

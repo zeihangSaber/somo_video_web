@@ -43,6 +43,10 @@ th {
 	font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial,
 		sans-serif;
 }
+a {
+	text-decoration: none;
+	color: inherit;
+}
 html,
 body,
 .el-container {
@@ -61,6 +65,24 @@ body,
 
 .uploadBox(avatar, 104px, 104px);
 .uploadBox(poster, 139px, 104px);
-.share_table{
+
+.statueAct_btn {
+	color: #333;
+	width: 33.33%;
+	.el-radio-button__inner {
+		border-color: #dcdfe6;
+		background-color: #fafafa;
+		width: 100%;
+	}
+	&.is-active {
+		span.el-radio-button__inner {
+			background-color: #e6f1fc;
+			border-color: #a3d0fd;
+			color: @dodgerBlue;
+		}
+	}
+}
+
+.share_table {
 	height: 40%;
 }

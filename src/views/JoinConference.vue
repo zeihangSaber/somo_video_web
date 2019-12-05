@@ -119,7 +119,7 @@ export default class JoinConference extends Vue {
 	$md5: (str: string) => string;
 	created() {
 		console.log("1", this.Mcode);
-		this.setMeetingMcode("1111");
+		// this.setMeetingMcode("1111");
 
 		this.conference_name = this.userName;
 	}

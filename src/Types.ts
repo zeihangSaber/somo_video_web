@@ -37,3 +37,17 @@ export interface ContentData {
 	qr: string; //二维码地址
 	type: number; //1改变原样式，0表示不改变
 }
+
+export interface actItem {
+	id: number;
+	tenant: number;
+	subject: string;
+	desc: string;
+	money: number;
+	start: number;
+	end: number;
+	bid: number;
+	status: number;
+}
+
+export type actList = actItem[];

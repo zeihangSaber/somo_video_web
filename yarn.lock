@@ -10765,10 +10765,10 @@ yorkie@^2.0.0:
     normalize-path "^1.0.0"
     strip-indent "^2.0.0"
 
-zeihang_saber@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/zeihang_saber/-/zeihang_saber-0.0.2.tgz#92640caf304d4d0af37113bbc75518daf08d870d"
-  integrity sha512-9UT2xiOvrjAX95TrNMZ4c6aotpA5y130tlqCqQ027HmqZ28IYyuef68iu9RYL3qy4+vVKnWYe9YT5ZzYiP2qpQ==
+zeihang_saber@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/zeihang_saber/-/zeihang_saber-0.0.5.tgz#9d9d4a011b50a47d22cea17d0039c0100b3c206c"
+  integrity sha512-B+LVl73qYED9xcNblWx7q288P5BtZdd8vb8ld3HQneUsI4C5baw4A2DWqdWiqaZbhplzProiLZUu26gi6jx97w==
   dependencies:
     "@types/js-base64" "^2.3.1"
     axios "^0.19.0"

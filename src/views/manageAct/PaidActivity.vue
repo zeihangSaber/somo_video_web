@@ -25,10 +25,11 @@ export default class PaidActivity extends Vue {
 			start: new Date().getTime() - 3600 * 1000 * 24 * 360,
 			end: new Date().getTime() + 3600 * 1000 * 24 * 360
 		}).then((res: any) => {
-			console.log("已购买", res.items);
+			console.log("一年内的全部订单", res.items);
 		});
 		Somo_ajax.singUpList().then((res: any) => {
 			this.activitys = deepclone(res.acts);
+			console.log("已购买", res.acts);
 		});
 	}
 }

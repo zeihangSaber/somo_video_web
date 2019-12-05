@@ -26,6 +26,9 @@ export default <Moudles>{
 				end: new Date().getTime() + 3600 * 1000 * 24 * 30,
 				limit: 4
 			});
+			items.map(item => {
+				return (item.paid = 0);
+			});
 			commit("setActivityList", items);
 			if (ajax.defaultParameter.tenant) {
 				const arr = items.filter(item => {

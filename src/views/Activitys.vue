@@ -5,12 +5,7 @@
 			<h3>Selected activities</h3>
 		</div>
 		<div class="activitys" v-show="activitysShow">
-			<Activity
-				class="activity"
-				v-for="activity in activityList"
-				:key="`${activity.id}${+active.paid}`"
-				:activity="activity"
-			/>
+			<Activity class="activity" v-for="activity in activityList" :key="activity.id" :activity="activity" />
 		</div>
 		<!-- <el-pagination
 			@size-change="handleSizeChange"

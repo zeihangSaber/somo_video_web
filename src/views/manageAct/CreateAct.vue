@@ -122,12 +122,16 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { VueCropper } from "vue-cropper";
-import { State, Action } from "vuex-class";
+import { State, Getter, Action, Mutation, namespace } from "vuex-class";
+import { actItem, actList } from "@/Types";
 import ajax from "@/utils/ajax";
 import moment from "moment";
 
 @Component
 export default class HeaderTab extends Vue {
+	@State private myCreateActList: actList;
+	@Mutation private setMyCreateActList: (arr: actList) => void;
+
 	private rules = {
 		banner: [{ required: true, validator: this.checkBanner, message: "请添加活动海报", trigger: "submit" }],
 		subject: [{ required: true, message: "请输入活动名称", trigger: "submit" }],
@@ -139,14 +143,14 @@ export default class HeaderTab extends Vue {
 		money: [{ required: true, validator: this.check, message: "无", trigger: "submit" }]
 	};
 	private form = {
-		subject: "1",
+		subject: "",
 		start: new Date().getTime() + 3600 * 10,
 		end: new Date().getTime() + 3600 * 100,
 		money: 0,
 		desc: {
-			address: "1",
-			topic: "1",
-			notice: "1",
+			address: "",
+			topic: "",
+			notice: "",
 			declare: "",
 			banner: "",
 			qr: "",
@@ -160,8 +164,17 @@ export default class HeaderTab extends Vue {
 			return arg.getTime() <= new Date().getTime();
 		}
 	};
+	created() {
+		const { actIndex } = this.$route.query;
+		if (+actIndex !== -1) {
+			const form = this.myCreateActList[+actIndex];
+			form.desc = JSON.parse(form.desc);
+			// @ts-ignore
+			this.form = form;
+		}
+		// console.log(t this.$route.query.actIndex);
+	}
 	submitForm(formName: string) {
-		console.log(223);
 		// @ts-ignore
 		this.$refs[formName].validate((flag: boolean) => {
 			if (flag) {

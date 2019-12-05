@@ -50,3 +50,5 @@ export interface actItem {
 	status: number;
 	paid?: number;
 }
+
+export type actList = actItem[];

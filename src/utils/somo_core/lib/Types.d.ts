@@ -170,6 +170,7 @@ export interface UserInfo {
 	mid: number | null;
 	tenant: number | null;
 	cookie: string | null;
+	tenantName: string | null;
 }
 export interface Options {
 	src: string;

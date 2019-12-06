@@ -54,7 +54,7 @@ const routes = [
 	{
 		path: "/home",
 		name: "home",
-		component: MeetingPage
+		component: Home
 	},
 	{
 		path: "/product",

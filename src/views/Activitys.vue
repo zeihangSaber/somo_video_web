@@ -78,7 +78,6 @@ export default class Activitys extends Vue {
 				item.paid = 0;
 			}
 		}
-		console.log(activityList);
 		const [paidActivitys, nopaidActivitys] = activityList.reduce(
 			(activityState: any, activity: any) => {
 				if (activity.paid === 1) {

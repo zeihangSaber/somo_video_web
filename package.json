@@ -26,7 +26,7 @@
 		"vuex": "^3.1.2",
 		"vuex-class": "^0.3.2",
 		"vuex-persistedstate": "^2.7.0",
-		"zeihang_saber": "^0.0.9"
+		"zeihang_saber": "^0.2.3"
 	},
 	"devDependencies": {
 		"@types/jest": "^24.0.11",

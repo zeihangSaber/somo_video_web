@@ -1,6 +1,6 @@
 <template>
 	<div class="container" v-show="activityDetailsShow">
-		<DetailHeader :headerData="headerData" class="main_header">
+		<DetailHeader :headerData="headerData" :actId="actId" class="main_header">
 			<!-- <div class="slot_return">
 				<span class="icon_return"></span>
 				<span>返回</span>
@@ -41,7 +41,8 @@ export default class activityDetails extends Vue {
 		mettingCode: "",
 		width: "280px",
 		height: "210px",
-		type: 1
+		type: 1,
+		studentInfo: []
 	};
 	public contentData: ContentData = {
 		topic: "",
@@ -62,6 +63,7 @@ export default class activityDetails extends Vue {
 	initData(mettingCode: string | number = "", paidState: boolean = false) {
 		this.activityDetail = this.activityList.filter((item: any): any => +item.id === +this.actId)[0];
 		const desc = JSON.parse(this.activityDetail.desc);
+		console.log(desc);
 		this.headerData = Object.assign(this.headerData, {
 			subject: this.activityDetail.subject,
 			bannerUrl: desc.banner,
@@ -70,7 +72,8 @@ export default class activityDetails extends Vue {
 			paidState,
 			startTime: detailTime(this.activityDetail.start),
 			endTime: detailTime(this.activityDetail.end),
-			mettingCode
+			mettingCode,
+			studentInfo: desc.studentInfo
 		});
 		this.contentData = Object.assign(this.contentData, {
 			topic: desc.topic,

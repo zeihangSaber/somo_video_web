@@ -6,9 +6,15 @@ const post: Post = {
 		url: "/vmt/act/list",
 		defaultData: []
 	},
+	// 创建活动
 	addAct: {
 		url: "/vmt/act/add",
 		defaultData: ["uid", "dt", "cookie", "tenant"]
+	},
+	// 创建活动
+	setAct: {
+		url: "/vmt/act/set/status",
+		defaultData: ["uid", "dt", "cookie"]
 	},
 	//查询用户的付费活动
 	singUpList: {

@@ -1,6 +1,6 @@
 <template>
 	<div ref="saber">
-		<button @click="leaveMeeting">退出会议</button>
+		<button @click="push">会议</button>
 	</div>
 </template>
 
@@ -26,80 +26,11 @@ export default class MeetingPage extends Vue {
 		});
 	}
 	mounted() {
-		console.log(somo.defaultParameter.mid);
-		if (!somo.defaultParameter.mid) {
-			this.quit();
-		}
-		this.srcJoint = this.Mcode + "U" + this.uid;
-		console.log(this.srcJoint);
 		(this.$refs.saber as HTMLElement).appendChild(somo.streamerDom);
-		this.microphoneORcamera(this.microphone, 1);
-		this.microphoneORcamera(this.camera, 2);
-	}
-	beforeDestroy() {
-		alert(123);
-		this.leaveMeeting();
-		console.log("我已经离开了");
-	}
-	quit() {
-		this.leaveMeeting();
-		this.$router.push({ path: "/joinConference" });
-	}
-	leaveMeeting() {
-		somo.leave({
-			mid: this.Mcode
-		}).then((res: any) => {
-			console.log("退出成功");
-		});
 	}
 
-	microphoneORcamera(status: any, type: any) {
-		// status:1开启，0关闭；type：1麦克风设置，2摄像头设置
-		console.log(status, type);
-		if (type == 1) {
-			somo.tellYou({
-				mid: this.Mcode,
-				mic: status,
-				volume: "80%"
-			});
-		} else if (type == 2) {
-			somo.showYou({
-				mid: this.Mcode,
-				camera: status
-			});
-		}
-		if (type == 1 && status == 1) {
-			//麦克风开启
-			somo.createClient();
-			somo.clientInit();
-			somo.join();
-		}
-		if (type == 2 && status == 1) {
-			//摄像头开启
-			// console.log(111111);
-			// setTimeout(() => {
-			// 	this.push();
-			// }, 400);
-			setTimeout(this.push, 1000);
-		}
-	}
-	leave_meeting() {
-		somo.leave({
-			mid: this.Mcode
-		}).then((res: any): void => {
-			console.log(res);
-		});
-	}
 	push() {
-		// somo.publish("rtmp://rtmp2.video.somo.tech/video", "10286079U10000435");
-		somo.publish("rtmp://rtmp2.video.somo.tech/video", this.srcJoint);
-		// try {
-		// 	somo.publish("rtmp://rtmp2.video.somo.tech/video", "10286079U10000435");
-		// } catch (e) {
-		// 	console.log(e);
-		// 	console.log(1111111111);
-		// 	// error
-		// }
+		somo.publish("rtmp://rtmp2.video.somo.tech/video", "10288230U10000434");
 	}
 }
 </script>

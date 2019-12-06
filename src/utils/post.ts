@@ -1,7 +1,7 @@
 import { Post } from "@/Types";
 
 const post: Post = {
-	//全部活动列表
+	// 全部活动列表
 	actList: {
 		url: "/vmt/act/list",
 		defaultData: []
@@ -11,9 +11,14 @@ const post: Post = {
 		url: "/vmt/act/add",
 		defaultData: ["uid", "dt", "cookie", "tenant"]
 	},
-	// 创建活动
+	// 修改活动状态
 	setAct: {
 		url: "/vmt/act/set/status",
+		defaultData: ["uid", "dt", "cookie"]
+	},
+	// 修改活动
+	modifyAct: {
+		url: "/vmt/act/set",
 		defaultData: ["uid", "dt", "cookie"]
 	},
 	//查询用户的付费活动

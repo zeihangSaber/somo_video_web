@@ -8,7 +8,7 @@ import Activitys from "@/views/Activitys.vue";
 import ActivityDetails from "@/views/ActivityDetails.vue";
 import Register from "@/views/Register.vue";
 import JoinConference from "@/views/JoinConference.vue";
-import ManageAct from "@/views/manageAct.vue";
+import ManageAct from "@/views/manageAct/index.vue";
 import CreateAct from "@/views/manageAct/CreateAct.vue";
 import PaidActivity from "@/views/manageAct/PaidActivity.vue";
 import History from "@/views/manageAct/History.vue";

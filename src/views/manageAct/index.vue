@@ -22,8 +22,8 @@ const needFooter = ["home", "price", "about", "download", "product"];
 @Component
 export default class ManageAct extends Vue {
 	private avatarUrl: string = "";
-	private nickName: string = "sss";
-	private account: string = "ddd";
+	private nickName: string = "";
+	private account: string = "";
 	private menuList = [
 		{
 			icon: "el-icon-s-management",

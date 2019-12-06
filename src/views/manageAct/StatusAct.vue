@@ -64,9 +64,12 @@
 				</el-table-column>
 				<el-table-column prop="info" label="会议信息">
 					<template slot-scope="scope">
-						<p class="midTitle">会议号</p>
-						<p>{{ scope.row.info }}</p>
-						<el-button type="text">加入会议</el-button>
+						<el-button v-if="!scope.row.info" @click="getActInfo(scope.row)">获取会议号</el-button>
+						<template v-else>
+							<p class="midTitle">会议号</p>
+							<p>{{ scope.row.info }}</p>
+							<el-button type="text">加入会议</el-button>
+						</template>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -99,32 +102,33 @@ export default class StatusAct extends Vue {
 		fontSize: "12px"
 	};
 	created() {
-		ajax.setTenant(14);
 		this.ActivityList();
 	}
 	get myList() {
-		return this.myCreateActList.reduce(
-			(a: any[], b, index) => {
-				const { subject, status, start, end, money, id, desc } = b;
-				const { banner } = JSON.parse(desc);
-				const myStatus = changeStatus(status, end);
-				const obj = {
-					id,
-					index,
-					// @ts-ignore
-					statusText: StatusText[myStatus],
-					img: banner,
-					subject,
-					time: `${format(start)} - ${format(end)}`,
-					money,
-					handle: [myStatus === 2, myStatus === 1, myStatus === 2],
-					info: ""
-				};
-				a[myStatus].push(obj);
-				return a;
-			},
-			[[], [], []]
-		);
+		return this.myCreateActList.length === 0
+			? []
+			: this.myCreateActList.reduce(
+					(a: any[], b, index) => {
+						const { subject, status, start, end, money, id, desc } = b;
+						const { banner } = JSON.parse(desc);
+						const myStatus = changeStatus(status, end);
+						const obj = {
+							id,
+							index,
+							// @ts-ignore
+							statusText: StatusText[myStatus],
+							img: banner,
+							subject,
+							time: `${format(start)} - ${format(end)}`,
+							money,
+							handle: [myStatus === 2, myStatus === 1, myStatus === 2],
+							info: ""
+						};
+						a[myStatus].push(obj);
+						return a;
+					},
+					[[], [], []]
+			  );
 	}
 	changeStatus(actid: number, status: number, index: number) {
 		ajax.setAct({
@@ -139,6 +143,9 @@ export default class StatusAct extends Vue {
 	}
 	toCreate(actIndex: any) {
 		this.$router.push({ path: "./create", query: { actIndex } });
+	}
+	getActInfo(act: any) {
+		ajax.singUpCheck();
 	}
 }
 function format(v: number) {

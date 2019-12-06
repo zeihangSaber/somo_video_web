@@ -20,6 +20,11 @@ const post: Post = {
 		url: "/vmt/act/signup/check",
 		defaultData: ["dt", "uid", "cookie"]
 	},
+	//报名参加活动
+	signUp: {
+		url: "/vmt/act/signup",
+		defaultData: ["cookie", "uid", "dt"]
+	},
 	//注册获取验证码
 	regCode: {
 		url: "/udb/user/reg/code",

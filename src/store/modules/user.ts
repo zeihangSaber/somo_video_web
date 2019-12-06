@@ -4,6 +4,9 @@ export default <Moudles>{
 	state: {
 		login_status: false,
 		userName: "",
+		role: "",
+		tenant: "",
+		tenantName: "",
 		uid: "",
 		cookie: ""
 	},
@@ -20,6 +23,15 @@ export default <Moudles>{
 		},
 		Cookie(state: any, cookie: string): void {
 			state.cookie = cookie;
+		},
+		Role(state: any, role: number): void {
+			state.role = role;
+		},
+		Tenant(state: any, tenant: number) {
+			state.tenant = tenant;
+		},
+		TenantName(state: any, tenantName: string): void {
+			state.tenantName = tenantName;
 		}
 	},
 	actions: {

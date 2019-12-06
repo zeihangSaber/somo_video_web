@@ -48,12 +48,12 @@ export default class MeetingPage extends Vue {
 	leaveMeeting() {
 		somo.leave({
 			mid: this.Mcode
-		}).then(res => {
+		}).then((res: any) => {
 			console.log("退出成功");
 		});
 	}
 
-	microphoneORcamera(status, type) {
+	microphoneORcamera(status: any, type: any) {
 		// status:1开启，0关闭；type：1麦克风设置，2摄像头设置
 		console.log(status, type);
 		if (type == 1) {

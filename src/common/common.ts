@@ -1,4 +1,4 @@
-let checkout = (code): number => {
+let checkout = (code: number): any => {
 	if (code === 2001) {
 		return alert("会议不存在");
 	}

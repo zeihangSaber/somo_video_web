@@ -11,6 +11,7 @@ import JoinConference from "@/views/JoinConference.vue";
 import ManageAct from "@/views/manageAct/index.vue";
 import CreateAct from "@/views/manageAct/CreateAct.vue";
 import PaidActivity from "@/views/manageAct/PaidActivity.vue";
+import ActivityDetail from "@/views/manageAct/ActivityDetail.vue";
 import History from "@/views/manageAct/History.vue";
 import MeetingPage from "@/views/MeetingPage.vue";
 import StatusAct from "@/views/manageAct/StatusAct.vue";
@@ -48,6 +49,11 @@ const routes = [
 				path: "/manageAct/paidActivity",
 				name: "paidActivity",
 				component: PaidActivity
+			},
+			{
+				path: "/manageAct/activityDetail",
+				name: "activityDetail",
+				component: ActivityDetail
 			}
 		]
 	},
@@ -100,6 +106,10 @@ const routes = [
 		path: "/meetingPage",
 		name: "meetingPage",
 		component: MeetingPage
+	},
+	{
+		path: "/",
+		redirect: "/home"
 	}
 
 	// {

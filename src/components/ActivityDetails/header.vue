@@ -124,7 +124,11 @@ export default class activityDetails_header extends Vue {
 	}
 	joinMetting() {
 		if (this.login_status) {
-			this.fromShow = true;
+			if (this.headerData.paidState) {
+				console.log("加入会议");
+			} else {
+				this.fromShow = true;
+			}
 		} else {
 			this.LoginShow(true);
 		}

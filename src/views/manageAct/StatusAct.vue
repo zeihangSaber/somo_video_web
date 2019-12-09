@@ -21,7 +21,9 @@
 			>
 				<el-table-column prop="status" label="活动状态">
 					<template slot-scope="scope">
-						<p>{{ scope.row.statusText }}</p>
+						<p v-show="status === 1" style="color:#52C51A">{{ scope.row.statusText }}</p>
+						<p v-show="status === 2" style="color:#E52E2E">{{ scope.row.statusText }}</p>
+						<p v-show="status === 0" style="color:#666666">{{ scope.row.statusText }}</p>
 					</template>
 				</el-table-column>
 				<el-table-column prop="img" label="主图">
@@ -62,14 +64,9 @@
 						</div>
 					</template>
 				</el-table-column>
-				<el-table-column prop="info" label="会议信息">
+				<el-table-column prop="info" label="会议信息" :width="120">
 					<template slot-scope="scope">
-						<el-button v-if="!scope.row.info" @click="getActInfo(scope.row)">获取会议号</el-button>
-						<template v-else>
-							<p class="midTitle">会议号</p>
-							<p>{{ scope.row.info }}</p>
-							<el-button type="text">加入会议</el-button>
-						</template>
+						<el-button type="primary" size="mini" @click="getActInfo(scope.row)">查看详情</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -145,7 +142,12 @@ export default class StatusAct extends Vue {
 		this.$router.push({ path: "./create", query: { actIndex } });
 	}
 	getActInfo(act: any) {
-		ajax.singUpCheck();
+		this.$router.push({
+			path: "/manageAct/activityDetail",
+			query: {
+				actId: act.id
+			}
+		});
 	}
 }
 function format(v: number) {

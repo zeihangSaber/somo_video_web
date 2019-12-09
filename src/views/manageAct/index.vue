@@ -2,9 +2,9 @@
 	<div class="content">
 		<div class="aside">
 			<el-avatar :size="80" :src="avatarUrl" icon="el-icon-user-solid"></el-avatar>
-			<p class="nickName">{{ nickName }}</p>
-			<p class="account">{{ account }}</p>
-			<el-menu text-color="#333" router>
+			<p class="nickName">{{ userName }}</p>
+			<p class="account">{{ uid }}</p>
+			<el-menu text-color="#333" router :default-active="defaultActive" style="border-right:0px">
 				<el-menu-item v-for="item in menuList" :index="item.name" :key="item.name">
 					<i :class="item.icon"></i>
 					<span class="menuTitle" slot="title">{{ item.title }}</span>
@@ -17,30 +17,36 @@
 	</div>
 </template>
 <script lang="ts">
+import { State } from "vuex-class";
 import { Component, Vue } from "vue-property-decorator";
 const needFooter = ["home", "price", "about", "download", "product"];
 @Component
 export default class ManageAct extends Vue {
+	@State uid: string;
+	@State userName: string;
+	private defaultActive: string = "";
 	private avatarUrl: string = "";
-	private nickName: string = "";
-	private account: string = "";
 	private menuList = [
 		{
 			icon: "el-icon-s-management",
 			title: "活动管理",
-			name: "status"
+			name: "/manageAct/status"
 		},
 		{
 			icon: "el-icon-goods",
 			title: "已购买",
-			name: "goods"
+			name: "/manageAct/paidActivity"
 		},
 		{
 			icon: "el-icon-s-order",
 			title: "历史订单",
-			name: "history"
+			name: "/manageAct/history"
 		}
 	];
+	created() {
+		this.defaultActive = this.$route.path;
+		console.log(this.$route);
+	}
 }
 </script>
 <style lang="less">
@@ -63,6 +69,12 @@ export default class ManageAct extends Vue {
 	.nickName {
 		.fontStyle(20px);
 		margin-top: 20px;
+		line-height: 28px;
+	}
+	.account {
+		font-size: 16px;
+		line-height: 24px;
+		margin-bottom: 28px;
 	}
 	.el-menu-item {
 		background-color: #fafafa;

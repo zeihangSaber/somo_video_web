@@ -83,7 +83,7 @@ const detailTime = (time: number): string => {
 	return `${date.getFullYear()}年${nowMonth}月${strDate}日${hours}:${minutes}`;
 };
 const changeStatus = (status: number, end: number): number => {
-	if (end > new Date().getTime()) {
+	if (end < new Date().getTime()) {
 		return 0;
 	} else if (status === 0 || status === 2) {
 		return 2;

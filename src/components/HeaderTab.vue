@@ -28,7 +28,7 @@
 				登录
 			</div>
 			<div class="loginSuccess" v-show="login_status">
-				<span class="loginName">{{ userName }}</span>
+				<span class="loginName" @click="personalCenter">{{ userName }}</span>
 				<span class="tryToExit" @click="loginOut">退出</span>
 			</div>
 			<Login />
@@ -83,6 +83,9 @@ export default class HeaderTab extends Vue {
 	}
 	joinConference() {
 		this.$router.push({ name: "joinConference" });
+	}
+	personalCenter() {
+		this.$router.push({ name: "manageAct" });
 	}
 }
 </script>
@@ -168,6 +171,7 @@ export default class HeaderTab extends Vue {
 		.loginSuccess {
 			margin-bottom: 19px;
 			.loginName {
+				cursor: pointer;
 				margin-right: 19px;
 				font-size: 18px;
 				font-weight: 400;
@@ -186,4 +190,11 @@ export default class HeaderTab extends Vue {
 .el-menu.el-menu--horizontal {
 	border-bottom: 0;
 }
+// @media screen and(max-width: 1700px) {
+// 	#headerTab {
+// 		.con {
+// 			width: 1200px;
+// 		}
+// 	}
+// }
 </style>

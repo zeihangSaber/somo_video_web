@@ -55,6 +55,7 @@ export default class Activitys extends Vue {
 				if (res.acts) {
 					this.paidActivity(res.acts, list);
 				} else {
+					this.setActivityList(list);
 					this.loading = false;
 					this.activitysShow = true;
 				}

@@ -58,6 +58,10 @@ export default class ManageAct extends Vue {
 			}
 		}
 	];
+	created() {
+		console.log("xxxx", this.uid);
+		console.log("xxxx", this.userName);
+	}
 }
 </script>
 <style lang="less">

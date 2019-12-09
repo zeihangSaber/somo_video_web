@@ -3,6 +3,9 @@
 		<div class="title">已购买</div>
 		<div class="activitys" v-loading="loading">
 			<Activity class="activity" v-for="activity in activitys" :key="activity.id" :activity="activity"></Activity>
+			<div class="nodata" v-show="nodata">
+				<p>暂无数据</p>
+			</div>
 		</div>
 	</div>
 </template>
@@ -23,11 +26,17 @@ export default class PaidActivity extends Vue {
 	private activitys: actItem | any[] = [];
 	private paidId: [number];
 	private loading: boolean = true;
+	private nodata: boolean = false;
 	@Mutation setActivityList: (value: actItem) => void;
 	async created() {
 		await Somo_ajax.singUpList().then((res: any) => {
-			this.paidId = res.acts.filter((item: any) => +item.paid === 1).map((item: any) => item.actid);
-			this.getactList(this.paidId);
+			if (res.acts) {
+				this.paidId = res.acts.filter((item: any) => +item.paid === 1).map((item: any) => item.actid);
+				this.getactList(this.paidId);
+			} else {
+				this.nodata = true;
+				this.loading = false;
+			}
 		});
 	}
 	getactList(paidId: [number]) {
@@ -65,6 +74,7 @@ export default class PaidActivity extends Vue {
 @import "../../common/common.less";
 .paidActivity {
 	margin-left: 40px;
+	padding-right: 40px;
 	.title {
 		margin: 34px 0;
 		font-size: 20px;
@@ -81,6 +91,17 @@ export default class PaidActivity extends Vue {
 			background-color: #fff;
 			margin-right: 30px;
 			margin-bottom: 40px;
+		}
+		.nodata {
+			height: 600px;
+			width: 100%;
+			display: block;
+			text-align: center;
+			color: #909399;
+			line-height: 60px;
+			background-color: #fff;
+			position: relative;
+			.flex-option(row, center, center);
 		}
 	}
 }

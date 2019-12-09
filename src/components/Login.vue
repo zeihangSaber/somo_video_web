@@ -123,12 +123,20 @@ export default class Login extends Vue {
 	//账号验证
 	accoutVerify(account: any) {
 		if (account == "" || account == undefined) {
-			alert("手机号码或者邮箱不能为空！");
+			this.$message({
+				showClose: true,
+				message: "手机号码或者邮箱不能为空！",
+				type: "warning"
+			});
 			return false;
 		}
 		if (account.indexOf("@") >= 0 || !account.match(/^\d/)) {
 			if (!account.match(/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/)) {
-				alert("邮箱格式有错！");
+				this.$message({
+					showClose: true,
+					message: "邮箱格式有错！",
+					type: "error"
+				});
 				return false;
 			}
 			this.accountKid = "email";
@@ -139,7 +147,11 @@ export default class Login extends Vue {
 				!account.match(/^[0-9]{4}'\-'?[0-9]{7}$/) &&
 				!account.match(/^[0-9]{3}'\-'?[0-9]{8}$/)
 			) {
-				alert("手机号不正确！");
+				this.$message({
+					showClose: true,
+					message: "手机号不正确！",
+					type: "error"
+				});
 				return false;
 			} else {
 				this.accountKid = "mobile";
@@ -154,20 +166,36 @@ export default class Login extends Vue {
 				email: account
 			})
 				.then((res: object): void => {
-					alert("验证码已发送成功！");
+					this.$message({
+						showClose: true,
+						message: "验证码已发送成功！",
+						type: "success"
+					});
 				})
 				.catch((): void => {
-					alert("验证码发送失败，请重新发送");
+					this.$message({
+						showClose: true,
+						message: "验证码发送失败，请重新发送",
+						type: "error"
+					});
 				});
 		} else if (this.accountKid === "mobile") {
 			Somo_ajax.mobileCode({
 				mobile: account
 			})
 				.then((res: object): void => {
-					alert("验证码已发送成功！");
+					this.$message({
+						showClose: true,
+						message: "验证码已发送成功！",
+						type: "success"
+					});
 				})
 				.catch((): void => {
-					alert("验证码发送失败，请重新发送");
+					this.$message({
+						showClose: true,
+						message: "验证码发送失败，请重新发送",
+						type: "error"
+					});
 				});
 		}
 	}
@@ -182,6 +210,12 @@ export default class Login extends Vue {
 				this.setData(res);
 			});
 		} else if (from.type === "code") {
+			if (!this.accountKid)
+				return this.$message({
+					showClose: true,
+					message: "输入有误！",
+					type: "warning"
+				});
 			if (this.accountKid === "email") {
 				Somo_ajax.emailLogin({
 					email: from.account,
@@ -226,7 +260,11 @@ export default class Login extends Vue {
 		this.qrcodeTimetimer = setInterval(() => {
 			Somo_ajax.qrcodeQuery({ code }).then((res: any): void => {
 				if (res.code && +res.code === 1013) {
-					alert("二维码已失效");
+					this.$message({
+						showClose: true,
+						message: "二维码已失效",
+						type: "warning"
+					});
 					clearInterval(this.qrcodeTimetimer);
 					window.location.pathname = "/";
 					return;
@@ -253,7 +291,14 @@ export default class Login extends Vue {
 		this.Role(Somo_ajax.defaultParameter.role as number);
 		this.Tenant(Somo_ajax.defaultParameter.tenant as number);
 		this.TenantName(Somo_ajax.defaultParameter.tenantName as string);
-		// window.location.pathname = "home";
+		this.$message({
+			showClose: true,
+			message: "登录成功！",
+			type: "success"
+		});
+		setTimeout(() => {
+			window.location.pathname = "home";
+		}, 1000);
 	}
 }
 </script>

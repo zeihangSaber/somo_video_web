@@ -151,49 +151,35 @@ export default class JoinConference extends Vue {
 				return;
 			}
 			console.log(Somo.defaultParameter);
-			Somo.queryMid({
-				os: 3,
-				code: this.conference_num
-			}).then((res: any): void => {
-				console.log(res.code);
-				console.log(res);
-				if (res.id) {
-					console.log(res);
-					Somo.setMid(res.id);
-					// let route_arguments = {
-					// 	mid: res.id,
-					// 	uid: this.uid,
-					// 	cookie: this.cookie,
-					// 	camera: this.radio_2, //摄像头开关状态
-					// 	microphone: this.radio_1 //麦克风开关状态
-					// };
-					// window.location.href = "http://192.168.1.171:8080/?arguments=" + JSON.stringify(route_arguments);
-					Somo.joinMid({
-						mid: res.id
-					}).then((res_: any): void => {
-						console.log(res);
-						this.setMeetingMcode(res.id);
-						console.log("2", this.Mcode);
-						if (!this.radio_1) {
-							this.setMeetingmicrophone(0);
-						} else if (!this.radio_2) {
-							this.setMeetingcamera(0);
-						}
-						this.$router.push({ path: "./meetingPage" });
-						let route_arguments = {
-							mid: this.Mcode,
-							uid: this.uid,
-							// url_head:
-							camera: this.radio_2, //摄像头开关状态
-							microphone: this.radio_1 //麦克风开关状态
-						};
-						// window.location.href =
-						// "http://192.168.1.171:8080/?arguments=" + JSON.stringify(route_arguments);
-					});
-				} else {
-					checkout(res.code);
-				}
-			});
+			let route_arguments = {
+				mid: this.conference_num,
+				uid: this.uid,
+				cookie: this.cookie,
+				camera: this.radio_2, //摄像头开关状态
+				microphone: this.radio_1 //麦克风开关状态
+			};
+			window.location.href = "http://192.168.1.171:8081/?arguments=" + JSON.stringify(route_arguments);
+			// Somo.queryMid({
+			// 	os: 3,
+			// 	code: this.conference_num
+			// }).then((res: any): void => {
+			// 	console.log(res.code);
+			// 	console.log(res);
+			// 	if (res.id) {
+			// 		console.log(res);
+			// 		Somo.setMid(res.id);
+			// 		let route_arguments = {
+			// 			mid: res.id,
+			// 			uid: this.uid,
+			// 			cookie: this.cookie,
+			// 			camera: this.radio_2, //摄像头开关状态
+			// 			microphone: this.radio_1 //麦克风开关状态
+			// 		};
+			// 		window.location.href = "http://192.168.1.171:8081/?arguments=" + JSON.stringify(route_arguments);
+			// 	} else {
+			// 		checkout(res.code);
+			// 	}
+			// });
 		}
 	}
 	sponsorMeeting() {

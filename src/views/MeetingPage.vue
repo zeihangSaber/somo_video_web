@@ -36,6 +36,10 @@ export default class MeetingPage extends Vue {
 		this.microphoneORcamera(this.microphone, 1);
 		this.microphoneORcamera(this.camera, 2);
 	}
+	aa() {
+		sound = new Sound();
+		sound.setVolume(0);
+	}
 	beforeDestroy() {
 		alert(123);
 		this.leaveMeeting();
@@ -52,7 +56,6 @@ export default class MeetingPage extends Vue {
 			console.log("退出成功");
 		});
 	}
-
 	microphoneORcamera(status, type) {
 		// status:1开启，0关闭；type：1麦克风设置，2摄像头设置
 		console.log(status, type);
@@ -70,9 +73,9 @@ export default class MeetingPage extends Vue {
 		}
 		if (type == 1 && status == 1) {
 			//麦克风开启
-			somo.createClient();
-			somo.clientInit();
-			somo.join();
+			// somo.createClient();
+			// somo.clientInit();
+			// somo.join();
 		}
 		if (type == 2 && status == 1) {
 			//摄像头开启
@@ -92,6 +95,7 @@ export default class MeetingPage extends Vue {
 	}
 	push() {
 		// somo.publish("rtmp://rtmp2.video.somo.tech/video", "10286079U10000435");
+		console.log(this.srcJoint);
 		somo.publish("rtmp://rtmp2.video.somo.tech/video", this.srcJoint);
 		// try {
 		// 	somo.publish("rtmp://rtmp2.video.somo.tech/video", "10286079U10000435");

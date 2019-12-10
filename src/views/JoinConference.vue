@@ -115,6 +115,8 @@ export default class JoinConference extends Vue {
 	@State login_status: boolean; //判断是否登录
 	@State userName: string; //用户名称
 	@State Mcode: number; //mid
+	@State uid: number;
+	@State cookie: string;
 	@Action setMeetingMcode: (value: number | string) => void; //赋值mid
 	@Action setMeetingmicrophone: (value: number) => void; //麦克风设置
 	@Action setMeetingcamera: (value: number) => void; //摄像头设置
@@ -156,11 +158,20 @@ export default class JoinConference extends Vue {
 				console.log(res.code);
 				console.log(res);
 				if (res.id) {
+					console.log(res);
 					Somo.setMid(res.id);
+					// let route_arguments = {
+					// 	mid: res.id,
+					// 	uid: this.uid,
+					// 	cookie: this.cookie,
+					// 	camera: this.radio_2, //摄像头开关状态
+					// 	microphone: this.radio_1 //麦克风开关状态
+					// };
+					// window.location.href = "http://192.168.1.171:8080/?arguments=" + JSON.stringify(route_arguments);
 					Somo.joinMid({
 						mid: res.id
 					}).then((res_: any): void => {
-						console.log(res.id);
+						console.log(res);
 						this.setMeetingMcode(res.id);
 						console.log("2", this.Mcode);
 						if (!this.radio_1) {
@@ -168,7 +179,16 @@ export default class JoinConference extends Vue {
 						} else if (!this.radio_2) {
 							this.setMeetingcamera(0);
 						}
-						this.$router.push({ path: "./MeetingPage" });
+						this.$router.push({ path: "./meetingPage" });
+						let route_arguments = {
+							mid: this.Mcode,
+							uid: this.uid,
+							// url_head:
+							camera: this.radio_2, //摄像头开关状态
+							microphone: this.radio_1 //麦克风开关状态
+						};
+						// window.location.href =
+						// "http://192.168.1.171:8080/?arguments=" + JSON.stringify(route_arguments);
 					});
 				} else {
 					checkout(res.code);

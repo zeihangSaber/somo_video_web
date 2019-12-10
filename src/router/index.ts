@@ -8,9 +8,10 @@ import Activitys from "@/views/Activitys.vue";
 import ActivityDetails from "@/views/ActivityDetails.vue";
 import Register from "@/views/Register.vue";
 import JoinConference from "@/views/JoinConference.vue";
-import ManageAct from "@/views/manageAct.vue";
+import ManageAct from "@/views/manageAct/index.vue";
 import CreateAct from "@/views/manageAct/CreateAct.vue";
 import PaidActivity from "@/views/manageAct/PaidActivity.vue";
+import ActivityDetail from "@/views/manageAct/ActivityDetail.vue";
 import History from "@/views/manageAct/History.vue";
 import MeetingPage from "@/views/MeetingPage.vue";
 import StatusAct from "@/views/manageAct/StatusAct.vue";
@@ -48,13 +49,18 @@ const routes = [
 				path: "/manageAct/paidActivity",
 				name: "paidActivity",
 				component: PaidActivity
+			},
+			{
+				path: "/manageAct/activityDetail",
+				name: "activityDetail",
+				component: ActivityDetail
 			}
 		]
 	},
 	{
 		path: "/home",
 		name: "home",
-		component: MeetingPage
+		component: Home
 	},
 	{
 		path: "/product",
@@ -100,6 +106,10 @@ const routes = [
 		path: "/meetingPage",
 		name: "meetingPage",
 		component: MeetingPage
+	},
+	{
+		path: "/",
+		redirect: "/home"
 	}
 
 	// {

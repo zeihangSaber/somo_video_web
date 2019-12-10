@@ -28,6 +28,7 @@ export interface HeaderData {
 	width: string; //图片宽度
 	height: string; //图片高度
 	type: number; //1改变原样式，0表示不改变
+	studentInfo: []; //报名规则
 }
 
 export interface ContentData {
@@ -50,3 +51,5 @@ export interface actItem {
 	status: number;
 	paid?: number;
 }
+
+export type actList = actItem[];

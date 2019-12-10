@@ -1,10 +1,10 @@
 <template>
-	<div class="constant">
-		<el-button class="backBtn" type="text" icon="el-icon-arrow-left">返回</el-button>
+	<div class="constant createAct">
+		<el-button class="backBtn" @click="back" type="text" icon="el-icon-arrow-left">返回</el-button>
 		<div class="smallTitle">
 			<span class="titleAct">创建活动</span>
 			<el-button class="issueBtn" @click="submitForm('form')" type="primary" icon="el-icon-s-promotion">
-				发布活动
+				{{ +this.$route.query.actIndex === -1 ? "发布活动" : "发布修改" }}
 			</el-button>
 		</div>
 		<el-form ref="form" :model="form" :rules="rules" label-width="110px">
@@ -65,7 +65,12 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item label="探讨话题" prop="topic">
-					<el-input type="textarea" v-model="form.desc.topic" placeholder="请输入话题内容"></el-input>
+					<el-input
+						type="textarea"
+						v-model="form.desc.topic"
+						:autosize="{ minRows: 4, maxRows: 8 }"
+						placeholder="请输入话题内容"
+					></el-input>
 				</el-form-item>
 				<el-form-item label="报名须知">
 					<el-input size="medium" v-model="form.desc.notice"></el-input>
@@ -96,7 +101,13 @@
 				<span class="infoAct">报名设置</span>
 				<el-divider></el-divider>
 				<el-form-item label="收费金额" prop="money">
-					<el-input-number v-model="form.money" size="medium" :min="0" :max="9999.99"></el-input-number>
+					<el-input-number
+						:disabled="+this.$route.query.actIndex !== -1"
+						v-model="form.money"
+						size="medium"
+						:min="0"
+						:max="9999.99"
+					></el-input-number>
 				</el-form-item>
 				<el-form-item label="报名信息采集" prop="studentInfo">
 					<el-checkbox-group v-model="form.desc.studentInfo">
@@ -110,7 +121,7 @@
 				<span class="infoAct">活动发布</span>
 				<el-divider></el-divider>
 				<el-form-item label="发布状态选择" prop="status">
-					<el-radio-group v-model="form.desc.status">
+					<el-radio-group v-model="form.status">
 						<el-radio :label="1">上架</el-radio>
 						<el-radio :label="2">下架</el-radio>
 					</el-radio-group>
@@ -122,12 +133,16 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { VueCropper } from "vue-cropper";
-import { State, Action } from "vuex-class";
+import { State, Getter, Action, Mutation, namespace } from "vuex-class";
+import { actItem, actList } from "@/Types";
 import ajax from "@/utils/ajax";
 import moment from "moment";
 
 @Component
-export default class HeaderTab extends Vue {
+export default class CreateAct extends Vue {
+	@State private myCreateActList: actList;
+	@Mutation private setMyCreateActList: (arr: actList) => void;
+
 	private rules = {
 		banner: [{ required: true, validator: this.checkBanner, message: "请添加活动海报", trigger: "submit" }],
 		subject: [{ required: true, message: "请输入活动名称", trigger: "submit" }],
@@ -139,19 +154,19 @@ export default class HeaderTab extends Vue {
 		money: [{ required: true, validator: this.check, message: "无", trigger: "submit" }]
 	};
 	private form = {
-		subject: "1",
+		subject: "",
 		start: new Date().getTime() + 3600 * 10,
 		end: new Date().getTime() + 3600 * 100,
 		money: 0,
+		status: 2,
 		desc: {
-			address: "1",
-			topic: "1",
-			notice: "1",
+			address: "",
+			topic: "",
+			notice: "",
 			declare: "",
 			banner: "",
 			qr: "",
-			studentInfo: ["name", "phone"],
-			status: 2
+			studentInfo: ["name", "phone"]
 		}
 	};
 	private bannerFlag: boolean = false;
@@ -160,17 +175,36 @@ export default class HeaderTab extends Vue {
 			return arg.getTime() <= new Date().getTime();
 		}
 	};
+	created() {
+		const { actIndex } = this.$route.query;
+		if (+actIndex !== -1) {
+			const form = { ...this.myCreateActList[+actIndex] };
+			form.desc = JSON.parse(form.desc);
+			// @ts-ignore
+			this.form = form;
+			this.form.money = form.money / 100;
+			this.form.desc.studentInfo = [...this.form.desc.studentInfo, ...["name", "phone"]];
+			this.bannerFlag = !!this.form.desc.banner.length;
+		}
+		// console.log(t this.$route.query.actIndex);
+	}
 	submitForm(formName: string) {
-		console.log(223);
 		// @ts-ignore
 		this.$refs[formName].validate((flag: boolean) => {
 			if (flag) {
 				const obj = { ...this.form };
 				// @ts-ignore
 				obj.desc = JSON.stringify(this.form.desc);
-				ajax.addAct(obj).then((res: any) => {
-					console.log(res);
-				});
+				obj.money = obj.money * 100;
+				if (+this.$route.query.actIndex === -1) {
+					ajax.addAct(obj).then((res: actItem) => {
+						this.successSubmit(res);
+					});
+				} else {
+					ajax.modifyAct(obj).then((res: actItem) => {
+						this.successSubmit(res);
+					});
+				}
 			} else {
 				console.log("error submit!!");
 				return false;
@@ -212,6 +246,8 @@ export default class HeaderTab extends Vue {
 		!this.form.desc.address.length ? callback(new Error()) : callback();
 	}
 	checkTime(rule: any, value: any, callback: any) {
+		this.form.end = new Date(this.form.end).getTime();
+		this.form.start = new Date(this.form.start).getTime();
 		//"活动时间太长啦"
 		if (this.form.end > this.form.start + 1000 * 60 * 60 * 24) {
 			rule.message = "活动时间太长啦";
@@ -231,6 +267,17 @@ export default class HeaderTab extends Vue {
 	}
 	checkTopic(rule: any, value: any, callback: any) {
 		!this.form.desc.topic.length ? callback(new Error()) : callback();
+	}
+	successSubmit(res: actItem) {
+		const { actIndex } = this.$route.query;
+		this.$message.success("发布成功");
+		let arr = [...this.myCreateActList];
+		arr[+actIndex] = res;
+		this.setMyCreateActList(arr);
+		this.back();
+	}
+	back() {
+		this.$router.back();
 	}
 }
 </script>
@@ -291,5 +338,8 @@ export default class HeaderTab extends Vue {
 .el-divider {
 	background-color: @dodgerBlue;
 	margin: 8px 0;
+}
+.el-input__inner {
+	font-size: 14px;
 }
 </style>

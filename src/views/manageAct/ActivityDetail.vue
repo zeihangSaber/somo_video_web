@@ -1,35 +1,29 @@
 <template>
 	<div class="container" v-show="activityDetailsShow">
 		<DetailHeader :headerData="headerData" :actId="actId" class="main_header">
-			<!-- <div class="slot_return">
-				<span class="icon_return"></span>
-				<span>返回</span>
-			</div> -->
+			<div class="slot_return">
+				<el-button class="backBtn" @click="back" type="text" icon="el-icon-arrow-left">返回</el-button>
+			</div>
 		</DetailHeader>
-		<DetailContent :contentData="contentData" class="main_content">
-			<!-- <div class="title">
-				<h3>活动详情</h3>
-				<el-divider></el-divider>
-			</div> -->
-		</DetailContent>
+		<DetailContent :contentData="contentData" class="main_content"> </DetailContent>
 	</div>
 </template>
 
 <script lang="ts">
-import Somo_ajax from "@/utils/ajax";
+import Somo_ajax from "../../utils/ajax";
 import { HeaderData, ContentData } from "@/Types";
 import { getNum, detailTime } from "@/common/common";
 import { Component, Vue } from "vue-property-decorator";
 import { State, Action } from "vuex-class";
-import DetailHeader from "../components/ActivityDetails/header.vue";
-import DetailContent from "../components/ActivityDetails/content.vue";
+import DetailHeader from "../../components/ActivityDetails/header.vue";
+import DetailContent from "../../components/ActivityDetails/content.vue";
 @Component({
 	components: {
 		DetailHeader,
 		DetailContent
 	}
 })
-export default class activityDetails extends Vue {
+export default class activityDetail extends Vue {
 	public headerData: HeaderData = {
 		subject: "",
 		bannerUrl: "",
@@ -39,9 +33,9 @@ export default class activityDetails extends Vue {
 		startTime: "",
 		endTime: "",
 		mettingCode: "",
-		width: "280px",
-		height: "210px",
-		type: 1,
+		width: "360px",
+		height: "270px",
+		type: 0,
 		studentInfo: []
 	};
 	public contentData: ContentData = {
@@ -49,7 +43,7 @@ export default class activityDetails extends Vue {
 		notice: "",
 		declare: "",
 		qr: "",
-		type: 1
+		type: 0
 	};
 	private activityDetailsShow: boolean = false;
 	private activityDetail: any = {}; //通过actId筛选出的活动数据
@@ -63,7 +57,6 @@ export default class activityDetails extends Vue {
 	initData(mettingCode: string | number = "", paidState: boolean = false) {
 		this.activityDetail = this.activityList.filter((item: any): any => +item.id === +this.actId)[0];
 		const desc = JSON.parse(this.activityDetail.desc);
-		console.log(desc);
 		this.headerData = Object.assign(this.headerData, {
 			subject: this.activityDetail.subject,
 			bannerUrl: desc.banner,
@@ -86,44 +79,29 @@ export default class activityDetails extends Vue {
 	singUpCheck() {
 		if (this.login_status) {
 			Somo_ajax.singUpCheck({ actid: this.actId }).then((res: any): void => {
-				if (res.paid) {
-					this.initData(res.code, Boolean(res.paid));
-				} else {
-					this.initData();
-				}
+				this.initData(res.code, true);
 			});
 		} else {
 			this.initData();
 		}
 	}
+	back() {
+		this.$router.back();
+	}
 }
 </script>
 
 <style lang="less" scoped>
-@import "../common/common.less";
+@import "../../common/common.less";
 .container {
-	width: 1200px;
 	margin: 0 auto;
-	margin-top: 50px;
 	margin-bottom: 66px;
 	.main_header {
 		border-radius: 8px;
 		margin-bottom: 20px;
-		.slot_return {
-			margin-bottom: 24px;
-			span {
-				font-size: 14px;
-				font-weight: 400;
-				color: rgba(51, 51, 51, 1);
-				line-height: 20px;
-			}
-			.icon_return {
-				.backgroundImg("../assets/activity/activity-icon_retuen.png");
-				display: inline-block;
-				width: 9px;
-				height: 12px;
-				margin-right: 5px;
-			}
+		.backBtn {
+			.fontStyle(14px, #333);
+			margin-bottom: 20px;
 		}
 	}
 	.main_content {

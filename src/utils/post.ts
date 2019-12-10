@@ -1,14 +1,25 @@
 import { Post } from "@/Types";
 
 const post: Post = {
-	//全部活动列表
+	// 全部活动列表
 	actList: {
 		url: "/vmt/act/list",
 		defaultData: []
 	},
+	// 创建活动
 	addAct: {
 		url: "/vmt/act/add",
 		defaultData: ["uid", "dt", "cookie", "tenant"]
+	},
+	// 修改活动状态
+	setAct: {
+		url: "/vmt/act/set/status",
+		defaultData: ["uid", "dt", "cookie"]
+	},
+	// 修改活动
+	modifyAct: {
+		url: "/vmt/act/set",
+		defaultData: ["uid", "dt", "cookie"]
 	},
 	//查询用户的付费活动
 	singUpList: {
@@ -19,6 +30,11 @@ const post: Post = {
 	singUpCheck: {
 		url: "/vmt/act/signup/check",
 		defaultData: ["dt", "uid", "cookie"]
+	},
+	//报名参加活动
+	signUp: {
+		url: "/vmt/act/signup",
+		defaultData: ["cookie", "uid", "dt"]
 	},
 	//注册获取验证码
 	regCode: {

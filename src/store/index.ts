@@ -14,7 +14,8 @@ export default new Vuex.Store({
 					userName: state.userName,
 					cookie: state.cookie,
 					uid: state.uid,
-					Mcode: state.Mcode
+					Mcode: state.Mcode,
+					myCreateActList: state.myCreateActList
 				};
 			}
 		})

@@ -4,7 +4,13 @@
 			<span class="activity_paid" v-show="+this.activity.paid === 1"> </span>
 			<span
 				class="activity_state "
-				:class="[activity_state ? 'activity_underway' : 'activity_notStarted']"
+				:class="[
+					activity_state === 1
+						? 'activity_underway'
+						: activity_state === 2
+						? 'activity-end'
+						: 'activity_notStarted'
+				]"
 			></span>
 			<img :src="activity_desc.banner" alt="" />
 		</div>
@@ -25,14 +31,16 @@ export default class HeaderTab extends Vue {
 	private activity_desc: object = {};
 	private activity_time: string = "";
 	private activity_money: any = "";
-	private activity_state: boolean = false;
+	private activity_state: number = 0; // 0 未开始  1 进行中  2已结束
 	@Prop() activity: actItem;
 	created() {
 		const newTime = new Date().getTime();
-		if (this.activity.start <= newTime) {
-			this.activity_state = true;
+		if (this.activity.end >= newTime && this.activity.start <= newTime) {
+			this.activity_state = 1;
+		} else if (this.activity.end < newTime) {
+			this.activity_state = 2;
 		} else {
-			this.activity_state = false;
+			this.activity_state = 0;
 		}
 		this.activity_money = getNum(this.activity.money);
 		this.activity_desc = this.activity && JSON.parse(this.activity.desc);
@@ -80,6 +88,9 @@ export default class HeaderTab extends Vue {
 		}
 		.activity_notStarted {
 			.backgroundImg("../assets/activity/activity-notStarted.png");
+		}
+		.activity-end {
+			.backgroundImg("../assets/activity/activity-end.png");
 		}
 		img {
 			display: inline-block;

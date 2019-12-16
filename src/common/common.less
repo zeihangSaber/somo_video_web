@@ -1,0 +1,64 @@
+@fa: #fafafa;
+@dodgerBlue: #1890ff;
+
+.flex(@j: normal, @a: normal) {
+	justify-content: @j;
+	align-items: @a;
+	display: flex;
+}
+.fontStyle(@s: 14px, @c: #000, @w: normal) {
+	font-size: @s;
+	color: @c;
+	font-weight: @w;
+}
+.radius(@r, @h, @w, @b: none) {
+	line-height: @h;
+	border-radius: @r;
+	background: @b;
+	display: inline-block;
+	text-align: center;
+	width: @w;
+}
+
+//定义宽高
+.box(@width, @height) {
+	width: @width;
+	height: @height;
+}
+//定义背景图片
+.backgroundImg(@url) {
+	background: url(@url) no-repeat;
+	background-position: center center;
+	background-size: 100% 100%;
+}
+//定义flex布局
+.flex-option(@flex-direction:row,@justify-content:flex-start,@align-items:flex-start) {
+	display: flex;
+	flex-direction: @flex-direction;
+	justify-content: @justify-content;
+	align-items: @align-items;
+}
+//多行出现省略号  通过@line来控制行数
+.text-overflow(@line) {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: @line;
+	overflow: hidden;
+}
+
+.myScroll(@params) {
+	.@{params}::-webkit-scrollbar {
+		width: 4px;
+		height: 1px;
+	}
+	.@{params}::-webkit-scrollbar-thumb {
+		border-radius: 2px;
+		box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+		opacity: 0.3;
+	}
+	.@{params}::-webkit-scrollbar-track {
+		margin-top: 20px;
+		border-radius: 2px;
+		background: aliceblue;
+	}
+}

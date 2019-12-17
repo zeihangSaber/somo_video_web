@@ -102,7 +102,7 @@ export default {
 	},
 	computed: {
 		maxSlide() {
-			let maxSlide = Math.floor(this.members.length/4);
+			let maxSlide = Math.max(Math.floor(this.members.length/4), 1);
 			this.speaker && ++maxSlide;
 			this.sharer && ++maxSlide;
 			return maxSlide
@@ -203,5 +203,10 @@ button, .icon-close {
 		flex: 1;
 		background-color: #91949C;
 	}
+}
+#myStream {
+	position: fixed;
+	right: -100%;
+	top: 0;
 }
 </style>

@@ -44,105 +44,105 @@ import Ctrl from "./components/controls";
 import SideBox from "./components/side";
 import antiquity from "./utils/Antiquity";
 export default {
-  name: "app",
-  components: {
-    Player,
-    Ctrl,
-    SideBox
-  },
-  data() {
-    return {
-      meetingInfo: {},
-      members: [],
-      peopleNum: 0,
-      micNum: 0,
-      isShowSide: true,
-      isShowMessage: true,
-      isShowParty: true,
-      speaker: null,
-      sharer: null,
-      playerNum: 4,
-      slideCount: 2
-    };
-  },
-  created() {
-    antiquity.on("getMidInfo", meetingInfo => {
-      this.meetingInfo = meetingInfo;
-      console.log("meetingInfo", this.meetingInfo);
-    });
-    antiquity.on("getMembers", members => {
-      this.members = members;
-      this.peopleNum = members.length;
-      this.micNum = members.filter(item => {
-        if (item.mic === 0) {
-          return item;
-        }
-      }).length;
-      console.log("members", this.members);
-    });
-    antiquity.on("getShareUrl", sharer => {
-      console.log("sharer", sharer);
-    });
-    antiquity.on("getSpeaker", speaker => {
-      this.speaker = speaker;
-      console.log("speaker", speaker);
-    });
-  },
-  async mounted() {
-    const { offsetWidth, offsetHeight } = this.$refs.myStream;
-    this.$nextTick(async () => {
-      console.log(this.$refs.myStream);
-      await antiquity.joinMeeting({
-        code: 66666,
-        width: offsetWidth,
-        height: offsetHeight,
-        dom: this.$refs.myStream
-      });
-      antiquity.rtmp.setScreenSize(offsetWidth * 1.2, offsetHeight * 1.2);
-      antiquity.rtmp.setScreenPosition(-offsetWidth * 0.15, 0);
-      antiquity.rtmp.setWrap();
-      antiquity.rtmp.setCamMode(1280, 720, 24);
-      antiquity.publish(this.meetingInfo.video_url.slice(0, -1));
-    });
-  },
-  computed: {
-    maxSlide() {
-      let maxSlide = Math.floor(this.members.length / 4);
-      this.speaker && ++maxSlide;
-      this.sharer && ++maxSlide;
-      return maxSlide;
-    },
-    speakFlag() {
-      if (this.shareFlag) return this.speaker && this.slideCount === 2;
-      return this.speaker && this.slideCount === 1;
-    },
-    shareFlag() {
-      return this.sharer && this.slideCount === 1;
-    },
-    howMany() {
-      if (this.shareFlag || this.speakFlag) return "one";
-      if (this.playerNum === 4) return "four";
-      if (this.playerNum === 9) return "nine";
-      return "";
-    }
-  },
-  methods: {
-    handleSide() {
-      this.isShowSide = !this.isShowSide;
-    },
-    handleMessage() {
-      this.isShowMessage = !this.isShowMessage;
-    },
-    handleParty() {
-      this.isShowParty = !this.isShowParty;
-    },
-    prevSlide() {
-      this.slideCount !== 1 && --this.slideCount;
-    },
-    nextSlide() {
-      this.slideCount !== this.maxSlide && ++this.slideCount;
-    }
-  }
+	name: "app",
+	components: {
+		Player,
+		Ctrl,
+		SideBox
+	},
+	data() {
+		return {
+			meetingInfo: {},
+			members: [],
+			peopleNum: 0,
+			micNum: 0,
+			isShowSide: true,
+			isShowMessage: true,
+			isShowParty: true,
+			speaker: null,
+			sharer: null,
+			playerNum: 4,
+			slideCount: 2
+		}
+	},
+	created() {
+		antiquity.on("getMidInfo", (meetingInfo) => {
+			this.meetingInfo = meetingInfo;
+			console.log("meetingInfo", this.meetingInfo)
+		});
+		antiquity.on("getMembers", (members) => {
+			this.members = members;
+			this.peopleNum = members.length;
+			this.micNum = members.filter(item => {
+				if (item.mic === 0) {
+					return item
+				}
+			}).length
+			console.log("members", this.members)
+		});
+		antiquity.on("getShareUrl", (sharer) => {
+			console.log("sharer", sharer)
+		});
+		antiquity.on("getSpeaker", (speaker) => {
+			this.speaker = speaker;
+			console.log("speaker", speaker)
+		});
+	},
+	async mounted() {
+		const {offsetWidth, offsetHeight} = this.$refs.myStream;
+		this.$nextTick(async () => {
+			console.log(this.$refs.myStream)
+			await antiquity.joinMeeting({
+				code: 66666,
+				width: offsetWidth,
+				height: offsetHeight,
+				dom: this.$refs.myStream
+			});
+			antiquity.rtmp.setScreenSize(offsetWidth*1.2, offsetHeight*1.2);
+			antiquity.rtmp.setScreenPosition(-offsetWidth*0.15, 0);
+			antiquity.rtmp.setWrap();
+			antiquity.rtmp.setCamMode(1280, 720, 24);
+			antiquity.publish(this.meetingInfo.video_url.slice(0, -1))
+		})
+	},
+	computed: {
+		maxSlide() {
+			let maxSlide = Math.max(Math.floor(this.members.length/4), 1);
+			this.speaker && ++maxSlide;
+			this.sharer && ++maxSlide;
+			return maxSlide
+		},
+		speakFlag() {
+			if (this.shareFlag) return this.speaker && this.slideCount === 2;
+			return this.speaker && this.slideCount === 1
+		},
+		shareFlag() {
+			return this.sharer && this.slideCount === 1
+		},
+		howMany() {
+			if (this.shareFlag || this.speakFlag) return "one";
+			if (this.playerNum === 4) return "four";
+			if (this.playerNum === 9) return "nine";
+			return ''
+		}
+	},
+	methods: {
+		handleSide() {
+			this.isShowSide = !this.isShowSide
+		},
+		handleMessage() {
+			this.isShowMessage = !this.isShowMessage
+		},
+		handleParty() {
+			this.isShowParty = !this.isShowParty
+		},
+		prevSlide() {
+			this.slideCount !== 1 && --this.slideCount
+		},
+		nextSlide() {
+			this.slideCount !== this.maxSlide && ++this.slideCount
+		},
+	}
 };
 </script>
 
@@ -210,5 +210,10 @@ button,
     flex: 1;
     background-color: #91949c;
   }
+}
+#myStream {
+	position: fixed;
+	right: -100%;
+	top: 0;
 }
 </style>

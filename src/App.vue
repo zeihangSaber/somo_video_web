@@ -1,32 +1,32 @@
 <template>
-	<div id="app">
-		<div class="content">
-			<ctrl
-				@handleSide="handleSide"
-				:data="meetingInfo"
-				:peopleNum="peopleNum"
-				:micNum="micNum"
-				:showSide="isShowSide"
-				:showMessage="isShowMessage"
-				:showParty="isShowParty"
-				@handleMessage="handleMessage"
-				@handleParty="handleParty"
-			></ctrl>
-			<div class="playerBigBox">
-				<player v-for="item of members" :key="item.uid" :data="item"></player>
-				<div id="myStream" class="playerBox"></div>
-			</div>
-		</div>
-		<side-box
-			v-if="isShowSide"
-			:data="meetingInfo"
-			:members="members"
-			:showMessage="isShowMessage"
-			:showParty="isShowParty"
-			@handleMessage="handleMessage"
-			@handleParty="handleParty"
-		></side-box>
-	</div>
+  <div id="app">
+    <div class="content">
+      <ctrl
+        @handleSide="handleSide"
+        :data="meetingInfo"
+        :peopleNum="peopleNum"
+        :micNum="micNum"
+        :showSide="isShowSide"
+        :showMessage="isShowMessage"
+        :showParty="isShowParty"
+        @handleMessage="handleMessage"
+        @handleParty="handleParty"
+      ></ctrl>
+      <div class="playerBigBox">
+        <player v-for="item of members" :key="item.uid" :data="item"></player>
+        <div id="myStream" class="playerBox"></div>
+      </div>
+    </div>
+    <side-box
+      v-if="isShowSide"
+      :data="meetingInfo"
+      :members="members"
+      :showMessage="isShowMessage"
+      :showParty="isShowParty"
+      @handleMessage="handleMessage"
+      @handleParty="handleParty"
+    ></side-box>
+  </div>
 </template>
 
 <script>
@@ -109,45 +109,46 @@ export default {
 @import "./common/base";
 @import "./common/common";
 .playerBox {
-	width: 33%;
-	height: 33%;
-	background-color: bisque;
+  width: 33%;
+  height: 33%;
+  background-color: bisque;
 }
 .playerBigBox {
-	height: 100%;
-	.flex(space-around, flex-start);
-	flex-wrap: wrap;
+  height: 100%;
+  .flex(space-around, flex-start);
+  flex-wrap: wrap;
 }
 .icon {
-	width: 1em;
-	height: 1em;
-	vertical-align: -0.15em;
-	fill: currentColor;
-	overflow: hidden;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
 }
 .vjs-tech {
-	transform: translateZ(0);
+  transform: translateZ(0);
 }
-button, .icon-close {
-	cursor: pointer;
-	&:disabled {
-		cursor: not-allowed;
-		color: #ccc !important;
-		border-color: #ccc !important;
-		i {
-			color: #ccc !important;
-		}
-	}
+button,
+.icon-close {
+  cursor: pointer;
+  &:disabled {
+    cursor: not-allowed;
+    color: #ccc !important;
+    border-color: #ccc !important;
+    i {
+      color: #ccc !important;
+    }
+  }
 }
 #app {
-	height: 100%;
-	width: 100%;
-	.flex(flex-start, flex-start);
-	.content {
-		position: relative;
-		height: 100%;
-		flex: 1;
-		background-color: #91949C;
-	}
+  height: 100%;
+  width: 100%;
+  .flex(flex-start, flex-start);
+  .content {
+    position: relative;
+    height: 100%;
+    flex: 1;
+    background-color: #91949c;
+  }
 }
 </style>

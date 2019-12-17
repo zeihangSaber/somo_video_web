@@ -1,29 +1,41 @@
 <template>
     <div class="bigBox">
         <div class="title">
-            <p class="p">参会方(<span>5</span>)</p>
-            <i class="font_family icon-close"></i>
+            <p class="p">参会方(<span>{{members.length}}</span>)</p>
+            <i class="font_family icon-close" @click="$emit('handleParty')"></i>
         </div>
         <div class="box">
             <div class="top">
                 <input type="text" placeholder="搜索账号名称">
-                <div class="item">
-                    <img src="" />
-                    <p>123</p>
-                    <i class="font_family icon-camera-user active"></i>
-                    <i class="font_family icon-user-mic active"></i>
+                <div class="item" v-for="item of members" :key="item.uid">
+                    <img :src="item.avarter" />
+                    <p>{{item.name}}</p>
+                    <button :disabled="!hasControl">
+                        <i :class="`font_family icon-camera-user ${item.camera ? '' : 'active'}`"></i>
+                    </button>
+                    <button :disabled="!hasControl">
+                        <i :class="`font_family icon-user-mic ${item.mic ? '' : 'active'}`"></i>
+                    </button>
                 </div>
             </div>
             <div class="line"></div>
             <div class="bottom">
-                <button>全体静音</button>
-                <button>解除全体静音</button>
-                <button>锁定会议</button>
+                <button :disabled="!hasControl">全体静音</button>
+                <button :disabled="!hasControl">解除全体静音</button>
+                <button :disabled="!hasControl">锁定会议</button>
             </div>
         </div>
     </div>
 </template>
-<script></script>
+<script>export default {
+    name: "party",
+    props: ["members", "hasControl"],
+    data() {
+        return {
+        }
+    },
+}
+</script>
 <style lang="less" scoped>
     @import "../common/common";
     .title {
@@ -95,5 +107,9 @@
             }
         }
         margin-bottom: 10px;
+    }
+    button {
+        background-color: #fff;
+        border: none;
     }
 </style>

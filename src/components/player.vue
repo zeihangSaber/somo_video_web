@@ -1,49 +1,87 @@
 <template>
 	<div class="playerBox">
-		<video :id="`player${uid}`" class="video-js vjs-default-skin" autoplay>
-			<source src="rtmp://rtmp1.video.somo.tech/video/10311312U10001240" type="rtmp/mp4" />
+		<div class="ctrlMiddle">
+			{{data.name}}
+			<i class="font_family icon-mic" v-if="data.mic === 0"></i>
+			<svg v-else class="icon" aria-hidden="true">
+				<use xlink:href="#icon-mic-no"></use>
+			</svg>
+			<div v-if="data.role === 4" class="tag">主持人</div>
+		</div>
+		<video :id="`player${data.uid}`" class="video-js vjs-default-skin" autoplay>
+			<source :src="data.url" type="rtmp/mp4" />
 		</video>
-		<button @click="changeSrc">click</button>
 	</div>
 </template>
 
 <script lang="ts">
 export default {
-	props: {
-		uid: String,
-		// index: Number,
-		src: String
-	},
+	props: ["data"],
 	data() {
 		return {
 			player: null
 		};
 	},
-	methods: {
-		changeSrc() {
-			// this.src = 'sss'
-		}
-	},
 	watch: {
-		src(src) {
-			this.player.src(src)
+		data(data) {
+			this.player = null;
+			this.$nextTick(() => {
+				this.player = window["videojs"](`player${this.data.uid}`, {
+					techOrder: ["flash"]
+				});
+				this.player.src(data.url)
+			})
 		}
 	},
 	created() {
 		this.$nextTick(() => {
-			this.player = window["videojs"](`player${this.uid}`, {
+			this.player = window["videojs"](`player${this.data.uid}`, {
 				techOrder: ["flash"]
 			});
+			this.player.src(this.data.url)
 		});
 	}
 };
 </script>
 
 <style lang="less" scoped>
+@import "../common/common";
 .playerBox {
 	width: 33%;
 	height: 33%;
 	background-color: bisque;
+	position: relative;
+	.ctrlMiddle {
+		padding: 0 10px;
+		height: 40px;
+		line-height: 40px;
+		color: #fff;
+		font-size: 16px;
+		position: absolute;
+		left: 0;
+		top: 50px;
+		background-color: rgba(0, 0, 0, 0.6);
+		border-radius: 0 20px 20px 0;
+		z-index: 9999;
+		.flex(center, center);
+		svg {
+			margin-left: 5px;
+		}
+		.icon-mic {
+			color: #fff;
+			font-size: 24px;
+		}
+		.tag {
+			.fontStyle(10px, #fff);
+			width: 50px;
+			height: 20px;
+			line-height: 23px;
+			text-align: center;
+			background-color: #118BFB;
+			border-radius: 4px;
+			margin-left: 5px;
+		}
+	}
 }
 .video-js {
 	width: 100%;

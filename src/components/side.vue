@@ -1,18 +1,18 @@
 <template>
-    <div class="aside">
+    <div class="myAside">
         <div class="head">
             <div class="volce">
-                <p class="name">{{name}}</p>
+                <p class="name">{{this.data.name}}</p>
                 <p class="info">
-                    <span class="code">会议号：{{code}}</span>
-                    <span>密码：{{pwd}}</span>
+                    <span class="code">会议号：{{this.data.code}}</span>
+                    <span v-if="data.pwd">密码：{{this.data.pwd}}</span>
                 </p>
             </div>
-            <img :src="avarter">
+            <img :src="data.avarter">
         </div>
         <div class="foot">
-            <party></party>
-            <message></message>
+            <party v-if="showParty" @handleParty="() => $emit('handleParty')" :members="members" :hasControl="data.control"></party>
+            <message v-if="showMessage" @handleMessage="() => $emit('handleMessage')"></message>
         </div>
     </div>
 </template>
@@ -20,8 +20,8 @@
 import Message from "./message"
 import Party from "./party"
 export default {
-    name: "aside",
-    props: ["code", "pwd", "avarter", "name"],
+    name: "side",
+    props: ["data", "members", "showMessage", "showParty"],
     components: {Message, Party},
     data() {
         return {
@@ -32,7 +32,7 @@ export default {
 </script>
 <style lang="less" scoped>
 @import "../common/common";
-.aside {
+.myAside {
     width: 400px;
     background-color: #f4f4f4;
     height: 100%;

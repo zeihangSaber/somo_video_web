@@ -3,52 +3,63 @@
 		<div class="ctrlHeader">
 			<i></i>
 			<div class="center">
-				<span class="bigSpan">会议号：{{this.meetingInfo.code}}</span>
-				<span class="bigSpan">密码： </span>
-				<span>{{this.meetingInfo.name}}</span>
+				<span class="bigSpan">会议号：{{this.data.code}}</span>
+				<span class="bigSpan" v-if="data.pwd">密码：{{this.data.pwd}}</span>
+				<span>{{this.data.name}}</span>
 				<span>
-				<i class="font_family icon-people-num"></i>
-				{{this.members.length}}
+					<i class="font_family icon-people-num"></i>
+					{{this.peopleNum}}
+				</span>
+				<span></span>
+				<span v-if="this.data.locked">
+					<i :class="`font_family icon-${this.data.locked ? 'lock' : 'unlock'}`"></i>
 				</span>
 				<span>
 					<i class="font_family icon-noMute"></i>
+					{{this.micNum}}
 				</span>
 				<span>
 					<i class="font_family icon-time"></i>
+					{{this.data.start3}}
 				</span>
 			</div>
 			<i class="font_family icon-wifi-high"></i>
 		</div>
 		<div class="ctrlFooter">
 			<i></i>
-			<div class="center"></div>
-			<span><i class="font_family icon-zoomIn"></i></span>
+			<div class="center">
+				<button><i class="font_family icon-mic"></i>静音</button>
+				<button><i class="font_family icon-camera"></i>视频</button>
+				<button><i class="font_family icon-sharing"></i>邀请</button>
+				<button @click="$emit('handleMessage')">
+					<i :class="`font_family icon-barrage ${showMessage ? 'active' : ''}`"></i>消息
+				</button>
+				<button @click="$emit('handleParty')">
+					<i :class="`font_family icon-members ${showParty ? 'active' : ''}`"></i>参会方
+				</button>
+				<button><i class="font_family icon-setting"></i>设置</button>
+			</div>
+			<button class="zoomIn" @click="$emit('handleSide')">
+				<i :class="`font_family ${showSide ? 'icon-zoomIn' : 'icon-zoomOut'}`"></i>
+			</button>
 		</div>
 	</div>
 </template>
 
 <script>
 import antiquity from "../utils/Antiquity"
+let interval;
 export default {
 	name: "app",
-	data() {
-		return {
-			meetingInfo: {},
-			members: []
-		}
-	},
+	props: ["data", "peopleNum", "micNum", "showSide", "showMessage", "showParty"],
 	components: {},
-	created() {
-		antiquity.on("getMidInfo", (meetingInfo) => {
-			this.meetingInfo = meetingInfo
-			console.log("meetingInfo", this.meetingInfo)
-		})
-		antiquity.on("getMembers", (members) => {
-			this.members = members
-			console.log("members", this.members)
-		})
-	},
 	mounted() {
+		interval = setInterval(() => {
+			this.data.start3 = this.data.start3 + 1000
+		}, 1000)
+	},
+	destroyed() {
+		clearInterval(interval)
 	}
 };
 </script>
@@ -75,6 +86,9 @@ export default {
 		}
 		.center {
 			flex: 1;
+			span {
+				margin: 0 20px;
+			}
 		}
 	}
 	.ctrlFooter {
@@ -91,11 +105,40 @@ export default {
 		.flex(space-between, center);
 		.center {
 			flex: 1;
+			text-align: center;
+			button {
+				background-color: transparent;
+				outline: none;
+				border: none;
+				color: #fff;
+				font-size: 16px;
+				margin: 0 20px;
+				i {
+					display: block;
+					font-size: 32px;
+				}
+			}
+		}
+		.zoomIn {
+			background-color: transparent;
+			outline: none;
+			border: 2px solid #fff;
+			border-radius: 4px;
+			color: #fff;
+			font-size: 16px;
+			width: 34px;
+			height: 34px;
+			overflow: hidden;
+			i {
+				font-size: 40px;
+				position: relative;
+				left: -10px;
+				top: -8px;
+			}
 		}
 	}
 }
-.icon-zoomIn {
-	line-height: 40px;
-	font-size: 40px;
+.active {
+	color: #118BFB;
 }
 </style>

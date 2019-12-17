@@ -2,7 +2,7 @@
     <div class="bigBox">
         <div class="title">
             <p class="p">消息(<span>5</span>)</p>
-            <i class="font_family icon-close"></i>
+            <i class="font_family icon-close" @click="$emit('handleMessage')"></i>
         </div>
         <div class="box">
             <div class="top">

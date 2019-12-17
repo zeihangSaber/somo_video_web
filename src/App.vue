@@ -55,7 +55,7 @@ export default {
 	created() {
 		antiquity.on("getMidInfo", (meetingInfo) => {
 			this.meetingInfo = meetingInfo;
-			console.log("meetingInfo", this.meetingInfo)
+			// console.log(meetingInfo.myUid)
 		});
 		antiquity.on("getMembers", (members) => {
 			this.members = members;
@@ -75,13 +75,21 @@ export default {
 		});
 		window.saber = antiquity
 	},
-	mounted() {
-		antiquity.joinMeeting({
+	async mounted() {
+		await antiquity.joinMeeting({
 			code: 66666,
 			width: 500,
 			height: 500,
 			dom: document.getElementById("myStream")
 		});
+		console.log("meetingInfo", this.meetingInfo)
+		console.log(this.meetingInfo.myUid)
+		localStorage.setItem('my',JSON.stringify({
+			uid:this.meetingInfo.mine.uid,
+			mid:this.meetingInfo.id,
+			name:this.meetingInfo.mine.name
+		}))
+		
 	},
 	methods: {
 		handleSide() {

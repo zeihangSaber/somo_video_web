@@ -25,6 +25,8 @@
 			</div>
 			<i class="font_family icon-wifi-high"></i>
 		</div>
+		<div class="ctrlLeft" @click="$emit('prevSlide')"><i class="font_family icon-left"></i></div>
+		<div class="ctrlRight" @click="$emit('nextSlide')"><i class="font_family icon-right"></i></div>
 		<div class="ctrlFooter">
 			<i></i>
 			<div class="center">
@@ -89,6 +91,32 @@ export default {
 			span {
 				margin: 0 20px;
 			}
+		}
+	}
+	.ctrlLeft {
+		position: absolute;
+		left: 0;
+		bottom: 50%;
+		color: rgba(255, 255, 255, .7);
+		background-color: rgba(0, 0, 0, .6);
+		border-radius: 0 27px 27px 0;
+		z-index: 999;
+		.icon-left {
+			font-size: 50px;
+			cursor: pointer;
+		}
+	}
+	.ctrlRight {
+		position: absolute;
+		right: 0;
+		bottom: 50%;
+		color: rgba(255, 255, 255, .7);
+		background-color: rgba(0, 0, 0, .6);
+		border-radius: 27px 0 0 27px;
+		z-index: 999;
+		.icon-right {
+			font-size: 50px;
+			cursor: pointer;
 		}
 	}
 	.ctrlFooter {

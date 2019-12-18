@@ -18,7 +18,6 @@
 							<div class="msgBox-content">{{itme.text}}</div>
 						</div>
 					</div>
-
 				</div>
 			</div>
 			<div class="line"></div>
@@ -27,7 +26,7 @@
 				<button :disabled=disabled @click="send_msg()">发送</button>
 			</div>
 		</div>
-		<div class="bulletScreen" v-if="bulletScreen == 1">
+		<div class="bulletScreen" v-if="barrage">
 			<div v-for="item in arr" class="bulletScreen-msg">
 				<div class="bulletScreen-name">{{item.name}}：</div>
 				<div class="bulletScreen-main">{{item.text}}</div>
@@ -39,6 +38,7 @@
 	import antiquity from "../utils/Antiquity";
 
 	export default {
+		props: ["barrage"],
 		data() {
 			return {
 				message: [],
@@ -61,7 +61,12 @@
 			this._time()
 			document.onkeydown = (e) => {
 				if (e.keyCode === 13) {
-					this.send_msg() //这里调用的是点击按钮登录的事件
+					event.preventDefault() // 阻止浏览器默认换行操作
+					if(this.msgContent == ''){
+						return
+					}else{
+						this.send_msg() //这里调用的是点击按钮登录的事件
+					}
 				}
 			}
 		},
@@ -94,11 +99,6 @@
 		},
 		methods: {
 			send_msg: function() {
-				alert(this.msgContent)
-				if(this.msgContent == ''){
-					
-					return
-				}else{
 					antiquity.ajax.broadcast({
 						"mid": this.my.mid,
 						"text": Base64.encode(this.msgContent)
@@ -111,8 +111,6 @@
 						})
 						this.msgContent = ''
 					})
-				}
-				
 			},
 			// 实时获取当前电脑时间
 			_time: function() {
@@ -142,7 +140,7 @@
 		bottom: 100px;
 		left: 30px;
 		z-index: 500;
-		
+
 		.bulletScreen-msg{
 			max-height:88px;
 			min-height:44px;

@@ -56,15 +56,15 @@
 				<div class="set_main_box">
 					<div class="set_main_title">视频布局:</div>
 					<div class="set_gongneng">
-						<div @click="set(1,1)">
-							<svg class="icon" aria-hidden="true" v-if="splitScreen === 4">
+						<div @click="$emit('selectFour')">
+							<svg class="icon" aria-hidden="true" v-if="playerNum === 4">
 								<use xlink:href="#icon-select"></use>
 							</svg>
 							<i class="font_family icon-select-no" v-else></i>
 							<span>四分屏</span>
 						</div>
-						<div @click="set(1,0)">
-							<svg class="icon" aria-hidden="true" v-if="splitScreen === 9">
+						<div @click="$emit('selectNine')">
+							<svg class="icon" aria-hidden="true" v-if="playerNum === 9">
 								<use xlink:href="#icon-select"></use>
 							</svg>
 							<i class="font_family icon-select-no" v-else></i>
@@ -75,15 +75,15 @@
 				<div class="set_main_box">
 					<div class="set_main_title">弹幕消息:</div>
 					<div class="set_gongneng">
-						<div @click="set(2,1)">
-							<svg class="icon" aria-hidden="true" v-if="bulletScreen">
+						<div @click="$emit('barrageTrue')">
+							<svg class="icon" aria-hidden="true" v-if="barrage">
 								<use xlink:href="#icon-select"></use>
 							</svg>
 							<i class="font_family icon-select-no" v-else></i>
 							<span>开启</span>
 						</div>
-						<div @click="set(2,0)">
-							<svg class="icon" aria-hidden="true" v-if="!bulletScreen">
+						<div @click="$emit('barrageFalse')">
+							<svg class="icon" aria-hidden="true" v-if="!barrage">
 								<use xlink:href="#icon-select"></use>
 							</svg>
 							<i class="font_family icon-select-no" v-else></i>
@@ -103,12 +103,10 @@
 		name: "app",
 		data(){
 			return{
-				splitScreen: 4,//分屏
-				bulletScreen: false,//弹幕
 				showSetting: false
 			}
 		},
-		props: ["data", "peopleNum", "micNum", "showSide", "showMessage", "showParty"],
+		props: ["data", "peopleNum", "micNum", "showSide", "showMessage", "showParty", "playerNum", "barrage"],
 		components: {},
 		mounted() {
 			localStorage.setItem('bulletScreen',this.bulletScreen);
@@ -128,7 +126,7 @@
 @import "../common/common";
 .set_box{
 	width: 320px;
-	background:rgba(0,0,0,0.86);
+	background:rgba(0, 0, 0, .6);
 	border-radius:8px;
 	position: absolute;
 	bottom: 115px;

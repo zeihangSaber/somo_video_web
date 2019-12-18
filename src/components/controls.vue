@@ -30,8 +30,14 @@
 		<div class="ctrlFooter">
 			<i></i>
 			<div class="center">
-				<button><i class="font_family icon-mic"></i>静音</button>
-				<button><i class="font_family icon-camera"></i>视频</button>
+				<button @click="handleMic">
+					<i :class="`font_family ${data.mine.mic === 0 ? 'icon-mic' : 'icon-mic-no'}`"></i>
+					静音
+				</button>
+				<button @click="handleCamera">
+					<i :class="`font_family ${data.mine.camera === 0 ? 'icon-camera' : 'icon-camera-no'}`"></i>
+					视频
+				</button>
 				<button><i class="font_family icon-sharing"></i>邀请</button>
 				<button @click="$emit('handleMessage')">
 					<i :class="`font_family icon-barrage ${showMessage ? 'active' : ''}`"></i>消息
@@ -115,6 +121,14 @@
 			}, 1000)
 		},
 		methods:{
+			handleMic() {
+				this.data.mine.mic === 0 ? antiquity.muteVideo() : antiquity.unmuteAudio();
+			},
+			handleCamera() {
+				this.data.mine.camera === 0
+					? antiquity.muteVideo()
+					: antiquity.unmuteVideo(this.data.video_url.slice(0, -1));
+			}
 		},
 		destroyed() {
 			clearInterval(interval)
@@ -249,6 +263,9 @@
 				i {
 					display: block;
 					font-size: 32px;
+				}
+				.icon-camera-no, .icon-mic-no {
+					color: #ff6b6f;
 				}
 			}
 		}

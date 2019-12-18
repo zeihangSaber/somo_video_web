@@ -103,8 +103,8 @@
 		name: "app",
 		data(){
 			return{
-				splitScreen: 4,//分屏
-				bulletScreen: false,//弹幕
+				splitScreen: 4, // 分屏
+				bulletScreen: false, // 弹幕
 				showSetting: false
 			}
 		},

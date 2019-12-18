@@ -24,7 +24,7 @@ export default {
 	},
 	watch: {
 		data(data) {
-			this.player.dispose()
+			this.player.paused();
 			this.player = null;
 			this.$nextTick(() => {
 				this.player = window["videojs"](this.$refs.saber, {
@@ -44,7 +44,7 @@ export default {
 		});
 	},
 	beforeDestroy() {
-		this.player.dispose()
+		this.player.paused();
 		this.player = null
 	}
 };

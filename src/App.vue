@@ -155,6 +155,7 @@ export default {
 @import "./common/base";
 @import "./common/common";
 .playerBigBox {
+  min-width: 800px;
   height: 100%;
   .flex(space-around, flex-start);
   flex-wrap: wrap;

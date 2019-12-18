@@ -21,11 +21,15 @@
         >
           <img :src="item.avarter" />
           <p>
-            {{ item.name }}
+            <span>{{ item.name }}</span>
             <span v-if="item.role === 4" class="handle">主持人</span>
             <span v-if="item.speaker === 1" class="speaker">主讲</span>
           </p>
-          <button class="permissionBtn" @click="setMic(item)">
+          <button
+            v-if="item.role !== 4"
+            class="permissionBtn"
+            @click="setMic(item)"
+          >
             {{ item.mic === 1 ? "取消静音" : "静音" }}
           </button>
           <button class="permissionBtn more" @click="more(item)">
@@ -34,7 +38,7 @@
               <span class="permission_header"></span>
               <div class="permission_content">
                 <div v-if="permissionType.setSpeaker" @click="setSpeaker(item)">
-                  设为主讲
+                  {{ item.speaker === 1 ? "结束主讲" : "设为主讲" }}
                 </div>
                 <div v-if="permissionType.setRole" @click="setRole(item)">
                   设为主持人
@@ -153,7 +157,18 @@ export default {
       //   console.log(antiquity);
     },
     setSpeaker(item) {
-      console.log(item);
+      const speaker = item.speaker === 1 ? 0 : 1;
+      const data = {
+        admin: antiquity.uid,
+        uid: item.uid,
+        dt: item.dt,
+        device: item.device,
+        speaker
+      };
+      antiquity.ajax.speakerSet(data).then(res => {
+        console.log(res);
+      });
+      console.log(antiquity.ajax);
     },
     setRole(item) {
       const data = {
@@ -183,6 +198,15 @@ export default {
       console.log(item);
     },
     setKick(item) {
+      const data = {
+        admin: antiquity.uid,
+        uid: item.uid,
+        dt: item.dt,
+        device: item.device
+      };
+      antiquity.ajax.kick(data).then(res => {
+        console.log(res);
+      });
       console.log(item);
     }
   }
@@ -235,7 +259,7 @@ export default {
       img {
         width: 36px;
         height: 36px;
-        margin-right: 15px;
+        margin-right: 10px;
         border: 0;
         border-radius: 20px;
       }
@@ -243,6 +267,10 @@ export default {
         flex: 1;
         .flex(flex-start, center);
         span {
+          max-width: 125px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
           margin-left: 4px;
         }
       }

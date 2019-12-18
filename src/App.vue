@@ -211,9 +211,9 @@ button,
     background-color: #91949c;
   }
 }
-#myStream {
-	position: fixed;
-	right: -100%;
-	top: 0;
-}
+/*#myStream {*/
+/*	position: fixed;*/
+/*	right: -100%;*/
+/*	top: 0;*/
+/*}*/
 </style>

@@ -39,36 +39,35 @@
 				<button @click="$emit('handleParty')">
 					<i :class="`font_family icon-members ${showParty ? 'active' : ''}`"></i>参会方
 				</button>
-				<button @click="set_show()">
-					<i :class="`font_family icon-setting ${show ? 'active' : ''}`"></i>设置
-					<!-- <i class="font_family icon-setting"></i>设置 -->
+				<button @click="() => showSetting = !showSetting">
+					<i :class="`font_family icon-setting ${showSetting ? 'active' : ''}`"></i>设置
 				</button>
 			</div>
 			<button class="zoomIn" @click="$emit('handleSide')">
 				<i :class="`font_family ${showSide ? 'icon-zoomIn' : 'icon-zoomOut'}`"></i>
 			</button>
 		</div>
-		<div class="set_box" v-if="show == 1">
+		<div class="set_box" v-if="showSetting">
 			<div class="set_title">
 				<div>设置</div>
-				<i class="font_family icon-close " @click="set_show()"></i>
+				<i class="font_family icon-close " @click="() => showSetting = !showSetting"></i>
 			</div>
 			<div class="set_main">
 				<div class="set_main_box">
 					<div class="set_main_title">视频布局:</div>
 					<div class="set_gongneng">
-						<div @click="set(1,1)">
-							<svg  class="icon" aria-hidden="true" v-if="splitScreen == 1">
+						<div @click="$emit('selectFour')">
+							<svg class="icon" aria-hidden="true" v-if="playerNum === 4">
 								<use xlink:href="#icon-select"></use>
 							</svg>
-							<i class="font_family icon-select-no " v-if="splitScreen == 0"></i>
+							<i class="font_family icon-select-no" v-else></i>
 							<span>四分屏</span>
 						</div>
-						<div @click="set(1,0)">
-							<svg  class="icon" aria-hidden="true" v-if="splitScreen == 0">
+						<div @click="$emit('selectNine')">
+							<svg class="icon" aria-hidden="true" v-if="playerNum === 9">
 								<use xlink:href="#icon-select"></use>
 							</svg>
-							<i class="font_family icon-select-no " v-if="splitScreen == 1"></i>
+							<i class="font_family icon-select-no" v-else></i>
 							<span>九分屏</span>
 						</div>
 					</div>
@@ -76,18 +75,18 @@
 				<div class="set_main_box">
 					<div class="set_main_title">弹幕消息:</div>
 					<div class="set_gongneng">
-						<div @click="set(2,1)">
-							<svg  class="icon" aria-hidden="true" v-if="bulletScreen == 1">
+						<div @click="$emit('barrageTrue')">
+							<svg class="icon" aria-hidden="true" v-if="barrage">
 								<use xlink:href="#icon-select"></use>
 							</svg>
-							<i class="font_family icon-select-no " v-if="bulletScreen == 0"></i>
+							<i class="font_family icon-select-no" v-else></i>
 							<span>开启</span>
 						</div>
-						<div @click="set(2,0)">
-							<svg  class="icon" aria-hidden="true" v-if="bulletScreen == 0">
+						<div @click="$emit('barrageFalse')">
+							<svg class="icon" aria-hidden="true" v-if="!barrage">
 								<use xlink:href="#icon-select"></use>
 							</svg>
-							<i class="font_family icon-select-no " v-if="bulletScreen == 1"></i>
+							<i class="font_family icon-select-no" v-else></i>
 							<span>关闭</span>
 						</div>
 					</div>
@@ -104,31 +103,18 @@
 		name: "app",
 		data(){
 			return{
-				splitScreen:1,//分屏
-				bulletScreen:1,//弹幕
-				show:0
+				showSetting: false
 			}
 		},
-		props: ["data", "peopleNum", "micNum", "showSide", "showMessage", "showParty"],
+		props: ["data", "peopleNum", "micNum", "showSide", "showMessage", "showParty", "playerNum", "barrage"],
 		components: {},
 		mounted() {
-			localStorage.setItem('bulletScreen',this.bulletScreen)
+			localStorage.setItem('bulletScreen',this.bulletScreen);
 			interval = setInterval(() => {
 				this.data.start3 = this.data.start3 + 1000
 			}, 1000)
 		},
 		methods:{
-			set_show(){
-				this.show = !this.show
-			},
-			set(type,select){
-				if(type == 1){//分屏
-					this.splitScreen = select
-				}else if(type == 2){//弹幕
-					this.bulletScreen = select
-					localStorage.setItem('bulletScreen',this.bulletScreen)
-				}
-			}
 		},
 		destroyed() {
 			clearInterval(interval)
@@ -140,9 +126,7 @@
 @import "../common/common";
 .set_box{
 	width: 320px;
-	// height: 100px;
-	background:rgba(0,0,0,0.86);
-	// background: red;
+	background:rgba(0, 0, 0, .6);
 	border-radius:8px;
 	position: absolute;
 	bottom: 115px;
@@ -150,9 +134,7 @@
 	z-index: 110000;
 	.set_main{
 		padding: 25px 0;
-		box-sizing: border-box;
 		font-size:16px;
-		font-family:PingFangSC-Regular,PingFang SC;
 		font-weight:400;
 		color:rgba(255,255,255,1);
 		.set_main_box{
@@ -160,9 +142,7 @@
 			display: flex;
 			justify-content: center;
 			align-items: flex-start;
-			margin: 0 auto;
-			// background: pink;
-			margin-bottom: 16px;
+			margin: 0 auto 16px;
 			.set_main_title{
 				width: 40%;
 				// border: 1px solid red;
@@ -184,16 +164,13 @@
 		justify-content: space-between;
 		align-items: center;
 		padding: 0 20px 0 24px;
-		box-sizing: border-box;
 		border-bottom: 1px solid #333333;
 		font-size:28px;
-		font-family:PingFangSC-Semibold,PingFang SC;
 		font-weight:600;
 		color:rgba(255,255,255,1);
 		& i{
 			color: #C5C6C8;
 		}
-		
 	}
 }
 .ctrlBox {

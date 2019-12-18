@@ -18,7 +18,6 @@
 							<div class="msgBox-content">{{itme.text}}</div>
 						</div>
 					</div>
-
 				</div>
 			</div>
 			<div class="line"></div>
@@ -27,7 +26,7 @@
 				<button :disabled=disabled @click="send_msg()">发送</button>
 			</div>
 		</div>
-		<div class="bulletScreen" v-if="bulletScreen == 1">
+		<div class="bulletScreen" v-if="barrage">
 			<div v-for="item in arr" class="bulletScreen-msg">
 				<div class="bulletScreen-name">{{item.name}}：</div>
 				<div class="bulletScreen-main">{{item.text}}</div>
@@ -39,6 +38,7 @@
 	import antiquity from "../utils/Antiquity";
 
 	export default {
+		props: ["barrage"],
 		data() {
 			return {
 				message: [],
@@ -140,7 +140,7 @@
 		bottom: 100px;
 		left: 30px;
 		z-index: 500;
-		
+
 		.bulletScreen-msg{
 			max-height:88px;
 			min-height:44px;

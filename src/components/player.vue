@@ -1,5 +1,5 @@
 <template>
-	<div class="playerBox">
+	<div class="playerBox" ref="playerBox">
 		<div class="ctrlMiddle">
 			{{data.name}}
 			<i class="font_family icon-mic" v-if="data.mic === 0"></i>
@@ -8,7 +8,7 @@
 			</svg>
 			<div v-if="data.role === 4" class="tag">主持人</div>
 		</div>
-		<video ref="saber" class="video-js vjs-default-skin" autoplay>
+		<video ref="saber" class="video-js vjs-default-skin">
 			<source :src="data.url" type="rtmp/mp4" />
 		</video>
 	</div>
@@ -16,7 +16,18 @@
 
 <script lang="ts">
 export default {
-	props: ["data"],
+	props: {
+		data: {
+			default() {
+				return {
+					mic: 0,
+					name: "wait",
+					role: -1,
+					url: "rtmp://58.200.131.2:1935/livetv/hunantv"
+				}
+			}
+		}
+	},
 	data() {
 		return {
 			player: null
@@ -24,13 +35,14 @@ export default {
 	},
 	watch: {
 		data(data) {
-			this.player.dispose()
-			this.player = null;
+			this.player.paused();
 			this.$nextTick(() => {
-				this.player = window["videojs"](this.$refs.saber, {
-					techOrder: ["flash"]
+				this.data.url && this.player.src(data.url, () => {
+					this.data.url && this.player.play()
 				});
-				this.player.src(data.url)
+				this.$nextTick(() => {
+					this.data.url && this.player.play()
+				})
 			})
 		}
 	},
@@ -38,14 +50,18 @@ export default {
 		this.$nextTick(() => {
 			this.player = window["videojs"](this.$refs.saber, {
 				techOrder: ["flash"],
-				aspectRatio: "16:9"
+				aspectRatio: "16:9",
+				preload: "none",
+				autoplay: true
+			}, () => {
+				this.player.paused();
+				this.data.url && this.player.src(this.data.url);
+				this.data.url && this.player.play();
 			});
-			this.player.src(this.data.url)
 		});
 	},
 	beforeDestroy() {
-		this.player.dispose()
-		this.player = null
+		this.player.dispose();
 	}
 };
 </script>

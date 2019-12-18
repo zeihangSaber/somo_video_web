@@ -12,7 +12,7 @@
         </div>
         <div class="foot">
             <party v-if="showParty" @handleParty="() => $emit('handleParty')" :members="members" :hasControl="data.control"></party>
-            <message v-if="showMessage" @handleMessage="() => $emit('handleMessage')"></message>
+            <message v-if="showMessage" @handleMessage="() => $emit('handleMessage')" :barrage="barrage"></message>
         </div>
     </div>
 </template>
@@ -21,7 +21,7 @@ import Message from "./message"
 import Party from "./party"
 export default {
     name: "side",
-    props: ["data", "members", "showMessage", "showParty"],
+    props: ["data", "members", "showMessage", "showParty", "barrage"],
     components: {Message, Party},
     data() {
         return {

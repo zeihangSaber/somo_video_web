@@ -1,7 +1,7 @@
 <template>
 	<div class="bigBox">
 		<div class="title">
-			<p class="p">消息(<span>5</span>)</p>
+			<p class="p">消息(<span>{{message.length}}</span>)</p>
 			<i class="font_family icon-close" @click="$emit('handleMessage')"></i>
 		</div>
 		<div class="box">
@@ -28,7 +28,6 @@
 			</div>
 		</div>
 		<div class="bulletScreen" v-if="bulletScreen == 1">
-			<div>{{bulletScreen}}</div>
 			<div v-for="item in arr" class="bulletScreen-msg">
 				<div class="bulletScreen-name">{{item.name}}：</div>
 				<div class="bulletScreen-main">{{item.text}}</div>
@@ -95,18 +94,25 @@
 		},
 		methods: {
 			send_msg: function() {
-				antiquity.ajax.broadcast({
-					"mid": this.my.mid,
-					"text": Base64.encode(this.msgContent)
-				}).then((res) => {
-					// console.log(res)
-					this.message.push({
-						name: this.my.name,
-						text: this.msgContent,
-						uid: this.my.uid
+				alert(this.msgContent)
+				if(this.msgContent == ''){
+					
+					return
+				}else{
+					antiquity.ajax.broadcast({
+						"mid": this.my.mid,
+						"text": Base64.encode(this.msgContent)
+					}).then((res) => {
+						// console.log(res)
+						this.message.push({
+							name: this.my.name,
+							text: this.msgContent,
+							uid: this.my.uid
+						})
+						this.msgContent = ''
 					})
-					this.msgContent = ''
-				})
+				}
+				
 			},
 			// 实时获取当前电脑时间
 			_time: function() {
@@ -115,6 +121,12 @@
 					var hour = t.getHours(); //得到小时
 					var minu = t.getMinutes(); //得到分钟
 					var sec = t.getSeconds(); //得到秒
+					if(minu < 10){
+						minu = '0' +  minu
+					}
+					if(sec < 10){
+						sec = '0' +  sec
+					}
 					this.time = hour + ':' + minu + ':' + sec
 				}, 1000)
 			},

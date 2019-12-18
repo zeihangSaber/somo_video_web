@@ -98,6 +98,11 @@ export default {
 				height: offsetHeight,
 				dom: this.$refs.myStream
 			});
+			localStorage.setItem('my',JSON.stringify({
+			            uid:this.meetingInfo.mine.uid,
+			            mid:this.meetingInfo.id,
+			            name:this.meetingInfo.mine.name
+			        }))
 			antiquity.rtmp.setScreenSize(offsetWidth*1.2, offsetHeight*1.2);
 			antiquity.rtmp.setScreenPosition(-offsetWidth*0.15, 0);
 			antiquity.rtmp.setWrap();

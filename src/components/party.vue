@@ -16,32 +16,49 @@
           class="item"
           v-for="item of members"
           :key="item.uid"
-          @mouseenter="enter($event, item)"
+          @mouseenter="enter($event)"
           @mouseleave="leave($event)"
         >
           <img :src="item.avarter" />
-          <p>{{ item.name }}</p>
-          <button class="permissionBtn" @click="setMic(item)">
+          <p>
+            <span>{{ item.name }}</span>
+            <span v-if="item.role === 4" class="handle">主持人</span>
+            <span v-if="item.speaker === 1" class="speaker">主讲</span>
+          </p>
+          <button
+            v-if="item.role !== 4"
+            class="permissionBtn"
+            @click="setMic(item)"
+          >
             {{ item.mic === 1 ? "取消静音" : "静音" }}
           </button>
-          <button class="permissionBtn more" @click="more">
+          <button class="permissionBtn more" @click="more(item)">
             更多
             <div v-show="permissionShow" class="permission">
               <span class="permission_header"></span>
               <div class="permission_content">
-                <div>设为主讲</div>
-                <div>关闭摄像头</div>
-                <div>设为主持人</div>
-                <div>移除</div>
+                <div v-if="permissionType.setSpeaker" @click="setSpeaker(item)">
+                  {{ item.speaker === 1 ? "结束主讲" : "设为主讲" }}
+                </div>
+                <div v-if="permissionType.setRole" @click="setRole(item)">
+                  设为主持人
+                </div>
+                <div v-if="permissionType.setCamera" @click="setCamera(item)">
+                  {{ item.camera === 1 ? "开启摄像头" : "关闭摄像头" }}
+                </div>
+                <div v-if="permissionType.setKick" @click="setKick(item)">
+                  移除
+                </div>
               </div>
             </div>
           </button>
 
           <div class="noPermissionBtn">
             <i
+              class=""
               :class="
-                `font_family icon-camera-user ${
-                  item.camera === 1 ? '' : 'active'
+                `font_family  ${
+                  item.camera === 0 ? 'icon-camera-user' : 'icon-camera-user-no'
                 }`
               "
             ></i>
@@ -49,7 +66,9 @@
           <div class="noPermissionBtn">
             <i
               :class="
-                `font_family icon-user-mic ${item.mic === 1 ? '' : 'active'}`
+                `font_family ${
+                  item.mic === 0 ? 'icon-user-mic' : 'icon-user-mic-no'
+                }`
               "
             ></i>
           </div>
@@ -71,26 +90,55 @@ export default {
   props: ["members", "hasControl"],
   data() {
     return {
-      permissionShow: false
+      permissionShow: false,
+      permissionType: {
+        setSpeaker: true,
+        setRole: true,
+        setCamera: true,
+        setKick: true
+      }
     };
   },
   methods: {
-    enter(event, item) {
-      console.log(item);
-      //   event.target.className = "item itemMouse";
-      if (this.hasControl) {
-        event.target.className = "item itemMouse";
-      }
+    enter(event) {
+      event.target.className = "item itemMouse";
+      //   if (this.hasControl) {
+      //     event.target.className = "item itemMouse";
+      //   }
     },
     leave(event) {
-      //   event.target.className = "item";
-      //   this.permissionShow = false;
-      if (this.hasControl) {
-        this.permissionShow = false;
-        event.target.className = "item";
-      }
+      event.target.className = "item";
+      this.permissionShow = false;
+      //   if (this.hasControl) {
+      //      this.permissionShow = false;
+      //     event.target.className = "item";
+      //   }
     },
-    more() {
+    more(item) {
+      this.permissionType = {
+        setSpeaker: true,
+        setRole: true,
+        setCamera: true,
+        setKick: true
+      };
+      if (item.uid === antiquity.uid) {
+        this.permissionType = {
+          setSpeaker: true,
+          setRole: false,
+          setCamera: false,
+          setKick: false
+        };
+        this.permissionShow = true;
+        return;
+      }
+      if (item.dt === 3) {
+        this.permissionType = {
+          setSpeaker: false,
+          setRole: true,
+          setCamera: false,
+          setKick: true
+        };
+      }
       this.permissionShow = true;
     },
     setMic(item) {
@@ -107,6 +155,59 @@ export default {
           console.log(res);
         });
       //   console.log(antiquity);
+    },
+    setSpeaker(item) {
+      const speaker = item.speaker === 1 ? 0 : 1;
+      const data = {
+        admin: antiquity.uid,
+        uid: item.uid,
+        dt: item.dt,
+        device: item.device,
+        speaker
+      };
+      antiquity.ajax.speakerSet(data).then(res => {
+        console.log(res);
+      });
+      console.log(antiquity.ajax);
+    },
+    setRole(item) {
+      const data = {
+        admin: antiquity.uid,
+        uid: item.uid,
+        dt: item.dt,
+        device: item.device,
+        role: 4
+      };
+      antiquity.ajax.roleSet(data).then(res => {
+        console.log("主持人设置", res);
+      });
+      console.log(item);
+    },
+    setCamera(item) {
+      const cameraState = item.camera;
+      const value = `[${item.uid}]`;
+      antiquity.ajax
+        .ruleSet({
+          admin: antiquity.uid,
+          rule: Boolean(cameraState) ? 2012 : 2011,
+          value
+        })
+        .then(res => {
+          console.log(res);
+        });
+      console.log(item);
+    },
+    setKick(item) {
+      const data = {
+        admin: antiquity.uid,
+        uid: item.uid,
+        dt: item.dt,
+        device: item.device
+      };
+      antiquity.ajax.kick(data).then(res => {
+        console.log(res);
+      });
+      console.log(item);
     }
   }
 };
@@ -158,20 +259,33 @@ export default {
       img {
         width: 36px;
         height: 36px;
-        margin-right: 15px;
+        margin-right: 10px;
         border: 0;
         border-radius: 20px;
       }
       p {
         flex: 1;
+        .flex(flex-start, center);
+        span {
+          max-width: 125px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          margin-left: 4px;
+        }
+      }
+      i {
+        margin-left: 4px;
       }
       .icon-camera-user,
       .icon-user-mic {
+        color: #c5c6c8;
+        font-size: 20px;
+      }
+      .icon-camera-user-no,
+      .icon-user-mic-no {
         color: #ff6b6f;
         font-size: 20px;
-        &.active {
-          color: #c5c6c8;
-        }
       }
       .permissionBtn {
         z-index: 10;
@@ -220,6 +334,21 @@ export default {
             margin-top: 0px;
           }
         }
+      }
+      .speaker {
+        background-color: #ff9802;
+        padding: 3px 6px;
+        font-size: 8px;
+        color: rgba(255, 255, 255, 1);
+        border-radius: 2px;
+      }
+      .handle {
+        padding: 3px 5px;
+        background-color: rgba(18, 139, 251, 1);
+        border-radius: 2px;
+        font-size: 8px;
+        color: rgba(255, 255, 255, 1);
+        border-radius: 2px;
       }
     }
     .itemMouse {

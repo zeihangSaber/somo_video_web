@@ -30,8 +30,12 @@ export default {
 				this.player = window["videojs"](this.$refs.saber, {
 					techOrder: ["flash"]
 				});
-				this.player.src(data.url);
-				this.player.play()
+				this.$nextTick(() => {
+					this.player.src(data.url);
+					this.$nextTick(() => {
+						this.player.play()
+					})
+				})
 			})
 		}
 	},
@@ -41,13 +45,12 @@ export default {
 				techOrder: ["flash"],
 				aspectRatio: "16:9"
 			});
-			this.player.paused();
 			this.player.src(this.data.url);
 			this.player.play()
 		});
 	},
 	beforeDestroy() {
-		this.player.paused();
+		this.player.dispose();
 		this.player = null
 	}
 };

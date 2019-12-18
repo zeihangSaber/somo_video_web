@@ -9,10 +9,16 @@
         :showSide="isShowSide"
         :showMessage="isShowMessage"
         :showParty="isShowParty"
+        :playerNum="playerNum"
+        :barrage="barrage"
         @handleMessage="handleMessage"
         @handleParty="handleParty"
         @prevSlide="prevSlide"
         @nextSlide="nextSlide"
+        @selectNine="() => playerNum = 9"
+        @selectFour="() => playerNum = 4"
+        @barrageTrue="() => barrage = true"
+        @barrageFalse="() => barrage = false"
       ></ctrl>
       <div :class="`playerBigBox ${howMany}`">
         <player
@@ -32,6 +38,7 @@
       :members="speaker ? [speaker, ...members] : members"
       :showMessage="isShowMessage"
       :showParty="isShowParty"
+      :barrage="barrage"
       @handleMessage="handleMessage"
       @handleParty="handleParty"
     ></side-box>
@@ -62,7 +69,8 @@ export default {
 			speaker: null,
 			sharer: null,
 			playerNum: 4,
-			slideCount: 2
+			slideCount: 2,
+            barrage: false
 		}
 	},
 	created() {

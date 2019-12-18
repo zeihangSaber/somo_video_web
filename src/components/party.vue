@@ -21,7 +21,7 @@
         >
           <img :src="item.avarter" />
           <p>{{ item.name }}</p>
-          <button class="permissionBtn">
+          <button class="permissionBtn" @click="setMic(item)">
             {{ item.mic === 1 ? "取消静音" : "静音" }}
           </button>
           <button class="permissionBtn more" @click="more">
@@ -65,6 +65,7 @@
   </div>
 </template>
 <script>
+import antiquity from "../utils/Antiquity";
 export default {
   name: "party",
   props: ["members", "hasControl"],
@@ -83,6 +84,7 @@ export default {
     },
     leave(event) {
       //   event.target.className = "item";
+      //   this.permissionShow = false;
       if (this.hasControl) {
         this.permissionShow = false;
         event.target.className = "item";
@@ -91,7 +93,21 @@ export default {
     more() {
       this.permissionShow = true;
     },
-    setMic() {}
+    setMic(item) {
+      const micState = item.mic;
+      const value = `[${item.uid}]`;
+      console.log(micState, value);
+      antiquity.ajax
+        .ruleSet({
+          admin: antiquity.uid,
+          rule: Boolean(micState) ? 1012 : 1011,
+          value
+        })
+        .then(res => {
+          console.log(res);
+        });
+      //   console.log(antiquity);
+    }
   }
 };
 </script>

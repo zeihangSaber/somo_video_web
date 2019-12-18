@@ -8,7 +8,7 @@
 			</svg>
 			<div v-if="data.role === 4" class="tag">主持人</div>
 		</div>
-		<video :id="`player${data.uid}`" class="video-js vjs-default-skin" autoplay>
+		<video ref="saber" class="video-js vjs-default-skin" autoplay>
 			<source :src="data.url" type="rtmp/mp4" />
 		</video>
 	</div>
@@ -24,9 +24,10 @@ export default {
 	},
 	watch: {
 		data(data) {
+			this.player.dispose()
 			this.player = null;
 			this.$nextTick(() => {
-				this.player = window["videojs"](`player${this.data.uid}`, {
+				this.player = window["videojs"](this.$refs.saber, {
 					techOrder: ["flash"]
 				});
 				this.player.src(data.url)
@@ -35,11 +36,16 @@ export default {
 	},
 	created() {
 		this.$nextTick(() => {
-			this.player = window["videojs"](`player${this.data.uid}`, {
-				techOrder: ["flash"]
+			this.player = window["videojs"](this.$refs.saber, {
+				techOrder: ["flash"],
+				aspectRatio: "16:9"
 			});
 			this.player.src(this.data.url)
 		});
+	},
+	beforeDestroy() {
+		this.player.dispose()
+		this.player = null
 	}
 };
 </script>

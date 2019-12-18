@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="content">
+    <div class="content" ref="content">
       <ctrl
         @handleSide="handleSide"
         :data="meetingInfo"
@@ -11,16 +11,25 @@
         :showParty="isShowParty"
         @handleMessage="handleMessage"
         @handleParty="handleParty"
+        @prevSlide="prevSlide"
+        @nextSlide="nextSlide"
       ></ctrl>
-      <div class="playerBigBox">
-        <player v-for="item of members" :key="item.uid" :data="item"></player>
-        <div id="myStream" class="playerBox"></div>
+      <div :class="`playerBigBox ${howMany}`">
+        <player
+          v-if="!(speakFlag || shareFlag)"
+          v-for="item of members"
+          :key="item.uid"
+          :data="item"
+        ></player>
+        <player v-if="speakFlag" :data="speaker"></player>
+        <player v-if="shareFlag" :data="sharer"></player>
+        <div ref="myStream" id="myStream" class="playerBox"></div>
       </div>
     </div>
     <side-box
       v-if="isShowSide"
       :data="meetingInfo"
-      :members="members"
+      :members="speaker ? [speaker, ...members] : members"
       :showMessage="isShowMessage"
       :showParty="isShowParty"
       @handleMessage="handleMessage"
@@ -49,13 +58,17 @@ export default {
 			micNum: 0,
 			isShowSide: true,
 			isShowMessage: true,
-			isShowParty: true
+			isShowParty: true,
+			speaker: null,
+			sharer: null,
+			playerNum: 4,
+			slideCount: 2
 		}
 	},
 	created() {
 		antiquity.on("getMidInfo", (meetingInfo) => {
 			this.meetingInfo = meetingInfo;
-			// console.log(meetingInfo.myUid)
+			console.log("meetingInfo", this.meetingInfo)
 		});
 		antiquity.on("getMembers", (members) => {
 			this.members = members;
@@ -71,25 +84,47 @@ export default {
 			console.log("sharer", sharer)
 		});
 		antiquity.on("getSpeaker", (speaker) => {
+			this.speaker = speaker;
 			console.log("speaker", speaker)
 		});
-		window.saber = antiquity
 	},
 	async mounted() {
-		await antiquity.joinMeeting({
-			code: 66666,
-			width: 500,
-			height: 500,
-			dom: document.getElementById("myStream")
-		});
-		console.log("meetingInfo", this.meetingInfo)
-		console.log(this.meetingInfo.myUid)
-		localStorage.setItem('my',JSON.stringify({
-			uid:this.meetingInfo.mine.uid,
-			mid:this.meetingInfo.id,
-			name:this.meetingInfo.mine.name
-		}))
-		
+		const {offsetWidth, offsetHeight} = this.$refs.myStream;
+		this.$nextTick(async () => {
+			console.log(this.$refs.myStream)
+			await antiquity.joinMeeting({
+				code: 66666,
+				width: offsetWidth,
+				height: offsetHeight,
+				dom: this.$refs.myStream
+			});
+			antiquity.rtmp.setScreenSize(offsetWidth*1.2, offsetHeight*1.2);
+			antiquity.rtmp.setScreenPosition(-offsetWidth*0.15, 0);
+			antiquity.rtmp.setWrap();
+			antiquity.rtmp.setCamMode(1280, 720, 24);
+			antiquity.publish(this.meetingInfo.video_url.slice(0, -1))
+		})
+	},
+	computed: {
+		maxSlide() {
+			let maxSlide = Math.max(Math.floor(this.members.length/4), 1);
+			this.speaker && ++maxSlide;
+			this.sharer && ++maxSlide;
+			return maxSlide
+		},
+		speakFlag() {
+			if (this.shareFlag) return this.speaker && this.slideCount === 2;
+			return this.speaker && this.slideCount === 1
+		},
+		shareFlag() {
+			return this.sharer && this.slideCount === 1
+		},
+		howMany() {
+			if (this.shareFlag || this.speakFlag) return "one";
+			if (this.playerNum === 4) return "four";
+			if (this.playerNum === 9) return "nine";
+			return ''
+		}
 	},
 	methods: {
 		handleSide() {
@@ -100,7 +135,13 @@ export default {
 		},
 		handleParty() {
 			this.isShowParty = !this.isShowParty
-		}
+		},
+		prevSlide() {
+			this.slideCount !== 1 && --this.slideCount
+		},
+		nextSlide() {
+			this.slideCount !== this.maxSlide && ++this.slideCount
+		},
 	}
 };
 </script>
@@ -108,15 +149,34 @@ export default {
 <style lang="less">
 @import "./common/base";
 @import "./common/common";
-.playerBox {
-  width: 33%;
-  height: 33%;
-  background-color: bisque;
-}
 .playerBigBox {
   height: 100%;
   .flex(space-around, flex-start);
   flex-wrap: wrap;
+  &.one {
+    .playerBox {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  &.two {
+  }
+  &.four {
+    .playerBox {
+      width: 49%;
+      height: 49%;
+    }
+  }
+  &.nine {
+    .playerBox {
+      width: 33%;
+      height: 33%;
+    }
+  }
+  .playerBox {
+    width: 50%;
+    height: 50%;
+  }
 }
 .icon {
   width: 1em;
@@ -150,5 +210,10 @@ button,
     flex: 1;
     background-color: #91949c;
   }
+}
+#myStream {
+	position: fixed;
+	right: -100%;
+	top: 0;
 }
 </style>

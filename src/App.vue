@@ -104,6 +104,9 @@
                 this.speaker = speaker;
                 console.log("speaker", speaker)
             });
+            antiquity.on("getToast", (msg) => {
+                console.log("getToast", msg)
+            });
         },
         async mounted() {
             this.$nextTick(async () => {
@@ -127,7 +130,7 @@
                 antiquity.rtmp.setScreenPosition(12, 9);
                 antiquity.rtmp.setWrap();
                 antiquity.rtmp.setCamMode(480, 360, 15);
-                antiquity.publish(this.meetingInfo.video_url.slice(0, -1))
+                antiquity.publish(this.meetingInfo.video_url)
             });
             this.$refs.draggable.ondragend = (e) => {
                 this.$refs.draggable.style.left = `${e.x - 180}px`;

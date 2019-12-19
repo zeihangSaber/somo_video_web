@@ -124,12 +124,12 @@
 		},
 		methods:{
 			handleMic() {
-				this.data.mine.mic === 0 ? antiquity.muteVideo() : antiquity.unmuteAudio();
+				this.data.mine.mic === 0 ? antiquity.muteAudio() : antiquity.unmuteAudio();
 			},
 			handleCamera() {
 				this.data.mine.camera === 0
 					? antiquity.muteVideo()
-					: antiquity.unmuteVideo(this.data.video_url.slice(0, -1));
+					: antiquity.unmuteVideo(this.data.video_url);
 			}
 		},
 		destroyed() {

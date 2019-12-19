@@ -1,9 +1,5 @@
 import { Antiquity } from "zeihang_saber";
-console.log(Antiquity.uuid());
-const uuid = "41bc35b9-528e-4f2a-3cec-9c5dda2f1b6e";
+console.log(Antiquity.uuid())
+const uuid = "5db0451a-24ab-4d21-3ff5-4a0dd338d119";
 
-export default new Antiquity(
-  10001250,
-  "MTAwMDEyNTAtMTU2NzM5MDMxMTA4OS02ODA1Nzcw",
-  uuid
-);
+export default new Antiquity(10003437, "MTAwMDM0MzctMTU3MTY0ODcwNDI4Ni0zOTc5Njg3", uuid);

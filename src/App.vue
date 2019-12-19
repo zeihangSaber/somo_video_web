@@ -51,7 +51,7 @@
     import Player from "./components/player";
     import Ctrl from "./components/controls";
     import SideBox from "./components/side";
-    import antiquity, { myMid } from "./utils/Antiquity";
+    import antiquity, { myMid, Password } from "./utils/Antiquity";
     export default {
         name: "app",
         components: {
@@ -105,6 +105,7 @@
             this.$nextTick(async () => {
                 await antiquity.joinMeeting({
                     code: myMid,
+					password: Password,
                     width: 480,
                     height: 360,
                     dom: this.$refs.draggable

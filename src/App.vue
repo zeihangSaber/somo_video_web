@@ -49,9 +49,7 @@
     import Player from "./components/player";
     import Ctrl from "./components/controls";
     import SideBox from "./components/side";
-    import antiquity from "./utils/Antiquity";
-    import { Base64 } from "js-base64";
-    const { encode, decode } = Base64;
+    import antiquity, { myMid } from "./utils/Antiquity";
     export default {
         name: "app",
         components: {
@@ -97,13 +95,12 @@
                 this.speaker = speaker;
                 console.log("speaker", speaker)
             });
-            console.log(JSON.parse(decode(window.location.href.split("arguments=")[1])));
         },
         async mounted() {
             const {offsetWidth, offsetHeight} = this.$refs.myStream;
             this.$nextTick(async () => {
                 await antiquity.joinMeeting({
-                    code: 66666,
+                    code: myMid,
                     width: offsetWidth,
                     height: offsetHeight,
                     dom: this.$refs.myStream
@@ -111,7 +108,7 @@
                 antiquity.rtmp.setScreenSize(offsetWidth*1.2, offsetHeight*1.2);
                 antiquity.rtmp.setScreenPosition(-offsetWidth*0.15, 0);
                 antiquity.rtmp.setWrap();
-                antiquity.rtmp.setCamMode(1280, 720, 24);
+                antiquity.rtmp.setCamMode(480, 360, 15);
                 antiquity.publish(this.meetingInfo.video_url.slice(0, -1))
             })
         },

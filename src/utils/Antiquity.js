@@ -1,5 +1,7 @@
 import { Antiquity } from "zeihang_saber";
+import { Base64 } from "js-base64";
+const { encode, decode } = Base64;
 console.log(Antiquity.uuid())
-const uuid = "5db0451a-24ab-4d21-3ff5-4a0dd338d119";
-
-export default new Antiquity(10003437, "MTAwMDM0MzctMTU3MTY0ODcwNDI4Ni0zOTc5Njg3", uuid);
+const {cookie, uid, device, mid} = JSON.parse(decode(window.location.href.split("arguments=")[1]));
+export const myMid = mid;
+export default new Antiquity(uid, cookie, device);

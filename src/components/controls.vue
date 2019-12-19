@@ -31,11 +31,11 @@
 			<i></i>
 			<div class="center">
 				<button @click="handleMic">
-					<i :class="`font_family ${data.mine.mic === 0 ? 'icon-mic' : 'icon-mic-no'}`"></i>
+					<i :class="`font_family ${data.mine && data.mine.mic === 0 ? 'icon-mic' : 'icon-mic-no'}`"></i>
 					静音
 				</button>
 				<button @click="handleCamera">
-					<i :class="`font_family ${data.mine.camera === 0 ? 'icon-camera' : 'icon-camera-no'}`"></i>
+					<i :class="`font_family ${data.mine && data.mine.camera === 0 ? 'icon-camera' : 'icon-camera-no'}`"></i>
 					视频
 				</button>
 				<button><i class="font_family icon-sharing"></i>邀请</button>

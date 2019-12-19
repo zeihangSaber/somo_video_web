@@ -49,7 +49,7 @@
     import Player from "./components/player";
     import Ctrl from "./components/controls";
     import SideBox from "./components/side";
-    import antiquity, { myMid } from "./utils/Antiquity";
+    import antiquity, { myMid, Password } from "./utils/Antiquity";
     export default {
         name: "app",
         components: {
@@ -103,7 +103,8 @@
                     code: myMid,
                     width: offsetWidth,
                     height: offsetHeight,
-                    dom: this.$refs.myStream
+                    dom: this.$refs.myStream,
+					password: Password
                 });
                 antiquity.rtmp.setScreenSize(offsetWidth*1.2, offsetHeight*1.2);
                 antiquity.rtmp.setScreenPosition(-offsetWidth*0.15, 0);

@@ -29,7 +29,9 @@
                 ></player>
                 <player v-if="speakFlag" :data="speaker"></player>
                 <player v-if="shareFlag" :data="sharer"></player>
-                <div ref="myStream" id="myStream" :class="`playerBox ${mineFlag ? '' : 'mineOut'}`"></div>
+                <div class="drag" draggable="true" ref="draggable">
+                    <div class="move"></div>
+                </div>
             </div>
         </div>
         <side-box
@@ -68,7 +70,7 @@
                 isShowParty: true,
                 speaker: null,
                 sharer: null,
-                playerNum: 4,
+                playerNum: 9,
                 slideCount: 1,
                 barrage: false
             }
@@ -97,20 +99,23 @@
             });
         },
         async mounted() {
-            const {offsetWidth, offsetHeight} = this.$refs.myStream;
             this.$nextTick(async () => {
                 await antiquity.joinMeeting({
                     code: myMid,
-                    width: offsetWidth,
-                    height: offsetHeight,
-                    dom: this.$refs.myStream
+                    width: 480,
+                    height: 360,
+                    dom: this.$refs.draggable
                 });
-                antiquity.rtmp.setScreenSize(offsetWidth*1.2, offsetHeight*1.2);
-                antiquity.rtmp.setScreenPosition(-offsetWidth*0.15, 0);
+                antiquity.rtmp.setScreenSize(480, 360);
+                antiquity.rtmp.setScreenPosition(12, 9);
                 antiquity.rtmp.setWrap();
                 antiquity.rtmp.setCamMode(480, 360, 15);
                 antiquity.publish(this.meetingInfo.video_url.slice(0, -1))
-            })
+            });
+            this.$refs.draggable.ondragend = (e) => {
+                this.$refs.draggable.style.left = `${e.x - 180}px`;
+                this.$refs.draggable.style.top = `${e.y}px`;
+            }
         },
         computed: {
             maxSlide() {
@@ -137,6 +142,9 @@
                 if (this.playerNum === 4) return "four";
                 if (this.playerNum === 9) return "nine";
                 return ''
+            },
+            saber() {
+                console.log(1)
             }
         },
         methods: {
@@ -216,6 +224,7 @@
     #app {
         height: 100%;
         width: 100%;
+        position: relative;
         .flex(flex-start, flex-start);
         .content {
             position: relative;
@@ -228,5 +237,22 @@
     	position: fixed;
     	right: -100%;
     	top: 0;
+    }
+    .drag {
+        width: 240px;
+        height: 180px;
+        background-color: bisque;
+        position: absolute;
+        top: 100px;
+        right: -180px;
+        .move {
+            width: 10px;
+            height: 10px;
+            background-color: #ff6b6f;
+            position: absolute;
+            z-index: 99999;
+            right: 0;
+        }
+        z-index: 99998;
     }
 </style>

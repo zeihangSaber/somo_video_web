@@ -109,9 +109,7 @@
                     width: 480,
                     height: 360,
                     dom: this.$refs.draggable
-                }).then((res) => {
-                    alert(11111)
-                })
+                });
                 antiquity.rtmp.setScreenSize(480, 360);
                 antiquity.rtmp.setScreenPosition(12, 9);
                 antiquity.rtmp.setWrap();
@@ -178,7 +176,7 @@
     @import "./common/common";
     .playerBigBox {
         height: 100%;
-        .flex(space-around, flex-start);
+        .flex(flex-start, flex-start);
         flex-wrap: wrap;
         &.one {
             .playerBox {
@@ -192,12 +190,14 @@
             .playerBox {
                 width: 49%;
                 height: 49%;
+                margin: 0.5%;
             }
         }
         &.nine {
             .playerBox {
-                width: 33%;
-                height: 33%;
+                width: 32.33%;
+                height: 32.33%;
+                margin: 0.5%;
             }
         }
         .playerBox {

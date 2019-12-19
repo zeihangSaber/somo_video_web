@@ -10,7 +10,7 @@
     "core-js": "^3.4.3",
     "js-base64": "^2.5.1",
     "vue": "^2.6.10",
-    "zeihang_saber": "^0.9.7"
+    "zeihang_saber": "^1.0.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.1.0",

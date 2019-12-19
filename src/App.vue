@@ -51,7 +51,7 @@
     import Player from "./components/player";
     import Ctrl from "./components/controls";
     import SideBox from "./components/side";
-    import antiquity, { myMid } from "./utils/Antiquity";
+    import antiquity, { myMid, Password } from "./utils/Antiquity";
     export default {
         name: "app",
         components: {
@@ -97,11 +97,15 @@
                 this.speaker = speaker;
                 console.log("speaker", speaker)
             });
+            antiquity.on("getToast", (msg) => {
+                console.log("getToast", msg)
+            });
         },
         async mounted() {
             this.$nextTick(async () => {
                 await antiquity.joinMeeting({
                     code: myMid,
+					password: Password,
                     width: 480,
                     height: 360,
                     dom: this.$refs.draggable
@@ -110,7 +114,7 @@
                 antiquity.rtmp.setScreenPosition(12, 9);
                 antiquity.rtmp.setWrap();
                 antiquity.rtmp.setCamMode(480, 360, 15);
-                antiquity.publish(this.meetingInfo.video_url.slice(0, -1))
+                antiquity.publish(this.meetingInfo.video_url)
             });
             this.$refs.draggable.ondragend = (e) => {
                 this.$refs.draggable.style.left = `${e.x - 180}px`;

@@ -8,10 +8,12 @@
                     :micNum="micNum"
                     :showSide="isShowSide"
                     :showMessage="isShowMessage"
+					:ShowShare='isShowShare'
                     :showParty="isShowParty"
                     :playerNum="playerNum"
                     :barrage="barrage"
                     @handleMessage="handleMessage"
+					@ShowShare="ShowShare"
                     @handleParty="handleParty"
                     @prevSlide="prevSlide"
                     @nextSlide="nextSlide"
@@ -33,6 +35,7 @@
                     <div class="move"></div>
                 </div>
             </div>
+			<share v-if="isShowShare" :shareData='shareData'></share>
         </div>
         <side-box
                 v-if="isShowSide"
@@ -51,13 +54,15 @@
     import Player from "./components/player";
     import Ctrl from "./components/controls";
     import SideBox from "./components/side";
-    import antiquity, { myMid, Password } from "./utils/Antiquity";
+	import share from "./components/share";
+    import antiquity, { myMid, Password, MeetingStatus } from "./utils/Antiquity";
     export default {
         name: "app",
         components: {
             Player,
             Ctrl,
-            SideBox
+            SideBox,
+			share
         },
         data() {
             return {
@@ -68,11 +73,13 @@
                 isShowSide: true,
                 isShowMessage: true,
                 isShowParty: true,
+				isShowShare:false,
                 speaker: null,
                 sharer: null,
                 playerNum: 9,
                 slideCount: 1,
-                barrage: false
+                barrage: false,
+				shareData:{}
             }
         },
         created() {
@@ -100,13 +107,22 @@
         },
         async mounted() {
             this.$nextTick(async () => {
+				console.log(myMid)
+				this.shareData = {
+					mid: myMid,
+					password: Password
+				}
+				this.isShowShare = MeetingStatus
                 await antiquity.joinMeeting({
                     code: myMid,
 					password: Password,
                     width: 480,
                     height: 360,
                     dom: this.$refs.draggable
-                });
+                }).then((res) => {
+					alert(1111)
+					console.log(res)
+				})
                 antiquity.rtmp.setScreenSize(480, 360);
                 antiquity.rtmp.setScreenPosition(12, 9);
                 antiquity.rtmp.setWrap();
@@ -144,11 +160,11 @@
                 if (this.playerNum === 9) return "nine";
                 return ''
             },
-            saber() {
-                console.log(1)
-            }
         },
         methods: {
+			ShowShare() {
+				this.isShowShare = !this.isShowShare
+			},
             handleSide() {
                 this.isShowSide = !this.isShowSide
             },
@@ -179,6 +195,7 @@
             .playerBox {
                 width: 100%;
                 height: 100%;
+				
             }
         }
         &.two {
@@ -228,6 +245,7 @@
         position: relative;
         .flex(flex-start, flex-start);
         .content {
+			min-width: 1080px;
             position: relative;
             height: 100%;
             flex: 1;

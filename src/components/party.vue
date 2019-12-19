@@ -80,7 +80,7 @@
         <button :disabled="!hasControl" @click="handleRemoveMicAllOn">
           解除全体静音
         </button>
-        <button :disabled="!hasControl">锁定会议</button>
+        <button :disabled="!hasControl" @click="handleLock">锁定会议</button>
       </div>
     </div>
   </div>
@@ -89,7 +89,7 @@
 import antiquity from "../utils/Antiquity";
 export default {
   name: "party",
-  props: ["members", "hasControl"],
+  props: ["members", "hasControl", "data"],
   data() {
     return {
       permissionShow: false,
@@ -217,9 +217,7 @@ export default {
         rule: 1001,
         value: "2"
       };
-      antiquity.ajax.ruleSet(data).then(res => {
-        console.log(meetingInfo);
-      });
+      antiquity.ajax.ruleSet(data).then(res => {});
     },
     handleRemoveMicAllOn() {
       const data = {
@@ -230,6 +228,17 @@ export default {
       antiquity.ajax.ruleSet(data).then(res => {
         console.log(res);
       });
+    },
+    handleLock() {
+      if (this.data.locked) {
+        antiquity.ajax.unlock().then(res => {
+          console.log(res);
+        });
+      } else {
+        antiquity.ajax.lock().then(res => {
+          console.log(res);
+        });
+      }
     }
   }
 };

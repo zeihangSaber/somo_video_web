@@ -11,7 +11,7 @@
             <img :src="data.avarter">
         </div>
         <div class="foot">
-            <party v-if="showParty" @handleParty="() => $emit('handleParty')" :members="members" :hasControl="data.control"></party>
+            <party v-if="showParty" :data="data" @handleParty="() => $emit('handleParty')" :members="members" :hasControl="data.control"></party>
             <message v-if="showMessage" @handleMessage="() => $emit('handleMessage')" :barrage="barrage"></message>
         </div>
     </div>

@@ -101,18 +101,18 @@ export default {
   },
   methods: {
     enter(event) {
-      event.target.className = "item itemMouse";
-      //   if (this.hasControl) {
-      //     event.target.className = "item itemMouse";
-      //   }
+      // event.target.className = "item itemMouse";
+      if (this.hasControl) {
+        event.target.className = "item itemMouse";
+      }
     },
     leave(event) {
-      event.target.className = "item";
+      // event.target.className = "item";
       this.permissionShow = false;
-      //   if (this.hasControl) {
-      //      this.permissionShow = false;
-      //     event.target.className = "item";
-      //   }
+      if (this.hasControl) {
+        this.permissionShow = false;
+        event.target.className = "item";
+      }
     },
     more(item) {
       this.permissionType = {

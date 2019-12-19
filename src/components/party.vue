@@ -76,8 +76,10 @@
       </div>
       <div class="line"></div>
       <div class="bottom">
-        <button :disabled="!hasControl">全体静音</button>
-        <button :disabled="!hasControl">解除全体静音</button>
+        <button :disabled="!hasControl" @click="setMicAllOff">全体静音</button>
+        <button :disabled="!hasControl" @click="handleRemoveMicAllOn">
+          解除全体静音
+        </button>
         <button :disabled="!hasControl">锁定会议</button>
       </div>
     </div>
@@ -208,6 +210,26 @@ export default {
         console.log(res);
       });
       console.log(item);
+    },
+    setMicAllOff() {
+      const data = {
+        admin: antiquity.uid,
+        rule: 1001,
+        value: "2"
+      };
+      antiquity.ajax.ruleSet(data).then(res => {
+        console.log(meetingInfo);
+      });
+    },
+    handleRemoveMicAllOn() {
+      const data = {
+        admin: antiquity.uid,
+        rule: 1001,
+        value: "0"
+      };
+      antiquity.ajax.ruleSet(data).then(res => {
+        console.log(res);
+      });
     }
   }
 };

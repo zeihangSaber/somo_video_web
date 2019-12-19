@@ -122,7 +122,7 @@
 		},
 		methods:{
 			handleMic() {
-				this.data.mine.mic === 0 ? antiquity.muteVideo() : antiquity.unmuteAudio();
+				this.data.mine.mic === 0 ? antiquity.muteAudio() : antiquity.unmuteAudio();
 			},
 			handleCamera() {
 				this.data.mine.camera === 0

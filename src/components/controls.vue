@@ -38,7 +38,9 @@
 					<i :class="`font_family ${data.mine && data.mine.camera === 0 ? 'icon-camera' : 'icon-camera-no'}`"></i>
 					视频
 				</button>
-				<button><i class="font_family icon-sharing"></i>邀请</button>
+				<button @click="$emit('ShowShare')">
+					<i :class="`font_family icon-sharing ${ShowShare ? 'active' : ''}`"></i>邀请
+				</button>
 				<button @click="$emit('handleMessage')">
 					<i :class="`font_family icon-barrage ${showMessage ? 'active' : ''}`"></i>消息
 				</button>
@@ -112,7 +114,7 @@
 				showSetting: false
 			}
 		},
-		props: ["data", "peopleNum", "micNum", "showSide", "showMessage", "showParty", "playerNum", "barrage"],
+		props: ["data", "peopleNum", "micNum", "showSide", "showMessage", "showParty", "playerNum", "barrage","ShowShare"],
 		components: {},
 		mounted() {
 			localStorage.setItem('bulletScreen',this.bulletScreen);

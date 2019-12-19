@@ -70,13 +70,13 @@
                 members: [],
                 peopleNum: 0,
                 micNum: 0,
-                isShowSide: false,
+                isShowSide: true,
                 isShowMessage: true,
                 isShowParty: true,
 				isShowShare:false,
                 speaker: null,
                 sharer: null,
-                playerNum: 4,
+                playerNum: 9,
                 slideCount: 1,
                 barrage: false,
 				shareData:{}
@@ -123,6 +123,7 @@
                     height: 360,
                     dom: this.$refs.draggable
                 }).then((res) => {
+					alert(1111)
 					console.log(res)
 				})
                 antiquity.rtmp.setScreenSize(480, 360);
@@ -215,10 +216,8 @@
             }
         }
         .playerBox {
-            width: 49%;
-            height: 49%;
-            .flex(center, center);
-            overflow: hidden;
+            width: 50%;
+            height: 50%;
         }
     }
     .icon {
@@ -267,7 +266,7 @@
         background-color: bisque;
         position: absolute;
         top: 100px;
-        right: 20px;
+        right: -180px;
         .move {
             width: 10px;
             height: 10px;

@@ -102,10 +102,10 @@
             this.$nextTick(async () => {
                 await antiquity.joinMeeting({
                     code: myMid,
-                    width: offsetWidth,
-                    height: offsetHeight,
-                    dom: this.$refs.myStream,
-					password: Password
+					password: Password,
+                    width: 480,
+                    height: 360,
+                    dom: this.$refs.draggable
                 });
                 antiquity.rtmp.setScreenSize(480, 360);
                 antiquity.rtmp.setScreenPosition(12, 9);

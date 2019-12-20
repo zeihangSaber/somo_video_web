@@ -230,7 +230,8 @@ export default {
 }
 .playerBigBox {
 	height: 100%;
-	.flex(space-around, flex-start);
+	.flex(flex-start, flex-start);
+	align-content: flex-start;
 	flex-wrap: wrap;
 	&.one {
 		.playerBox {
@@ -242,14 +243,16 @@ export default {
 	}
 	&.four {
 		.playerBox {
-			width: 49%;
-			height: 49%;
+			width: 49.8%;
+			height: 49.8%;
+			margin: 0.1%;
 		}
 	}
 	&.nine {
 		.playerBox {
-			width: 33%;
-			height: 33%;
+			width: 33.133%;
+			height: 33.133%;
+			margin: 0.1%;
 		}
 	}
 	.playerBox {

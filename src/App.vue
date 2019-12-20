@@ -23,7 +23,7 @@
 				@barrageFalse="() => (barrage = false)"
 			></ctrl>
 			<div :class="`playerBigBox ${howMany}`" ref="playerBigBox">
-				<player v-if="!(speakFlag || shareFlag)" v-for="item of members" :key="item.uid" :data="item"></player>
+				<player v-if="!(speakFlag || shareFlag)" v-for="item of nowPlayerNum" :key="item" :data="members[playerNum * (realCount - 1) + item - 1]"></player>
 				<player v-if="speakFlag" :data="speaker"></player>
 				<player v-if="shareFlag" :data="sharer"></player>
 				<div class="drag" draggable="true" ref="draggable"><div class="move"></div></div>
@@ -80,6 +80,14 @@ export default {
 			timer:''
 		};
 	},
+	beforeCreate() {
+		window.onbeforeunload = (e) => {
+			e.returnValue=("确定离开当前页面吗？");
+		};
+		window.onclose = (e) => {
+			e.returnValue=("确定离开当前页面吗？");
+		};
+	},
 	created() {
 		antiquity.on('getMidInfo', meetingInfo => {
 			this.meetingInfo = meetingInfo;
@@ -124,7 +132,7 @@ export default {
 	},
 	computed: {
 		maxSlide() {
-			let maxSlide = Math.max(Math.floor(this.members.length / 4), 1);
+			let maxSlide = Math.max(Math.ceil(this.members.length / 4), 1);
 			this.speaker && ++maxSlide;
 			this.sharer && ++maxSlide;
 			console.log('ddd', maxSlide);
@@ -147,6 +155,18 @@ export default {
 			if (this.playerNum === 4) return 'four';
 			if (this.playerNum === 9) return 'nine';
 			return '';
+		},
+		realCount() {
+			let realCount = 0;
+			if (this.speakFlag && this.shareFlag) {
+				realCount = -2;
+			} else if (this.speakFlag || this.shareFlag) {
+				realCount = -1;
+			}
+			return Math.max(this.slideCount + realCount, 0);
+		},
+		nowPlayerNum() {
+			return Math.min(this.members.length - this.playerNum * (this.realCount - 1), this.playerNum)
 		}
 	},
 	methods: {
@@ -258,6 +278,8 @@ export default {
 	.playerBox {
 		width: 50%;
 		height: 50%;
+		.flex(center, center);
+		overflow: hidden;
 	}
 }
 .icon {

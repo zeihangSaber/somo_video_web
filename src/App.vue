@@ -108,33 +108,6 @@ export default {
 		});
 	},
 	async mounted() {
-		this.$nextTick(async () => {
-			console.log(myMid);
-			this.shareData = {
-				mid: myMid,
-				password: Password
-			};
-			this.isShowShare = MeetingStatus;
-			await antiquity
-				.joinMeeting({
-					code: myMid,
-					password: Password,
-					width: 480,
-					height: 360,
-					dom: this.$refs.draggable
-				})
-				.then(res => {
-					if (res.code == 2011) {
-						window.location.href = 'http://localhost:8080/joinConference';
-					}
-					console.log(res.code);
-				});
-			antiquity.rtmp.setScreenSize(480, 360);
-			antiquity.rtmp.setScreenPosition(12, 9);
-			antiquity.rtmp.setWrap();
-			antiquity.rtmp.setCamMode(480, 360, 15);
-			antiquity.publish(this.meetingInfo.video_url);
-		});
 		this.$refs.draggable.ondragend = e => {
 			this.$refs.draggable.style.left = `${e.x - 180}px`;
 			this.$refs.draggable.style.top = `${e.y}px`;
@@ -142,6 +115,9 @@ export default {
 		this.timer = setInterval(() => {
 			this.bubbleMsg_status()
 		}, 3000);
+		this.$nextTick(() => {
+			this.init();
+		})
 	},
 	computed: {
 		maxSlide() {
@@ -195,6 +171,34 @@ export default {
 		},
 		nextSlide() {
 			this.slideCount !== this.maxSlide && ++this.slideCount;
+		},
+		init() {
+			this.$nextTick(async () => {
+				this.shareData = {
+					mid: myMid,
+					password: Password
+				};
+				this.isShowShare = MeetingStatus;
+				await antiquity
+						.joinMeeting({
+							code: myMid,
+							password: Password,
+							width: 480,
+							height: 360,
+							dom: this.$refs.draggable
+						})
+						.then(res => {
+							if (res.code == 2011) {
+								window.location.href = 'http://localhost:8080/joinConference';
+							}
+							console.log(res.code);
+						});
+				antiquity.rtmp.setScreenSize(480, 360);
+				antiquity.rtmp.setScreenPosition(12, 9);
+				antiquity.rtmp.setWrap();
+				antiquity.rtmp.setCamMode(480, 360, 15);
+				antiquity.publish(this.meetingInfo.video_url);
+			});
 		}
 	}
 };
@@ -223,7 +227,8 @@ export default {
 }
 .playerBigBox {
 	height: 100%;
-	.flex(space-around, flex-start);
+	.flex(flex-start, flex-start);
+	align-content: flex-start;
 	flex-wrap: wrap;
 	&.one {
 		.playerBox {
@@ -235,14 +240,16 @@ export default {
 	}
 	&.four {
 		.playerBox {
-			width: 49%;
-			height: 49%;
+			width: 49.8%;
+			height: 49.8%;
+			margin: 0.1%;
 		}
 	}
 	&.nine {
 		.playerBox {
-			width: 33%;
-			height: 33%;
+			width: 33.133%;
+			height: 33.133%;
+			margin: 0.1%;
 		}
 	}
 	.playerBox {

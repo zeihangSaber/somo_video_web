@@ -7964,10 +7964,10 @@ yargs@^15.0.0:
     y18n "^4.0.0"
     yargs-parser "^16.1.0"
 
-zeihang_saber@^1.1.6:
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/zeihang_saber/-/zeihang_saber-1.1.6.tgz#c12523617694f6a7cf9ca2e4bc725b034f2de290"
-  integrity sha512-zykL/XyXxvFiL2aieYY/t2ZYc4dpk1/fwsVFp9a6PYAhIc7pLTvCYx6NiIM2IiLeRYjKtZNT4UCVx4Qjb9/2zQ==
+zeihang_saber@^1.1.9:
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/zeihang_saber/-/zeihang_saber-1.1.9.tgz#1444981b02d130e85c32a8385614be314ba25988"
+  integrity sha512-NO8nunn8nrQJ44Qpm2euHHNDcJtAHVWALrnV5xj4W5buYPjwqDWNrV/Uq3wDDKNKhtsgyXtYDGPgtkwCaeNK5g==
   dependencies:
     axios "^0.19.0"
     js-base64 "^2.5.1"

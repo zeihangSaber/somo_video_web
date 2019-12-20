@@ -107,9 +107,6 @@ export default {
 			this.bubbleMsg.push(msg);
 		});
 	},
-	// watch: {
-	// 	bubbleMsg: 'bubbleMsg_status'
-	// },
 	async mounted() {
 		this.$nextTick(async () => {
 			console.log(myMid);

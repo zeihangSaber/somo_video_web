@@ -115,9 +115,6 @@ export default {
 			this.bubbleMsg.push(msg);
 		});
 	},
-	// watch: {
-	// 	bubbleMsg: 'bubbleMsg_status'
-	// },
 	async mounted() {
 		this.$refs.draggable.ondragend = e => {
 			this.$refs.draggable.style.left = `${e.x - 180}px`;

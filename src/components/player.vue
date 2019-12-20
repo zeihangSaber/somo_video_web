@@ -69,8 +69,8 @@ export default {
 <style lang="less" scoped>
 @import "../common/common";
 .playerBox {
-	width: 33%;
-	height: 33%;
+	width: 33.3%;
+	height: 33.3%;
 	background-color: bisque;
 	position: relative;
 	.ctrlMiddle {

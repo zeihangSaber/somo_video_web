@@ -319,6 +319,8 @@
 		.center {
 			flex: 1;
 			text-align: center;
+			.flex(center, center);
+			padding-bottom: 5px;
 			button {
 				background-color: transparent;
 				outline: none;

@@ -235,7 +235,7 @@ export default {
 .bubble-BOX {
 	width: 200px;
 	height: 200px;
-	// border: 1px solid red;
+	pointer-events: none;
 	position: absolute;
 	top: calc(50vh - 100px);
 	left: calc(50% - 100px);

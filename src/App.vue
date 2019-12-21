@@ -81,7 +81,6 @@ export default {
 			bubbleMsg: [],
 			timer:'',
 			test: false,
-			
 		};
 	},
 	beforeCreate() {
@@ -123,6 +122,15 @@ export default {
 		this.timer = setInterval(() => {
 			this.bubbleMsg_status()
 		}, 3000);
+		console.log(this.meetingInfo)
+		setTimeout(() => {
+			console.log(this.meetingInfo)
+			localStorage.setItem('my',JSON.stringify({
+			                uid:this.meetingInfo.mine.uid,
+			                mid:this.meetingInfo.id,
+			                name:this.meetingInfo.mine.name
+			            }))
+		}, 1000);
 		this.$nextTick(() => {
 			this.init();
 		})

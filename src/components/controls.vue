@@ -20,7 +20,7 @@
 				</span>
 				<span>
 					<i class="font_family icon-time"></i>
-					{{this.data.start3}}
+					{{time_meeting}}
 				</span>
 			</div>
 			<i class="font_family icon-wifi-high"></i>
@@ -114,7 +114,9 @@
 		name: "app",
 		data(){
 			return{
-				showSetting: false
+				showSetting: false,
+				time:'',
+				time_meeting:''
 			}
 		},
 		props: [
@@ -133,11 +135,29 @@
 		components: {},
 		mounted() {
 			localStorage.setItem('bulletScreen',this.bulletScreen);
-			interval = setInterval(() => {
-				this.data.start3 = this.data.start3 + 1000
+			setInterval(() => {
+					let timestamp = (new Date()).getTime();//当前时间戳
+					this.time =  timestamp - this.data.start
+					this.time_meeting = this.formatDuring(this.time)
 			}, 1000)
 		},
 		methods:{
+			formatDuring(mss) {
+					var days = parseInt(mss / (1000 * 60 * 60 * 24));
+					var hours = parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) + days*24;
+					var minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60));
+					var seconds = parseInt((mss % (1000 * 60)) / 1000);
+					if(hours<10){
+						hours = '0' + hours
+					}
+					if(minutes<10){
+						minutes = '0' + minutes
+					}
+					if(seconds<10){
+						seconds = '0' + seconds
+					}
+					return hours + ":" + minutes + ":" + seconds;
+			},
 			handleMic() {
 				this.data.mine.mic === 0 ? antiquity.muteAudio() : antiquity.unmuteAudio();
 			},

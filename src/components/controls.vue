@@ -58,52 +58,54 @@
 				<i :class="`font_family ${showSide ? 'icon-zoomIn' : 'icon-zoomOut'}`"></i>
 			</button>
 		</div>
-		<div class="set_box" v-if="showSetting">
-			<div class="set_title">
-				<div>设置</div>
-				<i class="font_family icon-close " @click="() => showSetting = !showSetting"></i>
-			</div>
-			<div class="set_main">
-				<div class="set_main_box">
-					<div class="set_main_title">视频布局:</div>
-					<div class="set_gongneng">
-						<div @click="$emit('selectFour')">
-							<svg class="icon" aria-hidden="true" v-if="playerNum === 4">
-								<use xlink:href="#icon-select"></use>
-							</svg>
-							<i class="font_family icon-select-no" v-else></i>
-							<span>四分屏</span>
+		<transition enter-active-class="animated flipInY fast" leave-active-class="animated flipOutY fast">
+			<div class="set_box" v-if="showSetting">
+				<div class="set_title">
+					<div>设置</div>
+					<i class="font_family icon-close " @click="() => showSetting = !showSetting"></i>
+				</div>
+				<div class="set_main">
+					<div class="set_main_box">
+						<div class="set_main_title">视频布局:</div>
+						<div class="set_gongneng">
+							<div @click="$emit('selectFour')">
+								<svg class="icon" aria-hidden="true" v-if="playerNum === 4">
+									<use xlink:href="#icon-select"></use>
+								</svg>
+								<i class="font_family icon-select-no" v-else></i>
+								<span>四分屏</span>
+							</div>
+							<div @click="$emit('selectNine')">
+								<svg class="icon" aria-hidden="true" v-if="playerNum === 9">
+									<use xlink:href="#icon-select"></use>
+								</svg>
+								<i class="font_family icon-select-no" v-else></i>
+								<span>九分屏</span>
+							</div>
 						</div>
-						<div @click="$emit('selectNine')">
-							<svg class="icon" aria-hidden="true" v-if="playerNum === 9">
-								<use xlink:href="#icon-select"></use>
-							</svg>
-							<i class="font_family icon-select-no" v-else></i>
-							<span>九分屏</span>
+					</div>
+					<div class="set_main_box">
+						<div class="set_main_title">弹幕消息:</div>
+						<div class="set_gongneng">
+							<div @click="$emit('barrageTrue')">
+								<svg class="icon" aria-hidden="true" v-if="barrage">
+									<use xlink:href="#icon-select"></use>
+								</svg>
+								<i class="font_family icon-select-no" v-else></i>
+								<span>开启</span>
+							</div>
+							<div @click="$emit('barrageFalse')">
+								<svg class="icon" aria-hidden="true" v-if="!barrage">
+									<use xlink:href="#icon-select"></use>
+								</svg>
+								<i class="font_family icon-select-no" v-else></i>
+								<span>关闭</span>
+							</div>
 						</div>
 					</div>
 				</div>
-				<div class="set_main_box">
-					<div class="set_main_title">弹幕消息:</div>
-					<div class="set_gongneng">
-						<div @click="$emit('barrageTrue')">
-							<svg class="icon" aria-hidden="true" v-if="barrage">
-								<use xlink:href="#icon-select"></use>
-							</svg>
-							<i class="font_family icon-select-no" v-else></i>
-							<span>开启</span>
-						</div>
-						<div @click="$emit('barrageFalse')">
-							<svg class="icon" aria-hidden="true" v-if="!barrage">
-								<use xlink:href="#icon-select"></use>
-							</svg>
-							<i class="font_family icon-select-no" v-else></i>
-							<span>关闭</span>
-						</div>
-					</div>
-				</div>
 			</div>
-		</div>
+		</transition>
 	</div>
 </template>
 

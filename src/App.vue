@@ -25,30 +25,47 @@
 				@barrageFalse="() => (barrage = false)"
 			></ctrl>
 			<div :class="`playerBigBox ${howMany}`" ref="playerBigBox">
-				<player v-if="!(speakFlag || shareFlag)" v-for="item of nowPlayerNum" :key="item" :data="members[playerNum * (realCount - 1) + item - 1]"></player>
-				<player v-if="speakFlag" :data="speaker"></player>
-				<player v-if="shareFlag" :data="sharer"></player>
-				<div :class="`drag`" ref="draggable"></div>
+				<div :class="`dragBox ${mineFlag ? 'playerBox' : 'boxOut'}`">
+					<div class="drag" ref="draggable"></div>
+				</div>
+				<player
+					v-if="!(speakFlag || shareFlag)"
+					v-for="item of nowPlayerNum"
+					:key="item"
+					:meetingInfo="meetingInfo"
+					:hawMany="howMany"
+					:data="members[playerNum * (realCount - 1) + item - 1]">
+				</player>
+				<div
+					class="space playerBox"
+					v-if="!(speakFlag || shareFlag)"
+					v-for="item of playerNum - nowPlayerNum"
+				></div>
+				<player v-if="speakFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
+				<player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo"></player>
 			</div>
 			<share v-if="isShowShare" :shareData="shareData"></share>
 			<div class="bubble-BOX">
 				<div class="bubble" v-for="item in bubbleMsg">{{ item }}</div>
 			</div>
 		</div>
-		<side-box
-			v-if="isShowSide"
-			:data="meetingInfo"
-			:members="speaker ? [speaker, ...members] : members"
-			:showMessage="isShowMessage"
-			:showParty="isShowParty"
-			:barrage="barrage"
-			@handleMessage="handleMessage"
-			@handleParty="handleParty"
-		></side-box>
+		<transition enter-active-class="animated bounceIn faster" leave-active-class="animated bounceOut faster">
+			<side-box
+					v-if="isShowSide"
+					:data="meetingInfo"
+					:members="speaker ? [speaker, ...members] : members"
+					:showMessage="isShowMessage"
+					:showParty="isShowParty"
+					:barrage="barrage"
+					@handleMessage="handleMessage"
+					@handleParty="handleParty"
+			></side-box>
+		</transition>
 	</div>
 </template>
 
 <script>
+import animate from 'animate.css';
 import Player from './components/player';
 import Ctrl from './components/controls';
 import SideBox from './components/side';
@@ -74,7 +91,7 @@ export default {
 			isShowShare: false,
 			speaker: null,
 			sharer: null,
-			playerNum: 9,
+			playerNum: 4,
 			slideCount: 1,
 			barrage: false,
 			shareData: {},
@@ -142,13 +159,16 @@ export default {
 			return this.sharer && this.slideCount === 1;
 		},
 		mineFlag() {
+			// if (this.members.length < 3) return false;
 			if (this.speakFlag && this.speakFlag && this.slideCount === 3) return true;
 			if (this.speakFlag || (this.speakFlag && this.slideCount === 2)) return true;
 			if (this.slideCount === 1) return true;
+			return false
 		},
 		howMany() {
 			if (this.members.length === 1) return 'fir';
 			if (this.shareFlag || this.speakFlag) return 'one';
+			if (this.members.length === 2) return 'two';
 			if (this.playerNum === 4) return 'four';
 			if (this.playerNum === 9) return 'nine';
 			return '';
@@ -164,7 +184,7 @@ export default {
 		},
 		nowPlayerNum() {
 			return Math.min(this.members.length - this.playerNum * (this.realCount - 1), this.playerNum)
-		}
+		},
 	},
 	methods: {
 		bubbleMsg_status() {
@@ -216,11 +236,16 @@ export default {
 				antiquity.publish(this.meetingInfo.video_url);
 			});
 		}
+	},
+	watch: {
+		mineFlag() {
+		}
 	}
 };
 </script>
 
 <style lang="less">
+
 @import './common/base';
 @import './common/common';
 .bubble {
@@ -243,6 +268,7 @@ export default {
 }
 .playerBigBox {
 	height: 100%;
+	overflow: hidden;
 	.flex(flex-start, flex-start);
 	align-content: flex-start;
 	flex-wrap: wrap;
@@ -251,7 +277,7 @@ export default {
 			width: 0;
 			height: 0;
 		}
-		.drag {
+		.dragBox {
 			width: 100%;
 			height: 99.5%;
 		}
@@ -266,6 +292,15 @@ export default {
 		.playerBox {
 			width: 100%;
 			height: 100%;
+		}
+		.dragBox {
+			width: 328px;
+			height: 188px;
+			border: 4px solid #91949C;
+			position: absolute;
+			z-index: 5;
+			top: 50px;
+			right: 20px;
 		}
 	}
 	&.four {
@@ -287,10 +322,19 @@ export default {
 		height: 50%;
 		.flex(center, center);
 		overflow: hidden;
-		background-color: #ccc;
+		background-color: #444;
+		&.space {
+			background-color: #ccc;
+		}
 	}
 	.drag {
-		background-color: #ccc;
+		background-color: #444;
+		width: 100%;
+		height: 100%;
+	}
+	.boxOut {
+		position: fixed;
+		top: -200%;
 	}
 }
 .icon {
@@ -320,6 +364,7 @@ button,
 	width: 100%;
 	position: relative;
 	.flex(flex-start, flex-start);
+	overflow: hidden;
 	.content {
 		min-width: 1080px;
 		position: relative;
@@ -335,5 +380,8 @@ button,
 }
 .caster {
 	left: -500px;
+}
+.superFaster {
+	transition-duration: .02s;
 }
 </style>

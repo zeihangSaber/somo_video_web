@@ -7,7 +7,6 @@
 			<div class="hint">复制并分享邀请码，其他人可通过邀请码加入会议</div>
 			<!-- <div class="invite-btn">邀请</div> -->
 			<el-button class="ml10 invite-btn" type="text" size="medium"
-					name='11'
 			        v-clipboard:copy="sysAppIds"
 			        v-clipboard:success="onCopy"
 			        v-clipboard:error="onError">邀请
@@ -40,11 +39,13 @@ export default {
 	methods: {
 		// 复制成功
 		    onCopy(e){
-		      console.log(e);
+				this.$emit('toast','邀请链接已复制到剪贴板')
+				console.log(e);
 		    },
 		    // 复制失败
 		    onError(e){
-		      alert("失败");
+				this.$emit('toast','复制失败')
+				alert("失败");
 		    },
 		// var num1 = '82452365122547854'
 		// var num2 = num1.replace(/(.{4})/g, "$1 ")

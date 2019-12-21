@@ -7,13 +7,13 @@
 		<div class="box">
 			<div class="top">
 				<div class="time">{{time}}</div>
-				<div class="topBox">
+				<div class="topBox" ref="topBox">
 					<div class="msgBox" v-for="itme in message">
-						<div v-if="itme.uid != my.uid">
+						<div v-if="itme.uid != my.uid" class="msg">
 							<div class="msgBox-name">{{itme.name}}</div>
 							<div class="msgBox-content">{{itme.text}}</div>
 						</div>
-						<div v-if="itme.uid == my.uid" class="ME-msg">
+						<div v-if="itme.uid == my.uid" class="ME-msg msg">
 							<div class="msgBox-name">{{itme.name}}</div>
 							<div class="msgBox-content">{{itme.text}}</div>
 						</div>
@@ -22,7 +22,7 @@
 			</div>
 			<div class="line"></div>
 			<div class="bottom">
-				<textarea placeholder="在此处输入消息…" rows="3" v-model="msgContent"></textarea>
+				<textarea maxlength="30" placeholder="在此处输入消息…" rows="3" v-model="msgContent"></textarea>
 				<button :disabled=disabled @click="send_msg()">发送</button>
 			</div>
 		</div>
@@ -98,7 +98,14 @@
 			}
 		},
 		methods: {
+			Talk() {
+			    this.$nextTick(() => {
+					// console.log(container.scrollHeight)
+			        this.$refs.topBox.scrollTop = this.$refs.topBox.offsetHeight;
+			    })
+			},
 			send_msg: function() {
+				this.Talk()
 					antiquity.ajax.broadcast({
 						"mid": this.my.mid,
 						"text": Base64.encode(this.msgContent)
@@ -134,33 +141,33 @@
 <style lang="less" scoped>
 	@import "../common/common";
 	.bulletScreen{
-		width: 476px;
 		// background: pink;
+		max-width: 476px;
 		position: fixed;
 		bottom: 100px;
 		left: 30px;
 		z-index: 500;
-
 		.bulletScreen-msg{
-			max-height:88px;
 			min-height:44px;
 			background:rgba(0,0,0,0.5);
 			border-radius:6px;
 			margin-bottom: 10px;
-			padding-left: 22px;
+			padding: 10px 22px;
 			box-sizing: border-box;
 			display: flex;
 			justify-content: flex-start;
-			align-items: center;
+			align-items:flex-start;
 			& div{
 				font-size:16px;
-				font-family:PingFangSC-Regular,PingFang SC;
 				font-weight:400;
 			}
 			.bulletScreen-name{
+				text-align: right;
 				color:rgba(105,183,255,1);
 			}
 			.bulletScreen-main{
+				max-width: 352px;
+				word-break: normal;
 				color:#ffffff;
 			}
 		}
@@ -190,6 +197,8 @@
 		.top,
 		.bottom {
 			padding: 14px 20px;
+			padding-right: 0px;
+			box-sizing: border-box;
 		}
 
 		.top {
@@ -208,7 +217,8 @@
 			.topBox {
 				height: 85%;
 				overflow-y: overlay;
-
+				padding-right: 20px;
+				box-sizing: border-box;
 
 			}
 
@@ -222,20 +232,19 @@
 				box-sizing: border-box;
 			}
 
-			& div {
+			.msg{
 				margin-bottom: 16px;
 			}
 
 			.msgBox-name {
 				font-size: 14px;
-
 				font-weight: 400;
 				color: rgba(153, 153, 153, 1);
 			}
 
 			.msgBox-content {
 				font-size: 16px;
-
+				word-wrap:break-word;
 				font-weight: 400;
 				color: rgba(24, 24, 24, 1);
 				margin-top: 4px;
@@ -248,6 +257,8 @@
 
 		.bottom {
 			height: 136px;
+			padding-right: 20px;
+			box-sizing: border-box;
 			.flex(flex-start, flex-end);
 			flex-direction: column;
 

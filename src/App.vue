@@ -13,7 +13,9 @@
 				:playerNum="playerNum"
 				:barrage="barrage"
 				:maxSlide="maxSlide"
+				:shareData="shareData"
 				:slideCount="slideCount"
+				@toast="toast"
 				@handleMessage="handleMessage"
 				@ShowShare="ShowShare"
 				@handleParty="handleParty"
@@ -30,7 +32,7 @@
 				<player v-if="shareFlag" :data="sharer"></player>
 				<div :class="`drag`" ref="draggable"></div>
 			</div>
-			<!-- <share v-if="isShowShare" :shareData="shareData"></share> -->
+			<share v-if="isShowShare" :shareData="shareData" @toast="toast"></share>
 			<div class="bubble-BOX">
 				<div class="bubble" v-for="item in bubbleMsg">{{ item }}</div>
 			</div>
@@ -126,10 +128,10 @@ export default {
 		setTimeout(() => {
 			console.log(this.meetingInfo)
 			localStorage.setItem('my',JSON.stringify({
-			                uid:this.meetingInfo.mine.uid,
-			                mid:this.meetingInfo.id,
-			                name:this.meetingInfo.mine.name
-			            }))
+				uid:this.meetingInfo.mine.uid,
+				mid:this.meetingInfo.id,
+				name:this.meetingInfo.mine.name
+			}))
 		}, 1000);
 		this.$nextTick(() => {
 			this.init();
@@ -176,6 +178,9 @@ export default {
 		}
 	},
 	methods: {
+		toast(e){
+			this.bubbleMsg.push(e)
+		},
 		bubbleMsg_status() {
 			if (this.bubbleMsg != '') {
 				this.bubbleMsg.shift();
@@ -184,7 +189,12 @@ export default {
 			}
 		},
 		ShowShare() {
-			this.isShowShare = !this.isShowShare;
+			// this.shareData = {
+			// 	mid: myMid,
+			// 	password: Password,
+			// 	copy:true
+			// };
+			// this.isShowShare = !this.isShowShare;
 		},
 		handleSide() {
 			this.isShowSide = !this.isShowSide;
@@ -205,7 +215,7 @@ export default {
 			this.$nextTick(async () => {
 				this.shareData = {
 					mid: myMid,
-					password: Password
+					password: Password,
 				};
 				this.isShowShare = MeetingStatus;
 				await antiquity
@@ -242,7 +252,7 @@ export default {
 	margin-bottom: 10px;
 }
 .bubble-BOX {
-	width: 200px;
+	width: 230px;
 	height: 200px;
 	pointer-events: none;
 	position: absolute;

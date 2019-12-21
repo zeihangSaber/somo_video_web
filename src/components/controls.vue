@@ -25,8 +25,11 @@
 			</div>
 			<i class="font_family icon-wifi-high"></i>
 		</div>
-		<div class="ctrlLeft" @click="$emit('prevSlide')"><i class="font_family icon-left"></i></div>
-		<div class="ctrlRight" @click="$emit('nextSlide')"><i class="font_family icon-right"></i></div>
+		<div :class="`ctrlLeft ${slideCount === 0 ? 'disable' : ''}`" @click="$emit('prevSlide')" v-if="maxSlide > 1"><i class="font_family icon-left"></i></div>
+		<div :class="`ctrlRight ${slideCount === maxSlide ? 'disable' : ''}`" @click="$emit('nextSlide')" v-if="maxSlide > 1"><i class="font_family icon-right"></i></div>
+		<div class="ctrlPoint" v-if="maxSlide > 1">
+			<div :class="`point ${index === slideCount ? 'active' : ''}`" v-for="index of maxSlide"></div>
+		</div>
 		<div class="ctrlFooter">
 			<i></i>
 			<div class="center">
@@ -114,7 +117,19 @@
 				showSetting: false
 			}
 		},
-		props: ["data", "peopleNum", "micNum", "showSide", "showMessage", "showParty", "playerNum", "barrage","ShowShare"],
+		props: [
+			"data",
+			"peopleNum",
+			"micNum",
+			"showSide",
+			"showMessage",
+			"showParty",
+			"playerNum",
+			"barrage",
+			"ShowShare",
+			"maxSlide",
+			"slideCount"
+		],
 		components: {},
 		mounted() {
 			localStorage.setItem('bulletScreen',this.bulletScreen);
@@ -222,6 +237,10 @@
 		background-color: rgba(0, 0, 0, .6);
 		border-radius: 0 27px 27px 0;
 		z-index: 999;
+		.disable {
+			background-color: rgba(0, 0, 0, .4);
+			color: rgba(255, 255, 255, .5);
+		}
 		.icon-left {
 			font-size: 50px;
 			cursor: pointer;
@@ -235,9 +254,34 @@
 		background-color: rgba(0, 0, 0, .6);
 		border-radius: 27px 0 0 27px;
 		z-index: 999;
+		.disable {
+			background-color: rgba(0, 0, 0, .4);
+			color: rgba(255, 255, 255, .5);
+		}
 		.icon-right {
 			font-size: 50px;
 			cursor: pointer;
+		}
+	}
+	.ctrlPoint {
+		position: absolute;
+		z-index: 9999;
+		top: 80%;
+		left: 50%;
+		height: 15px;
+		background-color: rgba(0, 0, 0, .4);
+		border-radius: 8px;
+		padding: 0 3px;
+		.flex(space-around, center);
+		.point {
+			height: 8px;
+			width: 8px;
+			margin: 0 2px;
+			border-radius: 50%;
+			background-color: rgba(216, 216, 216, .4);
+			&.active {
+				background-color: rgba(216, 216, 216);
+			}
 		}
 	}
 	.ctrlFooter {

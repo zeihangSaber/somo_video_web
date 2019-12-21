@@ -12,6 +12,8 @@
 				:showParty="isShowParty"
 				:playerNum="playerNum"
 				:barrage="barrage"
+				:maxSlide="maxSlide"
+				:slideCount="slideCount"
 				@handleMessage="handleMessage"
 				@ShowShare="ShowShare"
 				@handleParty="handleParty"
@@ -26,7 +28,7 @@
 				<player v-if="!(speakFlag || shareFlag)" v-for="item of nowPlayerNum" :key="item" :data="members[playerNum * (realCount - 1) + item - 1]"></player>
 				<player v-if="speakFlag" :data="speaker"></player>
 				<player v-if="shareFlag" :data="sharer"></player>
-				<div class="drag" draggable="true" ref="draggable"><div class="move"></div></div>
+				<div :class="`drag`" ref="draggable"></div>
 			</div>
 			<share v-if="isShowShare" :shareData="shareData"></share>
 			<div class="bubble-BOX">
@@ -77,7 +79,8 @@ export default {
 			barrage: false,
 			shareData: {},
 			bubbleMsg: [],
-			timer:''
+			timer:'',
+			test: false
 		};
 	},
 	beforeCreate() {
@@ -116,10 +119,6 @@ export default {
 		});
 	},
 	async mounted() {
-		this.$refs.draggable.ondragend = e => {
-			this.$refs.draggable.style.left = `${e.x - 180}px`;
-			this.$refs.draggable.style.top = `${e.y}px`;
-		};
 		this.timer = setInterval(() => {
 			this.bubbleMsg_status()
 		}, 3000);
@@ -129,7 +128,7 @@ export default {
 	},
 	computed: {
 		maxSlide() {
-			let maxSlide = Math.max(Math.ceil(this.members.length / 4), 1);
+			let maxSlide = Math.max(Math.ceil(this.members.length / this.playerNum), 1);
 			this.speaker && ++maxSlide;
 			this.sharer && ++maxSlide;
 			console.log('ddd', maxSlide);
@@ -148,6 +147,7 @@ export default {
 			if (this.slideCount === 1) return true;
 		},
 		howMany() {
+			if (this.members.length === 1) return 'fir';
 			if (this.shareFlag || this.speakFlag) return 'one';
 			if (this.playerNum === 4) return 'four';
 			if (this.playerNum === 9) return 'nine';
@@ -213,10 +213,6 @@ export default {
 							}
 							console.log(res.code);
 						});
-				antiquity.rtmp.setScreenSize(480, 360);
-				antiquity.rtmp.setScreenPosition(12, 9);
-				antiquity.rtmp.setWrap();
-				antiquity.rtmp.setCamMode(480, 360, 15);
 				antiquity.publish(this.meetingInfo.video_url);
 			});
 		}
@@ -250,6 +246,17 @@ export default {
 	.flex(flex-start, flex-start);
 	align-content: flex-start;
 	flex-wrap: wrap;
+	&.fir {
+		.playerBox {
+			width: 0;
+			height: 0;
+		}
+		.drag {
+			width: 100%;
+			height: 99.5%;
+			background-color: #91949c;
+		}
+	}
 	&.one {
 		.playerBox {
 			width: 100%;
@@ -257,6 +264,26 @@ export default {
 		}
 	}
 	&.two {
+		.playerBox {
+			width: 100%;
+			height: 100%;
+		}
+		.drag {
+			background-color: #91949c;
+			position: absolute;
+			top: 100px;
+			right: -180px;
+			.move {
+				width: 10px;
+				height: 10px;
+				background-color: #ff6b6f;
+				position: absolute;
+				z-index: 99999;
+				right: 0;
+			}
+			z-index: 99998;
+		}
+
 	}
 	&.four {
 		.playerBox {
@@ -319,21 +346,7 @@ button,
 	right: -100%;
 	top: 0;
 }
-.drag {
-	width: 240px;
-	height: 180px;
-	background-color: bisque;
-	position: absolute;
-	top: 100px;
-	right: -180px;
-	.move {
-		width: 10px;
-		height: 10px;
-		background-color: #ff6b6f;
-		position: absolute;
-		z-index: 99999;
-		right: 0;
-	}
-	z-index: 99998;
+.caster {
+	left: -500px;
 }
 </style>

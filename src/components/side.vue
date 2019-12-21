@@ -61,13 +61,13 @@ export default {
         }
         img {
             width: 90px;
-            height: 68px;
+            height: 60px;
             border-radius: 4px;
         }
     }
     .foot {
         height: 100%;
-        padding: 20px;
+        padding: 15px 20px;
         width: 100%;
         .flex();
         flex-direction: column;

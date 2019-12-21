@@ -319,12 +319,15 @@
 		.center {
 			flex: 1;
 			text-align: center;
+			.flex(center, center);
+			padding-bottom: 5px;
 			button {
 				background-color: transparent;
 				outline: none;
 				border: none;
 				color: #fff;
 				font-size: 16px;
+				font-weight: normal;
 				margin: 0 20px;
 				i {
 					display: block;

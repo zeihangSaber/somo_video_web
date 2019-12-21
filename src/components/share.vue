@@ -58,13 +58,13 @@ export default {
 	margin-top: 24px;
 	margin-bottom: 32px;
 	font-size: 16px;
-	font-family: PingFangSC-Regular, PingFang SC;
+
 	font-weight: 400;
 	color: rgba(221, 221, 221, 1);
 }
 .meeting-password {
 	font-size: 24px;
-	font-family: PingFangSC-Regular, PingFang SC;
+
 	font-weight: 400;
 	color: rgba(255, 255, 255, 1);
 	margin-top: 4px;
@@ -76,9 +76,7 @@ export default {
 	color: rgba(255, 255, 255, 1);
 }
 .title {
-	margin-bottom: 24px;
 	font-size: 24px;
-	font-family: PingFangSC-Regular, PingFang SC;
 	font-weight: 400;
 	color: rgba(255, 255, 255, 1);
 }
@@ -88,7 +86,7 @@ export default {
 	background: rgba(17, 139, 251, 1);
 	border-radius: 4px;
 	font-size: 20px;
-	font-family: PingFangSC-Regular, PingFang SC;
+
 	font-weight: 400;
 	color: rgba(255, 255, 255, 1);
 	display: flex;

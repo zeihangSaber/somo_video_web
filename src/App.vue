@@ -30,7 +30,7 @@
 				<player v-if="shareFlag" :data="sharer"></player>
 				<div :class="`drag`" ref="draggable"></div>
 			</div>
-			<share v-if="isShowShare" :shareData="shareData"></share>
+			<!-- <share v-if="isShowShare" :shareData="shareData"></share> -->
 			<div class="bubble-BOX">
 				<div class="bubble" v-for="item in bubbleMsg">{{ item }}</div>
 			</div>
@@ -80,7 +80,8 @@ export default {
 			shareData: {},
 			bubbleMsg: [],
 			timer:'',
-			test: false
+			test: false,
+			
 		};
 	},
 	beforeCreate() {

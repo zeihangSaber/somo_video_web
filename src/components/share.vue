@@ -7,6 +7,7 @@
 			<div class="hint">复制并分享邀请码，其他人可通过邀请码加入会议</div>
 			<!-- <div class="invite-btn">邀请</div> -->
 			<el-button class="ml10 invite-btn" type="text" size="medium"
+					name='11'
 			        v-clipboard:copy="sysAppIds"
 			        v-clipboard:success="onCopy"
 			        v-clipboard:error="onError">邀请

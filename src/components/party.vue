@@ -10,11 +10,74 @@
     <div class="box">
       <div class="top">
         <div class="input">
-          <input type="text" placeholder="搜索账号名称" />
+          <input type="text" placeholder="搜索账号名称" v-model="search" @input='search_member'/>
         </div>
+		<div
+		  v-if="search == ''"
+		  class="item"
+		  v-for="item of members"
+		  :key="item.uid"
+		  @mouseenter="enter($event)"
+		  @mouseleave="leave($event)"
+		>
+		  <img :src="item.avarter" />
+		  <p>
+		    <span>{{ item.name }}</span>
+		    <span v-if="item.role === 4" class="handle">主持人</span>
+		    <span v-if="item.speaker === 1" class="speaker">主讲</span>
+		  </p>
+		  <button
+		    v-if="item.role !== 4"
+		    class="permissionBtn"
+		    @click="setMic(item)"
+		  >
+		    {{ item.mic === 1 ? "取消静音" : "静音" }}
+		  </button>
+		  <button class="permissionBtn more" @click="more(item)">
+		    更多
+		    <div v-show="permissionShow" class="permission">
+		      <span class="permission_header"></span>
+		      <div class="permission_content">
+		        <div v-if="permissionType.setSpeaker" @click="setSpeaker(item)">
+		          {{ item.speaker === 1 ? "结束主讲" : "设为主讲" }}
+		        </div>
+		        <div v-if="permissionType.setRole" @click="setRole(item)">
+		          设为主持人
+		        </div>
+		        <div v-if="permissionType.setCamera" @click="setCamera(item)">
+		          {{ item.camera === 1 ? "开启摄像头" : "关闭摄像头" }}
+		        </div>
+		        <div v-if="permissionType.setKick" @click="setKick(item)">
+		          移除
+		        </div>
+		      </div>
+		    </div>
+		  </button>
+		
+		  <div class="noPermissionBtn">
+		    <i
+		      class=""
+		      :class="
+		        `font_family  ${
+		          item.camera === 0 ? 'icon-camera-user' : 'icon-camera-user-no'
+		        }`
+		      "
+		    ></i>
+		  </div>
+		  <div class="noPermissionBtn">
+		    <i
+		      :class="
+		        `font_family ${
+		          item.mic === 0 ? 'icon-user-mic' : 'icon-user-mic-no'
+		        }`
+		      "
+		    ></i>
+		  </div>
+		</div>
         <div
+		  v-if="search != ''"
           class="item"
-          v-for="item of members"
+          v-for="item of s_members"
           :key="item.uid"
           @mouseenter="enter($event)"
           @mouseleave="leave($event)"
@@ -52,7 +115,7 @@
               </div>
             </div>
           </button>
-
+        
           <div class="noPermissionBtn">
             <i
               class=""
@@ -73,6 +136,8 @@
             ></i>
           </div>
         </div>
+		
+		
       </div>
       <div class="line"></div>
       <div class="bottom">
@@ -92,6 +157,8 @@ export default {
   props: ["members", "hasControl", "data"],
   data() {
     return {
+	  s_members:[],
+	  search:'',
       permissionShow: false,
       permissionType: {
         setSpeaker: true,
@@ -101,7 +168,23 @@ export default {
       }
     };
   },
+  computed:{
+	  
+  },
   methods: {
+	  search_member:function() {
+				this.s_members = []
+	  		  if(this.search != ''){
+	  			  
+				  this.members.forEach((item) => {
+					  if(item.name.indexOf(this.search) >= 0){
+						  console.log(item)
+						  this.s_members.push(item)
+					  }
+				  })
+	  			  // console.log(this.members)
+	  		  }
+	  },
     enter(event) {
       // event.target.className = "item itemMouse";
       if (this.hasControl) {

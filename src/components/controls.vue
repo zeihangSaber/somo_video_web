@@ -325,6 +325,7 @@
 				border: none;
 				color: #fff;
 				font-size: 16px;
+				font-weight: normal;
 				margin: 0 20px;
 				i {
 					display: block;

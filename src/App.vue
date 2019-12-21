@@ -254,7 +254,6 @@ export default {
 		.drag {
 			width: 100%;
 			height: 99.5%;
-			background-color: #91949c;
 		}
 	}
 	&.one {
@@ -268,22 +267,6 @@ export default {
 			width: 100%;
 			height: 100%;
 		}
-		.drag {
-			background-color: #91949c;
-			position: absolute;
-			top: 100px;
-			right: -180px;
-			.move {
-				width: 10px;
-				height: 10px;
-				background-color: #ff6b6f;
-				position: absolute;
-				z-index: 99999;
-				right: 0;
-			}
-			z-index: 99998;
-		}
-
 	}
 	&.four {
 		.playerBox {
@@ -304,6 +287,10 @@ export default {
 		height: 50%;
 		.flex(center, center);
 		overflow: hidden;
+		background-color: #ccc;
+	}
+	.drag {
+		background-color: #ccc;
 	}
 }
 .icon {

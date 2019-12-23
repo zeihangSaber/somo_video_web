@@ -8,17 +8,17 @@
             <i class="font_family icon-close" @click="$emit('handleParty')"></i>
         </div>
         <div class="box">
-            <div class="top">
-                <div class="input">
+            <transition-group class="top" name="list-complete" tag="div">
+                <div key="search" class="input">
                     <input type="text" placeholder="搜索账号名称" v-model="search" @input='search_member'/>
                 </div>
                 <div
-                        v-if="search == ''"
-                        class="item"
-                        v-for="item of members"
-                        :key="item.uid"
-                        @mouseenter="enter($event)"
-                        @mouseleave="leave($event)"
+                    v-if="search == ''"
+                    class="item"
+                    v-for="item of members"
+                    :key="item.uid"
+                    @mouseenter="enter($event)"
+                    @mouseleave="leave($event)"
                 >
                     <img :src="item.avarter"/>
                     <p>
@@ -53,7 +53,6 @@
                             </div>
                         </div>
                     </button>
-
                     <div class="noPermissionBtn">
                         <i
                                 class=""
@@ -136,9 +135,7 @@
                         ></i>
                     </div>
                 </div>
-
-
-            </div>
+            </transition-group>
             <div class="line"></div>
             <div class="bottom">
                 <button :disabled="!hasControl" @click="setMicAllOff">全体静音</button>
@@ -509,6 +506,7 @@
         .bottom {
             height: 60px;
             .flex(space-between);
+
             button {
                 padding: 0;
                 background-color: #fff;
@@ -527,5 +525,18 @@
     button {
         background-color: #fff;
         border: none;
+    }
+
+    .list-complete-item {
+        transition: all .3s;
+        display: inline-block;
+        margin-right: 10px;
+    }
+    .list-complete-enter, .list-complete-leave-to {
+        opacity: 0;
+        transform: translateX(350px);
+    }
+    .list-complete-leave-active {
+        position: absolute;
     }
 </style>

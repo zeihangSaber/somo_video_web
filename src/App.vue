@@ -45,6 +45,7 @@
 				></div>
 				<player v-if="speakFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
 				<player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo"></player>
+				<div v-if="waiting" class="waiting"><i class="font_family icon-camera-none"></i></div>
 			</div>
 			<share v-if="isShowShare" :shareData="shareData" @toast="toast"></share>
 			<div class="bubble-BOX">
@@ -100,6 +101,7 @@ export default {
 			bubbleMsg: [],
 			timer:'',
 			test: false,
+			waiting: true
 		};
 	},
 	beforeCreate() {
@@ -141,15 +143,6 @@ export default {
 		this.timer = setInterval(() => {
 			this.bubbleMsg_status()
 		}, 3000);
-		console.log(this.meetingInfo)
-		setTimeout(() => {
-			console.log(this.meetingInfo)
-			localStorage.setItem('my',JSON.stringify({
-				uid:this.meetingInfo.mine.uid,
-				mid:this.meetingInfo.id,
-				name:this.meetingInfo.mine.name
-			}))
-		}, 1000);
 		this.$nextTick(() => {
 			this.init();
 		})
@@ -182,7 +175,7 @@ export default {
 			if (this.members.length === 2) return 'two';
 			if (this.playerNum === 4) return 'four';
 			if (this.playerNum === 9) return 'nine';
-			return '';
+			return 'fir'
 		},
 		realCount() {
 			let realCount = 0;
@@ -204,17 +197,9 @@ export default {
 		bubbleMsg_status() {
 			if (this.bubbleMsg != '') {
 				this.bubbleMsg.shift();
-			}else{
-				// clearTimeout(this.timer)
 			}
 		},
 		ShowShare() {
-			// this.shareData = {
-			// 	mid: myMid,
-			// 	password: Password,
-			// 	copy:true
-			// };
-			// this.isShowShare = !this.isShowShare;
 		},
 		handleSide() {
 			this.isShowSide = !this.isShowSide;
@@ -250,7 +235,7 @@ export default {
 							if (res.code == 2011) {
 								window.location.href = 'http://localhost:8080/joinConference';
 							}
-							console.log(res.code);
+							this.waiting = false;
 						});
 				antiquity.publish(this.meetingInfo.video_url);
 			});
@@ -354,6 +339,20 @@ export default {
 	.boxOut {
 		position: fixed;
 		top: -200%;
+	}
+	.waiting {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		z-index: 10;
+		background-color: #444;
+		.flex(center, center);
+		.icon-camera-none {
+			font-size: 80px;
+			color: #666;
+		}
 	}
 }
 .icon {

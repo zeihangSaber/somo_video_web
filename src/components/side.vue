@@ -2,13 +2,13 @@
     <div class="myAside">
         <div class="head">
             <div class="volce">
-                <p class="name">{{this.data.name}}</p>
+                <p class="name">{{this.data.name ? this.data.name : "没有名字哦"}}</p>
                 <p class="info">
                     <span class="code">会议号：{{this.data.code}}</span>
                     <span v-if="data.pwd">密码：{{this.data.pwd}}</span>
                 </p>
             </div>
-            <img :src="data.avarter">
+            <div class="myImg" :style="`background-image: url(${data.avarter ? data.avarter : 'http://somo-video-image.oss-cn-beijing.aliyuncs.com/10000562-1565754341192.png'});`"></div>
         </div>
         <div class="foot">
             <transition enter-active-class="animated bounceInRight faster" leave-active-class="animated bounceOutRight faster">
@@ -66,10 +66,11 @@ export default {
                 }
             }
         }
-        img {
+        .myImg {
             width: 90px;
             height: 60px;
             border-radius: 4px;
+            background-size: cover;
         }
     }
     .foot {

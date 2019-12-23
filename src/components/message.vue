@@ -38,14 +38,12 @@
 </template>
 <script>
     import antiquity from "../utils/Antiquity";
-
     export default {
         props: ["barrage", "meetingInfo"],
         data() {
             return {
                 message: [],
                 time: '',
-                // myUid:'',
                 msgContent: ''
             }
         },
@@ -68,7 +66,7 @@
                 return disabled
             },
             arr() {
-                let newArr = []
+                let newArr = [];
                 if (this.message.length > 3) {
                     newArr = [
                         this.message[this.message.length - 3],
@@ -89,23 +87,22 @@
                     this.$refs.topBox.scrollTop = this.$refs.topBox_.offsetHeight;
                 }, 100)
             },
-            send_msg: function () {
+            send_msg() {
                 this.Talk();
                 antiquity.ajax.broadcast({
                     "mid": this.meetingInfo.mid,
                     "text": Base64.encode(this.msgContent)
                 }).then((res) => {
-                    // console.log(res)
                     this.message.push({
                         name: this.meetingInfo.mine.name,
                         text: this.msgContent,
                         uid: this.meetingInfo.mine.uid
-                    })
+                    });
                     this.msgContent = ''
                 })
             },
             // 实时获取当前电脑时间
-            _time: function () {
+            _time() {
                 setInterval(() => {
                     let t = new Date();
                     let hour = t.getHours(); //得到小时
@@ -125,7 +122,6 @@
 </script>
 <style lang="less" scoped>
     @import "../common/common";
-
     .bulletScreen {
         width: 360px;
         position: fixed;
@@ -156,7 +152,6 @@
             }
         }
     }
-
     .title {
         padding-bottom: 10px;
         .flex(space-between, center);
@@ -169,7 +164,6 @@
             color: #c5c6c8;
         }
     }
-
     .box {
         border-radius: 6px;
         background-color: #fff;
@@ -187,7 +181,6 @@
             flex: 1;
             .time {
                 font-size: 14px;
-
                 font-weight: 400;
                 color: rgba(153, 153, 153, 1);
                 text-align: center;

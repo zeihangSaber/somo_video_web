@@ -15,7 +15,6 @@
 				:maxSlide="maxSlide"
 				:shareData="shareData"
 				:slideCount="slideCount"
-				@toast="toast"
 				@handleMessage="handleMessage"
 				@ShowShare="ShowShare"
 				@handleParty="handleParty"
@@ -47,10 +46,7 @@
 				<player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo"></player>
 				<div v-if="waiting" class="waiting"><i class="font_family icon-camera-none"></i></div>
 			</div>
-			<share v-if="isShowShare" :shareData="shareData" @toast="toast"></share>
-			<div class="bubble-BOX">
-				<div class="bubble" v-for="item in bubbleMsg">{{ item }}</div>
-			</div>
+			<share v-if="isShowShare" :shareData="shareData"></share>
 		</div>
 		<transition enter-active-class="animated bounceIn faster" leave-active-class="animated bounceOut faster">
 			<side-box
@@ -98,7 +94,6 @@ export default {
 			slideCount: 1,
 			barrage: false,
 			shareData: {},
-			bubbleMsg: [],
 			timer:'',
 			test: false,
 			waiting: true
@@ -125,7 +120,6 @@ export default {
 					return item;
 				}
 			}).length;
-			console.log('members', this.members);
 		});
 		antiquity.on('getShareUrl', sharer => {
 			console.log('sharer', sharer);
@@ -134,15 +128,13 @@ export default {
 			this.speaker = speaker;
 			console.log('speaker', speaker);
 		});
-		antiquity.on('getToast', msg => {
-			console.log('getToast', msg);
-			this.bubbleMsg.push(msg);
-		});
+		this.$nextTick(() => {
+			antiquity.on('getToast', msg => {
+				this.$Toast.success({message: msg});
+			});
+		})
 	},
 	async mounted() {
-		this.timer = setInterval(() => {
-			this.bubbleMsg_status()
-		}, 3000);
 		this.$nextTick(() => {
 			this.init();
 		})
@@ -191,14 +183,6 @@ export default {
 		},
 	},
 	methods: {
-		toast(e){
-			this.bubbleMsg.push(e)
-		},
-		bubbleMsg_status() {
-			if (this.bubbleMsg != '') {
-				this.bubbleMsg.shift();
-			}
-		},
 		ShowShare() {
 		},
 		handleSide() {
@@ -252,25 +236,6 @@ export default {
 
 @import './common/base';
 @import './common/common';
-.bubble {
-	border-radius: 8px;
-	padding: 10px 20px;
-	box-sizing: border-box;
-	background: rgba(0,0,0,0.3);
-	// background: red;
-	color: #ffffff;
-	margin-bottom: 10px;
-}
-.bubble-BOX {
-	width: 230px;
-	height: 200px;
-	pointer-events: none;
-	position: absolute;
-	top: calc(50vh - 100px);
-	left: calc(50% - 100px);
-	z-index: 1000000;
-	text-align: center;
-}
 .playerBigBox {
 	height: 100%;
 	overflow: hidden;

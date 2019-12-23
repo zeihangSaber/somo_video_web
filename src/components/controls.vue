@@ -41,7 +41,7 @@
 					<i :class="`font_family ${data.mine && data.mine.camera === 0 ? 'icon-camera' : 'icon-camera-no'}`"></i>
 					视频
 				</button>
-				<button @click="$emit('ShowShare')">
+				<button>
 					<!--${ShowShare ? 'active' : ''}-->
 					<button class="ml10" type="text" size="medium"
 					        v-clipboard:copy="sysAppIds"
@@ -158,14 +158,12 @@
 		methods:{
 			// 复制成功
 			    onCopy(e){
-					this.$emit('toast','邀请链接已复制到剪贴板')
-					console.log(e);
-			    },
+					this.$Toast.success({message: '邀请链接已复制到剪贴板'});
+				},
 			    // 复制失败
 			    onError(e){
-					this.$emit('toast','复制失败')
-					alert("失败");
-			    },
+					this.$Toast.success({message: '复制失败'})
+;			    },
 			formatDuring(mss) {
 					let days = parseInt(mss / (1000 * 60 * 60 * 24));
 					let hours = parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) + days * 24;
@@ -312,12 +310,13 @@
 	.ctrlPoint {
 		position: absolute;
 		z-index: 9999;
-		top: 80%;
+		top: 90%;
 		left: 50%;
 		height: 15px;
 		background-color: rgba(0, 0, 0, .4);
 		border-radius: 8px;
 		padding: 0 3px;
+		transform: translateX(-50%);
 		.flex(space-around, center);
 		.point {
 			height: 8px;

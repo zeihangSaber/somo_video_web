@@ -13,7 +13,7 @@
             </svg>
             <div v-if="data.role === 4" class="tag">主持人</div>
         </div>
-        <video ref="saber" class="video-js vjs-default-skin">
+        <video ref="saber" class="video-js vjs-default-skin saber">
             <source :src="data.url" type="rtmp/mp4" />
         </video>
         <div :class="`${data.camera === 0 ? 'hasCamera' : 'noCamera'}`">
@@ -46,13 +46,14 @@
         watch: {
             data(data) {
                 if (this.data.uid === this.meetingInfo.mine.uid)  return;
-                this.player.paused();
+                console.log(`~~~~~~~~~~~~~~`);
+                this.player && this.player.paused();
                 this.$nextTick(() => {
-                    this.data.url && this.player.src(data.url, () => {
+                    this.player && this.data.url && this.player.src(data.url, () => {
                         this.data.url && this.player.play()
                     });
                     this.$nextTick(() => {
-                        this.data.url && this.player.play()
+                        this.player && this.data.url && this.player.play()
                     })
                 })
             }
@@ -70,6 +71,7 @@
                     this.data.url && this.player.src(this.data.url);
                     this.data.url && this.player.play();
                 });
+                this.player.dispose()
             });
         },
         beforeDestroy() {

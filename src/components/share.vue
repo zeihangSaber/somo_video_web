@@ -1,6 +1,7 @@
 <template>
-    <div class="big-box">
+    <div class="big-box" v-if="isShowShare">
         <div class="share-pop-up">
+			<div class="close" @click="_close()"><i class="font_family icon-close"></i></div>
             <div class="title">会议邀请码：</div>
             <div class="meeting-num">{{ shareData.mid }}</div>
             <div class="meeting-password" v-if="shareData.password">会议密码：{{ shareData.password }}</div>
@@ -30,8 +31,11 @@
                 + '会议链接：http://www.somo.tech/openApp?invite_code=' + this.shareData.mid +  '\n'
                 + '您可以直接输入会议号加入会议， 也可以点击会议链接直接入会。'
         },
-        props: ['shareData'],
+        props: ['shareData','isShowShare'],
         methods: {
+			_close(){
+				this.isShowShare = false
+			},
             // 复制成功
             onCopy(e){
                 this.$Toast.success({message: '邀请链接已复制到剪贴板'});
@@ -45,6 +49,12 @@
 </script>
 
 <style scoped>
+	.close{
+		color: #FFFFFF;
+		position: absolute;
+		top: 20px;
+		right: 20px;
+	}
     .foot_box{
         width: 100%;
         position: absolute;

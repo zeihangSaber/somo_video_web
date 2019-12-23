@@ -37,6 +37,7 @@
 				<player
 					v-if="!(speakFlag || shareFlag)"
 					v-for="item of nowPlayerNum"
+					ref="players"
 					:key="item"
 					:meetingInfo="meetingInfo"
 					:hawMany="howMany"
@@ -252,7 +253,13 @@ export default {
 		}
 	},
 	watch: {
-		mineFlag() {
+		slideCount() {
+			this.$nextTick(() => {
+				this.$refs.players.forEach(item => {
+					item.paused()
+				})
+
+			})
 		}
 	}
 };

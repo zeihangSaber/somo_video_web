@@ -363,22 +363,24 @@ export default {
 }
 
 .box {
+  height: 0;
   border-radius: 6px;
   background-color: #fff;
   flex: 1;
   .flex();
   flex-direction: column;
-
   .bottom {
     padding: 15px 15px;
   }
 
   .top {
+    height: calc(100% - 60px);
     flex: 1;
     padding: 14px 8px;
     .input {
       padding: 0 12px;
-      height: 80%;
+      box-sizing: border-box;
+      height: 100%;
       input {
         background-color: #f4f4f4;
         border-radius: 16px;
@@ -389,7 +391,7 @@ export default {
         margin-bottom: 5px;
       }
       .member {
-        height: 95%;
+        height: calc(100% - 32px);
         overflow-y: auto;
         .item {
           position: relative;

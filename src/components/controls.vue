@@ -151,7 +151,6 @@
 							 + '您可以直接输入会议号加入会议， 也可以点击会议链接直接入会。';
 			if(this.data.start != 0){
 				setInterval(() => {
-						console.log(this.data)
 						let timestamp = (new Date()).getTime();//当前时间戳
 						this.time =  timestamp - this.data.start;
 						this.time_meeting = this.formatDuring(this.time)
@@ -160,13 +159,12 @@
 				setInterval(() => {
 						let time = 1000
 						time = time + 1000
-						console.log(this.data)
 						// let timestamp = (new Date()).getTime();//当前时间戳
 						// this.time =  timestamp - this.data.start;
 						this.time_meeting = this.formatDuring(time)
 				}, 1000)
 			}
-			
+
 		},
 		methods:{
 			// 复制成功

@@ -45,14 +45,14 @@
         },
         watch: {
             data(data) {
+                clearTimeout(this.timer);
                 if (this.data.uid === this.meetingInfo.mine.uid) return;
-                this.player && this.player.pause();
+                // this.player && this.player.pause();
                 this.$nextTick(() => {
                     this.player && this.player.pause();
-                    this.player && this.player.reset();
-                    this.data.url && this.player && this.player.src(data.url);
-                    this.data.url && this.player && this.player.load();
-                    this.data.url && this.player && this.player.play();
+                    data.url && this.player && this.player.src(data.url ? data.url : '');
+                    data.url && this.player && this.player.load();
+                    data.url && this.player && this.player.play();
                 });
             }
         },
@@ -83,6 +83,7 @@
             }
         },
         beforeDestroy() {
+            clearTimeout(this.timer);
             this.data.uid !== this.meetingInfo.mine.uid && this.player.dispose();
         }
     };

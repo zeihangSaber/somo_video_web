@@ -4,13 +4,14 @@
 			<div class="title">会议邀请码：</div>
 			<div class="meeting-num">{{ shareData.mid }}</div>
 			<div class="meeting-password" v-if="shareData.password">会议密码：{{ shareData.password }}</div>
-			<div class="hint">复制并分享邀请码，其他人可通过邀请码加入会议</div>
-			<!-- <div class="invite-btn">邀请</div> -->
-			<el-button class="ml10 invite-btn" type="text" size="medium"
-			        v-clipboard:copy="sysAppIds"
-			        v-clipboard:success="onCopy"
-			        v-clipboard:error="onError">邀请
-			</el-button>
+			<div class="foot_box">
+				<div class="hint">复制并分享邀请码，其他人可通过邀请码加入会议</div>
+				<el-button class="ml10 invite-btn" type="text" size="medium"
+				        v-clipboard:copy="sysAppIds"
+				        v-clipboard:success="onCopy"
+				        v-clipboard:error="onError">邀请
+				</el-button>
+			</div>
 		</div>
 	</div>
 </template>
@@ -29,11 +30,6 @@ export default {
 						 + '会议号：' + this.shareData.mid +  '\n'
 						 + '会议链接：http://www.somo.tech/openApp?invite_code=' + this.shareData.mid +  '\n'
 						 + '您可以直接输入会议号加入会议， 也可以点击会议链接直接入会。'
-		// 您好：
-		// 蓝猫微会视频会议正在进行中，特邀请您参加。
-		// 会议号：286781
-		// 会议链接：http://www.somo.tech/openApp?invite_code=286781
-		// 您可以直接输入会议号加入会议， 也可以点击会议链接直接入会。
 	},
 	props: ['shareData'],
 	methods: {
@@ -55,6 +51,11 @@ export default {
 </script>
 
 <style>
+	.foot_box{
+		width: 100%;
+		position: absolute;
+		bottom: 48px;
+	}
 .hint {
 	margin-top: 24px;
 	margin-bottom: 32px;
@@ -68,7 +69,7 @@ export default {
 
 	font-weight: 400;
 	color: rgba(255, 255, 255, 1);
-	margin-top: 4px;
+	margin-top: 8px;
 }
 .meeting-num {
 	font-size: 54px;
@@ -80,6 +81,7 @@ export default {
 	font-size: 24px;
 	font-weight: 400;
 	color: rgba(255, 255, 255, 1);
+	margin-bottom: 24px;
 }
 .invite-btn {
 	width: 155px;
@@ -103,6 +105,7 @@ export default {
 	text-align: center;
 	padding: 48px 0;
 	box-sizing: border-box;
+	position: relative;
 }
 .big-box {
 	width: 100%;

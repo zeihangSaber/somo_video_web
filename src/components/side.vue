@@ -11,8 +11,17 @@
             <img :src="data.avarter">
         </div>
         <div class="foot">
+<<<<<<< HEAD
             <party v-if="showParty" :data="data" @handleParty="() => $emit('handleParty')" :members="members" :hasControl="data.control"></party>
             <message :data='data' v-if="showMessage" @handleMessage="() => $emit('handleMessage')" :barrage="barrage"></message>
+=======
+            <transition enter-active-class="animated bounceInRight faster" leave-active-class="animated bounceOutRight faster">
+                <party v-if="showParty" :data="data" @handleParty="() => $emit('handleParty')" :members="members" :hasControl="data.control"></party>
+            </transition>
+            <transition enter-active-class="animated bounceInUp faster" leave-active-class="animated bounceOutDown faster">
+                <message v-if="showMessage" @handleMessage="() => $emit('handleMessage')" :barrage="barrage" :meetingInfo="data"></message>
+            </transition>
+>>>>>>> 93508a699a42fd061152d95d1bc6e0bb29b4217a
         </div>
     </div>
 </template>
@@ -72,6 +81,7 @@ export default {
         height: 100%;
         padding: 15px 20px;
         width: 100%;
+        overflow: hidden;
         .flex();
         flex-direction: column;
         .bigBox {

@@ -39,11 +39,13 @@ export default {
 	methods: {
 		// 复制成功
 		    onCopy(e){
-		      console.log(e);
+				this.$emit('toast','邀请链接已复制到剪贴板')
+				console.log(e);
 		    },
 		    // 复制失败
 		    onError(e){
-		      alert("失败");
+				this.$emit('toast','复制失败')
+				alert("失败");
 		    },
 		// var num1 = '82452365122547854'
 		// var num2 = num1.replace(/(.{4})/g, "$1 ")
@@ -57,13 +59,13 @@ export default {
 	margin-top: 24px;
 	margin-bottom: 32px;
 	font-size: 16px;
-	font-family: PingFangSC-Regular, PingFang SC;
+
 	font-weight: 400;
 	color: rgba(221, 221, 221, 1);
 }
 .meeting-password {
 	font-size: 24px;
-	font-family: PingFangSC-Regular, PingFang SC;
+
 	font-weight: 400;
 	color: rgba(255, 255, 255, 1);
 	margin-top: 4px;
@@ -75,9 +77,7 @@ export default {
 	color: rgba(255, 255, 255, 1);
 }
 .title {
-	margin-bottom: 24px;
 	font-size: 24px;
-	font-family: PingFangSC-Regular, PingFang SC;
 	font-weight: 400;
 	color: rgba(255, 255, 255, 1);
 }
@@ -87,7 +87,7 @@ export default {
 	background: rgba(17, 139, 251, 1);
 	border-radius: 4px;
 	font-size: 20px;
-	font-family: PingFangSC-Regular, PingFang SC;
+
 	font-weight: 400;
 	color: rgba(255, 255, 255, 1);
 	display: flex;
@@ -107,7 +107,7 @@ export default {
 .big-box {
 	width: 100%;
 	height: 100%;
-	background: pink;
+	/* background: pink; */
 	position: absolute;
 	top: 0;
 	left: 0;

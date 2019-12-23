@@ -20,13 +20,16 @@
 				</span>
 				<span>
 					<i class="font_family icon-time"></i>
-					{{this.data.start3}}
+					{{time_meeting}}
 				</span>
 			</div>
 			<i class="font_family icon-wifi-high"></i>
 		</div>
-		<div class="ctrlLeft" @click="$emit('prevSlide')"><i class="font_family icon-left"></i></div>
-		<div class="ctrlRight" @click="$emit('nextSlide')"><i class="font_family icon-right"></i></div>
+		<div :class="`ctrlLeft ${slideCount === 0 ? 'disable' : ''}`" @click="$emit('prevSlide')" v-if="maxSlide > 1"><i class="font_family icon-left"></i></div>
+		<div :class="`ctrlRight ${slideCount === maxSlide ? 'disable' : ''}`" @click="$emit('nextSlide')" v-if="maxSlide > 1"><i class="font_family icon-right"></i></div>
+		<div class="ctrlPoint" v-if="maxSlide > 1">
+			<div :class="`point ${index === slideCount ? 'active' : ''}`" v-for="index of maxSlide"></div>
+		</div>
 		<div class="ctrlFooter">
 			<i></i>
 			<div class="center">
@@ -39,7 +42,13 @@
 					视频
 				</button>
 				<button @click="$emit('ShowShare')">
-					<i :class="`font_family icon-sharing ${ShowShare ? 'active' : ''}`"></i>邀请
+					<!--${ShowShare ? 'active' : ''}-->
+					<el-button class="ml10" type="text" size="medium"
+					        v-clipboard:copy="sysAppIds"
+					        v-clipboard:success="onCopy"
+					        v-clipboard:error="onError">
+							<i :class="`font_family icon-sharing`" class="invite"></i>邀请
+					</el-button>
 				</button>
 				<button @click="$emit('handleMessage')">
 					<i :class="`font_family icon-barrage ${showMessage ? 'active' : ''}`"></i>消息
@@ -55,52 +64,54 @@
 				<i :class="`font_family ${showSide ? 'icon-zoomIn' : 'icon-zoomOut'}`"></i>
 			</button>
 		</div>
-		<div class="set_box" v-if="showSetting">
-			<div class="set_title">
-				<div>设置</div>
-				<i class="font_family icon-close " @click="() => showSetting = !showSetting"></i>
-			</div>
-			<div class="set_main">
-				<div class="set_main_box">
-					<div class="set_main_title">视频布局:</div>
-					<div class="set_gongneng">
-						<div @click="$emit('selectFour')">
-							<svg class="icon" aria-hidden="true" v-if="playerNum === 4">
-								<use xlink:href="#icon-select"></use>
-							</svg>
-							<i class="font_family icon-select-no" v-else></i>
-							<span>四分屏</span>
+		<transition enter-active-class="animated flipInY fast" leave-active-class="animated flipOutY fast">
+			<div class="set_box" v-if="showSetting">
+				<div class="set_title">
+					<div>设置</div>
+					<i class="font_family icon-close " @click="() => showSetting = !showSetting"></i>
+				</div>
+				<div class="set_main">
+					<div class="set_main_box">
+						<div class="set_main_title">视频布局:</div>
+						<div class="set_gongneng">
+							<div @click="$emit('selectFour')">
+								<svg class="icon" aria-hidden="true" v-if="playerNum === 4">
+									<use xlink:href="#icon-select"></use>
+								</svg>
+								<i class="font_family icon-select-no" v-else></i>
+								<span>四分屏</span>
+							</div>
+							<div @click="$emit('selectNine')">
+								<svg class="icon" aria-hidden="true" v-if="playerNum === 9">
+									<use xlink:href="#icon-select"></use>
+								</svg>
+								<i class="font_family icon-select-no" v-else></i>
+								<span>九分屏</span>
+							</div>
 						</div>
-						<div @click="$emit('selectNine')">
-							<svg class="icon" aria-hidden="true" v-if="playerNum === 9">
-								<use xlink:href="#icon-select"></use>
-							</svg>
-							<i class="font_family icon-select-no" v-else></i>
-							<span>九分屏</span>
+					</div>
+					<div class="set_main_box">
+						<div class="set_main_title">弹幕消息:</div>
+						<div class="set_gongneng">
+							<div @click="$emit('barrageTrue')">
+								<svg class="icon" aria-hidden="true" v-if="barrage">
+									<use xlink:href="#icon-select"></use>
+								</svg>
+								<i class="font_family icon-select-no" v-else></i>
+								<span>开启</span>
+							</div>
+							<div @click="$emit('barrageFalse')">
+								<svg class="icon" aria-hidden="true" v-if="!barrage">
+									<use xlink:href="#icon-select"></use>
+								</svg>
+								<i class="font_family icon-select-no" v-else></i>
+								<span>关闭</span>
+							</div>
 						</div>
 					</div>
 				</div>
-				<div class="set_main_box">
-					<div class="set_main_title">弹幕消息:</div>
-					<div class="set_gongneng">
-						<div @click="$emit('barrageTrue')">
-							<svg class="icon" aria-hidden="true" v-if="barrage">
-								<use xlink:href="#icon-select"></use>
-							</svg>
-							<i class="font_family icon-select-no" v-else></i>
-							<span>开启</span>
-						</div>
-						<div @click="$emit('barrageFalse')">
-							<svg class="icon" aria-hidden="true" v-if="!barrage">
-								<use xlink:href="#icon-select"></use>
-							</svg>
-							<i class="font_family icon-select-no" v-else></i>
-							<span>关闭</span>
-						</div>
-					</div>
-				</div>
 			</div>
-		</div>
+		</transition>
 	</div>
 </template>
 
@@ -111,18 +122,68 @@
 		name: "app",
 		data(){
 			return{
-				showSetting: false
+				showSetting: false,
+				time:'',
+				time_meeting:'',
+				sysAppIds:''
 			}
 		},
-		props: ["data", "peopleNum", "micNum", "showSide", "showMessage", "showParty", "playerNum", "barrage","ShowShare"],
+		props: [
+			"data",
+			"peopleNum",
+			"micNum",
+			"showSide",
+			"showMessage",
+			"showParty",
+			"playerNum",
+			"barrage",
+			"ShowShare",
+			"maxSlide",
+			"slideCount",
+			"shareData"
+		],
 		components: {},
 		mounted() {
+			setTimeout(()=>{console.log(this.shareData)},1000)
+			this.sysAppIds = '您好：' + '\n'
+							 + '蓝猫微会视频会议正在进行中，特邀请您参加。' + '\n'
+							 + '会议号：' + this.shareData.mid +  '\n'
+							 + '会议链接：http://www.somo.tech/openApp?invite_code=' + this.shareData.mid +  '\n'
+							 + '您可以直接输入会议号加入会议， 也可以点击会议链接直接入会。'
 			localStorage.setItem('bulletScreen',this.bulletScreen);
-			interval = setInterval(() => {
-				this.data.start3 = this.data.start3 + 1000
+			setInterval(() => {
+					let timestamp = (new Date()).getTime();//当前时间戳
+					this.time =  timestamp - this.data.start
+					this.time_meeting = this.formatDuring(this.time)
 			}, 1000)
 		},
 		methods:{
+			// 复制成功
+			    onCopy(e){
+					this.$emit('toast','邀请链接已复制到剪贴板')
+					console.log(e);
+			    },
+			    // 复制失败
+			    onError(e){
+					this.$emit('toast','复制失败')
+					alert("失败");
+			    },
+			formatDuring(mss) {
+					var days = parseInt(mss / (1000 * 60 * 60 * 24));
+					var hours = parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) + days*24;
+					var minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60));
+					var seconds = parseInt((mss % (1000 * 60)) / 1000);
+					if(hours<10){
+						hours = '0' + hours
+					}
+					if(minutes<10){
+						minutes = '0' + minutes
+					}
+					if(seconds<10){
+						seconds = '0' + seconds
+					}
+					return hours + ":" + minutes + ":" + seconds;
+			},
 			handleMic() {
 				this.data.mine.mic === 0 ? antiquity.muteAudio() : antiquity.unmuteAudio();
 			},
@@ -222,6 +283,10 @@
 		background-color: rgba(0, 0, 0, .6);
 		border-radius: 0 27px 27px 0;
 		z-index: 999;
+		.disable {
+			background-color: rgba(0, 0, 0, .4);
+			color: rgba(255, 255, 255, .5);
+		}
 		.icon-left {
 			font-size: 50px;
 			cursor: pointer;
@@ -235,9 +300,37 @@
 		background-color: rgba(0, 0, 0, .6);
 		border-radius: 27px 0 0 27px;
 		z-index: 999;
+		.disable {
+			background-color: rgba(0, 0, 0, .4);
+			color: rgba(255, 255, 255, .5);
+		}
 		.icon-right {
 			font-size: 50px;
 			cursor: pointer;
+		}
+	}
+	.invite:hover{
+		color: #118BFB;
+	}
+	.ctrlPoint {
+		position: absolute;
+		z-index: 9999;
+		top: 80%;
+		left: 50%;
+		height: 15px;
+		background-color: rgba(0, 0, 0, .4);
+		border-radius: 8px;
+		padding: 0 3px;
+		.flex(space-around, center);
+		.point {
+			height: 8px;
+			width: 8px;
+			margin: 0 2px;
+			border-radius: 50%;
+			background-color: rgba(216, 216, 216, .4);
+			&.active {
+				background-color: rgba(216, 216, 216);
+			}
 		}
 	}
 	.ctrlFooter {
@@ -255,12 +348,15 @@
 		.center {
 			flex: 1;
 			text-align: center;
+			.flex(center, center);
+			padding-bottom: 5px;
 			button {
 				background-color: transparent;
 				outline: none;
 				border: none;
 				color: #fff;
 				font-size: 16px;
+				font-weight: normal;
 				margin: 0 20px;
 				i {
 					display: block;

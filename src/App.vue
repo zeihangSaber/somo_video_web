@@ -12,6 +12,10 @@
 				:showParty="isShowParty"
 				:playerNum="playerNum"
 				:barrage="barrage"
+				:maxSlide="maxSlide"
+				:shareData="shareData"
+				:slideCount="slideCount"
+				@toast="toast"
 				@handleMessage="handleMessage"
 				@ShowShare="ShowShare"
 				@handleParty="handleParty"
@@ -23,30 +27,48 @@
 				@barrageFalse="() => (barrage = false)"
 			></ctrl>
 			<div :class="`playerBigBox ${howMany}`" ref="playerBigBox">
-				<player v-if="!(speakFlag || shareFlag)" v-for="item of nowPlayerNum" :key="item" :data="members[playerNum * (realCount - 1) + item - 1]"></player>
-				<player v-if="speakFlag" :data="speaker"></player>
-				<player v-if="shareFlag" :data="sharer"></player>
-				<div class="drag" draggable="true" ref="draggable"><div class="move"></div></div>
+				<div :class="`dragBox ${mineFlag ? 'playerBox' : 'boxOut'}`">
+					<div class="drag" ref="draggable"></div>
+				</div>
+				<player
+					v-if="!(speakFlag || shareFlag)"
+					v-for="item of nowPlayerNum"
+					:key="item"
+					:meetingInfo="meetingInfo"
+					:hawMany="howMany"
+					:data="members[playerNum * (realCount - 1) + item - 1]">
+				</player>
+				<div
+					class="space playerBox"
+					v-if="!(speakFlag || shareFlag)"
+					v-for="item of playerNum - nowPlayerNum"
+				></div>
+				<player v-if="speakFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
+				<player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo"></player>
+				<div v-if="waiting" class="waiting"><i class="font_family icon-camera-none"></i></div>
 			</div>
-			<share v-if="isShowShare" :shareData="shareData"></share>
+			<share v-if="isShowShare" :shareData="shareData" @toast="toast"></share>
 			<div class="bubble-BOX">
 				<div class="bubble" v-for="item in bubbleMsg">{{ item }}</div>
 			</div>
 		</div>
-		<side-box
-			v-if="isShowSide"
-			:data="meetingInfo"
-			:members="speaker ? [speaker, ...members] : members"
-			:showMessage="isShowMessage"
-			:showParty="isShowParty"
-			:barrage="barrage"
-			@handleMessage="handleMessage"
-			@handleParty="handleParty"
-		></side-box>
+		<transition enter-active-class="animated bounceIn faster" leave-active-class="animated bounceOut faster">
+			<side-box
+					v-if="isShowSide"
+					:data="meetingInfo"
+					:members="speaker ? [speaker, ...members] : members"
+					:showMessage="isShowMessage"
+					:showParty="isShowParty"
+					:barrage="barrage"
+					@handleMessage="handleMessage"
+					@handleParty="handleParty"
+			></side-box>
+		</transition>
 	</div>
 </template>
 
 <script>
+import animate from 'animate.css';
 import Player from './components/player';
 import Ctrl from './components/controls';
 import SideBox from './components/side';
@@ -77,7 +99,9 @@ export default {
 			barrage: false,
 			shareData: {},
 			bubbleMsg: [],
-			timer:''
+			timer:'',
+			test: false,
+			waiting: true
 		};
 	},
 	beforeCreate() {
@@ -116,10 +140,6 @@ export default {
 		});
 	},
 	async mounted() {
-		this.$refs.draggable.ondragend = e => {
-			this.$refs.draggable.style.left = `${e.x - 180}px`;
-			this.$refs.draggable.style.top = `${e.y}px`;
-		};
 		this.timer = setInterval(() => {
 			this.bubbleMsg_status()
 		}, 3000);
@@ -129,7 +149,7 @@ export default {
 	},
 	computed: {
 		maxSlide() {
-			let maxSlide = Math.max(Math.ceil(this.members.length / 4), 1);
+			let maxSlide = Math.max(Math.ceil(this.members.length / this.playerNum), 1);
 			this.speaker && ++maxSlide;
 			this.sharer && ++maxSlide;
 			console.log('ddd', maxSlide);
@@ -143,15 +163,19 @@ export default {
 			return this.sharer && this.slideCount === 1;
 		},
 		mineFlag() {
+			// if (this.members.length < 3) return false;
 			if (this.speakFlag && this.speakFlag && this.slideCount === 3) return true;
 			if (this.speakFlag || (this.speakFlag && this.slideCount === 2)) return true;
 			if (this.slideCount === 1) return true;
+			return false
 		},
 		howMany() {
+			if (this.members.length === 1) return 'fir';
 			if (this.shareFlag || this.speakFlag) return 'one';
+			if (this.members.length === 2) return 'two';
 			if (this.playerNum === 4) return 'four';
 			if (this.playerNum === 9) return 'nine';
-			return '';
+			return 'fir'
 		},
 		realCount() {
 			let realCount = 0;
@@ -164,18 +188,18 @@ export default {
 		},
 		nowPlayerNum() {
 			return Math.min(this.members.length - this.playerNum * (this.realCount - 1), this.playerNum)
-		}
+		},
 	},
 	methods: {
+		toast(e){
+			this.bubbleMsg.push(e)
+		},
 		bubbleMsg_status() {
 			if (this.bubbleMsg != '') {
 				this.bubbleMsg.shift();
-			}else{
-				// clearTimeout(this.timer)
 			}
 		},
 		ShowShare() {
-			this.isShowShare = !this.isShowShare;
 		},
 		handleSide() {
 			this.isShowSide = !this.isShowSide;
@@ -196,7 +220,7 @@ export default {
 			this.$nextTick(async () => {
 				this.shareData = {
 					mid: myMid,
-					password: Password
+					password: Password,
 				};
 				this.isShowShare = MeetingStatus;
 				await antiquity
@@ -211,20 +235,21 @@ export default {
 							if (res.code == 2011) {
 								window.location.href = 'http://localhost:8080/joinConference';
 							}
-							console.log(res.code);
+							this.waiting = false;
 						});
-				antiquity.rtmp.setScreenSize(480, 360);
-				antiquity.rtmp.setScreenPosition(12, 9);
-				antiquity.rtmp.setWrap();
-				antiquity.rtmp.setCamMode(480, 360, 15);
 				antiquity.publish(this.meetingInfo.video_url);
 			});
+		}
+	},
+	watch: {
+		mineFlag() {
 		}
 	}
 };
 </script>
 
 <style lang="less">
+
 @import './common/base';
 @import './common/common';
 .bubble {
@@ -237,9 +262,9 @@ export default {
 	margin-bottom: 10px;
 }
 .bubble-BOX {
-	width: 200px;
+	width: 230px;
 	height: 200px;
-	// border: 1px solid red;
+	pointer-events: none;
 	position: absolute;
 	top: calc(50vh - 100px);
 	left: calc(50% - 100px);
@@ -247,9 +272,20 @@ export default {
 }
 .playerBigBox {
 	height: 100%;
+	overflow: hidden;
 	.flex(flex-start, flex-start);
 	align-content: flex-start;
 	flex-wrap: wrap;
+	&.fir {
+		.playerBox {
+			width: 0;
+			height: 0;
+		}
+		.dragBox {
+			width: 100%;
+			height: 99.5%;
+		}
+	}
 	&.one {
 		.playerBox {
 			width: 100%;
@@ -257,6 +293,19 @@ export default {
 		}
 	}
 	&.two {
+		.playerBox {
+			width: 100%;
+			height: 100%;
+		}
+		.dragBox {
+			width: 328px;
+			height: 188px;
+			border: 4px solid #91949C;
+			position: absolute;
+			z-index: 5;
+			top: 50px;
+			right: 20px;
+		}
 	}
 	&.four {
 		.playerBox {
@@ -277,6 +326,33 @@ export default {
 		height: 50%;
 		.flex(center, center);
 		overflow: hidden;
+		background-color: #444;
+		&.space {
+			background-color: #ccc;
+		}
+	}
+	.drag {
+		background-color: #444;
+		width: 100%;
+		height: 100%;
+	}
+	.boxOut {
+		position: fixed;
+		top: -200%;
+	}
+	.waiting {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		z-index: 10;
+		background-color: #444;
+		.flex(center, center);
+		.icon-camera-none {
+			font-size: 80px;
+			color: #666;
+		}
 	}
 }
 .icon {
@@ -306,6 +382,7 @@ button,
 	width: 100%;
 	position: relative;
 	.flex(flex-start, flex-start);
+	overflow: hidden;
 	.content {
 		min-width: 1080px;
 		position: relative;
@@ -319,21 +396,10 @@ button,
 	right: -100%;
 	top: 0;
 }
-.drag {
-	width: 240px;
-	height: 180px;
-	background-color: bisque;
-	position: absolute;
-	top: 100px;
-	right: -180px;
-	.move {
-		width: 10px;
-		height: 10px;
-		background-color: #ff6b6f;
-		position: absolute;
-		z-index: 99999;
-		right: 0;
-	}
-	z-index: 99998;
+.caster {
+	left: -500px;
+}
+.superFaster {
+	transition-duration: .02s;
 }
 </style>

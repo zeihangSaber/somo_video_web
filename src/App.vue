@@ -43,11 +43,15 @@
 					:hawMany="howMany"
 					:data="members[playerNum * (realCount - 1) + item - 1]">
 				</player>
-				<div
-					class="space playerBox"
-					v-if="!(speakFlag || shareFlag)"
-					v-for="item of playerNum - nowPlayerNum"
-				></div>
+				<div style="position: fixed; color: #f4f4f4; background-color: #ff6b6f">
+					q:{{realCount}} w:{{slideCount}} s:{{speakFlag}}
+				</div>
+
+<!--				<div-->
+<!--					class="space playerBox"-->
+<!--					v-if="!(speakFlag || shareFlag)"-->
+<!--					v-for="item of playerNum - nowPlayerNum"-->
+<!--				></div>-->
 				<player v-if="speakFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
 				<player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo"></player>
 				<div v-if="waiting" class="waiting"><i class="font_family icon-camera-none"></i></div>
@@ -116,7 +120,6 @@ export default {
 	created() {
 		antiquity.on('getMidInfo', meetingInfo => {
 			this.meetingInfo = meetingInfo;
-			console.log('meetingInfo', this.meetingInfo);
 		});
 		antiquity.on('getMembers', members => {
 			this.members = members;
@@ -128,11 +131,10 @@ export default {
 			}).length;
 		});
 		antiquity.on('getShareUrl', sharer => {
-			console.log('sharer', sharer);
+			this.sharer = sharer;
 		});
 		antiquity.on('getSpeaker', speaker => {
 			this.speaker = speaker;
-			console.log('speaker', speaker);
 		});
 		this.$nextTick(() => {
 			antiquity.on('getToast', msg => {
@@ -150,7 +152,6 @@ export default {
 			let maxSlide = Math.max(Math.ceil(this.members.length / this.playerNum), 1);
 			this.speaker && ++maxSlide;
 			this.sharer && ++maxSlide;
-			console.log('ddd', maxSlide);
 			return maxSlide;
 		},
 		speakFlag() {
@@ -162,9 +163,11 @@ export default {
 		},
 		mineFlag() {
 			// if (this.members.length < 3) return false;
-			if (this.speakFlag && this.speakFlag && this.slideCount === 3) return true;
-			if (this.speakFlag || (this.speakFlag && this.slideCount === 2)) return true;
-			if (this.slideCount === 1) return true;
+			if (this.speaker && this.sharer && this.slideCount === 3) return true;
+			if (this.sharer && this.slideCount === 2) return true;
+			if (this.speaker && this.slideCount === 2) return true;
+			if (!this.sharer && !this.speaker && this.slideCount === 1) return true;
+			// if (this.slideCount === 1) return true;
 			return false
 		},
 		howMany() {
@@ -177,10 +180,11 @@ export default {
 		},
 		realCount() {
 			let realCount = 0;
-			if (this.speakFlag && this.shareFlag) {
+			if (this.speaker && this.sharer) {
 				realCount = -2;
-			} else if (this.speakFlag || this.shareFlag) {
+			} else if (this.speaker || this.sharer) {
 				realCount = -1;
+				console.log('!!!!!!!!!!!', realCount)
 			}
 			return Math.max(this.slideCount + realCount, 0);
 		},
@@ -230,7 +234,6 @@ export default {
 							dom: this.$refs.draggable
 						})
 						.then(res => {
-							console.log(res)
 							if (res.code == 1) {
 								this.$Toast.success({message: '会议号错误'});
 								setTimeout(()=>{
@@ -245,21 +248,9 @@ export default {
 								return
 							}
 							this.waiting = false;
-						}).catch((e) => {
-							console.log('dfsdfsdf', e);
 						});
 				antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
 			});
-		}
-	},
-	watch: {
-		slideCount() {
-			this.$nextTick(() => {
-				this.$refs.players.forEach(item => {
-					item.paused()
-				})
-
-			})
 		}
 	}
 };

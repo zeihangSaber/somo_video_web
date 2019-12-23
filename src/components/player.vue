@@ -45,19 +45,15 @@
         },
         watch: {
             data(data) {
-                if (this.data.uid === this.meetingInfo.mine.uid)  return;
-                setTimeout(() => {
+                if (this.data.uid === this.meetingInfo.mine.uid) return;
+                this.player && this.player.pause();
+                this.$nextTick(() => {
                     this.player && this.player.pause();
-                    this.$nextTick(() => {
-                        this.player && this.data.url && this.player.src(data.url, () => {
-                            this.data.url && this.player.play()
-                        });
-                        this.$nextTick(() => {
-                            this.player && this.data.url && this.player.play();
-                            console.log('@@@@@@@@@@@@@')
-                        })
-                    })
-                }, 300)
+                    this.player && this.player.reset();
+                    this.data.url && this.player && this.player.src(data.url);
+                    this.data.url && this.player && this.player.load();
+                    this.data.url && this.player && this.player.play();
+                });
             }
         },
         mounted() {
@@ -68,7 +64,10 @@
                     aspectRatio: "16:9",
                     preload: "none",
                     autoplay: true,
-                    notSupportedMessage: '嘿嘿',
+                    flash: {
+                        swf: "https://cdn.bootcss.com/videojs-swf/5.4.2/video-js.swf"
+                    },
+                    notSupportedMessage: '重置中，请稍后',
                     poster: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1577103508780&di=beca8334ab9b7281d07c64b77addd67d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F4610b912c8fcc3cef70d70409845d688d53f20f7.jpg',
                     techCanOverridePoster: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1577103508780&di=beca8334ab9b7281d07c64b77addd67d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F4610b912c8fcc3cef70d70409845d688d53f20f7.jpg'
                 }, () => {

@@ -43,12 +43,12 @@
 				</button>
 				<button @click="$emit('ShowShare')">
 					<!--${ShowShare ? 'active' : ''}-->
-					<el-button class="ml10" type="text" size="medium"
+					<button class="ml10" type="text" size="medium"
 					        v-clipboard:copy="sysAppIds"
 					        v-clipboard:success="onCopy"
 					        v-clipboard:error="onError">
 							<i :class="`font_family icon-sharing`" class="invite"></i>邀请
-					</el-button>
+					</button>
 				</button>
 				<button @click="$emit('handleMessage')">
 					<i :class="`font_family icon-barrage ${showMessage ? 'active' : ''}`"></i>消息
@@ -144,16 +144,14 @@
 		],
 		components: {},
 		mounted() {
-			setTimeout(()=>{console.log(this.shareData)},1000)
 			this.sysAppIds = '您好：' + '\n'
 							 + '蓝猫微会视频会议正在进行中，特邀请您参加。' + '\n'
 							 + '会议号：' + this.shareData.mid +  '\n'
 							 + '会议链接：http://www.somo.tech/openApp?invite_code=' + this.shareData.mid +  '\n'
-							 + '您可以直接输入会议号加入会议， 也可以点击会议链接直接入会。'
-			localStorage.setItem('bulletScreen',this.bulletScreen);
+							 + '您可以直接输入会议号加入会议， 也可以点击会议链接直接入会。';
 			setInterval(() => {
 					let timestamp = (new Date()).getTime();//当前时间戳
-					this.time =  timestamp - this.data.start
+					this.time =  timestamp - this.data.start;
 					this.time_meeting = this.formatDuring(this.time)
 			}, 1000)
 		},
@@ -169,10 +167,10 @@
 					alert("失败");
 			    },
 			formatDuring(mss) {
-					var days = parseInt(mss / (1000 * 60 * 60 * 24));
-					var hours = parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) + days*24;
-					var minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60));
-					var seconds = parseInt((mss % (1000 * 60)) / 1000);
+					let days = parseInt(mss / (1000 * 60 * 60 * 24));
+					let hours = parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) + days * 24;
+					let minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60));
+					let seconds = parseInt((mss % (1000 * 60)) / 1000);
 					if(hours<10){
 						hours = '0' + hours
 					}
@@ -222,7 +220,6 @@
 			margin: 0 auto 16px;
 			.set_main_title{
 				width: 40%;
-				// border: 1px solid red;
 			}
 			.set_gongneng{
 				width: 50%;

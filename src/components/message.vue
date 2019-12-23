@@ -58,9 +58,6 @@
             this._time()
         },
         computed: {
-            bulletScreen() {
-                return localStorage.getItem('bulletScreen')
-            },
             disabled() {
                 let disabled;
                 if (this.msgContent === '') {

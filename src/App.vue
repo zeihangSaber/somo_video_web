@@ -132,7 +132,7 @@ export default {
 				mid:this.meetingInfo.id,
 				name:this.meetingInfo.mine.name
 			}))
-		}, 1000);
+		}, 2000);
 		this.$nextTick(() => {
 			this.init();
 		})

@@ -8,21 +8,23 @@
 			<div class="top">
 				<div class="time">{{time}}</div>
 				<div class="topBox" ref="topBox">
-					<div class="msgBox" v-for="itme in message">
-						<div v-if="itme.uid != my.uid" class="msg">
-							<div class="msgBox-name">{{itme.name}}</div>
-							<div class="msgBox-content">{{itme.text}}</div>
-						</div>
-						<div v-if="itme.uid == my.uid" class="ME-msg msg">
-							<div class="msgBox-name">{{itme.name}}</div>
-							<div class="msgBox-content">{{itme.text}}</div>
+					<div ref="aa">
+						<div class="msgBox" v-for="itme in message">
+							<div v-if="itme.uid != my.uid" class="msg">
+								<div class="msgBox-name">{{itme.name}}</div>
+								<div class="msgBox-content">{{itme.text}}</div>
+							</div>
+							<div v-if="itme.uid == my.uid" class="ME-msg msg">
+								<div class="msgBox-name">{{itme.name}}</div>
+								<div class="msgBox-content">{{itme.text}}</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="line"></div>
 			<div class="bottom">
-				<textarea maxlength="30" placeholder="在此处输入消息…" rows="3" v-model="msgContent"></textarea>
+				<textarea placeholder="在此处输入消息…" rows="3" v-model="msgContent"></textarea>
 				<button :disabled=disabled @click="send_msg()">发送</button>
 			</div>
 		</div>
@@ -38,7 +40,7 @@
 	import antiquity from "../utils/Antiquity";
 
 	export default {
-		props: ["barrage"],
+		props: ["barrage","data"],
 		data() {
 			return {
 				message: [],
@@ -58,6 +60,7 @@
 			console.log(localStorage.getItem('my'))
 		},
 		mounted() {
+			console.log(this.data)
 			this._time()
 			document.onkeydown = (e) => {
 				if (e.keyCode === 13) {
@@ -91,18 +94,19 @@
 								this.message[this.message.length-2],
 								this.message[this.message.length-1]
 							]
+							this.Talk()
 				}else{
 					newArr = this.message
+					this.Talk()
 				}
 				return newArr
 			}
 		},
 		methods: {
 			Talk() {
-			    this.$nextTick(() => {
-					// console.log(container.scrollHeight)
-			        this.$refs.topBox.scrollTop = this.$refs.topBox.offsetHeight;
-			    })
+				setTimeout(()=>{
+					this.$refs.topBox.scrollTop = this.$refs.aa.offsetHeight;
+				},100)
 			},
 			send_msg: function() {
 				this.Talk()
@@ -141,33 +145,30 @@
 <style lang="less" scoped>
 	@import "../common/common";
 	.bulletScreen{
+		// width: 380px;
 		// background: pink;
-		max-width: 476px;
 		position: fixed;
 		bottom: 100px;
 		left: 30px;
 		z-index: 500;
 		.bulletScreen-msg{
-			min-height:44px;
 			background:rgba(0,0,0,0.5);
 			border-radius:6px;
 			margin-bottom: 10px;
 			padding: 10px 22px;
 			box-sizing: border-box;
-			display: flex;
-			justify-content: flex-start;
-			align-items:flex-start;
 			& div{
 				font-size:16px;
+				font-family:PingFangSC-Regular,PingFang SC;
 				font-weight:400;
 			}
 			.bulletScreen-name{
-				text-align: right;
+				// float: left;
+				max-width: 80px;
 				color:rgba(105,183,255,1);
 			}
 			.bulletScreen-main{
-				max-width: 352px;
-				word-break: normal;
+				max-width: 300px;
 				color:#ffffff;
 			}
 		}

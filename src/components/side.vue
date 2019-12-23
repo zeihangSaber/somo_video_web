@@ -12,7 +12,7 @@
         </div>
         <div class="foot">
             <party v-if="showParty" :data="data" @handleParty="() => $emit('handleParty')" :members="members" :hasControl="data.control"></party>
-            <message v-if="showMessage" @handleMessage="() => $emit('handleMessage')" :barrage="barrage"></message>
+            <message :data='data' v-if="showMessage" @handleMessage="() => $emit('handleMessage')" :barrage="barrage"></message>
         </div>
     </div>
 </template>
@@ -28,6 +28,9 @@ export default {
 
         }
     },
+	mounted() {
+		console.log(this.data)
+	}
 }
 </script>
 <style lang="less" scoped>

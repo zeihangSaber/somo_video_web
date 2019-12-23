@@ -268,6 +268,7 @@ export default {
 	position: absolute;
 	top: calc(50vh - 100px);
 	left: calc(50% - 100px);
+	z-index: 1000000;
 	text-align: center;
 }
 .playerBigBox {

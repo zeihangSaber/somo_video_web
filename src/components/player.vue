@@ -46,7 +46,7 @@
         watch: {
             data(data) {
                 if (this.data.uid === this.meetingInfo.mine.uid)  return;
-                this.player.paused();
+                this.player && this.player.paused();
                 this.$nextTick(() => {
                     this.data.url && this.player.src(data.url, () => {
                         this.data.url && this.player.play()

@@ -51,7 +51,7 @@
 				<player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo"></player>
 				<div v-if="waiting" class="waiting"><i class="font_family icon-camera-none"></i></div>
 			</div>
-			<share v-if="isShowShare" :shareData="shareData"></share>
+			<share :isShowShare="isShowShare" :shareData="shareData"></share>
 		</div>
 		<transition enter-active-class="animated bounceIn faster" leave-active-class="animated bounceOut faster">
 			<side-box
@@ -229,8 +229,19 @@ export default {
 							dom: this.$refs.draggable
 						})
 						.then(res => {
-							if (res.code == 2011) {
-								window.location.href = 'http://localhost:8080/joinConference';
+							console.log(res)
+							if (res.code == 1) {
+								this.$Toast.success({message: '会议号错误'});
+								setTimeout(()=>{
+									window.location.href = 'http://localhost:8080/joinConference';
+								},2000)
+								return
+							}else if (res.code == 2011) {
+								this.$Toast.success({message: '会议密码输入错误'});
+								setTimeout(()=>{
+									window.location.href = 'http://localhost:8080/joinConference';
+								},2000)
+								return
 							}
 							this.waiting = false;
 						}).catch((e) => {

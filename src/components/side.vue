@@ -37,7 +37,7 @@ export default {
 <style lang="less" scoped>
 @import "../common/common";
 .myAside {
-    width: 400px;
+    width: 400px !important;
     background-color: #f4f4f4;
     height: 100%;
     .flex(space-around, flex-start);

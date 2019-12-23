@@ -35,17 +35,17 @@
         methods: {
             // 复制成功
             onCopy(e){
-                this.$Toast.success('邀请链接已复制到剪贴板');
+                this.$Toast.success({message: '邀请链接已复制到剪贴板'});
             },
             // 复制失败
             onError(e){
-                this.$Toast.success('复制失败');
+                this.$Toast.success({message: '复制失败'});
             },
         }
     };
 </script>
 
-<style>
+<style scoped>
     .foot_box{
         width: 100%;
         position: absolute;

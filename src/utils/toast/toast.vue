@@ -39,6 +39,7 @@
         top: 20%;
         left: 50%;
         z-index: 100;
+        transform: translateX(-50%);
     }
     .toastBox {
         color: #fff;

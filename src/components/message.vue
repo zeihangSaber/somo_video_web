@@ -89,8 +89,13 @@
             },
             send_msg() {
                 this.Talk();
+				event.preventDefault()
+				if(!Base64.encode(this.msgContent)){
+					return
+				}
+				console.log(this.meetingInfo)
                 antiquity.ajax.broadcast({
-                    "mid": this.meetingInfo.mid,
+                    "mid": this.meetingInfo.id,
                     "text": Base64.encode(this.msgContent)
                 }).then((res) => {
                     this.message.push({

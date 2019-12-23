@@ -29,9 +29,9 @@
 			<div :class="`playerBigBox ${howMany}`" ref="playerBigBox">
 				<div :class="`dragBox ${mineFlag ? 'playerBox' : 'boxOut'}`">
 					<div class="drag" ref="draggable">
-<!--						<div class="dragHasCamera" v-if="this.meetingInfo.mine.camera === 1">-->
-<!--							<i class="font_family icon-camera-none"></i>-->
-<!--						</div>-->
+						<div :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
+							<i class="font_family icon-camera-none"></i>
+						</div>
 					</div>
 				</div>
 				<player
@@ -263,21 +263,6 @@ export default {
 		.dragBox {
 			width: 100%;
 			height: 99.5%;
-			position: relative;
-			.dragHasCamera {
-				position: absolute;
-				width: 100%;
-				height: 100%;
-				top: 0;
-				left: 0;
-				z-index: 300;
-				background-color: #444;
-				.flex(center, center);
-				.icon-camera-none {
-					font-size: 80px;
-					color: #666;
-				}
-			}
 		}
 	}
 	&.one {
@@ -329,6 +314,21 @@ export default {
 		background-color: #444;
 		width: 100%;
 		height: 100%;
+		position: relative;
+		.dragHasCamera {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			z-index: 5;
+			background-color: #444;
+			.flex(center, center);
+			.icon-camera-none {
+				font-size: 80px;
+				color: #666;
+			}
+		}
 	}
 	.boxOut {
 		position: fixed;
@@ -396,4 +396,5 @@ button,
 .superFaster {
 	transition-duration: .02s;
 }
+
 </style>

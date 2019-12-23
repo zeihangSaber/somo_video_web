@@ -229,11 +229,12 @@ export default {
 							dom: this.$refs.draggable
 						})
 						.then(res => {
-							console.log(1111111111111111111111)
 							if (res.code == 2011) {
 								window.location.href = 'http://localhost:8080/joinConference';
 							}
 							this.waiting = false;
+						}).catch((e) => {
+							console.log('dfsdfsdf', e);
 						});
 				antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
 			});
@@ -247,9 +248,8 @@ export default {
 </script>
 
 <style lang="less">
-
-@import './common/base';
-@import './common/common';
+@import "./common/base";
+@import "./common/common";
 .playerBigBox {
 	height: 100%;
 	overflow: hidden;
@@ -293,12 +293,20 @@ export default {
 			height: 49.8%;
 			margin: 0.1%;
 		}
+		.dragBox {
+			width: 49.8%;
+			height: 49.8%;
+		}
 	}
 	&.nine {
 		.playerBox {
 			width: 33.133%;
 			height: 33.133%;
 			margin: 0.1%;
+		}
+		.dragBox {
+			width: 33.133%;
+			height: 33.133%;
 		}
 	}
 	.playerBox {
@@ -332,8 +340,8 @@ export default {
 		}
 	}
 	.boxOut {
-		position: fixed;
-		top: -200%;
+		position: absolute;
+		z-index: -200;
 	}
 	.waiting {
 		position: absolute;
@@ -351,51 +359,51 @@ export default {
 	}
 }
 .icon {
-	width: 1em;
-	height: 1em;
-	vertical-align: -0.15em;
-	fill: currentColor;
-	overflow: hidden;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
 }
 .vjs-tech {
-	transform: translateZ(0);
+  transform: translateZ(0);
 }
 button,
 .icon-close {
-	cursor: pointer;
-	&:disabled {
-		cursor: not-allowed;
-		color: #ccc !important;
-		border-color: #ccc !important;
-		i {
-			color: #ccc !important;
-		}
-	}
+  cursor: pointer;
+  &:disabled {
+    cursor: not-allowed;
+    color: #ccc !important;
+    border-color: #ccc !important;
+    i {
+      color: #ccc !important;
+    }
+  }
 }
 #app {
-	height: 100%;
-	width: 100%;
-	position: relative;
-	.flex(flex-start, flex-start);
-	overflow: hidden;
-	.content {
-		min-width: 1080px;
-		position: relative;
-		height: 100%;
-		flex: 1;
-		background-color: #91949c;
-	}
+  height: 100%;
+  width: 100%;
+  position: relative;
+  .flex(flex-start, flex-start);
+  overflow: hidden;
+  .content {
+    min-width: 1080px;
+    position: relative;
+    height: 100%;
+    flex: 1;
+    background-color: #91949c;
+  }
 }
 .mineOut {
-	position: fixed;
-	right: -100%;
-	top: 0;
+  position: fixed;
+  right: -100%;
+  top: 0;
 }
 .caster {
-	left: -500px;
+  left: -500px;
 }
 .superFaster {
-	transition-duration: .02s;
+  transition-duration: 0.02s;
 }
 
 </style>

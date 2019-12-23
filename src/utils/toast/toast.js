@@ -5,7 +5,7 @@ let getVueToast = () => {
     toastVue = new Vue({
         render: h => h(ToastComponent),
     }).$mount();
-    document.body.append(toastVue.$el);
+    document.getElementsByClassName('playerBigBox')[0].append(toastVue.$el);
 };
 const Toast = {
     success(options) {

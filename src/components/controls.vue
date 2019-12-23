@@ -28,7 +28,7 @@
 		<div :class="`ctrlLeft ${slideCount === 0 ? 'disable' : ''}`" @click="$emit('prevSlide')" v-if="maxSlide > 1"><i class="font_family icon-left"></i></div>
 		<div :class="`ctrlRight ${slideCount === maxSlide ? 'disable' : ''}`" @click="$emit('nextSlide')" v-if="maxSlide > 1"><i class="font_family icon-right"></i></div>
 		<div class="ctrlPoint" v-if="maxSlide > 1">
-			<div :class="`point ${index === slideCount ? 'active' : ''}`" v-for="index of maxSlide"></div>
+			<div :class="`point ${index === slideCount ? 'active' : ''}`" v-for="index of maxSlide" @click="() => $emit('selectSlide', index)"></div>
 		</div>
 		<div class="ctrlFooter">
 			<i></i>
@@ -51,10 +51,10 @@
 					</button>
 				</button>
 				<button @click="$emit('handleMessage')">
-					<i :class="`font_family icon-barrage ${showMessage ? 'active' : ''}`"></i>消息
+					<i :class="`font_family icon-barrage ${showSide && showMessage ? 'active' : ''}`"></i>消息
 				</button>
 				<button @click="$emit('handleParty')">
-					<i :class="`font_family icon-members ${showParty ? 'active' : ''}`"></i>参会方
+					<i :class="`font_family icon-members ${showSide && showParty ? 'active' : ''}`"></i>参会方
 				</button>
 				<button @click="() => showSetting = !showSetting">
 					<i :class="`font_family icon-setting ${showSetting ? 'active' : ''}`"></i>设置

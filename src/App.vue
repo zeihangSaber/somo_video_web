@@ -24,10 +24,15 @@
 				@selectFour="() => (playerNum = 4)"
 				@barrageTrue="() => (barrage = true)"
 				@barrageFalse="() => (barrage = false)"
+				@selectSlide="(num) => slideCount = num"
 			></ctrl>
 			<div :class="`playerBigBox ${howMany}`" ref="playerBigBox">
 				<div :class="`dragBox ${mineFlag ? 'playerBox' : 'boxOut'}`">
-					<div class="drag" ref="draggable"></div>
+					<div class="drag" ref="draggable">
+						<div :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
+							<i class="font_family icon-camera-none"></i>
+						</div>
+					</div>
 				</div>
 				<player
 					v-if="!(speakFlag || shareFlag)"
@@ -69,7 +74,7 @@ import Player from './components/player';
 import Ctrl from './components/controls';
 import SideBox from './components/side';
 import share from './components/share';
-import antiquity, { myMid, Password, MeetingStatus } from './utils/Antiquity';
+import antiquity, { myMid, Password, MeetingStatus, myCamera, myMic } from './utils/Antiquity';
 export default {
 	name: 'app',
 	components: {
@@ -190,9 +195,17 @@ export default {
 		},
 		handleMessage() {
 			this.isShowMessage = !this.isShowMessage;
+			if (!this.isShowSide) {
+				this.isShowSide = true;
+				this.isShowMessage = true;
+			}
 		},
 		handleParty() {
 			this.isShowParty = !this.isShowParty;
+			if (!this.isShowSide) {
+				this.isShowSide = true;
+				this.isShowParty = true;
+			}
 		},
 		prevSlide() {
 			this.slideCount !== 1 && --this.slideCount;
@@ -221,7 +234,7 @@ export default {
 							}
 							this.waiting = false;
 						});
-				antiquity.publish(this.meetingInfo.video_url);
+				antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
 			});
 		}
 	},
@@ -301,6 +314,21 @@ export default {
 		background-color: #444;
 		width: 100%;
 		height: 100%;
+		position: relative;
+		.dragHasCamera {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			z-index: 5;
+			background-color: #444;
+			.flex(center, center);
+			.icon-camera-none {
+				font-size: 80px;
+				color: #666;
+			}
+		}
 	}
 	.boxOut {
 		position: fixed;
@@ -368,4 +396,5 @@ button,
 .superFaster {
 	transition-duration: .02s;
 }
+
 </style>

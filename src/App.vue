@@ -229,10 +229,13 @@ export default {
 							dom: this.$refs.draggable
 						})
 						.then(res => {
+							console.log(666666666666)
 							if (res.code == 2011) {
 								window.location.href = 'http://localhost:8080/joinConference';
 							}
 							this.waiting = false;
+						}).catch((e) => {
+							console.log('dfsdfsdf', e);
 						});
 				antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
 			});
@@ -292,12 +295,20 @@ export default {
 			height: 49.8%;
 			margin: 0.1%;
 		}
+		.dragBox {
+			width: 49.8%;
+			height: 49.8%;
+		}
 	}
 	&.nine {
 		.playerBox {
 			width: 33.133%;
 			height: 33.133%;
 			margin: 0.1%;
+		}
+		.dragBox {
+			width: 33.133%;
+			height: 33.133%;
 		}
 	}
 	.playerBox {
@@ -331,8 +342,8 @@ export default {
 		}
 	}
 	.boxOut {
-		position: fixed;
-		top: -200%;
+		position: absolute;
+		z-index: -200;
 	}
 	.waiting {
 		position: absolute;

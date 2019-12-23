@@ -229,7 +229,6 @@ export default {
 							dom: this.$refs.draggable
 						})
 						.then(res => {
-							console.log(666666666666)
 							if (res.code == 2011) {
 								window.location.href = 'http://localhost:8080/joinConference';
 							}

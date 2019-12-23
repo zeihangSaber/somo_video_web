@@ -43,15 +43,11 @@
 					:hawMany="howMany"
 					:data="members[playerNum * (realCount - 1) + item - 1]">
 				</player>
-				<div style="position: fixed; color: #f4f4f4; background-color: #ff6b6f">
-					q:{{realCount}} w:{{slideCount}} s:{{speakFlag}}
-				</div>
-
-<!--				<div-->
-<!--					class="space playerBox"-->
-<!--					v-if="!(speakFlag || shareFlag)"-->
-<!--					v-for="item of playerNum - nowPlayerNum"-->
-<!--				></div>-->
+				<div
+					class="space playerBox"
+					v-if="!(speakFlag || shareFlag)"
+					v-for="item of playerNum - nowPlayerNum"
+				></div>
 				<player v-if="speakFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
 				<player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo"></player>
 				<div v-if="waiting" class="waiting"><i class="font_family icon-camera-none"></i></div>
@@ -237,13 +233,13 @@ export default {
 							if (res.code == 1) {
 								this.$Toast.success({message: '会议号错误'});
 								setTimeout(()=>{
-									window.location.href = 'http://localhost:8080/joinConference';
+									window.location.href = 'https://http://182.61.17.228/joinConference';
 								},2000)
 								return
 							}else if (res.code == 2011) {
 								this.$Toast.success({message: '会议密码输入错误'});
 								setTimeout(()=>{
-									window.location.href = 'http://localhost:8080/joinConference';
+									window.location.href = 'https://http://182.61.17.228/joinConference';
 								},2000)
 								return
 							}

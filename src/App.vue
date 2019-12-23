@@ -15,7 +15,6 @@
 				:maxSlide="maxSlide"
 				:shareData="shareData"
 				:slideCount="slideCount"
-				@toast="toast"
 				@handleMessage="handleMessage"
 				@ShowShare="ShowShare"
 				@handleParty="handleParty"
@@ -47,7 +46,7 @@
 				<player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo"></player>
 				<div v-if="waiting" class="waiting"><i class="font_family icon-camera-none"></i></div>
 			</div>
-			<share v-if="isShowShare" :shareData="shareData" @toast="toast"></share>
+			<share v-if="isShowShare" :shareData="shareData"></share>
 		</div>
 		<transition enter-active-class="animated bounceIn faster" leave-active-class="animated bounceOut faster">
 			<side-box
@@ -129,9 +128,11 @@ export default {
 			this.speaker = speaker;
 			console.log('speaker', speaker);
 		});
-		antiquity.on('getToast', msg => {
-			this.$Toast.success({message: msg});
-		});
+		this.$nextTick(() => {
+			antiquity.on('getToast', msg => {
+				this.$Toast.success({message: msg});
+			});
+		})
 	},
 	async mounted() {
 		this.$nextTick(() => {

@@ -6,7 +6,7 @@
             :id="data.uid === meetingInfo.mine.uid ? 'mine' : ''"
     >
         <div class="ctrlMiddle">
-            {{data.name}}
+            {{data.name ? data.name : "没有名字哦"}}
             <i class="font_family icon-mic" v-if="data.mic === 0"></i>
             <svg v-else class="icon" aria-hidden="true">
                 <use xlink:href="#icon-mic-no"></use>

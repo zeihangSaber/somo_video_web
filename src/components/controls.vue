@@ -158,11 +158,11 @@
 		methods:{
 			// 复制成功
 			    onCopy(e){
-					this.$emit('toast','邀请链接已复制到剪贴板');
-;			    },
+					this.$Toast.success('邀请链接已复制到剪贴板');
+				},
 			    // 复制失败
 			    onError(e){
-					this.$emit('toast','复制失败');
+					this.$Toast.success('复制失败')
 ;			    },
 			formatDuring(mss) {
 					let days = parseInt(mss / (1000 * 60 * 60 * 24));

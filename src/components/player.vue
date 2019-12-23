@@ -46,16 +46,18 @@
         watch: {
             data(data) {
                 if (this.data.uid === this.meetingInfo.mine.uid)  return;
-                console.log(`~~~~~~~~~~~~~~`);
-                this.player && this.player.paused();
-                this.$nextTick(() => {
-                    this.player && this.data.url && this.player.src(data.url, () => {
-                        this.data.url && this.player.play()
-                    });
-                    this.$nextTick(() => {
-                        this.player && this.data.url && this.player.play()
-                    })
-                })
+                setTimeout(() => {
+                    this.player && this.player.paused();
+                    // this.$nextTick(() => {
+                    //     this.player && this.data.url && this.player.src(data.url, () => {
+                    //         this.data.url && this.player.play()
+                    //     });
+                    //     this.$nextTick(() => {
+                    //         this.player && this.data.url && this.player.play();
+                    //         console.log('@@@@@@@@@@@@@')
+                    //     })
+                    // })
+                }, 300)
             }
         },
         mounted() {
@@ -65,13 +67,15 @@
                     techOrder: ["flash"],
                     aspectRatio: "16:9",
                     preload: "none",
-                    autoplay: true
+                    autoplay: true,
+                    notSupportedMessage: '嘿嘿',
+                    poster: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1577103508780&di=beca8334ab9b7281d07c64b77addd67d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F4610b912c8fcc3cef70d70409845d688d53f20f7.jpg',
+                    techCanOverridePoster: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1577103508780&di=beca8334ab9b7281d07c64b77addd67d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F4610b912c8fcc3cef70d70409845d688d53f20f7.jpg'
                 }, () => {
                     this.player.paused();
                     this.data.url && this.player.src(this.data.url);
                     this.data.url && this.player.play();
                 });
-                this.player.dispose()
             });
         },
         beforeDestroy() {

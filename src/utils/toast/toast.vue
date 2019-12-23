@@ -23,7 +23,7 @@
                 };
                 obj.timer = setTimeout(() => {
                     this.remove(obj);
-                }, 3000);
+                }, 1500);
                 this.layers.push(obj);
             },
             remove(layer) {
@@ -35,8 +35,8 @@
 </script>
 <style>
     .toastBigBox {
-        position: fixed;
-        top: 20%;
+        position: absolute;
+        top: 15%;
         left: 50%;
         z-index: 100;
         transform: translateX(-50%);

@@ -24,6 +24,7 @@
 				@selectFour="() => (playerNum = 4)"
 				@barrageTrue="() => (barrage = true)"
 				@barrageFalse="() => (barrage = false)"
+				@selectSlide="(num) => slideCount = num"
 			></ctrl>
 			<div :class="`playerBigBox ${howMany}`" ref="playerBigBox">
 				<div :class="`dragBox ${mineFlag ? 'playerBox' : 'boxOut'}`">
@@ -190,9 +191,17 @@ export default {
 		},
 		handleMessage() {
 			this.isShowMessage = !this.isShowMessage;
+			if (!this.isShowSide) {
+				this.isShowSide = true;
+				this.isShowMessage = true;
+			}
 		},
 		handleParty() {
 			this.isShowParty = !this.isShowParty;
+			if (!this.isShowSide) {
+				this.isShowSide = true;
+				this.isShowParty = true;
+			}
 		},
 		prevSlide() {
 			this.slideCount !== 1 && --this.slideCount;

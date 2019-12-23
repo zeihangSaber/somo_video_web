@@ -252,91 +252,6 @@ export default {
 @import "./common/base";
 @import "./common/common";
 .playerBigBox {
-<<<<<<< HEAD
-  height: 100%;
-  overflow: hidden;
-  .flex(flex-start, flex-start);
-  align-content: flex-start;
-  flex-wrap: wrap;
-  &.fir {
-    .playerBox {
-      width: 0;
-      height: 0;
-    }
-    .dragBox {
-      width: 100%;
-      height: 99.5%;
-    }
-  }
-  &.one {
-    .playerBox {
-      width: 100%;
-      height: 100%;
-    }
-  }
-  &.two {
-    .playerBox {
-      width: 100%;
-      height: 100%;
-    }
-    .dragBox {
-      width: 328px;
-      height: 188px;
-      border: 4px solid #91949c;
-      position: absolute;
-      z-index: 5;
-      top: 50px;
-      right: 20px;
-    }
-  }
-  &.four {
-    .playerBox {
-      width: 49.8%;
-      height: 49.8%;
-      margin: 0.1%;
-    }
-  }
-  &.nine {
-    .playerBox {
-      width: 33.133%;
-      height: 33.133%;
-      margin: 0.1%;
-    }
-  }
-  .playerBox {
-    width: 50%;
-    height: 50%;
-    .flex(center, center);
-    overflow: hidden;
-    background-color: #444;
-    &.space {
-      background-color: #ccc;
-    }
-  }
-  .drag {
-    background-color: #444;
-    width: 100%;
-    height: 100%;
-  }
-  .boxOut {
-    position: fixed;
-    top: -200%;
-  }
-  .waiting {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: 10;
-    background-color: #444;
-    .flex(center, center);
-    .icon-camera-none {
-      font-size: 80px;
-      color: #666;
-    }
-  }
-=======
 	height: 100%;
 	overflow: hidden;
 	.flex(flex-start, flex-start);
@@ -443,7 +358,6 @@ export default {
 			color: #666;
 		}
 	}
->>>>>>> 29f33fbb2080a40d3a63311fa6ef6b0462adc991
 }
 .icon {
   width: 1em;

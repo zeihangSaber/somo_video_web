@@ -87,7 +87,7 @@
               </div>
             </div>
             <div
-              v-if="search != ''"
+              v-if="search !== ''"
               class="item"
               v-for="item of s_members"
               :key="item.uid"
@@ -211,7 +211,7 @@ export default {
     },
     leave(event) {
       // event.target.className = "item";
-      this.permissionShow = false;
+      // this.permissionShow = false;
       if (this.hasControl) {
         this.permissionShow = false;
         event.target.className = "item";
@@ -378,7 +378,7 @@ export default {
     padding: 14px 8px;
     .input {
       padding: 0 12px;
-      height: 100%;
+      height: 80%;
       input {
         background-color: #f4f4f4;
         border-radius: 16px;
@@ -389,7 +389,7 @@ export default {
         margin-bottom: 5px;
       }
       .member {
-        height: 90%;
+        height: 95%;
         overflow-y: auto;
         .item {
           position: relative;
@@ -514,11 +514,11 @@ export default {
       background-color: #f4f4f4;
 
       .noPermissionBtn {
-        display: none;
+        display: none !important;
       }
 
       .permissionBtn {
-        display: block;
+        display: block !important;
       }
     }
   }
@@ -528,7 +528,7 @@ export default {
   }
 
   .bottom {
-    height: 60px;
+    height: 60px !important;
     .flex(space-between);
 
     button {
@@ -537,7 +537,8 @@ export default {
       border-radius: 4px;
       border: 1px solid #118bfb;
       height: 100%;
-      width: 100px;
+      width: 30%;
+      min-width: 90px;
       color: #118bfb;
       font-size: 14px;
     }

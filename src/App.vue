@@ -72,7 +72,7 @@ export default {
 			isShowShare: false,
 			speaker: null,
 			sharer: null,
-			playerNum: 9,
+			playerNum: 4,
 			slideCount: 1,
 			barrage: false,
 			shareData: {},

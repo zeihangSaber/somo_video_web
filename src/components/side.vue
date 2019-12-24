@@ -15,7 +15,7 @@
                 <party v-if="showParty" :data="data" @handleParty="() => $emit('handleParty')" :members="members" :hasControl="data.control"></party>
             </transition>
             <transition enter-active-class="animated bounceInUp faster" leave-active-class="animated bounceOutDown faster">
-                <message v-if="showMessage" @handleMessage="() => $emit('handleMessage')" :barrage="barrage" :meetingInfo="data"></message>
+                <message v-if="showMessage" @handleMessage="() => $emit('handleMessage')" :barrage="barrage" :meetingInfo="data" :message="message"></message>
             </transition>
         </div>
     </div>
@@ -25,7 +25,7 @@ import Message from "./message"
 import Party from "./party"
 export default {
     name: "side",
-    props: ["data", "members", "showMessage", "showParty", "barrage"],
+    props: ["data", "members", "showMessage", "showParty", "barrage", "message"],
     components: {Message, Party},
     data() {
         return {

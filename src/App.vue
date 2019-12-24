@@ -38,7 +38,7 @@
 					v-if="!(speakFlag || shareFlag)"
 					v-for="item of nowPlayerNum"
 					ref="players"
-					:key="item"
+					:key="item + 333"
 					:meetingInfo="meetingInfo"
 					:hawMany="howMany"
 					:data="members[playerNum * (realCount - 1) + item - 1]">
@@ -47,6 +47,7 @@
 					class="space playerBox"
 					v-if="!(speakFlag || shareFlag)"
 					v-for="item of playerNum - nowPlayerNum"
+					:key="item"
 				></div>
 				<template v-if="meetingInfo.mine.speaker !== 1">
 					<player v-if="speakFlag && !shareFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
@@ -54,7 +55,7 @@
 				</template>
 				<div v-if="waiting" class="waiting"><i class="font_family icon-camera-none"></i></div>
 			</div>
-			<share :isShowShare="isShowShare" :shareData="shareData"></share>
+			<share :isShowShare_="isShowShare_" :shareData="shareData" @share_status="share_status"></share>
 		</div>
 		<transition enter-active-class="animated bounceIn faster" leave-active-class="animated bounceOut faster">
 			<side-box
@@ -64,6 +65,7 @@
 					:showMessage="isShowMessage"
 					:showParty="isShowParty"
 					:barrage="barrage"
+					:message="message"
 					@handleMessage="handleMessage"
 					@handleParty="handleParty"
 			></side-box>
@@ -102,6 +104,7 @@ export default {
 			isShowMessage: true,
 			isShowParty: true,
 			isShowShare: false,
+			isShowShare_: false,
 			speaker: null,
 			sharer: null,
 			playerNum: 4,
@@ -110,7 +113,8 @@ export default {
 			shareData: {},
 			timer:'',
 			test: false,
-			waiting: true
+			waiting: true,
+			message: [],
 		};
 	},
 	beforeCreate() {
@@ -119,6 +123,9 @@ export default {
 		};
 	},
 	created() {
+		antiquity.on("getMsg", (msg) => {
+		    this.message.push(msg)
+		});
 		antiquity.on('getMidInfo', meetingInfo => {
 			this.meetingInfo = meetingInfo;
 		});
@@ -137,14 +144,26 @@ export default {
 		antiquity.on('getSpeaker', speaker => {
 			this.speaker = speaker;
 		});
-		antiquity.on('getToast', msg => {
-			this.$Toast.success({message: msg});
-		});
+		this.$nextTick(() => {
+			antiquity.on('getToast', msg => {
+				this.$Toast.success({message: msg});
+			});
+		})
+
 	},
 	async mounted() {
+		window.addEventListener('offline', ()=>{
+	 	//网络由正常常到异常时触发
+	  	this.$Toast.success({message:'您的网络已断开，请检查网络设置。'})
+    });
+    window.addEventListener('online',()=>{
+		//从异常到正常时触发
+		this.$Toast.success({message:'正常尝试连接网络中，请稍等~'})
+    });
 		this.$nextTick(() => {
 			this.init();
 		})
+
 	},
 	computed: {
 		maxSlide() {
@@ -190,6 +209,11 @@ export default {
 		},
 	},
 	methods: {
+		share_status(){
+			this.isShowShare_ = false
+		},
+		ShowShare() {
+		},
 		handleSide() {
 			this.isShowSide = !this.isShowSide;
 		},
@@ -219,7 +243,7 @@ export default {
 					mid: myMid,
 					password: Password,
 				};
-				this.isShowShare = MeetingStatus;
+				this.isShowShare_ = MeetingStatus;
 				await antiquity
 						.joinMeeting({
 							code: myMid,
@@ -390,6 +414,7 @@ button,
 #app {
   height: 100%;
   width: 100%;
+  min-height: 600px;
   position: relative;
   .flex(flex-start, flex-start);
   overflow: hidden;

@@ -1,7 +1,7 @@
 <template>
-    <div class="big-box" v-if="isShowShare">
+    <div class="big-box" v-if="isShowShare_">
         <div class="share-pop-up">
-			<div class="close" @click="_close()"><i class="font_family icon-close"></i></div>
+			<div class="close" @click="$emit('share_status')"><i class="font_family icon-close"></i></div>
             <div class="title">会议邀请码：</div>
             <div class="meeting-num">{{ shareData.mid }}</div>
             <div class="meeting-password" v-if="shareData.password">会议密码：{{ shareData.password }}</div>
@@ -21,20 +21,26 @@
     export default {
         data() {
             return {
-                sysAppIds:''
+                // sysAppIds:''
+				status:''
             };
         },
-        mounted() {
-            this.sysAppIds = '您好：' + '\n'
+		computed:{
+			// http://www.somo.tech/openApp
+			sysAppIds(){
+				let data = '您好：' + '\n'
                 + '蓝猫微会视频会议正在进行中，特邀请您参加。' + '\n'
                 + '会议号：' + this.shareData.mid +  '\n'
-                + '会议链接：http://www.somo.tech/openApp?invite_code=' + this.shareData.mid +  '\n'
+                + '会议链接：https://182.61.17.228/sharePage?invite_code=' + this.shareData.mid +  '\n'
                 + '您可以直接输入会议号加入会议， 也可以点击会议链接直接入会。'
-        },
-        props: ['shareData','isShowShare'],
+				return data
+			}
+		},
+        props: ['shareData','isShowShare_'],
         methods: {
 			_close(){
-				this.isShowShare = false
+				this.$emit('status',false)
+				// this.status = false
 			},
             // 复制成功
             onCopy(e){

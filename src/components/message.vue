@@ -39,19 +39,19 @@
 <script>
     import antiquity from "../utils/Antiquity";
     export default {
-        props: ["barrage", "meetingInfo"],
+        props: ["barrage", "meetingInfo", "message"],
         data() {
             return {
-                message: [],
+                // message: [],
                 time: '',
                 msgContent: ''
             }
         },
-        created() {
-            antiquity.on("getMsg", (msg) => {
-                this.message.push(msg)
-            });
-        },
+        // created() {
+        //     antiquity.on("getMsg", (msg) => {
+        //         this.message.push(msg)
+        //     });
+        // },
         mounted() {
             this._time()
         },
@@ -185,6 +185,8 @@
             height: 0;
             flex: 1;
             .time {
+				padding-right: 20px;
+				box-sizing: border-box;
                 font-size: 14px;
                 font-weight: 400;
                 color: rgba(153, 153, 153, 1);

@@ -125,6 +125,7 @@
 				showSetting: false,
 				time:'',
 				time_meeting:'',
+				not_time:1000
 				// sysAppIds:''
 			}
 		},
@@ -154,19 +155,20 @@
 			}
 		},
 		mounted() {
-			if(this.data.start != 0){
+			console.log(this.data)
+			if(this.data.start){
+				alert(2222)
 				setInterval(() => {
 						let timestamp = (new Date()).getTime();//当前时间戳
 						this.time =  timestamp - this.data.start;
 						this.time_meeting = this.formatDuring(this.time)
 				}, 1000)
-			}else if(this.data.start == 0){
+			}else if(!this.data.start){
+				alert(11111)
+				
 				setInterval(() => {
-						let time = 1000
-						time = time + 1000
-						// let timestamp = (new Date()).getTime();//当前时间戳
-						// this.time =  timestamp - this.data.start;
-						this.time_meeting = this.formatDuring(time)
+						this.not_time = this.not_time + 1000
+						this.time_meeting = this.formatDuring(this.not_time)
 				}, 1000)
 			}
 

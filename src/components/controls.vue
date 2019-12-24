@@ -125,7 +125,7 @@
 				showSetting: false,
 				time:'',
 				time_meeting:'',
-				sysAppIds:''
+				// sysAppIds:''
 			}
 		},
 		props: [
@@ -143,12 +143,17 @@
 			"shareData"
 		],
 		components: {},
+		computed:{
+			sysAppIds(){
+				let data = '您好：' + '\n'
+		        + '蓝猫微会视频会议正在进行中，特邀请您参加。' + '\n'
+		        + '会议号：' + this.shareData.mid +  '\n'
+		        + '会议链接：https://182.61.17.228/sharePage?invite_code=' + this.shareData.mid +  '\n'
+		        + '您可以直接输入会议号加入会议， 也可以点击会议链接直接入会。'
+				return data
+			}
+		},
 		mounted() {
-			this.sysAppIds = '您好：' + '\n'
-							 + '蓝猫微会视频会议正在进行中，特邀请您参加。' + '\n'
-							 + '会议号：' + this.shareData.mid +  '\n'
-							 + '会议链接：http://www.somo.tech/openApp?invite_code=' + this.shareData.mid +  '\n'
-							 + '您可以直接输入会议号加入会议， 也可以点击会议链接直接入会。';
 			if(this.data.start != 0){
 				setInterval(() => {
 						console.log(this.data)
@@ -175,8 +180,8 @@
 				},
 			    // 复制失败
 			    onError(e){
-					this.$Toast.success({message: '复制失败'})
-;			    },
+					this.$Toast.success({message: '复制失败'});			    
+			},
 			formatDuring(mss) {
 					let days = parseInt(mss / (1000 * 60 * 60 * 24));
 					let hours = parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) + days * 24;

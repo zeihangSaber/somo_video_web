@@ -52,7 +52,7 @@
 				<player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo"></player>
 				<div v-if="waiting" class="waiting"><i class="font_family icon-camera-none"></i></div>
 			</div>
-			<share :isShowShare="isShowShare" :shareData="shareData"></share>
+			<share :isShowShare_="isShowShare_" :shareData="shareData" @share_status="share_status"></share>
 		</div>
 		<transition enter-active-class="animated bounceIn faster" leave-active-class="animated bounceOut faster">
 			<side-box
@@ -62,6 +62,7 @@
 					:showMessage="isShowMessage"
 					:showParty="isShowParty"
 					:barrage="barrage"
+					:message="message"
 					@handleMessage="handleMessage"
 					@handleParty="handleParty"
 			></side-box>
@@ -94,6 +95,7 @@ export default {
 			isShowMessage: true,
 			isShowParty: true,
 			isShowShare: false,
+			isShowShare_: false,
 			speaker: null,
 			sharer: null,
 			playerNum: 4,
@@ -102,7 +104,8 @@ export default {
 			shareData: {},
 			timer:'',
 			test: false,
-			waiting: true
+			waiting: true,
+			message: [],
 		};
 	},
 	beforeCreate() {
@@ -114,6 +117,9 @@ export default {
 		};
 	},
 	created() {
+		antiquity.on("getMsg", (msg) => {
+		    this.message.push(msg)
+		});
 		antiquity.on('getMidInfo', meetingInfo => {
 			this.meetingInfo = meetingInfo;
 			console.log('meetingInfo', this.meetingInfo);
@@ -189,6 +195,9 @@ export default {
 		},
 	},
 	methods: {
+		share_status(){
+			this.isShowShare_ = false
+		},
 		ShowShare() {
 		},
 		handleSide() {
@@ -220,7 +229,7 @@ export default {
 					mid: myMid,
 					password: Password,
 				};
-				this.isShowShare = MeetingStatus;
+				this.isShowShare_ = MeetingStatus;
 				await antiquity
 						.joinMeeting({
 							code: myMid,
@@ -401,6 +410,7 @@ button,
 #app {
   height: 100%;
   width: 100%;
+  min-height: 600px;
   position: relative;
   .flex(flex-start, flex-start);
   overflow: hidden;

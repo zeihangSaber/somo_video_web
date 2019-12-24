@@ -157,15 +157,12 @@
 		mounted() {
 			console.log(this.data)
 			if(this.data.start){
-				// alert(2222)
 				setInterval(() => {
 						let timestamp = (new Date()).getTime();//当前时间戳
 						this.time =  timestamp - this.data.start;
 						this.time_meeting = this.formatDuring(this.time)
 				}, 1000)
 			}else if(!this.data.start){
-				// alert(11111)
-				
 				setInterval(() => {
 						this.not_time = this.not_time + 1000
 						this.time_meeting = this.formatDuring(this.not_time)
@@ -180,7 +177,7 @@
 				},
 			    // 复制失败
 			    onError(e){
-					this.$Toast.success({message: '复制失败'});			    
+					this.$Toast.success({message: '复制失败'});
 			},
 			formatDuring(mss) {
 					let days = parseInt(mss / (1000 * 60 * 60 * 24));

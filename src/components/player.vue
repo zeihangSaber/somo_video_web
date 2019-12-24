@@ -5,7 +5,7 @@
             v-if="data.uid !== meetingInfo.mine.uid"
             :id="data.uid === meetingInfo.mine.uid ? 'mine' : ''"
     >
-        <player-status></player-status>
+        <player-status :data="data"></player-status>
         <div :class="`${data.camera === 0 ? 'hasCamera' : 'noCamera'}`">
             <i class="font_family icon-camera-none"></i>
         </div>
@@ -24,10 +24,11 @@
                         role: -1,
                         url: "rtmp://58.200.131.2:1935/livetv/hunantv"
                     }
-                }
+                },
             },
             meetingInfo: {},
-            howMany: "zero"
+            howMany: "zero",
+            isShare: false
         },
         data() {
             return {
@@ -43,6 +44,11 @@
                 this.player && this.player.dispose();
                 if (!this.$refs.playerBox) return;
                 this.createVideo();
+            }
+        },
+        computed: {
+            src() {
+                return this.isShare ? this.data.shareUrl : this.data.url
             }
         },
         mounted() {
@@ -73,8 +79,8 @@
                         techCanOverridePoster: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1577103508780&di=beca8334ab9b7281d07c64b77addd67d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F4610b912c8fcc3cef70d70409845d688d53f20f7.jpg'
                     }, () => {
                         this.player.pause();
-                        this.data.url && this.player.src(this.data.url);
-                        this.data.url && this.player.play();
+                        this.src && this.player.src(this.src);
+                        this.src && this.player.play();
                     });
                 });
             }

@@ -32,13 +32,14 @@
 						<div :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
 							<i class="font_family icon-camera-none"></i>
 						</div>
+						<player-status :data="meetingInfo.mine"></player-status>
 					</div>
 				</div>
 				<player
 					v-if="!(speakFlag || shareFlag)"
 					v-for="item of nowPlayerNum"
 					ref="players"
-					:key="item"
+					:key="item + 333"
 					:meetingInfo="meetingInfo"
 					:hawMany="howMany"
 					:data="members[playerNum * (realCount - 1) + item - 1]">
@@ -48,8 +49,10 @@
 					v-if="!(speakFlag || shareFlag)"
 					v-for="item of playerNum - nowPlayerNum"
 				></div>
-				<player v-if="speakFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
-				<player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo"></player>
+				<template v-if="meetingInfo.mine.speaker !== 1">
+					<player v-if="speakFlag && !shareFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
+					<player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo" :isShare="true"></player>
+				</template>
 				<div v-if="waiting" class="waiting"><i class="font_family icon-camera-none"></i></div>
 			</div>
 			<share :isShowShare_="isShowShare_" :shareData="shareData" @share_status="share_status"></share>
@@ -76,6 +79,7 @@ import Player from './components/player';
 import Ctrl from './components/controls';
 import SideBox from './components/side';
 import share from './components/share';
+import playerStatus from "./components/playerStatus";
 import antiquity, { myMid, Password, MeetingStatus, myCamera, myMic } from './utils/Antiquity';
 export default {
 	name: 'app',
@@ -83,7 +87,8 @@ export default {
 		Player,
 		Ctrl,
 		SideBox,
-		share
+		share,
+		playerStatus
 	},
 	data() {
 		return {
@@ -164,6 +169,8 @@ export default {
 		speakFlag() {
 			if (this.shareFlag) return this.speaker && this.slideCount === 2;
 			return this.speaker && this.slideCount === 1;
+			(this.speaker || this.sharer) && ++maxSlide;
+			return maxSlide;
 		},
 		shareFlag() {
 			return this.sharer && this.slideCount === 1;
@@ -174,11 +181,15 @@ export default {
 			if (this.speakFlag || (this.speakFlag && this.slideCount === 2)) return true;
 			if (this.slideCount === 1) return true;
 			return false
+		membersNum() {
+			if (this.meetingInfo.mine.speaker) return this.members.length + 1;
+			if (this.speaker || this.sharer) return this.members.length + 1;
+			return this.members.length
 		},
 		howMany() {
-			if (this.members.length === 1) return 'fir';
-			if (this.shareFlag || this.speakFlag) return 'one';
-			if (this.members.length === 2) return 'two';
+			if (this.membersNum === 1) return 'fir';
+			if ((this.shareFlag || this.speakFlag) && this.slideCount === 1) return 'one';
+			if (this.membersNum === 2) return 'two';
 			if (this.playerNum === 4) return 'four';
 			if (this.playerNum === 9) return 'nine';
 			return 'fir'
@@ -191,6 +202,14 @@ export default {
 				realCount = -1;
 			}
 			return Math.max(this.slideCount + realCount, 0);
+		},
+		mineFlag() {
+			if (this.sharer && this.meetingInfo.mine.speaker) return 'boxOut';
+			if (this.slideCount !== 1 && this.meetingInfo.mine.speaker) return 'boxOut';
+			if (this.meetingInfo.mine.speaker) return 'playerBox';
+			if ((this.speaker || this.sharer) && this.slideCount === 2) return 'playerBox';
+			if (!this.speaker && !this.sharer && this.slideCount === 1) return 'playerBox';
+			return 'boxOut';
 		},
 		nowPlayerNum() {
 			return Math.min(this.members.length - this.playerNum * (this.realCount - 1), this.playerNum)

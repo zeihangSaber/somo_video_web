@@ -5,15 +5,15 @@
 			<div class="center">
 				<span class="bigSpan">会议号：{{this.data.code}}</span>
 				<span class="bigSpan" v-if="data.pwd">密码：{{this.data.pwd}}</span>
-				<span>{{this.data.name}}</span>
+				<span>
+					{{this.data.name ? this.data.name : "没有名字哦"}}
+					<i v-if="this.data.locked" class="font_family icon-lock"></i>
+				</span>
 				<span>
 					<i class="font_family icon-people-num"></i>
 					{{this.peopleNum}}
 				</span>
 				<span v-if="!this.data.muteAll">全体静音</span>
-				<span>
-					<i :class="`font_family icon-${this.data.locked ? 'lock' : 'unlock'}`"></i>
-				</span>
 				<span>
 					<i class="font_family icon-noMute"></i>
 					{{this.micNum}}
@@ -156,7 +156,6 @@
 		mounted() {
 			if(this.data.start != 0){
 				setInterval(() => {
-						console.log(this.data)
 						let timestamp = (new Date()).getTime();//当前时间戳
 						this.time =  timestamp - this.data.start;
 						this.time_meeting = this.formatDuring(this.time)
@@ -165,13 +164,12 @@
 				setInterval(() => {
 						let time = 1000
 						time = time + 1000
-						console.log(this.data)
 						// let timestamp = (new Date()).getTime();//当前时间戳
 						// this.time =  timestamp - this.data.start;
 						this.time_meeting = this.formatDuring(time)
 				}, 1000)
 			}
-			
+
 		},
 		methods:{
 			// 复制成功

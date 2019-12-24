@@ -50,5 +50,6 @@
         line-height: 40px;
         padding: 0 10px;
         margin-bottom: 10px;
+        text-align: center;
     }
 </style>

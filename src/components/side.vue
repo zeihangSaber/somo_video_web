@@ -8,7 +8,7 @@
                     <span v-if="data.pwd">密码：{{this.data.pwd}}</span>
                 </p>
             </div>
-            <div class="myImg" :style="`background-image: url(${data.avarter ? data.avarter : 'http://somo-video-image.oss-cn-beijing.aliyuncs.com/10000562-1565754341192.png'});`"></div>
+            <div class="myImg" :style="`background-image: url(${data.avarter ? data.avarter : ''});`"></div>
         </div>
         <div class="foot">
             <transition enter-active-class="animated bounceInRight faster" leave-active-class="animated bounceOutRight faster">
@@ -31,10 +31,7 @@ export default {
         return {
 
         }
-    },
-	mounted() {
-		console.log(this.data)
-	}
+    }
 }
 </script>
 <style lang="less" scoped>

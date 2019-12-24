@@ -20,7 +20,6 @@ export default {
         Object.keys(Toast).forEach(key => {
             $toast[key] = Toast[key]
         });
-        console.log('!!!!!!!!!!!!!', $toast, _Vue);
         _Vue.prototype.$Toast = $toast;
     }
 }

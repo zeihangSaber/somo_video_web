@@ -157,14 +157,14 @@
 		mounted() {
 			console.log(this.data)
 			if(this.data.start){
-				alert(2222)
+				// alert(2222)
 				setInterval(() => {
 						let timestamp = (new Date()).getTime();//当前时间戳
 						this.time =  timestamp - this.data.start;
 						this.time_meeting = this.formatDuring(this.time)
 				}, 1000)
 			}else if(!this.data.start){
-				alert(11111)
+				// alert(11111)
 				
 				setInterval(() => {
 						this.not_time = this.not_time + 1000
@@ -221,7 +221,7 @@
 	border-radius:8px;
 	position: absolute;
 	bottom: 115px;
-	left: 50%;
+	left: 55%;
 	z-index: 110000;
 	.set_main{
 		padding: 25px 0;
@@ -388,11 +388,11 @@
 			border-radius: 4px;
 			color: #fff;
 			font-size: 16px;
-			width: 34px;
-			height: 34px;
+			width: 32px;
+			height: 32px;
 			overflow: hidden;
 			i {
-				font-size: 40px;
+				font-size: 38px;
 				position: relative;
 				left: -10px;
 				top: -8px;
@@ -402,5 +402,8 @@
 }
 .active {
 	color: #118BFB;
+}
+.font_family {
+  font-size: 20px;
 }
 </style>

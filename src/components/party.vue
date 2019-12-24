@@ -567,4 +567,16 @@ button {
 .list-complete-leave-active {
   position: absolute;
 }
+input::-webkit-input-placeholder{
+	  color:#BBBBBB;
+	}
+	input::-moz-placeholder{
+	  color:#BBBBBB;
+	}
+	input:-moz-placeholder{
+	  color:#BBBBBB;
+	}
+	input:-ms-input-placeholder{
+	  color:#BBBBBB;
+	}
 </style>

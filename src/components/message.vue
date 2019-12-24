@@ -11,11 +11,11 @@
                     <div ref="topBox_">
                         <div class="msgBox" v-for="itme in message">
                             <div v-if="itme.uid != meetingInfo.mine.uid" class="msg">
-                                <div class="msgBox-name">{{itme.name}}</div>
+                                <div class="msgBox-name" style="color: #868FAA;">{{itme.name}}<span class="msg_time">{{itme.time}}</span></div>
                                 <div class="msgBox-content">{{itme.text}}</div>
                             </div>
                             <div v-if="itme.uid == meetingInfo.mine.uid" class="ME-msg msg">
-                                <div class="msgBox-name">{{itme.name}}</div>
+                                <div class="msgBox-name" style="color: #118BFB;">{{itme.name}}<span class="msg_time">{{itme.time}}</span></div>
                                 <div class="msgBox-content">{{itme.text}}</div>
                             </div>
                         </div>
@@ -24,8 +24,10 @@
             </div>
             <div class="line"></div>
             <div class="bottom" @keydown.enter="send_msg">
-                <textarea maxlength="30" placeholder="在此处输入消息…" rows="3" v-model="msgContent"></textarea>
-                <button :disabled=disabled @click="send_msg()">发送</button>
+				<div class="send_box">
+					<div class="textarea_box"><textarea class="textarea" wrap="virtual" maxlength="70" placeholder="在此处输入消息…" rows="3" v-model="msgContent"></textarea></div>
+					<button :disabled=disabled @click="send_msg()">发送</button>
+				</div>
             </div>
         </div>
         <div class="bulletScreen" v-if="barrage">
@@ -42,16 +44,10 @@
         props: ["barrage", "meetingInfo", "message"],
         data() {
             return {
-                // message: [],
                 time: '',
                 msgContent: ''
             }
         },
-        // created() {
-        //     antiquity.on("getMsg", (msg) => {
-        //         this.message.push(msg)
-        //     });
-        // },
         mounted() {
             this._time()
         },
@@ -101,14 +97,15 @@
                     this.message.push({
                         name: this.meetingInfo.mine.name,
                         text: this.msgContent,
-                        uid: this.meetingInfo.mine.uid
+                        uid: this.meetingInfo.mine.uid,
+						time:this._time()
                     });
                     this.msgContent = ''
                 })
             },
             // 实时获取当前电脑时间
             _time() {
-                setInterval(() => {
+                // setInterval(() => {
                     let t = new Date();
                     let hour = t.getHours(); //得到小时
                     let minu = t.getMinutes(); //得到分钟
@@ -119,8 +116,8 @@
                     if (sec < 10) {
                         sec = '0' + sec
                     }
-                    this.time = hour + ':' + minu + ':' + sec
-                }, 1000)
+                    return hour + ':' + minu + ':' + sec
+                // }, 1000)
             },
         }
     }
@@ -183,6 +180,7 @@
         }
         .top {
             height: 0;
+			min-height: 88px;
             flex: 1;
             .time {
 				padding-right: 20px;
@@ -194,7 +192,7 @@
                 margin-bottom: 12px;
             }
             .topBox {
-                height: 85%;
+                height: 100%;
                 overflow-y: overlay;
                 padding-right: 20px;
                 box-sizing: border-box;
@@ -203,6 +201,10 @@
             .myScroll(topBox)
         }
         .msgBox {
+			.msg_time{
+				color: #BBBBBB;
+				margin-left: 10px;
+			}
             .ME-msg {
                 text-align: right;
                 padding-right: 10px;
@@ -221,34 +223,69 @@
                 word-wrap: break-word;
                 font-weight: 400;
                 color: rgba(24, 24, 24, 1);
-                margin-top: 4px;
+                margin-top: 2px;
             }
         }
         .line {
             border-bottom: 2px solid #f4f4f4;
         }
         .bottom {
-            height: 136px;
-            padding-right: 20px;
+            height: 94px;
+			padding: 17px 12px 17px 12px;
             box-sizing: border-box;
             .flex(flex-start, flex-end);
             flex-direction: column;
+			.send_box{
+				width: 100%;
+				height: 100%;
+				display: flex;
+				justify-content: flex-end;
+				align-items:center;
+				border-radius:5px;
+				overflow: hidden;
+				.textarea_box{
+					width: 79%;
+					height: 100%;
+					border-radius:5px 0 0 5px;
+					padding: 5px 12px;
+					box-sizing: border-box;
+					border:1px solid rgba(17,139,251,1);
+				}
+			}
             textarea {
+				width: 100%;
+				height: 100%;
                 border: none;
                 resize: none;
-                width: 100%;
                 outline: none;
-                flex: 1;
-                margin-bottom: 5px;
+				overflow: hidden;
+				overflow-y: hidden;
+				font-size:14px;
+				font-family:PingFangSC-Regular,PingFang SC;
+				font-weight:400;
+				color:rgba(51,51,51,1);
+                // flex: 1;
             }
             button {
+				width: 20.35%;
+				height: 100%;
                 background-color: #118BFB;
-                border-radius: 4px;
+                // border-radius: 4px;
                 border: none;
-                width: 70px;
-                height: 30px;
                 color: #fff;
             }
         }
     }
+	textarea::-webkit-input-placeholder{
+	  color:#BBBBBB;
+	}
+	textarea::-moz-placeholder{
+	  color:#BBBBBB;
+	}
+	textarea:-moz-placeholder{
+	  color:#BBBBBB;
+	}
+	textarea:-ms-input-placeholder{
+	  color:#BBBBBB;
+	}
 </style>

@@ -8,7 +8,7 @@
                     <span v-if="data.pwd">密码：{{this.data.pwd}}</span>
                 </p>
             </div>
-            <div class="myImg" :style="`background-image: url(${data.avarter ? data.avarter : ''});`"></div>
+            <!-- <div class="myImg" :style="`background-image: url(${data.avarter ? data.avarter : ''});`"></div> -->
         </div>
         <div class="foot">
             <transition enter-active-class="animated bounceInRight faster" leave-active-class="animated bounceOutRight faster">
@@ -43,7 +43,7 @@ export default {
     .flex(space-around, flex-start);
     flex-direction: column;
     .head {
-        height: 108px;
+        height: 100px;
         width: 100%;
         padding: 20px;
         background-color: #fff;
@@ -54,9 +54,17 @@ export default {
             .flex(space-around, flex-start);
             flex-direction: column;
             .name {
+				font-size:22px;
+				font-family:PingFangSC-Medium,PingFang SC;
+				font-weight:500;
+				color:rgba(0,0,0,1);
                 padding-right: 20px;
             }
             .info {
+				font-size:14px !important;
+				font-family:PingFangSC-Medium,PingFang SC;
+				font-weight:500 !important;
+				color:rgba(0,0,0,1) !important;
                 .fontStyle(14px, #000, blod);
                 .code {
                     padding-right: 20px;
@@ -72,7 +80,7 @@ export default {
     }
     .foot {
         height: 100%;
-        padding: 15px 20px;
+        padding: 15px 16px;
         width: 100%;
         overflow: hidden;
         .flex();

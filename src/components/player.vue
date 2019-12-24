@@ -97,7 +97,7 @@
             height: 40px;
             line-height: 40px;
             color: #fff;
-            font-size: 16px;
+            font-size: 18px;
             position: absolute;
             left: 0;
             top: 50px;

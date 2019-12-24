@@ -182,6 +182,7 @@ export default {
 			if (this.speakFlag || (this.speakFlag && this.slideCount === 2)) return true;
 			if (this.slideCount === 1) return true;
 			return false
+		},	
 		membersNum() {
 			if (this.meetingInfo.mine.speaker) return this.members.length + 1;
 			if (this.speaker || this.sharer) return this.members.length + 1;
@@ -209,6 +210,7 @@ export default {
 			this.isShowShare_ = false
 		},
 		ShowShare() {
+			
 		},
 		handleSide() {
 			this.isShowSide = !this.isShowSide;
@@ -268,6 +270,7 @@ export default {
 			});
 		}
 	}
+	
 };
 </script>
 

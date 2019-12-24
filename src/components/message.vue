@@ -288,4 +288,7 @@
 	textarea:-ms-input-placeholder{
 	  color:#BBBBBB;
 	}
+	button[disabled] {
+	  color: #70b9fc !important;
+	}
 </style>

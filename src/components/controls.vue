@@ -47,7 +47,7 @@
 					        v-clipboard:copy="sysAppIds"
 					        v-clipboard:success="onCopy"
 					        v-clipboard:error="onError">
-							<i :class="`font_family icon-sharing`" class="invite"></i>邀请
+							<i :class="`font_family icon-sharing`"></i>邀请
 					</button>
 				</button>
 				<button @click="$emit('handleMessage')">
@@ -402,5 +402,8 @@
 }
 .font_family {
   font-size: 20px;
+}
+.font_family:hover{
+	color: #DDDDDD;
 }
 </style>

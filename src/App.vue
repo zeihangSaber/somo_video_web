@@ -31,6 +31,7 @@
 						<div :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : 'dragNoCamera'}`">
 							<i class="font_family icon-camera-none"></i>
 						</div>
+						<player-status :data="meetingInfo.mine"></player-status>
 					</div>
 				</div>
 				<player
@@ -76,6 +77,7 @@ import Player from './components/player';
 import Ctrl from './components/controls';
 import SideBox from './components/side';
 import share from './components/share';
+import playerStatus from "./components/playerStatus";
 import antiquity, { myMid, Password, MeetingStatus, myCamera, myMic } from './utils/Antiquity';
 export default {
 	name: 'app',
@@ -83,7 +85,8 @@ export default {
 		Player,
 		Ctrl,
 		SideBox,
-		share
+		share,
+		playerStatus
 	},
 	data() {
 		return {

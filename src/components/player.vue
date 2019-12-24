@@ -5,7 +5,7 @@
             v-if="data.uid !== meetingInfo.mine.uid"
             :id="data.uid === meetingInfo.mine.uid ? 'mine' : ''"
     >
-        <player-status></player-status>
+        <player-status :data="data"></player-status>
         <div :class="`${data.camera === 0 ? 'hasCamera' : 'noCamera'}`">
             <i class="font_family icon-camera-none"></i>
         </div>

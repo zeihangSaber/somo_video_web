@@ -16,7 +16,6 @@
 				:shareData="shareData"
 				:slideCount="slideCount"
 				@handleMessage="handleMessage"
-				@ShowShare="ShowShare"
 				@handleParty="handleParty"
 				@prevSlide="prevSlide"
 				@nextSlide="nextSlide"
@@ -27,9 +26,9 @@
 				@selectSlide="(num) => slideCount = num"
 			></ctrl>
 			<div :class="`playerBigBox ${howMany}`" ref="playerBigBox">
-				<div :class="`dragBox ${mineFlag ? 'playerBox' : 'boxOut'}`">
+				<div :class="`dragBox ${mineFlag}`">
 					<div class="drag" ref="draggable">
-						<div :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
+						<div :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : 'dragNoCamera'}`">
 							<i class="font_family icon-camera-none"></i>
 						</div>
 					</div>
@@ -87,7 +86,11 @@ export default {
 	},
 	data() {
 		return {
-			meetingInfo: {},
+			meetingInfo: {
+				mine: {
+					speaker: 0
+				}
+			},
 			members: [],
 			peopleNum: 0,
 			micNum: 0,
@@ -112,20 +115,15 @@ export default {
 		window.onbeforeunload = (e) => {
 			e.returnValue=("确定离开当前页面吗？");
 		};
-		window.onclose = (e) => {
-			e.returnValue=("确定离开当前页面吗？");
-		};
 	},
 	created() {
 		antiquity.on("getMsg", (msg) => {
 			console.log(msg)
 			msg.time = this._time()
-			
 		    this.message.push(msg)
 		});
 		antiquity.on('getMidInfo', meetingInfo => {
 			this.meetingInfo = meetingInfo;
-			console.log('meetingInfo', this.meetingInfo);
 		});
 		antiquity.on('getMembers', members => {
 			this.members = members;
@@ -137,34 +135,43 @@ export default {
 			}).length;
 		});
 		antiquity.on('getShareUrl', sharer => {
-			console.log('sharer', sharer);
+			this.sharer = sharer;
 		});
 		antiquity.on('getSpeaker', speaker => {
 			this.speaker = speaker;
-			console.log('speaker', speaker);
 		});
 		this.$nextTick(() => {
 			antiquity.on('getToast', msg => {
 				this.$Toast.success({message: msg});
 			});
 		})
+
 	},
 	async mounted() {
+		window.addEventListener('offline', ()=>{
+	 	//网络由正常常到异常时触发
+	  	this.$Toast.success({message:'您的网络已断开，请检查网络设置。'})
+    });
+    window.addEventListener('online',()=>{
+		//从异常到正常时触发
+		this.$Toast.success({message:'正常尝试连接网络中，请稍等~'})
+    });
 		this.$nextTick(() => {
 			this.init();
 		})
+
 	},
 	computed: {
 		maxSlide() {
 			let maxSlide = Math.max(Math.ceil(this.members.length / this.playerNum), 1);
-			this.speaker && ++maxSlide;
-			this.sharer && ++maxSlide;
-			console.log('ddd', maxSlide);
+			(this.speaker || this.sharer) && ++maxSlide;
 			return maxSlide;
 		},
 		speakFlag() {
 			if (this.shareFlag) return this.speaker && this.slideCount === 2;
 			return this.speaker && this.slideCount === 1;
+			if (this.meetingInfo.mine.speaker === 1 && this.slideCount === 1) return true;
+			return this.speaker && this.slideCount === 1 && !this.sharer;
 		},
 		shareFlag() {
 			return this.sharer && this.slideCount === 1;
@@ -175,6 +182,10 @@ export default {
 			if (this.speakFlag || (this.speakFlag && this.slideCount === 2)) return true;
 			if (this.slideCount === 1) return true;
 			return false
+		membersNum() {
+			if (this.meetingInfo.mine.speaker) return this.members.length + 1;
+			if (this.speaker || this.sharer) return this.members.length + 1;
+			return this.members.length
 		},
 		howMany() {
 			if (this.members.length === 1) return 'fir';
@@ -186,11 +197,7 @@ export default {
 		},
 		realCount() {
 			let realCount = 0;
-			if (this.speakFlag && this.shareFlag) {
-				realCount = -2;
-			} else if (this.speakFlag || this.shareFlag) {
-				realCount = -1;
-			}
+			if (this.speaker || this.sharer) realCount = -1;
 			return Math.max(this.slideCount + realCount, 0);
 		},
 		nowPlayerNum() {
@@ -198,22 +205,6 @@ export default {
 		},
 	},
 	methods: {
-		// 实时获取当前电脑时间
-		_time() {
-		    // setInterval(() => {
-		        let t = new Date();
-		        let hour = t.getHours(); //得到小时
-		        let minu = t.getMinutes(); //得到分钟
-		        let sec = t.getSeconds(); //得到秒
-		        if (minu < 10) {
-		            minu = '0' + minu
-		        }
-		        if (sec < 10) {
-		            sec = '0' + sec
-		        }
-		        return hour + ':' + minu + ':' + sec
-		    // }, 1000)
-		},
 		share_status(){
 			this.isShowShare_ = false
 		},
@@ -238,7 +229,7 @@ export default {
 		},
 		prevSlide() {
 			this.slideCount !== 1 && --this.slideCount;
-		},
+ 		},
 		nextSlide() {
 			this.slideCount !== this.maxSlide && ++this.slideCount;
 		},
@@ -258,36 +249,23 @@ export default {
 							dom: this.$refs.draggable
 						})
 						.then(res => {
-							console.log(res)
 							if (res.code == 1) {
 								this.$Toast.success({message: '会议号错误'});
 								setTimeout(()=>{
-									window.location.href = 'http://localhost:8080/joinConference';
-								},2000)
+									window.location.href = 'https://http://182.61.17.228/joinConference';
+								}, 2000);
 								return
 							}else if (res.code == 2011) {
 								this.$Toast.success({message: '会议密码输入错误'});
 								setTimeout(()=>{
-									window.location.href = 'http://localhost:8080/joinConference';
-								},2000)
+									window.location.href = 'https://http://182.61.17.228/joinConference';
+								}, 2000);
 								return
 							}
 							this.waiting = false;
-						}).catch((e) => {
-							console.log('dfsdfsdf', e);
 						});
 				antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
 			});
-		}
-	},
-	watch: {
-		slideCount() {
-			this.$nextTick(() => {
-				this.$refs.players.forEach(item => {
-					item.paused()
-				})
-
-			})
 		}
 	}
 };
@@ -370,6 +348,9 @@ export default {
 		width: 100%;
 		height: 100%;
 		position: relative;
+		.dragNoCamera {
+			display: none;
+		}
 		.dragHasCamera {
 			position: absolute;
 			width: 100%;
@@ -412,7 +393,7 @@ export default {
   overflow: hidden;
 }
 .vjs-tech {
-  transform: translateZ(0);
+  transform: translateZ(0) !important;
 }
 button,
 .icon-close {
@@ -451,6 +432,10 @@ button,
 }
 .superFaster {
   transition-duration: 0.02s;
+}
+.video-js {
+	width: 100% !important;
+	height: 100% !important;
 }
 
 </style>

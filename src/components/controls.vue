@@ -5,8 +5,8 @@
 			<div class="center">
 				<span class="bigSpan">会议号：{{this.data.code}}</span>
 				<span class="bigSpan" v-if="data.pwd">密码：{{this.data.pwd}}</span>
-				<span>
-					{{this.data.name ? this.data.name : "没有名字哦"}}
+				<span v-show="this.data.name">
+					{{ this.data.name }}
 					<i v-if="this.data.locked" class="font_family icon-lock"></i>
 				</span>
 				<span>

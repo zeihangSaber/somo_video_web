@@ -50,7 +50,7 @@
 				></div>
 				<template v-if="meetingInfo.mine.speaker !== 1">
 					<player v-if="speakFlag && !shareFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
-					<player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo"></player>
+					<player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo" :isShare="true"></player>
 				</template>
 				<div v-if="waiting" class="waiting"><i class="font_family icon-camera-none"></i></div>
 			</div>
@@ -149,30 +149,25 @@ export default {
 	computed: {
 		maxSlide() {
 			let maxSlide = Math.max(Math.ceil(this.members.length / this.playerNum), 1);
-			this.speaker || this.sharer && ++maxSlide;
+			(this.speaker || this.sharer) && ++maxSlide;
 			return maxSlide;
 		},
 		speakFlag() {
+			if (this.meetingInfo.mine.speaker === 1 && this.slideCount === 1) return true;
 			return this.speaker && this.slideCount === 1 && !this.sharer;
 		},
 		shareFlag() {
 			return this.sharer && this.slideCount === 1;
 		},
-		mineFlag() {
-			if (this.meetingInfo.mine.speaker === 1) {
-				if (this.sharer) return 'boxOut';
-				if (this.slideCount !== 1) return 'boxOut';
-				return 'playerBox'
-			} else {
-				if (this.speaker || this.sharer && this.slideCount === 2) return 'playerBox';
-				if (!this.speaker && !this.sharer && this.slideCount === 1) return 'playerBox';
-			}
-			return 'boxOut';
+		membersNum() {
+			if (this.meetingInfo.mine.speaker) return this.members.length + 1;
+			if (this.speaker || this.sharer) return this.members.length + 1;
+			return this.members.length
 		},
 		howMany() {
-			if (this.members.length === 1) return 'fir';
-			if (this.shareFlag || this.speakFlag) return 'one';
-			if (this.members.length === 2) return 'two';
+			if (this.membersNum === 1) return 'fir';
+			if ((this.shareFlag || this.speakFlag) && this.slideCount === 1) return 'one';
+			if (this.membersNum === 2) return 'two';
 			if (this.playerNum === 4) return 'four';
 			if (this.playerNum === 9) return 'nine';
 			return 'fir'
@@ -181,6 +176,14 @@ export default {
 			let realCount = 0;
 			if (this.speaker || this.sharer) realCount = -1;
 			return Math.max(this.slideCount + realCount, 0);
+		},
+		mineFlag() {
+			if (this.sharer && this.meetingInfo.mine.speaker) return 'boxOut';
+			if (this.slideCount !== 1 && this.meetingInfo.mine.speaker) return 'boxOut';
+			if (this.meetingInfo.mine.speaker) return 'playerBox';
+			if ((this.speaker || this.sharer) && this.slideCount === 2) return 'playerBox';
+			if (!this.speaker && !this.sharer && this.slideCount === 1) return 'playerBox';
+			return 'boxOut';
 		},
 		nowPlayerNum() {
 			return Math.min(this.members.length - this.playerNum * (this.realCount - 1), this.playerNum)

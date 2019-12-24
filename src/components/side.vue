@@ -2,7 +2,7 @@
     <div class="myAside">
         <div class="head">
             <div class="volce">
-                <p class="name">{{this.data.name ? this.data.name : "没有名字哦"}}</p>
+                <p class="name" v-show="this.data.name">{{ this.data.name }}</p>
                 <p class="info">
                     <span class="code">会议号：{{this.data.code}}</span>
                     <span v-if="data.pwd">密码：{{this.data.pwd}}</span>

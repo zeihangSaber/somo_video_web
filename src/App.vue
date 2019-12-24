@@ -47,6 +47,7 @@
 					class="space playerBox"
 					v-if="!(speakFlag || shareFlag)"
 					v-for="item of playerNum - nowPlayerNum"
+					:key="item"
 				></div>
 				<player v-if="speakFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
 				<player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo"></player>
@@ -82,7 +83,7 @@ export default {
 		Player,
 		Ctrl,
 		SideBox,
-		share
+		share,
 	},
 	data() {
 		return {
@@ -102,7 +103,9 @@ export default {
 			shareData: {},
 			timer:'',
 			test: false,
-			waiting: true
+			waiting: true,
+			
+
 		};
 	},
 	beforeCreate() {
@@ -137,11 +140,21 @@ export default {
 				this.$Toast.success({message: msg});
 			});
 		})
+		
 	},
 	async mounted() {
+		window.addEventListener('offline', ()=>{
+	 	//网络由正常常到异常时触发
+	  	this.$Toast.success({message:'您的网络已断开，请检查网络设置。'})
+    });
+    window.addEventListener('online',()=>{
+		//从异常到正常时触发
+		this.$Toast.success({message:'正常尝试连接网络中，请稍等~'})
+    });
 		this.$nextTick(() => {
 			this.init();
 		})
+		
 	},
 	computed: {
 		maxSlide() {

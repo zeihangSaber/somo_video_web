@@ -5,24 +5,15 @@
             v-if="data.uid !== meetingInfo.mine.uid"
             :id="data.uid === meetingInfo.mine.uid ? 'mine' : ''"
     >
-        <div class="ctrlMiddle">
-            {{data.name ? data.name : "没有名字哦"}}
-            <i class="font_family icon-mic" v-if="data.mic === 0"></i>
-            <svg v-else class="icon" aria-hidden="true">
-                <use xlink:href="#icon-mic-no"></use>
-            </svg>
-            <div v-if="data.role === 4" class="tag">主持人</div>
-        </div>
-        <video ref="saber" class="video-js vjs-default-skin saber">
-            <source :src="data.url" type="rtmp/mp4" />
-        </video>
+        <player-status></player-status>
         <div :class="`${data.camera === 0 ? 'hasCamera' : 'noCamera'}`">
             <i class="font_family icon-camera-none"></i>
         </div>
     </div>
 </template>
 
-<script lang="ts">
+<script>
+    import playerStatus from "./playerStatus";
     export default {
         props: {
             data: {
@@ -43,47 +34,52 @@
                 player: null
             };
         },
+        components: {
+            playerStatus
+        },
         watch: {
-            data(data) {
-                clearTimeout(this.timer);
+            data() {
                 if (this.data.uid === this.meetingInfo.mine.uid) return;
-                // this.player && this.player.pause();
-                this.$nextTick(() => {
-                    this.player && this.player.pause();
-                    data.url && this.player && this.player.src(data.url ? data.url : '');
-                    data.url && this.player && this.player.load();
-                    data.url && this.player && this.player.play();
-                });
+                this.player && this.player.dispose();
+                if (!this.$refs.playerBox) return;
+                this.createVideo();
             }
         },
         mounted() {
             this.$nextTick(() => {
-                if (this.data.uid === this.meetingInfo.mine.uid) return;
-                this.player = window["videojs"](this.$refs.saber, {
-                    techOrder: ["flash"],
-                    aspectRatio: "16:9",
-                    preload: "none",
-                    autoplay: true,
-                    flash: {
-                        swf: "https://cdn.bootcss.com/videojs-swf/5.4.2/video-js.swf"
-                    },
-                    notSupportedMessage: '重置中，请稍后',
-                    poster: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1577103508780&di=beca8334ab9b7281d07c64b77addd67d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F4610b912c8fcc3cef70d70409845d688d53f20f7.jpg',
-                    techCanOverridePoster: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1577103508780&di=beca8334ab9b7281d07c64b77addd67d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F4610b912c8fcc3cef70d70409845d688d53f20f7.jpg'
-                }, () => {
-                    this.player.pause();
-                    this.data.url && this.player.src(this.data.url);
-                    this.data.url && this.player.play();
-                });
+                this.createVideo()
             });
         },
         methods: {
             paused() {
                 console.log('本该停止的');
+            },
+            createVideo() {
+                if (this.data.uid === this.meetingInfo.mine.uid) return;
+                let dom = document.createElement("video");
+                dom.className = "video-js vjs-default-skin";
+                this.$refs.playerBox.append(dom);
+                this.$nextTick(() => {
+                    this.player = window["videojs"](dom, {
+                        techOrder: ["flash"],
+                        aspectRatio: "16:9",
+                        preload: "none",
+                        autoplay: true,
+                        flash: {
+                            swf: "https://cdn.bootcss.com/videojs-swf/5.4.2/video-js.swf"
+                        },
+                        notSupportedMessage: '重置中，请稍后',
+                        poster: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1577103508780&di=beca8334ab9b7281d07c64b77addd67d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F4610b912c8fcc3cef70d70409845d688d53f20f7.jpg',
+                        techCanOverridePoster: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1577103508780&di=beca8334ab9b7281d07c64b77addd67d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F4610b912c8fcc3cef70d70409845d688d53f20f7.jpg'
+                    }, () => {
+                        this.player.pause();
+                        this.data.url && this.player.src(this.data.url);
+                        this.data.url && this.player.play();
+                    });
+                });
             }
         },
         beforeDestroy() {
-            clearTimeout(this.timer);
             this.data.uid !== this.meetingInfo.mine.uid && this.player.dispose();
         }
     };
@@ -129,8 +125,8 @@
         }
     }
     .video-js {
-        width: 100%;
-        height: 100%;
+        width: 100% !important;
+        height: 100% !important;
     }
     .hasCamera {
         display: none;

@@ -16,7 +16,6 @@
 				:shareData="shareData"
 				:slideCount="slideCount"
 				@handleMessage="handleMessage"
-				@ShowShare="ShowShare"
 				@handleParty="handleParty"
 				@prevSlide="prevSlide"
 				@nextSlide="nextSlide"
@@ -27,9 +26,9 @@
 				@selectSlide="(num) => slideCount = num"
 			></ctrl>
 			<div :class="`playerBigBox ${howMany}`" ref="playerBigBox">
-				<div :class="`dragBox ${mineFlag ? 'playerBox' : 'boxOut'}`">
+				<div :class="`dragBox ${mineFlag}`">
 					<div class="drag" ref="draggable">
-						<div :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
+						<div :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : 'dragNoCamera'}`">
 							<i class="font_family icon-camera-none"></i>
 						</div>
 					</div>
@@ -48,8 +47,10 @@
 					v-if="!(speakFlag || shareFlag)"
 					v-for="item of playerNum - nowPlayerNum"
 				></div>
-				<player v-if="speakFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
-				<player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo"></player>
+				<template v-if="meetingInfo.mine.speaker !== 1">
+					<player v-if="speakFlag && !shareFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
+					<player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo"></player>
+				</template>
 				<div v-if="waiting" class="waiting"><i class="font_family icon-camera-none"></i></div>
 			</div>
 			<share :isShowShare="isShowShare" :shareData="shareData"></share>
@@ -86,7 +87,11 @@ export default {
 	},
 	data() {
 		return {
-			meetingInfo: {},
+			meetingInfo: {
+				mine: {
+					speaker: 0
+				}
+			},
 			members: [],
 			peopleNum: 0,
 			micNum: 0,
@@ -109,9 +114,6 @@ export default {
 		window.onbeforeunload = (e) => {
 			e.returnValue=("确定离开当前页面吗？");
 		};
-		window.onclose = (e) => {
-			e.returnValue=("确定离开当前页面吗？");
-		};
 	},
 	created() {
 		antiquity.on('getMidInfo', meetingInfo => {
@@ -132,11 +134,9 @@ export default {
 		antiquity.on('getSpeaker', speaker => {
 			this.speaker = speaker;
 		});
-		this.$nextTick(() => {
-			antiquity.on('getToast', msg => {
-				this.$Toast.success({message: msg});
-			});
-		})
+		antiquity.on('getToast', msg => {
+			this.$Toast.success({message: msg});
+		});
 	},
 	async mounted() {
 		this.$nextTick(() => {
@@ -146,25 +146,25 @@ export default {
 	computed: {
 		maxSlide() {
 			let maxSlide = Math.max(Math.ceil(this.members.length / this.playerNum), 1);
-			this.speaker && ++maxSlide;
-			this.sharer && ++maxSlide;
+			this.speaker || this.sharer && ++maxSlide;
 			return maxSlide;
 		},
 		speakFlag() {
-			if (this.shareFlag) return this.speaker && this.slideCount === 2;
-			return this.speaker && this.slideCount === 1;
+			return this.speaker && this.slideCount === 1 && !this.sharer;
 		},
 		shareFlag() {
 			return this.sharer && this.slideCount === 1;
 		},
 		mineFlag() {
-			// if (this.members.length < 3) return false;
-			if (this.speaker && this.sharer && this.slideCount === 3) return true;
-			if (this.sharer && this.slideCount === 2) return true;
-			if (this.speaker && this.slideCount === 2) return true;
-			if (!this.sharer && !this.speaker && this.slideCount === 1) return true;
-			// if (this.slideCount === 1) return true;
-			return false
+			if (this.meetingInfo.mine.speaker === 1) {
+				if (this.sharer) return 'boxOut';
+				if (this.slideCount !== 1) return 'boxOut';
+				return 'playerBox'
+			} else {
+				if (this.speaker || this.sharer && this.slideCount === 2) return 'playerBox';
+				if (!this.speaker && !this.sharer && this.slideCount === 1) return 'playerBox';
+			}
+			return 'boxOut';
 		},
 		howMany() {
 			if (this.members.length === 1) return 'fir';
@@ -176,12 +176,7 @@ export default {
 		},
 		realCount() {
 			let realCount = 0;
-			if (this.speaker && this.sharer) {
-				realCount = -2;
-			} else if (this.speaker || this.sharer) {
-				realCount = -1;
-				console.log('!!!!!!!!!!!', realCount)
-			}
+			if (this.speaker || this.sharer) realCount = -1;
 			return Math.max(this.slideCount + realCount, 0);
 		},
 		nowPlayerNum() {
@@ -189,8 +184,6 @@ export default {
 		},
 	},
 	methods: {
-		ShowShare() {
-		},
 		handleSide() {
 			this.isShowSide = !this.isShowSide;
 		},
@@ -210,7 +203,7 @@ export default {
 		},
 		prevSlide() {
 			this.slideCount !== 1 && --this.slideCount;
-		},
+ 		},
 		nextSlide() {
 			this.slideCount !== this.maxSlide && ++this.slideCount;
 		},
@@ -234,13 +227,13 @@ export default {
 								this.$Toast.success({message: '会议号错误'});
 								setTimeout(()=>{
 									window.location.href = 'https://http://182.61.17.228/joinConference';
-								},2000)
+								}, 2000);
 								return
 							}else if (res.code == 2011) {
 								this.$Toast.success({message: '会议密码输入错误'});
 								setTimeout(()=>{
 									window.location.href = 'https://http://182.61.17.228/joinConference';
-								},2000)
+								}, 2000);
 								return
 							}
 							this.waiting = false;
@@ -329,6 +322,9 @@ export default {
 		width: 100%;
 		height: 100%;
 		position: relative;
+		.dragNoCamera {
+			display: none;
+		}
 		.dragHasCamera {
 			position: absolute;
 			width: 100%;
@@ -371,7 +367,7 @@ export default {
   overflow: hidden;
 }
 .vjs-tech {
-  transform: translateZ(0);
+  transform: translateZ(0) !important;
 }
 button,
 .icon-close {
@@ -409,6 +405,10 @@ button,
 }
 .superFaster {
   transition-duration: 0.02s;
+}
+.video-js {
+	width: 100% !important;
+	height: 100% !important;
 }
 
 </style>

@@ -269,7 +269,7 @@
 		left: 0;
 		top: 0;
 		width: 100%;
-		background-color: rgba(0, 0, 0, 0.6);
+		background-color: rgba(0, 0, 0, 1);
 		z-index: 9999;
 		color: #fff;
 		line-height: 36px;
@@ -404,6 +404,7 @@
   font-size: 20px;
 }
 .font_family:hover{
-	color: #DDDDDD;
+	cursor:pointer;
+	// color: #DDDDDD;
 }
 </style>

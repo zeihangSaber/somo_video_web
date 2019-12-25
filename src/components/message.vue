@@ -45,12 +45,19 @@
         data() {
             return {
                 time: '',
-                msgContent: ''
+                msgContent: '',
+				height:''
             }
         },
         mounted() {
             this._time()
         },
+		watch:{
+			message:function (newValue, oldVal) {
+			  // console.log( newValue, oldVal )
+			  this.Talk(2)
+			}
+		},
         computed: {
             disabled() {
                 let disabled;
@@ -78,18 +85,31 @@
             }
         },
         methods: {
-            Talk() {
-                setTimeout(() => {
-                    this.$refs.topBox.scrollTop = this.$refs.topBox_.offsetHeight;
-                }, 100)
+            Talk(type) {
+				// scrollTop + clientHeight == scrollHeight
+				// console.log(parseInt(this.$refs.topBox.scrollTop + this.$refs.topBox.clientHeight))
+				// console.log(this.$refs.topBox.scrollHeight)
+				this.height = parseInt(this.$refs.topBox.scrollTop + this.$refs.topBox.clientHeight)
+				if(type == 1){//自己发消息时触发
+					setTimeout(() => {
+					    this.$refs.topBox.scrollTop = this.$refs.topBox_.offsetHeight;
+					}, 100)
+					// console.log(this.height)
+				}else if(type == 2 && this.$refs.topBox.scrollHeight == this.height){
+					// alert(222)
+					setTimeout(() => {
+					    this.$refs.topBox.scrollTop = this.$refs.topBox_.offsetHeight;
+					}, 100)
+				}
+                
             },
             send_msg() {
-                this.Talk();
+                this.Talk(1);
 				event.preventDefault()
 				if(!Base64.encode(this.msgContent)){
 					return
 				}
-				console.log(this.meetingInfo)
+				// console.log(this.meetingInfo)
                 antiquity.ajax.broadcast({
                     "mid": this.meetingInfo.id,
                     "text": Base64.encode(this.msgContent)
@@ -158,6 +178,7 @@
         padding-bottom: 10px;
         .flex(space-between, center);
         .p {
+			cursor:pointer;
             .fontStyle(18px, #000, blod);
             padding-left: 10px;
             flex: 1;

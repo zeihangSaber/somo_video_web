@@ -1,31 +1,35 @@
 <template>
     <div id="app">
-        <div class="content" ref="content">
+        <div class="content" @mouseenter="Enter($event)" @mouseleave="Leave($event)" ref="content">
+           <transition enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <ctrl
-                    @handleSide="handleSide"
-                    :data="meetingInfo"
-                    :peopleNum="peopleNum"
-                    :micNum="micNum"
-                    :showSide="isShowSide"
-                    :showMessage="isShowMessage"
-                    :ShowShare="isShowShare"
-                    :showParty="isShowParty"
-                    :playerNum="playerNum"
-                    :barrage="barrage"
-                    :maxSlide="maxSlide"
-                    :shareData="shareData"
-                    :slideCount="slideCount"
-                    @handleMessage="handleMessage"
-                    @ShowShare="ShowShare"
-                    @handleParty="handleParty"
-                    @prevSlide="prevSlide"
-                    @nextSlide="nextSlide"
-                    @selectNine="() => (playerNum = 9)"
-                    @selectFour="() => (playerNum = 4)"
-                    @barrageTrue="() => (barrage = true)"
-                    @barrageFalse="() => (barrage = false)"
-                    @selectSlide="(num) => slideCount = num"
-            ></ctrl>
+                v-show="isShowCtrl"
+                @handleSide="handleSide"
+                :data="meetingInfo"
+                :peopleNum="peopleNum"
+                :micNum="micNum"
+                :showSide="isShowSide"
+                :showMessage="isShowMessage"
+                :ShowShare="isShowShare"
+                :showParty="isShowParty"
+                :playerNum="playerNum"
+                :barrage="barrage"
+                :maxSlide="maxSlide"
+                :shareData="shareData"
+                :slideCount="slideCount"
+                @handleMessage="handleMessage"
+                @ShowShare="ShowShare"
+                @handleParty="handleParty"
+                @prevSlide="prevSlide"
+                @nextSlide="nextSlide"
+                @selectNine="() => (playerNum = 9)"
+                @selectFour="() => (playerNum = 4)"
+                @barrageTrue="() => (barrage = true)"
+                @barrageFalse="() => (barrage = false)"
+                @selectSlide="(num) => slideCount = num"
+                ></ctrl>
+           </transition>
+            
             <div :class="`playerBigBox ${howMany}`" ref="playerBigBox">
                 <div :class="`dragBox ${mineFlag}`">
                     <div class="drag" ref="draggable">
@@ -37,7 +41,7 @@
                 </div>
                 <player
                         v-if="!(speakFlag || shareFlag)"
-                        v-for="item of nowPlayerNum"
+                        v-for="item in nowPlayerNum"
                         ref="players"
                         :key="item + 333"
                         :meetingInfo="meetingInfo"
@@ -101,6 +105,8 @@
                 members: [],
                 peopleNum: 0,
                 micNum: 0,
+                isShowCtrl: true,
+                showCtrlTime:"",
                 isShowSide: true,
                 isShowMessage: true,
                 isShowParty: true,
@@ -116,6 +122,7 @@
                 test: false,
                 waiting: true,
                 message: [],
+				upspring:0
             };
         },
         beforeCreate() {
@@ -125,6 +132,8 @@
         },
         created() {
             antiquity.on("getMsg", (msg) => {
+				console.log(msg)
+				msg.time = this._time()
                 this.message.push(msg)
             });
             antiquity.on('getMidInfo', meetingInfo => {
@@ -164,6 +173,9 @@
             this.$nextTick(() => {
                 this.init();
             })
+            this.showCtrlTime = setTimeout(()=>{
+                this.isShowCtrl = false
+            },3000)
 
         },
         computed: {
@@ -210,6 +222,22 @@
             },
         },
         methods: {
+			// 实时获取当前电脑时间
+			_time() {
+			    // setInterval(() => {
+			        let t = new Date();
+			        let hour = t.getHours(); //得到小时
+			        let minu = t.getMinutes(); //得到分钟
+			        let sec = t.getSeconds(); //得到秒
+			        if (minu < 10) {
+			            minu = '0' + minu
+			        }
+			        if (sec < 10) {
+			            sec = '0' + sec
+			        }
+			        return hour + ':' + minu + ':' + sec
+			    // }, 1000)
+			},
             share_status() {
                 this.isShowShare_ = false
             },
@@ -237,6 +265,15 @@
             },
             nextSlide() {
                 this.slideCount !== this.maxSlide && ++this.slideCount;
+            },
+            Enter(e){
+                clearTimeout(this.showCtrlTime)
+                this.isShowCtrl = true
+            },  
+            Leave(e){
+                this.showCtrlTime = setTimeout(()=>{
+                    this.isShowCtrl = false
+                },3000)
             },
             init() {
                 this.$nextTick(async () => {
@@ -279,14 +316,25 @@
 <style lang="less">
     @import "./common/base";
     @import "./common/common";
-
+		.videoBox{
+			width: 100%;
+			height: 100%;
+			background: #000000;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
     .playerBigBox {
-        height: 100%;
+		width: 100%;
+		height: 0;
+		background: #800080;
+		padding-bottom: 65.25%;
+		position: relative;
         overflow: hidden;
         .flex(flex-start, flex-start);
         align-content: flex-start;
         flex-wrap: wrap;
-
+		
         &.fir {
             .playerBox {
                 width: 0;

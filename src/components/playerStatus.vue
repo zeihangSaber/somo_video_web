@@ -18,9 +18,9 @@
 <style lang="less" scoped>
     @import "../common/common";
     .ctrlMiddle {
-        padding: 0 10px;
-        height: 40px;
-        line-height: 40px;
+        padding: 0 16px 0 12px;
+        height: 32px;
+        line-height: 32px;
         color: #fff;
         font-size: 16px;
         position: absolute;
@@ -39,7 +39,7 @@
         }
         .tag {
             .fontStyle(10px, #fff);
-            width: 50px;
+            width: 48px;
             height: 20px;
             line-height: 23px;
             text-align: center;

@@ -1,31 +1,35 @@
 <template>
     <div id="app">
-        <div class="content" ref="content">
+        <div class="content" @mouseenter="Enter($event)" @mouseleave="Leave($event)" ref="content">
+           <transition enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <ctrl
-                    @handleSide="handleSide"
-                    :data="meetingInfo"
-                    :peopleNum="peopleNum"
-                    :micNum="micNum"
-                    :showSide="isShowSide"
-                    :showMessage="isShowMessage"
-                    :ShowShare="isShowShare"
-                    :showParty="isShowParty"
-                    :playerNum="playerNum"
-                    :barrage="barrage"
-                    :maxSlide="maxSlide"
-                    :shareData="shareData"
-                    :slideCount="slideCount"
-                    @handleMessage="handleMessage"
-                    @ShowShare="ShowShare"
-                    @handleParty="handleParty"
-                    @prevSlide="prevSlide"
-                    @nextSlide="nextSlide"
-                    @selectNine="() => (playerNum = 9)"
-                    @selectFour="() => (playerNum = 4)"
-                    @barrageTrue="() => (barrage = true)"
-                    @barrageFalse="() => (barrage = false)"
-                    @selectSlide="(num) => slideCount = num"
-            ></ctrl>
+                v-show="isShowCtrl"
+                @handleSide="handleSide"
+                :data="meetingInfo"
+                :peopleNum="peopleNum"
+                :micNum="micNum"
+                :showSide="isShowSide"
+                :showMessage="isShowMessage"
+                :ShowShare="isShowShare"
+                :showParty="isShowParty"
+                :playerNum="playerNum"
+                :barrage="barrage"
+                :maxSlide="maxSlide"
+                :shareData="shareData"
+                :slideCount="slideCount"
+                @handleMessage="handleMessage"
+                @ShowShare="ShowShare"
+                @handleParty="handleParty"
+                @prevSlide="prevSlide"
+                @nextSlide="nextSlide"
+                @selectNine="() => (playerNum = 9)"
+                @selectFour="() => (playerNum = 4)"
+                @barrageTrue="() => (barrage = true)"
+                @barrageFalse="() => (barrage = false)"
+                @selectSlide="(num) => slideCount = num"
+                ></ctrl>
+           </transition>
+            
             <div :class="`playerBigBox ${howMany}`" ref="playerBigBox">
                 <div :class="`dragBox ${mineFlag}`">
                     <div class="drag" ref="draggable">
@@ -37,7 +41,7 @@
                 </div>
                 <player
                         v-if="!(speakFlag || shareFlag)"
-                        v-for="item of nowPlayerNum"
+                        v-for="item in nowPlayerNum"
                         ref="players"
                         :key="item + 333"
                         :meetingInfo="meetingInfo"
@@ -101,6 +105,8 @@
                 members: [],
                 peopleNum: 0,
                 micNum: 0,
+                isShowCtrl: true,
+                showCtrlTime:"",
                 isShowSide: true,
                 isShowMessage: true,
                 isShowParty: true,
@@ -164,6 +170,9 @@
             this.$nextTick(() => {
                 this.init();
             })
+            this.showCtrlTime = setTimeout(()=>{
+                this.isShowCtrl = false
+            },3000)
 
         },
         computed: {
@@ -237,6 +246,15 @@
             },
             nextSlide() {
                 this.slideCount !== this.maxSlide && ++this.slideCount;
+            },
+            Enter(e){
+                clearTimeout(this.showCtrlTime)
+                this.isShowCtrl = true
+            },  
+            Leave(e){
+                this.showCtrlTime = setTimeout(()=>{
+                    this.isShowCtrl = false
+                },3000)
             },
             init() {
                 this.$nextTick(async () => {

@@ -37,12 +37,13 @@ export default {
 <style lang="less" scoped>
 @import "../common/common";
 .myAside {
-    width: 400px !important;
+    width: 320px !important;
     background-color: #f4f4f4;
     height: 100%;
     .flex(space-around, flex-start);
     flex-direction: column;
     .head {
+		display: none !important;
         height: 100px;
         width: 100%;
         padding: 20px;

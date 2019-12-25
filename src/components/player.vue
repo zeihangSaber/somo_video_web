@@ -75,8 +75,8 @@
                             swf: "https://cdn.bootcss.com/videojs-swf/5.4.2/video-js.swf"
                         },
                         notSupportedMessage: '重置中，请稍后',
-                        poster: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1577103508780&di=beca8334ab9b7281d07c64b77addd67d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F4610b912c8fcc3cef70d70409845d688d53f20f7.jpg',
-                        techCanOverridePoster: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1577103508780&di=beca8334ab9b7281d07c64b77addd67d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F4610b912c8fcc3cef70d70409845d688d53f20f7.jpg'
+                        poster: 'https://182.61.17.228/common/poster.png',
+                        techCanOverridePoster: 'https://182.61.17.228/common/poster.png'
                     }, () => {
                         this.player.pause();
                         this.src && this.player.src(this.src);

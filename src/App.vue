@@ -29,10 +29,10 @@
             <div :class="`playerBigBox ${howMany}`" ref="playerBigBox">
                 <div :class="`dragBox ${mineFlag}`">
                     <div class="drag" ref="draggable">
-                        <div :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
+                        <div v-if="meetingInfo.mine && meetingInfo.mine.camera === 0" :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
                             <i class="font_family icon-camera-none"></i>
                         </div>
-                        <player-status :data="meetingInfo.mine"></player-status>
+                        <player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
                     </div>
                 </div>
                 <player
@@ -187,7 +187,7 @@
             howMany() {
                 if (this.membersNum === 1) return 'fir';
                 if ((this.shareFlag || this.speakFlag) && this.slideCount === 1) return 'one';
-                if (this.membersNum === 2) return 'two';
+                if (!(this.shareFlag || this.speakFlag) && this.membersNum === 2) return 'two';
                 if (this.playerNum === 4) return 'four';
                 if (this.playerNum === 9) return 'nine';
                 return 'fir'

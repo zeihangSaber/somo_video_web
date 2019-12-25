@@ -1,5 +1,5 @@
 <template>
-    <div class="myAside">
+    <div class="myAside"  v-if=" showParty|| showMessage">
         <div class="head">
             <div class="volce">
                 <p class="name" v-show="this.data.name">{{ this.data.name }}</p>

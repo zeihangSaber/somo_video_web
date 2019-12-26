@@ -13,6 +13,7 @@
         <div :class="`${data.camera === 0 ? 'hasCamera' : 'noCamera'}`">
             <i class="font_family icon-camera-none"></i>
         </div>
+		<player-status v-if="mineFlag !== 'two'" :data="{name:data.name}"></player-status>
         <div class="holder"></div>
     </div>
 </template>
@@ -155,7 +156,7 @@
             font-size: 18px;
             position: absolute;
             left: 0;
-            top: 50px;
+            top: 0px;
             background-color: rgba(0, 0, 0, 0.6);
             border-radius: 0 20px 20px 0;
             z-index: 9999;

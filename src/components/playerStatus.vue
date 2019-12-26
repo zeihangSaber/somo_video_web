@@ -31,7 +31,7 @@
         font-size: 16px;
         position: absolute;
         left: 0;
-        top: 50px;
+        top: 0px;
         background-color: rgba(0, 0, 0, 0.6);
         border-radius: 0 20px 20px 0;
         z-index: 9999;

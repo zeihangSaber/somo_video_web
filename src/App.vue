@@ -31,15 +31,21 @@
                 @selectSlide="(num) => slideCount = num"
                 ></ctrl>
            </transition>
-			<div style="width: 100%;height: 100vh;background: #ffffff;display: flex;justify-content: center;align-items: center;">
+			<div style="width: 100%;height: 100vh;background: #000000;display: flex;justify-content: center;align-items: center;">
 				<div :class="`playerBigBox ${howMany}`" ref="playerBigBox">
-				    <div :class="`dragBox ${mineFlag}`" style="height: 50%;">
-				        <div class="drag" ref="draggable">
-				            <div v-if="meetingInfo.mine && meetingInfo.mine.camera === 0" :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
-				                <i class="font_family icon-camera-none"></i>
-				            </div>
-				            <player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
-				        </div>
+				    <div :class="`dragBox ${mineFlag}`"style="display: flex;position: relative;">
+						<div style="width: 0;padding-bottom: 56%;border: 1px solid red;"></div>
+						<div style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;overflow: hidden;">
+							<player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
+							<div style="width: 133.33%;height: 133.33%;">
+								<div class="drag" ref="draggable">
+									<div v-if="meetingInfo.mine && meetingInfo.mine.camera === 0" :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
+										<!-- <i class="font_family icon-camera-none"></i> -->
+									</div>
+								</div>
+							</div>
+						</div>
+						
 				    </div>
 				    <player
 				            v-if="!(speakFlag || shareFlag)"
@@ -50,11 +56,7 @@
 				            :hawMany="howMany"
 				            :data="members[playerNum * (realCount - 1) + item - 1]">
 				    </player>
-				    <div
-				            class="space playerBox"
-				            v-if="!(speakFlag || shareFlag)"
-				            v-for="item of playerNum - nowPlayerNum"
-				    ></div>
+				    <div class="space playerBox" v-if="!(speakFlag || shareFlag)" v-for="item of playerNum - nowPlayerNum"></div>
 			</div>
             
                 <template v-if="meetingInfo.mine.speaker !== 1">
@@ -360,7 +362,7 @@
     .playerBigBox {
 		width: 100%;
 		height: 0;
-		background: #800080;
+		background: #000000;
 		padding-bottom: 56.25%;
 		position: relative;
         overflow: hidden;
@@ -410,7 +412,7 @@
 
             .dragBox {
                 width: 49.8%;
-                height: 49.8%;
+                // height: 49.8%;
             }
         }
 

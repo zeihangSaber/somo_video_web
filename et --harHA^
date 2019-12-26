@@ -1,0 +1,239 @@
+[33mcommit 4397b92b0a4e8b3ddd6bed29ee77be11264e8f1b[m
+Author: 王伟忠 <601289650@qq.com>
+Date:   Thu Dec 26 14:38:56 2019 +0800
+
+    12/26-1
+
+[33mcommit c4f0a243cd145d1529eb896cf40274ed822ed0df[m
+Merge: 0d74505 8e2da62
+Author: 王伟忠 <601289650@qq.com>
+Date:   Wed Dec 25 18:44:40 2019 +0800
+
+    12/25-1
+
+[33mcommit 0d7450558b1dbaa7b79a37ab395f4f40ed858bc8[m
+Merge: 7c24dbc 320c067
+Author: 王伟忠 <601289650@qq.com>
+Date:   Wed Dec 25 18:42:39 2019 +0800
+
+    12/25-1
+
+[33mcommit 8e2da6229435dc2fe7d212aa1694bd3fe809f1da[m
+Author: wangning <wangning@somo.tech>
+Date:   Wed Dec 25 18:37:21 2019 +0800
+
+    优化
+
+[33mcommit 7c24dbc07ceb68551dcc0d886e057509025c842a[m
+Author: 王伟忠 <601289650@qq.com>
+Date:   Tue Dec 24 20:21:55 2019 +0800
+
+    12/24-6
+
+[33mcommit 320c067460164525d664b0da7397f970216be15a[m
+Author: wangning <wangning@somo.tech>
+Date:   Tue Dec 24 19:37:16 2019 +0800
+
+    默认头像
+
+[33mcommit df397007e1d47fea455fd3f8bed4a8fdad6df9f4[m
+Author: zeihang <zeihang@sina.com>
+Date:   Tue Dec 24 19:35:24 2019 +0800
+
+    33
+
+[33mcommit feeec4fa6d158832b4c54e4b5e6a182613ad7811[m
+Merge: 8a462c1 f9a6457
+Author: zeihang <zeihang@sina.com>
+Date:   Tue Dec 24 19:35:13 2019 +0800
+
+    Merge branch 'meeting' of http://192.168.1.10:10101/r/somo_video_web into meeting
+    
+    # Conflicts:
+    #       src/App.vue
+
+[33mcommit 8a462c109333581ec4e18a4162dc8c290126ce5c[m
+Author: zeihang <zeihang@sina.com>
+Date:   Tue Dec 24 19:32:54 2019 +0800
+
+    123
+
+[33mcommit f9a64576a5788fcda704b81be1c0a6ad6a84fbe6[m
+Author: 王伟忠 <601289650@qq.com>
+Date:   Tue Dec 24 19:32:17 2019 +0800
+
+    12/24-5
+
+[33mcommit 795abf7d3bfc75c3b5459b020220ddcecd591a76[m
+Merge: b8a2277 15e6663
+Author: 王伟忠 <601289650@qq.com>
+Date:   Tue Dec 24 19:29:09 2019 +0800
+
+    12/24-4
+
+[33mcommit b8a2277ec549420c78f77c42d1a59427c94d8b7f[m
+Author: 王伟忠 <601289650@qq.com>
+Date:   Tue Dec 24 19:27:43 2019 +0800
+
+    12/24-4
+
+[33mcommit 15e66638074168310b71f174536285afa7803fc5[m
+Author: wangning <wangning@somo.tech>
+Date:   Tue Dec 24 19:27:17 2019 +0800
+
+    名称优化
+
+[33mcommit 5241d09ec1de612143efb5487de14201b7dafa47[m
+Author: zeihang <zeihang@sina.com>
+Date:   Tue Dec 24 19:08:07 2019 +0800
+
+    no message
+
+[33mcommit deef224e4d692e46a3181a16604522bcb767919a[m
+Merge: 083fc33 cbd7d2a
+Author: 王伟忠 <601289650@qq.com>
+Date:   Tue Dec 24 18:56:08 2019 +0800
+
+    12/24-3
+
+[33mcommit 083fc334b6dd14b1e8b6dcdfed4a8319856f02ca[m
+Author: 王伟忠 <601289650@qq.com>
+Date:   Tue Dec 24 18:51:13 2019 +0800
+
+    12/24-3
+
+[33mcommit cbd7d2a1e9c6d549df20bfc9d32f61b659aae8fb[m
+Merge: aeab1bb 62490ce
+Author: zeihang <zeihang@sina.com>
+Date:   Tue Dec 24 18:24:46 2019 +0800
+
+    Merge branch 'meeting' of http://192.168.1.10:10101/r/somo_video_web into meeting
+    
+    # Conflicts:
+    #       src/App.vue
+
+[33mcommit aeab1bb16b18b6117157609f836916825e6b043c[m
+Author: zeihang <zeihang@sina.com>
+Date:   Tue Dec 24 18:15:10 2019 +0800
+
+    123
+
+[33mcommit 62490cefb4ae19a1c520425a169a422cff446ce8[m
+Author: 王伟忠 <601289650@qq.com>
+Date:   Tue Dec 24 16:11:21 2019 +0800
+
+    12/24-2
+
+[33mcommit 6e3b0a9aeb0d014579fb25a11f8f8ec4a92e999f[m
+Merge: 6248f36 357dee3
+Author: 王伟忠 <601289650@qq.com>
+Date:   Tue Dec 24 15:23:57 2019 +0800
+
+    12/24-1
+
+[33mcommit d3d5e6433a4b719648f4f77d974354e0a8f7cfff[m
+Author: zeihang <zeihang@sina.com>
+Date:   Tue Dec 24 15:23:56 2019 +0800
+
+    heihei
+
+[33mcommit 6248f3663187f6d37697916b5e07b639180ebc5e[m
+Author: 王伟忠 <601289650@qq.com>
+Date:   Tue Dec 24 15:22:37 2019 +0800
+
+    12/24-1
+
+[33mcommit 357dee3704af63da08bf9c7cf6f461d1e4c2dbd1[m
+Merge: 726cccd 4485ad7
+Author: wangning <wangning@somo.tech>
+Date:   Tue Dec 24 15:21:27 2019 +0800
+
+    合并
+
+[33mcommit 726cccd6e40f7d488008bf4988659788deece9cb[m
+Author: wangning <wangning@somo.tech>
+Date:   Tue Dec 24 15:20:59 2019 +0800
+
+    合并
+
+[33mcommit 4485ad78a13b8a7fdc6520fca694c735cf2d1bc2[m
+Author: zeihang <zeihang@sina.com>
+Date:   Tue Dec 24 15:20:18 2019 +0800
+
+    123
+
+[33mcommit 02a1f99e18b1b149e5da2f4ad0e075b7b07cb1cd[m
+Author: zeihang <zeihang@sina.com>
+Date:   Tue Dec 24 14:40:11 2019 +0800
+
+    unknow
+
+[33mcommit fb55889d00ee53f231a0d5633561e40aedb1082e[m
+Merge: 2efab2e 92d3080
+Author: zeihang <zeihang@sina.com>
+Date:   Mon Dec 23 21:16:10 2019 +0800
+
+    Merge branch 'meeting' of http://192.168.1.10:10101/r/somo_video_web into meeting
+
+[33mcommit 2efab2eb0e0eed7ee5e5fc355874baeb47307b9e[m
+Author: zeihang <zeihang@sina.com>
+Date:   Mon Dec 23 21:16:04 2019 +0800
+
+    11
+
+[33mcommit 92d3080d8e1157e4c91bc86a54eafda04210f9ce[m
+Author: wangning <wangning@somo.tech>
+Date:   Mon Dec 23 21:15:29 2019 +0800
+
+    参会列表ui
+
+[33mcommit da180065ba712db47b6e93359961d611185d0078[m
+Author: zeihang <zeihang@sina.com>
+Date:   Mon Dec 23 20:31:36 2019 +0800
+
+    ff
+
+[33mcommit 8ed9330f9868ede0c93551235859679e33959768[m
+Merge: 05153b0 c908c9b
+Author: zeihang <zeihang@sina.com>
+Date:   Mon Dec 23 20:27:36 2019 +0800
+
+    Merge branch 'meeting' of http://192.168.1.10:10101/r/somo_video_web into meeting
+
+[33mcommit 05153b01e60a1cf6556cc53096034f844997b78b[m
+Author: zeihang <zeihang@sina.com>
+Date:   Mon Dec 23 20:27:29 2019 +0800
+
+    ff
+
+[33mcommit c908c9bcdc28ab75fdc950a9c8ad5909586e9574[m
+Merge: 8ff19df 0a40f85
+Author: 王伟忠 <601289650@qq.com>
+Date:   Mon Dec 23 20:26:45 2019 +0800
+
+    Merge branch 'meeting' of http://192.168.1.10:10101/r/somo_video_web into meeting
+
+[33mcommit 8ff19df594a3e0c6218a2ea1300e16e9f24e4ec0[m
+Author: 王伟忠 <601289650@qq.com>
+Date:   Mon Dec 23 20:26:40 2019 +0800
+
+    12/23-10
+
+[33mcommit 0a40f85b94a62e052f1819804c5ea5c09bf5da79[m
+Author: wangning <wangning@somo.tech>
+Date:   Mon Dec 23 20:25:42 2019 +0800
+
+    合并
+
+[33mcommit cc8715deb6c10b188093f52fc56aa17c57bfddb3[m
+Merge: 48a1fe7 0b713bc
+Author: wangning <wangning@somo.tech>
+Date:   Mon Dec 23 18:36:04 2019 +0800
+
+    Merge branch 'meeting' of ssh://192.168.1.10:29418/somo_video_web into meeting
+
+[33mcommit 0b713bc7ca570c8e908d109d65f25d13be398773[m
+Author: zeihang <zeihang@sina.com>
+Date:   Mon Dec 23 18:00:32 2019 +0800
+
+    hei hei

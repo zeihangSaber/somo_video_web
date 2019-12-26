@@ -2,48 +2,50 @@
     <div id="app">
         <div class="content" @mouseenter="Enter($event)" @mouseleave="Leave($event)" ref="content">
            <transition enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
-				<ctrl
-					v-show="isShowCtrl"
-					@handleSide="handleSide"
-					:data="meetingInfo"
-					:peopleNum="peopleNum"
-					:micNum="micNum"
-					:showSide="isShowSide"
-					:showMessage="isShowMessage"
-					:ShowShare="isShowShare"
-					:showParty="isShowParty"
-					:playerNum="playerNum"
-					:barrage="barrage"
-					:maxSlide="maxSlide"
-					:shareData="shareData"
-					:slideCount="slideCount"
-					@handleMessage="handleMessage"
-					@ShowShare="ShowShare"
-					@handleParty="handleParty"
-					@prevSlide="prevSlide"
-					@nextSlide="nextSlide"
-					@selectNine="() => (playerNum = 9)"
-					@selectFour="() => (playerNum = 4)"
-					@barrageTrue="() => (barrage = true)"
-					@barrageFalse="() => (barrage = false)"
-					@selectSlide="(num) => slideCount = num"
-					></ctrl>
+            <ctrl
+                v-show="isShowCtrl"
+                @handleSide="handleSide"
+                :data="meetingInfo"
+                :peopleNum="peopleNum"
+                :micNum="micNum"
+                :showSide="isShowSide"
+                :changeScreen="changeScreen"
+                :showMessage="isShowMessage"
+                :ShowShare="isShowShare"
+                :showParty="isShowParty"
+                :playerNum="playerNum"
+                :barrage="barrage"
+                :maxSlide="maxSlide"
+                :shareData="shareData"
+                :slideCount="slideCount"
+                @handleMessage="handleMessage"
+                @ShowShare="ShowShare"
+                @handleParty="handleParty"
+                @prevSlide="prevSlide"
+                @nextSlide="nextSlide"
+                @LeaveMeeting="LeaveMeeting"
+                @selectNine="() => (playerNum = 9)"
+                @selectFour="() => (playerNum = 4)"
+                @barrageTrue="() => (barrage = true)"
+                @barrageFalse="() => (barrage = false)"
+                @selectSlide="(num) => slideCount = num"
+                ></ctrl>
            </transition>
-            <div class="videoBox">
+			<div style="width: 100%;height: 100vh;background: #ffffff;display: flex;justify-content: center;align-items: center;">
 				<div :class="`playerBigBox ${howMany}`" ref="playerBigBox">
-				    <div :class="`dragBox ${mineFlag}`">
+				    <div :class="`dragBox ${mineFlag}`" style="height: 50%;">
 				        <div class="drag" ref="draggable">
-				            <div :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
+				            <div v-if="meetingInfo.mine && meetingInfo.mine.camera === 0" :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
 				                <i class="font_family icon-camera-none"></i>
 				            </div>
-				            <player-status :data="meetingInfo.mine"></player-status>
+				            <player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
 				        </div>
 				    </div>
 				    <player
 				            v-if="!(speakFlag || shareFlag)"
 				            v-for="item in nowPlayerNum"
 				            ref="players"
-				            :key="item + 333"
+				            :key="members[playerNum * (realCount - 1) + item - 1].uid"
 				            :meetingInfo="meetingInfo"
 				            :hawMany="howMany"
 				            :data="members[playerNum * (realCount - 1) + item - 1]">
@@ -54,6 +56,7 @@
 				            v-for="item of playerNum - nowPlayerNum"
 				    ></div>
 			</div>
+            
                 <template v-if="meetingInfo.mine.speaker !== 1">
                     <player v-if="speakFlag && !shareFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
                     <player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo" :isShare="true"></player>
@@ -64,7 +67,6 @@
         </div>
         <transition enter-active-class="animated bounceIn faster" leave-active-class="animated bounceOut faster">
             <side-box
-                    v-if="isShowSide"
                     :data="meetingInfo"
                     :members="speaker ? [speaker, ...members] : members"
                     :showMessage="isShowMessage"
@@ -108,6 +110,7 @@
                 micNum: 0,
                 isShowCtrl: true,
                 showCtrlTime:"",
+                changeScreen: false,
                 isShowSide: true,
                 isShowMessage: true,
                 isShowParty: true,
@@ -182,7 +185,10 @@
             this.showCtrlTime = setTimeout(()=>{
                 this.isShowCtrl = false
             },3000)
+            document.addEventListener("fullscreenchange",()=>{
+                this.changeScreen =!this.changeScreen
 
+            })
         },
         computed: {
             maxSlide() {
@@ -205,7 +211,7 @@
             howMany() {
                 if (this.membersNum === 1) return 'fir';
                 if ((this.shareFlag || this.speakFlag) && this.slideCount === 1) return 'one';
-                if (this.membersNum === 2) return 'two';
+                if (!(this.shareFlag || this.speakFlag) && this.membersNum === 2) return 'two';
                 if (this.playerNum === 4) return 'four';
                 if (this.playerNum === 9) return 'nine';
                 return 'fir'
@@ -250,7 +256,21 @@
             ShowShare() {
             },
             handleSide() {
-                this.isShowSide = !this.isShowSide;
+                if(this.changeScreen){
+                    const el = document
+                    const cfs = el.cancalFullScreen || el.webkitCancelFullScreen || el.mozCancelFullScreen || el.exitFullscreen
+                    if(typeof cfs !="undefined" && cfs){
+                       cfs.call(el)
+                    }
+                    return
+                }else{
+                    const el = document.documentElement;
+                    const rfs = el.requestFullscreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullScreen;
+                    if(typeof rfs !== "undefined" && rfs){
+                        rfs.call(el)
+                    }
+                    return
+                }
             },
             handleMessage() {
                 this.isShowMessage = !this.isShowMessage;
@@ -275,11 +295,16 @@
             Enter(e){
                 clearTimeout(this.showCtrlTime)
                 this.isShowCtrl = true
-            },  
+            },
             Leave(e){
                 this.showCtrlTime = setTimeout(()=>{
                     this.isShowCtrl = false
                 },3000)
+            },
+            LeaveMeeting(){
+                antiquity.leaveMeeting()
+                console.log('离开会议',antiquity)
+                window.location.href = 'http://localhost:8080/joinConference';
             },
             init() {
                 this.$nextTick(async () => {
@@ -336,13 +361,13 @@
 		width: 100%;
 		height: 0;
 		background: #800080;
-		padding-bottom: 65.25%;
+		padding-bottom: 56.25%;
 		position: relative;
         overflow: hidden;
         .flex(flex-start, flex-start);
         align-content: flex-start;
         flex-wrap: wrap;
-		
+
         &.fir {
             .playerBox {
                 width: 0;
@@ -358,14 +383,12 @@
         &.one {
             .playerBox {
                 width: 100%;
-                height: 100%;
             }
         }
 
         &.two {
             .playerBox {
                 width: 100%;
-                height: 100%;
             }
 
             .dragBox {
@@ -382,7 +405,6 @@
         &.four {
             .playerBox {
                 width: 49.8%;
-                height: 49.8%;
                 margin: 0.1%;
             }
 
@@ -395,7 +417,6 @@
         &.nine {
             .playerBox {
                 width: 33.133%;
-                height: 33.133%;
                 margin: 0.1%;
             }
 
@@ -407,7 +428,6 @@
 
         .playerBox {
             width: 50%;
-            height: 50%;
             .flex(center, center);
             overflow: hidden;
             background-color: #444;
@@ -474,7 +494,7 @@
         overflow: hidden;
     }
 
-    .vjs-tech {
+    .vjs-tech>object {
         transform: translateZ(0) !important;
     }
 

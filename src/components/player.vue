@@ -1,14 +1,19 @@
 <template>
     <div
-            class="playerBox"
-            ref="playerBox"
-            v-if="data.uid !== meetingInfo.mine.uid"
-            :id="data.uid === meetingInfo.mine.uid ? 'mine' : ''"
+        class="playerBox"
+        ref="playerBox"
+        v-if="data.uid !== meetingInfo.mine.uid"
+        :id="data.uid === meetingInfo.mine.uid ? 'mine' : ''"
     >
-        <player-status :data="data"></player-status>
+<!--        <player-status :data="data"></player-status>-->
+        <div class="grail">
+            <div :id="`player_${data.uid}_tc`" class="vjs-tech"></div>
+            <div :id="`player_${data.uid}_ali`" class="vjs-tech"></div>
+        </div>
         <div :class="`${data.camera === 0 ? 'hasCamera' : 'noCamera'}`">
             <i class="font_family icon-camera-none"></i>
         </div>
+        <div class="holder"></div>
     </div>
 </template>
 
@@ -32,33 +37,38 @@
         },
         data() {
             return {
-                player: null
+                player: null,
+                count: 0
             };
         },
         components: {
             playerStatus
         },
         watch: {
-            data() {
-                if (this.data.uid === this.meetingInfo.mine.uid) return;
-                this.player && this.player.dispose();
-                if (!this.$refs.playerBox) return;
-                this.createVideo();
+            src() {
+                this.reset()
             }
         },
         computed: {
             src() {
+                console.log(`~~~~~~~~~~~~~~~, 流地址发生变化`);
                 return this.isShare ? this.data.shareUrl : this.data.url
             }
         },
         mounted() {
             this.$nextTick(() => {
-                this.createVideo()
+                // this.tcPlayer();
+                this.Aliplayer();
             });
         },
         methods: {
-            paused() {
-                console.log('本该停止的');
+            reset() {
+                if (this.data.uid === this.meetingInfo.mine.uid) return;
+                this.player && this.player.dispose();
+                if (!this.$refs.playerBox) return;
+                this.$nextTick(() => {
+                    this.Aliplayer();
+                });
             },
             createVideo() {
                 if (this.data.uid === this.meetingInfo.mine.uid) return;
@@ -75,13 +85,55 @@
                             swf: "https://cdn.bootcss.com/videojs-swf/5.4.2/video-js.swf"
                         },
                         notSupportedMessage: '重置中，请稍后',
-                        poster: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1577103508780&di=beca8334ab9b7281d07c64b77addd67d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F4610b912c8fcc3cef70d70409845d688d53f20f7.jpg',
-                        techCanOverridePoster: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1577103508780&di=beca8334ab9b7281d07c64b77addd67d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F4610b912c8fcc3cef70d70409845d688d53f20f7.jpg'
+                        poster: 'https://182.61.17.228/common/poster.png',
+                        techCanOverridePoster: 'https://182.61.17.228/common/poster.png'
                     }, () => {
                         this.player.pause();
                         this.src && this.player.src(this.src);
-                        this.src && this.player.play();
+                        this.src && this.player.replay();
                     });
+                });
+            },
+            Aliplayer() {
+                this.$nextTick(() => {
+                    this.player = new Aliplayer({
+                        "id": `player_${this.data.uid}_ali`,
+                        "source": this.src,
+                        // "width": `800px`,
+                        // "height": `450px`,
+                        "width": `${100 *16 / 12}%`,
+                        "height": `${100 *16 / 12}%`,
+                        // "rtmpBufferLength": 0,
+                        "autoplay": true,
+                        "isLive": true,
+                        "useFlashPrism": true,
+                        "definition": "FD",
+                        "autoPlayDelay": 0,
+                        "controlBarVisibility": "click"
+                    });
+                    this.player.on("liveStreamStop", () => {
+                        console.log("error~~~~~~~~~~~~~~~~~~~, 没有取到播放源");
+                        if (this.count === 3) {
+                            this.count = 0;
+                            this.reset();
+                            console.log('error~~~~~~~~~~~~~~~~~~~, 重置播放器')
+                        } else {
+                            ++this.count;
+                            this.player.pause();
+                            this.player.play();
+                        }
+                    })
+
+                });
+            },
+            tcPlayer() {
+                this.player = new TcPlayer(`player_${this.data.uid}_tc`, {
+                    "rtmp": this.src, //请替换成实际可用的播放地址
+                    "autoplay" : true,
+                    "live": true,
+                    "poster" : "http://www.test.com/myimage.jpg",
+                    "width" :  `800`,
+                    "height" : `450`
                 });
             }
         },
@@ -94,9 +146,6 @@
 <style lang="less" scoped>
     @import "../common/common";
     .playerBox {
-        width: 33.3%;
-        height: 33.3%;
-        background-color: bisque;
         position: relative;
         .ctrlMiddle {
             padding: 0 16px 0 12px;
@@ -129,10 +178,13 @@
                 margin-left: 5px;
             }
         }
+        .holder {
+            padding-bottom: 56.25%;
+            width: 0;
+        }
     }
-    .video-js {
-        width: 100% !important;
-        height: 100% !important;
+    .vjs-tech {
+        background-color: #444;
     }
     .hasCamera {
         display: none;
@@ -150,5 +202,15 @@
             font-size: 80px;
             color: #666;
         }
+    }
+    .grail {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: #444;
+        .flex(center, center);
+        overflow: hidden;
     }
 </style>

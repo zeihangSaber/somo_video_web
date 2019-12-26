@@ -59,9 +59,12 @@
 				<button @click="() => showSetting = !showSetting">
 					<i :class="`font_family icon-setting ${showSetting ? 'active' : ''}`"></i>设置
 				</button>
+				<button @click="$emit('LeaveMeeting')">
+					<i style="color:#FF5245" class="font_family icon-tuichu-normal "></i>离开
+				</button>
 			</div>
 			<button class="zoomIn" @click="$emit('handleSide')">
-				<i :class="`font_family ${showSide ? 'icon-zoomIn' : 'icon-zoomOut'}`"></i>
+				<i :class="`font_family ${changeScreen ? 'icon-zoomOut' : 'icon-zoomIn'}`"></i>
 			</button>
 		</div>
 		<transition enter-active-class="animated flipInY fast" leave-active-class="animated flipOutY fast">
@@ -134,6 +137,7 @@
 			"peopleNum",
 			"micNum",
 			"showSide",
+			"changeScreen",
 			"showMessage",
 			"showParty",
 			"playerNum",

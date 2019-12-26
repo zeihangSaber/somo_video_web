@@ -61,102 +61,97 @@
                 </div>
               </button>
               <div class="noPermissionBtn">
-                <i
-                  class=""
-                  :class="
-                    `font_family  ${
-                      item.camera === 0
-                        ? 'icon-camera-user'
-                        : 'icon-camera-user-no'
-                    }`
-                  "
-                ></i>
-              </div>
-              <div class="noPermissionBtn">
-                <i
-                  :class="
-                    `font_family ${
-                      item.mic === 0 ? 'icon-user-mic' : 'icon-user-mic-no'
-                    }`
-                  "
-                ></i>
-              </div>
-            </div>
-            <div
-              v-if="search !== ''"
-              class="item"
-              v-for="item of s_members"
-              :key="item.uid"
-              @mouseenter="enter($event)"
-              @mouseleave="leave($event)"
-            >
-              <img :src="item.avarter" />
-              <p>
-                <span>{{ item.name }}</span>
-                <span v-if="item.role === 4" class="handle">主持人</span>
-                <span v-if="item.speaker === 1" class="speaker">主讲</span>
-              </p>
-              <button
-                v-if="item.role !== 4"
-                class="permissionBtn"
-                @click="setMic(item)"
-              >
-                {{ item.mic === 1 ? "取消静音" : "静音" }}
-              </button>
-              <button class="permissionBtn more" @click="more(item)">
-                更多
-                <div v-show="permissionShow" class="permission">
-                  <span class="permission_header"></span>
-                  <div class="permission_content">
-                    <div
-                      v-if="permissionType.setSpeaker"
-                      @click="setSpeaker(item)"
-                    >
-                      {{ item.speaker === 1 ? "结束主讲" : "设为主讲" }}
-                    </div>
-                    <div v-if="permissionType.setRole" @click="setRole(item)">
-                      设为主持人
-                    </div>
-                    <div
-                      v-if="permissionType.setCamera"
-                      @click="setCamera(item)"
-                    >
-                      {{ item.camera === 1 ? "开启摄像头" : "关闭摄像头" }}
-                    </div>
-                    <div v-if="permissionType.setKick" @click="setKick(item)">
-                      移除
-                    </div>
-                  </div>
+                <i :class=" `font_family  ${item.camera === 0? 'icon-camera-user':'icon-camera-user-no'}`"></i>
+               </div>
+               <div class="noPermissionBtn">
+                    <i :class=" `font_family ${item.mic === 0 ? 'icon-user-mic' : 'icon-user-mic-no'}`"></i>
                 </div>
-              </button>
+            </div>
+                        <div
+                                v-if="search !== ''"
+                                class="item"
+                                v-for="item of s_members"
+                                :key="item.uid"
+                                @mouseenter="enter($event)"
+                                @mouseleave="leave($event)"
+                        >
+                            <img :src="item.avarter"/>
+                            <p>
+                                <span>{{ item.name }}</span>
+                                <span v-if="item.role === 4" class="handle">主持人</span>
+                                <span v-if="item.speaker === 1" class="speaker">主讲</span>
+                            </p>
+                            <button
+                                    v-if="item.role !== 4"
+                                    class="permissionBtn"
+                                    @click="setMic(item)"
+                            >
+                                {{ item.mic === 1 ? "取消静音" : "静音" }}
+                            </button>
+                            <button class="permissionBtn more" @click="more(item)">
+                                更多
+                                <div v-show="permissionShow" class="permission">
+                                    <span class="permission_header"></span>
+                                    <div class="permission_content">
+                                        <div
+                                                v-if="permissionType.setSpeaker"
+                                                @click="setSpeaker(item)"
+                                        >
+                                            {{ item.speaker === 1 ? "结束主讲" : "设为主讲" }}
+                                        </div>
+                                        <div v-if="permissionType.setRole" @click="setRole(item)">
+                                            设为主持人
+                                        </div>
+                                        <div
+                                                v-if="permissionType.setCamera"
+                                                @click="setCamera(item)"
+                                        >
+                                            {{ item.camera === 1 ? "开启摄像头" : "关闭摄像头" }}
+                                        </div>
+                                        <div v-if="permissionType.setKick" @click="setKick(item)">
+                                            移除
+                                        </div>
+                                    </div>
+                                </div>
+                            </button>
 
-              <div class="noPermissionBtn">
-                <i
-                  class=""
-                  :class="
+                            <div class="noPermissionBtn">
+                                <i
+                                        class=""
+                                        :class="
                     `font_family  ${
                       item.camera === 0
                         ? 'icon-camera-user'
                         : 'icon-camera-user-no'
                     }`
                   "
-                ></i>
-              </div>
-              <div class="noPermissionBtn">
-                <i
-                  :class="
+                                ></i>
+                            </div>
+                            <div class="noPermissionBtn">
+                                <i
+                                        :class="
                     `font_family ${
                       item.mic === 0 ? 'icon-user-mic' : 'icon-user-mic-no'
                     }`
                   "
-                ></i>
-              </div>
+                                ></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </transition-group>
+            <div class="line" v-if="hasControl"></div>
+            <div class="bottom" v-if="hasControl" >
+                <button :disabled="!hasControl" @click="setMicAllOff">全体静音</button>
+                <button :disabled="!hasControl" @click="handleRemoveMicAllOn">
+                    解除全体静音
+                </button>
+                <button :disabled="!hasControl" @click="handleLock">锁定会议</button>
             </div>
-          </div>
         </div>
       </transition-group>
       <div class="line"></div>
-      <div class="bottom">
+      <div class="bottom" v-if="hasControl">
         <button :disabled="!hasControl" @click="setMicAllOff" style="width: 27.5%;">全体静音</button>
         <button :disabled="!hasControl" @click="handleRemoveMicAllOn" style="width: 33.75%;">
           解除全体静音
@@ -164,185 +159,184 @@
         <button :disabled="!hasControl" @click="handleLock" class="lockMeeting">锁定会议</button>
       </div>
     </div>
-  </div>
 </template>
 <script>
-import antiquity from "../utils/Antiquity";
+	import antiquity from "../utils/Antiquity";
 
-export default {
-  name: "party",
-  props: ["members", "hasControl", "data"],
-  data() {
-    return {
-	  search_show:0,
-      s_members: [],
-      search: "",
-      permissionShow: false,
-      permissionType: {
-        setSpeaker: true,
-        setRole: true,
-        setCamera: true,
-        setKick: true
-      }
-    };
-  },
-  computed: {},
-  methods: {
-	searchShow(){
-		this.search_show = !this.search_show
-	},
-    search_member() {
-      this.s_members = [];
-      if (this.search != "") {
-        this.members.forEach(item => {
-          if (item.name.indexOf(this.search) >= 0) {
-            console.log(item);
-            this.s_members.push(item);
-          }
-        });
-        // console.log(this.members)
-      }
-    },
-    enter(event) {
-      // event.target.className = "item itemMouse";
-      if (this.hasControl) {
-        event.target.className = "item itemMouse";
-      }
-    },
-    leave(event) {
-      // event.target.className = "item";
-      // this.permissionShow = false;
-      if (this.hasControl) {
-        this.permissionShow = false;
-        event.target.className = "item";
-      }
-    },
-    more(item) {
-      this.permissionType = {
-        setSpeaker: true,
-        setRole: true,
-        setCamera: true,
-        setKick: true
-      };
-      if (item.uid === antiquity.uid) {
-        this.permissionType = {
-          setSpeaker: true,
-          setRole: false,
-          setCamera: false,
-          setKick: false
-        };
-        this.permissionShow = true;
-        return;
-      }
-      if (item.dt === 3) {
-        this.permissionType = {
-          setSpeaker: false,
-          setRole: true,
-          setCamera: false,
-          setKick: true
-        };
-      }
-      this.permissionShow = true;
-    },
-    setMic(item) {
-      const micState = item.mic;
-      const value = `[${item.uid}]`;
-      console.log(micState, value);
-      antiquity.ajax
-        .ruleSet({
-          admin: antiquity.uid,
-          rule: Boolean(micState) ? 1012 : 1011,
-          value
-        })
-        .then(res => {
-          console.log(res);
-        });
-      //   console.log(antiquity);
-    },
-    setSpeaker(item) {
-      const speaker = item.speaker === 1 ? 0 : 1;
-      const data = {
-        admin: antiquity.uid,
-        uid: item.uid,
-        dt: item.dt,
-        device: item.device,
-        speaker
-      };
-      antiquity.ajax.speakerSet(data).then(res => {
-        console.log(res);
-      });
-      console.log(antiquity.ajax);
-    },
-    setRole(item) {
-      const data = {
-        admin: antiquity.uid,
-        uid: item.uid,
-        dt: item.dt,
-        device: item.device,
-        role: 4
-      };
-      antiquity.ajax.roleSet(data).then(res => {
-        console.log("主持人设置", res);
-      });
-      console.log(item);
-    },
-    setCamera(item) {
-      const cameraState = item.camera;
-      const value = `[${item.uid}]`;
-      antiquity.ajax
-        .ruleSet({
-          admin: antiquity.uid,
-          rule: Boolean(cameraState) ? 2012 : 2011,
-          value
-        })
-        .then(res => {
-          console.log(res);
-        });
-      console.log(item);
-    },
-    setKick(item) {
-      const data = {
-        admin: antiquity.uid,
-        uid: item.uid,
-        dt: item.dt,
-        device: item.device
-      };
-      antiquity.ajax.kick(data).then(res => {
-        console.log(res);
-      });
-      console.log(item);
-    },
-    setMicAllOff() {
-      const data = {
-        admin: antiquity.uid,
-        rule: 1001,
-        value: "2"
-      };
-      antiquity.ajax.ruleSet(data).then(res => {});
-    },
-    handleRemoveMicAllOn() {
-      const data = {
-        admin: antiquity.uid,
-        rule: 1001,
-        value: "0"
-      };
-      antiquity.ajax.ruleSet(data).then(res => {
-        console.log(res);
-      });
-    },
-    handleLock() {
-      if (this.data.locked) {
-        antiquity.ajax.unlock().then(res => {
-          console.log(res);
-        });
-      } else {
-        antiquity.ajax.lock().then(res => {
-          console.log(res);
-        });
-      }
-    }
-  }
-};
+	export default {
+	  name: "party",
+	  props: ["members", "hasControl", "data"],
+	  data() {
+		return {
+		  search_show:0,
+		  s_members: [],
+		  search: "",
+		  permissionShow: false,
+		  permissionType: {
+			setSpeaker: true,
+			setRole: true,
+			setCamera: true,
+			setKick: true
+		  }
+		};
+	  },
+	  computed: {},
+	  methods: {
+		searchShow(){
+			this.search_show = !this.search_show
+		},
+		search_member() {
+		  this.s_members = [];
+		  if (this.search != "") {
+			this.members.forEach(item => {
+			  if (item.name.indexOf(this.search) >= 0) {
+				console.log(item);
+				this.s_members.push(item);
+			  }
+			});
+			// console.log(this.members)
+		  }
+		},
+		enter(event) {
+		  // event.target.className = "item itemMouse";
+		  if (this.hasControl) {
+			event.target.className = "item itemMouse";
+		  }
+		},
+		leave(event) {
+		  // event.target.className = "item";
+		  // this.permissionShow = false;
+		  if (this.hasControl) {
+			this.permissionShow = false;
+			event.target.className = "item";
+		  }
+		},
+		more(item) {
+		  this.permissionType = {
+			setSpeaker: true,
+			setRole: true,
+			setCamera: true,
+			setKick: true
+		  };
+		  if (item.uid === antiquity.uid) {
+			this.permissionType = {
+			  setSpeaker: true,
+			  setRole: false,
+			  setCamera: false,
+			  setKick: false
+			};
+			this.permissionShow = true;
+			return;
+		  }
+		  if (item.dt === 3) {
+			this.permissionType = {
+			  setSpeaker: false,
+			  setRole: true,
+			  setCamera: false,
+			  setKick: true
+			};
+		  }
+		  this.permissionShow = true;
+		},
+		setMic(item) {
+		  const micState = item.mic;
+		  const value = `[${item.uid}]`;
+		  console.log(micState, value);
+		  antiquity.ajax
+			.ruleSet({
+			  admin: antiquity.uid,
+			  rule: Boolean(micState) ? 1012 : 1011,
+			  value
+			})
+			.then(res => {
+			  console.log(res);
+			});
+		  //   console.log(antiquity);
+		},
+		setSpeaker(item) {
+		  const speaker = item.speaker === 1 ? 0 : 1;
+		  const data = {
+			admin: antiquity.uid,
+			uid: item.uid,
+			dt: item.dt,
+			device: item.device,
+			speaker
+		  };
+		  antiquity.ajax.speakerSet(data).then(res => {
+			console.log(res);
+		  });
+		  console.log(antiquity.ajax);
+		},
+		setRole(item) {
+		  const data = {
+			admin: antiquity.uid,
+			uid: item.uid,
+			dt: item.dt,
+			device: item.device,
+			role: 4
+		  };
+		  antiquity.ajax.roleSet(data).then(res => {
+			console.log("主持人设置", res);
+		  });
+		  console.log(item);
+		},
+		setCamera(item) {
+		  const cameraState = item.camera;
+		  const value = `[${item.uid}]`;
+		  antiquity.ajax
+			.ruleSet({
+			  admin: antiquity.uid,
+			  rule: Boolean(cameraState) ? 2012 : 2011,
+			  value
+			})
+			.then(res => {
+			  console.log(res);
+			});
+		  console.log(item);
+		},
+		setKick(item) {
+		  const data = {
+			admin: antiquity.uid,
+			uid: item.uid,
+			dt: item.dt,
+			device: item.device
+		  };
+		  antiquity.ajax.kick(data).then(res => {
+			console.log(res);
+		  });
+		  console.log(item);
+		},
+		setMicAllOff() {
+		  const data = {
+			admin: antiquity.uid,
+			rule: 1001,
+			value: "2"
+		  };
+		  antiquity.ajax.ruleSet(data).then(res => {});
+		},
+		handleRemoveMicAllOn() {
+		  const data = {
+			admin: antiquity.uid,
+			rule: 1001,
+			value: "0"
+		  };
+		  antiquity.ajax.ruleSet(data).then(res => {
+			console.log(res);
+		  });
+		},
+		handleLock() {
+		  if (this.data.locked) {
+			antiquity.ajax.unlock().then(res => {
+			  console.log(res);
+			});
+		  } else {
+			antiquity.ajax.lock().then(res => {
+			  console.log(res);
+			});
+		  }
+		}
+	  }
+	};
 </script>
 <style lang="less" scoped>
 @import "../common/common";

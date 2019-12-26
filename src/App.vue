@@ -29,7 +29,7 @@
                 @selectSlide="(num) => slideCount = num"
                 ></ctrl>
            </transition>
-            
+
             <div :class="`playerBigBox ${howMany}`" ref="playerBigBox">
                 <div :class="`dragBox ${mineFlag}`">
                     <div class="drag" ref="draggable">
@@ -269,7 +269,7 @@
             Enter(e){
                 clearTimeout(this.showCtrlTime)
                 this.isShowCtrl = true
-            },  
+            },
             Leave(e){
                 this.showCtrlTime = setTimeout(()=>{
                     this.isShowCtrl = false
@@ -334,7 +334,7 @@
         .flex(flex-start, flex-start);
         align-content: flex-start;
         flex-wrap: wrap;
-		
+
         &.fir {
             .playerBox {
                 width: 0;
@@ -350,14 +350,12 @@
         &.one {
             .playerBox {
                 width: 100%;
-                height: 100%;
             }
         }
 
         &.two {
             .playerBox {
                 width: 100%;
-                height: 100%;
             }
 
             .dragBox {
@@ -374,7 +372,6 @@
         &.four {
             .playerBox {
                 width: 49.8%;
-                height: 49.8%;
                 margin: 0.1%;
             }
 
@@ -387,7 +384,6 @@
         &.nine {
             .playerBox {
                 width: 33.133%;
-                height: 33.133%;
                 margin: 0.1%;
             }
 
@@ -399,7 +395,6 @@
 
         .playerBox {
             width: 50%;
-            height: 50%;
             .flex(center, center);
             overflow: hidden;
             background-color: #444;

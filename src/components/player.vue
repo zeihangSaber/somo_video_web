@@ -1,14 +1,18 @@
 <template>
     <div
-            class="playerBox"
-            ref="playerBox"
-            v-if="data.uid !== meetingInfo.mine.uid"
-            :id="data.uid === meetingInfo.mine.uid ? 'mine' : ''"
+        class="playerBox"
+        ref="playerBox"
+        v-if="data.uid !== meetingInfo.mine.uid"
+        :id="data.uid === meetingInfo.mine.uid ? 'mine' : ''"
     >
         <player-status :data="data"></player-status>
+        <div class="grail">
+            <div :id="`player_${data.uid}`" class="vjs-tech"></div>
+        </div>
         <div :class="`${data.camera === 0 ? 'hasCamera' : 'noCamera'}`">
             <i class="font_family icon-camera-none"></i>
         </div>
+        <div class="holder"></div>
     </div>
 </template>
 
@@ -38,14 +42,14 @@
         components: {
             playerStatus
         },
-        watch: {
-            data() {
-                if (this.data.uid === this.meetingInfo.mine.uid) return;
-                this.player && this.player.dispose();
-                if (!this.$refs.playerBox) return;
-                this.createVideo();
-            }
-        },
+        // watch: {
+        //     src() {
+        //         if (this.data.uid === this.meetingInfo.mine.uid) return;
+        //         this.player && this.player.dispose();
+        //         if (!this.$refs.playerBox) return;
+        //         this.createVideo();
+        //     }
+        // },
         computed: {
             src() {
                 return this.isShare ? this.data.shareUrl : this.data.url
@@ -53,7 +57,7 @@
         },
         mounted() {
             this.$nextTick(() => {
-                this.createVideo()
+                this.Aliplayer()
             });
         },
         methods: {
@@ -83,6 +87,21 @@
                         this.src && this.player.play();
                     });
                 });
+            },
+            Aliplayer() {
+                this.player = new Aliplayer({
+                        "id": `player_${this.data.uid}`,
+                        "source": this.src,
+                        "width": `${100 *16 / 12}%`,
+                        "height": `${100 *16 / 12}%`,
+                        "autoplay": true,
+                        "isLive": true,
+                        "useFlashPrism": true,
+                        "definition": "FD",
+                        "autoPlayDelay": 0,
+                        "controlBarVisibility": "click"
+                });
+                this.player.on("liveStreamStop", )
             }
         },
         beforeDestroy() {
@@ -94,9 +113,6 @@
 <style lang="less" scoped>
     @import "../common/common";
     .playerBox {
-        width: 33.3%;
-        height: 33.3%;
-        background-color: bisque;
         position: relative;
         .ctrlMiddle {
             padding: 0 16px 0 12px;
@@ -129,10 +145,12 @@
                 margin-left: 5px;
             }
         }
+        .holder {
+            padding-bottom: 56.25%;
+            width: 0;
+        }
     }
-    .video-js {
-        width: 100% !important;
-        height: 100% !important;
+    .vjs-tech {
     }
     .hasCamera {
         display: none;
@@ -150,5 +168,14 @@
             font-size: 80px;
             color: #666;
         }
+    }
+    .grail {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        .flex(center, center);
+        overflow: hidden;
     }
 </style>

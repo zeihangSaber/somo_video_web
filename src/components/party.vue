@@ -167,6 +167,15 @@
                 <button :disabled="!hasControl" @click="handleLock">锁定会议</button>
             </div>
         </div>
+      </transition-group>
+      <div class="line"></div>
+      <div class="bottom" v-if="hasControl">
+        <button :disabled="!hasControl" @click="setMicAllOff">全体静音</button>
+        <button :disabled="!hasControl" @click="handleRemoveMicAllOn">
+          解除全体静音
+        </button>
+        <button :disabled="!hasControl" @click="handleLock">锁定会议</button>
+      </div>
     </div>
 </template>
 <script>

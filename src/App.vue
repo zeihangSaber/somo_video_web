@@ -9,6 +9,7 @@
                 :peopleNum="peopleNum"
                 :micNum="micNum"
                 :showSide="isShowSide"
+                :changeScreen="changeScreen"
                 :showMessage="isShowMessage"
                 :ShowShare="isShowShare"
                 :showParty="isShowParty"
@@ -63,7 +64,6 @@
         </div>
         <transition enter-active-class="animated bounceIn faster" leave-active-class="animated bounceOut faster">
             <side-box
-                    v-if="isShowSide"
                     :data="meetingInfo"
                     :members="speaker ? [speaker, ...members] : members"
                     :showMessage="isShowMessage"
@@ -107,6 +107,7 @@
                 micNum: 0,
                 isShowCtrl: true,
                 showCtrlTime:"",
+                changeScreen: false,
                 isShowSide: true,
                 isShowMessage: true,
                 isShowParty: true,
@@ -176,7 +177,10 @@
             this.showCtrlTime = setTimeout(()=>{
                 this.isShowCtrl = false
             },3000)
+            document.addEventListener("fullscreenchange",()=>{
+                this.changeScreen =!this.changeScreen
 
+            })
         },
         computed: {
             maxSlide() {
@@ -244,7 +248,21 @@
             ShowShare() {
             },
             handleSide() {
-                this.isShowSide = !this.isShowSide;
+                if(this.changeScreen){
+                    const el = document
+                    const cfs = el.cancalFullScreen || el.webkitCancelFullScreen || el.mozCancelFullScreen || el.exitFullscreen
+                    if(typeof cfs !="undefined" && cfs){
+                       cfs.call(el)
+                    }
+                    return
+                }else{
+                    const el = document.documentElement;
+                    const rfs = el.requestFullscreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullScreen;
+                    if(typeof rfs !== "undefined" && rfs){
+                        rfs.call(el)
+                    }
+                    return
+                }
             },
             handleMessage() {
                 this.isShowMessage = !this.isShowMessage;
@@ -275,6 +293,7 @@
                     this.isShowCtrl = false
                 },3000)
             },
+
             init() {
                 this.$nextTick(async () => {
                     this.shareData = {

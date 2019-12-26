@@ -158,8 +158,8 @@
                     </div>
                 </div>
             </transition-group>
-            <div class="line"></div>
-            <div class="bottom">
+            <div class="line" v-if="hasControl"></div>
+            <div class="bottom" v-if="hasControl" >
                 <button :disabled="!hasControl" @click="setMicAllOff">全体静音</button>
                 <button :disabled="!hasControl" @click="handleRemoveMicAllOn">
                     解除全体静音

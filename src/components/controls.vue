@@ -59,6 +59,9 @@
 				<button @click="() => showSetting = !showSetting">
 					<i :class="`font_family icon-setting ${showSetting ? 'active' : ''}`"></i>设置
 				</button>
+				<button @click="$emit('LeaveMeeting')">
+					<i style="color:#FF5245" class="font_family icon-tuichu-normal "></i>离开
+				</button>
 			</div>
 			<button class="zoomIn" @click="$emit('handleSide')">
 				<i :class="`font_family ${changeScreen ? 'icon-zoomOut' : 'icon-zoomIn'}`"></i>

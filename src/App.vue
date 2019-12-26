@@ -23,6 +23,7 @@
                 @handleParty="handleParty"
                 @prevSlide="prevSlide"
                 @nextSlide="nextSlide"
+                @LeaveMeeting="LeaveMeeting"
                 @selectNine="() => (playerNum = 9)"
                 @selectFour="() => (playerNum = 4)"
                 @barrageTrue="() => (barrage = true)"
@@ -293,7 +294,11 @@
                     this.isShowCtrl = false
                 },3000)
             },
-
+            LeaveMeeting(){
+                antiquity.leaveMeeting()
+                console.log('离开会议',antiquity)
+                window.location.href = 'http://localhost:8080/joinConference';
+            },
             init() {
                 this.$nextTick(async () => {
                     this.shareData = {

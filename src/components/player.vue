@@ -5,9 +5,10 @@
         v-if="data.uid !== meetingInfo.mine.uid"
         :id="data.uid === meetingInfo.mine.uid ? 'mine' : ''"
     >
-        <player-status :data="data"></player-status>
+<!--        <player-status :data="data"></player-status>-->
         <div class="grail">
-            <div :id="`player_${data.uid}`" class="vjs-tech"></div>
+            <div :id="`player_${data.uid}_tc`" class="vjs-tech"></div>
+            <div :id="`player_${data.uid}_ali`" class="vjs-tech"></div>
         </div>
         <div :class="`${data.camera === 0 ? 'hasCamera' : 'noCamera'}`">
             <i class="font_family icon-camera-none"></i>
@@ -36,7 +37,8 @@
         },
         data() {
             return {
-                player: null
+                player: null,
+                count: 0
             };
         },
         components: {
@@ -44,25 +46,29 @@
         },
         watch: {
             src() {
-                if (this.data.uid === this.meetingInfo.mine.uid) return;
-                this.player && this.player.dispose();
-                if (!this.$refs.playerBox) return;
-                this.Aliplayer();
+                this.reset()
             }
         },
         computed: {
             src() {
+                console.log(`~~~~~~~~~~~~~~~, 流地址发生变化`);
                 return this.isShare ? this.data.shareUrl : this.data.url
             }
         },
         mounted() {
             this.$nextTick(() => {
-                this.Aliplayer()
+                // this.tcPlayer();
+                this.Aliplayer();
             });
         },
         methods: {
-            paused() {
-                console.log('本该停止的');
+            reset() {
+                if (this.data.uid === this.meetingInfo.mine.uid) return;
+                this.player && this.player.dispose();
+                if (!this.$refs.playerBox) return;
+                this.$nextTick(() => {
+                    this.Aliplayer();
+                });
             },
             createVideo() {
                 if (this.data.uid === this.meetingInfo.mine.uid) return;
@@ -89,9 +95,12 @@
                 });
             },
             Aliplayer() {
-                this.player = new Aliplayer({
-                        "id": `player_${this.data.uid}`,
+                this.$nextTick(() => {
+                    this.player = new Aliplayer({
+                        "id": `player_${this.data.uid}_ali`,
                         "source": this.src,
+                        // "width": `800px`,
+                        // "height": `450px`,
                         "width": `${100 *16 / 12}%`,
                         "height": `${100 *16 / 12}%`,
                         // "rtmpBufferLength": 0,
@@ -101,12 +110,31 @@
                         "definition": "FD",
                         "autoPlayDelay": 0,
                         "controlBarVisibility": "click"
+                    });
+                    this.player.on("liveStreamStop", () => {
+                        console.log("error~~~~~~~~~~~~~~~~~~~, 没有取到播放源");
+                        if (this.count === 3) {
+                            this.count = 0;
+                            this.reset();
+                            console.log('error~~~~~~~~~~~~~~~~~~~, 重置播放器')
+                        } else {
+                            ++this.count;
+                            this.player.pause();
+                            this.player.play();
+                        }
+                    })
+
                 });
-                this.player.on("liveStreamStop", () => {
-                    console.log("error~~~~~~~~~~~~~~~~~~~, 没有取到播放源");
-                    this.player.pause();
-                    this.player.play();
-                })
+            },
+            tcPlayer() {
+                this.player = new TcPlayer(`player_${this.data.uid}_tc`, {
+                    "rtmp": this.src, //请替换成实际可用的播放地址
+                    "autoplay" : true,
+                    "live": true,
+                    "poster" : "http://www.test.com/myimage.jpg",
+                    "width" :  `800`,
+                    "height" : `450`
+                });
             }
         },
         beforeDestroy() {

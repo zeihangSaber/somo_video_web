@@ -61,7 +61,7 @@
 				</button>
 			</div>
 			<button class="zoomIn" @click="$emit('handleSide')">
-				<i :class="`font_family ${showSide ? 'icon-zoomIn' : 'icon-zoomOut'}`"></i>
+				<i :class="`font_family ${changeScreen ? 'icon-zoomOut' : 'icon-zoomIn'}`"></i>
 			</button>
 		</div>
 		<transition enter-active-class="animated flipInY fast" leave-active-class="animated flipOutY fast">
@@ -134,6 +134,7 @@
 			"peopleNum",
 			"micNum",
 			"showSide",
+			"changeScreen",
 			"showMessage",
 			"showParty",
 			"playerNum",

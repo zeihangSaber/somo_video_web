@@ -30,21 +30,21 @@
                 @selectSlide="(num) => slideCount = num"
                 ></ctrl>
            </transition>
-            
+
             <div :class="`playerBigBox ${howMany}`" ref="playerBigBox">
                 <div :class="`dragBox ${mineFlag}`">
                     <div class="drag" ref="draggable">
-                        <div :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
+                        <div v-if="meetingInfo.mine && meetingInfo.mine.camera === 0" :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
                             <i class="font_family icon-camera-none"></i>
                         </div>
-                        <player-status :data="meetingInfo.mine"></player-status>
+                        <player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
                     </div>
                 </div>
                 <player
                         v-if="!(speakFlag || shareFlag)"
                         v-for="item in nowPlayerNum"
                         ref="players"
-                        :key="item + 333"
+                        :key="members[playerNum * (realCount - 1) + item - 1].uid"
                         :meetingInfo="meetingInfo"
                         :hawMany="howMany"
                         :data="members[playerNum * (realCount - 1) + item - 1]">
@@ -123,6 +123,7 @@
                 test: false,
                 waiting: true,
                 message: [],
+				upspring:0
             };
         },
         beforeCreate() {
@@ -132,6 +133,8 @@
         },
         created() {
             antiquity.on("getMsg", (msg) => {
+				console.log(msg)
+				msg.time = this._time()
                 this.message.push(msg)
             });
             antiquity.on('getMidInfo', meetingInfo => {
@@ -200,7 +203,7 @@
             howMany() {
                 if (this.membersNum === 1) return 'fir';
                 if ((this.shareFlag || this.speakFlag) && this.slideCount === 1) return 'one';
-                if (this.membersNum === 2) return 'two';
+                if (!(this.shareFlag || this.speakFlag) && this.membersNum === 2) return 'two';
                 if (this.playerNum === 4) return 'four';
                 if (this.playerNum === 9) return 'nine';
                 return 'fir'
@@ -223,6 +226,22 @@
             },
         },
         methods: {
+			// 实时获取当前电脑时间
+			_time() {
+			    // setInterval(() => {
+			        let t = new Date();
+			        let hour = t.getHours(); //得到小时
+			        let minu = t.getMinutes(); //得到分钟
+			        let sec = t.getSeconds(); //得到秒
+			        if (minu < 10) {
+			            minu = '0' + minu
+			        }
+			        if (sec < 10) {
+			            sec = '0' + sec
+			        }
+			        return hour + ':' + minu + ':' + sec
+			    // }, 1000)
+			},
             share_status() {
                 this.isShowShare_ = false
             },
@@ -268,7 +287,7 @@
             Enter(e){
                 clearTimeout(this.showCtrlTime)
                 this.isShowCtrl = true
-            },  
+            },
             Leave(e){
                 this.showCtrlTime = setTimeout(()=>{
                     this.isShowCtrl = false
@@ -316,9 +335,20 @@
 <style lang="less">
     @import "./common/base";
     @import "./common/common";
-
+		.videoBox{
+			width: 100%;
+			height: 100%;
+			background: #000000;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
     .playerBigBox {
-        height: 100%;
+		width: 100%;
+		height: 0;
+		background: #800080;
+		padding-bottom: 65.25%;
+		position: relative;
         overflow: hidden;
         .flex(flex-start, flex-start);
         align-content: flex-start;
@@ -339,14 +369,12 @@
         &.one {
             .playerBox {
                 width: 100%;
-                height: 100%;
             }
         }
 
         &.two {
             .playerBox {
                 width: 100%;
-                height: 100%;
             }
 
             .dragBox {
@@ -363,7 +391,6 @@
         &.four {
             .playerBox {
                 width: 49.8%;
-                height: 49.8%;
                 margin: 0.1%;
             }
 
@@ -376,7 +403,6 @@
         &.nine {
             .playerBox {
                 width: 33.133%;
-                height: 33.133%;
                 margin: 0.1%;
             }
 
@@ -388,7 +414,6 @@
 
         .playerBox {
             width: 50%;
-            height: 50%;
             .flex(center, center);
             overflow: hidden;
             background-color: #444;
@@ -455,7 +480,7 @@
         overflow: hidden;
     }
 
-    .vjs-tech {
+    .vjs-tech>object {
         transform: translateZ(0) !important;
     }
 

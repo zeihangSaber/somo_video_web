@@ -6,17 +6,21 @@
         </div>
         <div class="box">
             <div class="top">
-                <div class="time">{{time}}</div>
+                <!-- <div class="time">{{time}}</div> -->
                 <div class="topBox" ref="topBox">
                     <div ref="topBox_">
                         <div class="msgBox" v-for="itme in message">
                             <div v-if="itme.uid != meetingInfo.mine.uid" class="msg">
-                                <div class="msgBox-name" style="color: #868FAA;">{{itme.name}}<span class="msg_time">{{itme.time}}</span></div>
-                                <div class="msgBox-content">{{itme.text}}</div>
+								<div class="user_name-time">
+									<div class="msgBox-name">{{itme.name}}</div>
+									<span class="msg_time">{{itme.time}}</span>
+								</div>
+                                
+                                <div class="msgBox-content others_content">{{itme.text}}</div>
                             </div>
                             <div v-if="itme.uid == meetingInfo.mine.uid" class="ME-msg msg">
-                                <div class="msgBox-name" style="color: #118BFB;">{{itme.name}}<span class="msg_time">{{itme.time}}</span></div>
-                                <div class="msgBox-content">{{itme.text}}</div>
+                                <div class="msgBox-name"><span class="msg_time my_time">{{itme.time}}</span>{{itme.name}}</div>
+                                <div class="msgBox-content my_content">{{itme.text}}</div>
                             </div>
                         </div>
                     </div>
@@ -26,7 +30,10 @@
             <div class="bottom" @keydown.enter="send_msg">
 				<div class="send_box">
 					<div class="textarea_box"><textarea class="textarea" wrap="virtual" maxlength="70" placeholder="在此处输入消息…" rows="3" v-model="msgContent"></textarea></div>
-					<button :disabled=disabled @click="send_msg()">发送</button>
+					<button :disabled=disabled @click="send_msg()">
+						<i class="font_family icon-fasong"></i><br>
+						{{msgContent.length}}/70
+					</button>
 				</div>
             </div>
         </div>
@@ -144,6 +151,9 @@
 </script>
 <style lang="less" scoped>
     @import "../common/common";
+	.my_time{
+		margin-right: 8px;
+	}
     .bulletScreen {
         width: 360px;
         position: fixed;
@@ -175,7 +185,9 @@
         }
     }
     .title {
-        padding-bottom: 10px;
+		height: 48px;
+		padding-right: 8px;
+		box-sizing: border-box;
         .flex(space-between, center);
         .p {
 			cursor:pointer;
@@ -195,7 +207,7 @@
         flex-direction: column;
         .top,
         .bottom {
-            padding: 14px 20px;
+            padding: 20px 16px;
             padding-right: 0px;
             box-sizing: border-box;
         }
@@ -225,6 +237,7 @@
 			.msg_time{
 				color: #BBBBBB;
 				margin-left: 10px;
+				font-size: 12px;
 			}
             .ME-msg {
                 text-align: right;
@@ -234,25 +247,56 @@
             .msg {
                 margin-bottom: 16px;
             }
+			.user_name-time{
+				display: flex;
+				justify-content: flex-start;
+				align-items: center;
+			}
             .msgBox-name {
-                font-size: 14px;
-                font-weight: 400;
-                color: rgba(153, 153, 153, 1);
+				font-size:12px;
+				font-weight:600;
+				color:rgba(51,51,51,1);
+				// border: 1px solid red;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
             }
             .msgBox-content {
                 font-size: 16px;
                 word-wrap: break-word;
                 font-weight: 400;
                 color: rgba(24, 24, 24, 1);
-                margin-top: 2px;
+                margin-top: 4px;
+				white-space:normal;
+				word-break:break-all;
             }
+			.others_content{
+				background:rgba(244,244,244,1);
+				border-radius:4px 18px 18px 18px;
+				padding: 8px 12px;
+				box-sizing: border-box;
+				font-size:14px;
+				font-weight:400;
+				color:rgba(68,68,68,1);
+			}
+			.my_content{
+				// height:36px;
+				background:rgba(17,165,251,1);
+				border-radius:18px 4px 18px 18px !important;
+				font-size:14px;
+				font-weight:400;
+				color:rgba(255,255,255,1);
+				display: inline-block;
+				padding: 8px 12px;
+				box-sizing: border-box;
+			}
         }
         .line {
             border-bottom: 2px solid #f4f4f4;
         }
         .bottom {
-            height: 94px;
-			padding: 17px 12px 17px 12px;
+            height: 84px;
+			padding: 8px;
             box-sizing: border-box;
             .flex(flex-start, flex-end);
             flex-direction: column;
@@ -265,17 +309,19 @@
 				border-radius:5px;
 				overflow: hidden;
 				.textarea_box{
-					width: 79%;
+					width: 256px;
 					height: 100%;
+					background: #F0F0F0;
 					border-radius:5px 0 0 5px;
 					padding: 5px 12px;
 					box-sizing: border-box;
-					border:1px solid rgba(17,139,251,1);
+					// border:1px solid rgba(17,139,251,1);
 				}
 			}
             textarea {
 				width: 100%;
 				height: 100%;
+				background: #F0F0F0;
                 border: none;
                 resize: none;
                 outline: none;
@@ -288,10 +334,9 @@
                 // flex: 1;
             }
             button {
-				width: 20.35%;
+				width: 48px;
 				height: 100%;
-                background-color: #118BFB;
-                // border-radius: 4px;
+				background:linear-gradient(180deg,rgba(47,184,255,1) 0%,rgba(17,139,251,1) 100%);
                 border: none;
                 color: #fff;
             }

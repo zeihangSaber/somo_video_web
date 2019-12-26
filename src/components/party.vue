@@ -1,21 +1,17 @@
 <template>
   <div class="bigBox">
     <div class="title">
-      <p class="p">
-        参会方(<span>{{ members.length }}</span
-        >)
-      </p>
-      <i class="font_family icon-close" @click="$emit('handleParty')"></i>
+      <p class="p" v-if="search_show == 0">参会方(<span>{{ members.length }}</span>)</p>
+	  <input v-if="search_show == 1" type="text" placeholder="搜索账号名称" v-model="search" @input="search_member" class="searchInput"/>
+	  <div>
+		  <i class="font_family icon-chazhaoanniu search" @click="searchShow()"></i>
+		  <i class="font_family icon-close" @click="$emit('handleParty')"></i>
+	  </div>
     </div>
     <div class="box">
       <transition-group class="top" name="list-complete" tag="div">
         <div key="search" class="input">
-          <input
-            type="text"
-            placeholder="搜索账号名称"
-            v-model="search"
-            @input="search_member"
-          />
+          
           <div class="member">
             <div
               v-if="search == ''"
@@ -161,11 +157,11 @@
       </transition-group>
       <div class="line"></div>
       <div class="bottom">
-        <button :disabled="!hasControl" @click="setMicAllOff">全体静音</button>
-        <button :disabled="!hasControl" @click="handleRemoveMicAllOn">
+        <button :disabled="!hasControl" @click="setMicAllOff" style="width: 27.5%;">全体静音</button>
+        <button :disabled="!hasControl" @click="handleRemoveMicAllOn" style="width: 33.75%;">
           解除全体静音
         </button>
-        <button :disabled="!hasControl" @click="handleLock">锁定会议</button>
+        <button :disabled="!hasControl" @click="handleLock" class="lockMeeting">锁定会议</button>
       </div>
     </div>
   </div>
@@ -178,6 +174,7 @@ export default {
   props: ["members", "hasControl", "data"],
   data() {
     return {
+	  search_show:0,
       s_members: [],
       search: "",
       permissionShow: false,
@@ -191,7 +188,10 @@ export default {
   },
   computed: {},
   methods: {
-    search_member: function() {
+	searchShow(){
+		this.search_show = !this.search_show
+	},
+    search_member() {
       this.s_members = [];
       if (this.search != "") {
         this.members.forEach(item => {
@@ -346,20 +346,38 @@ export default {
 </script>
 <style lang="less" scoped>
 @import "../common/common";
-
 .title {
-  padding-bottom: 10px;
-  .flex(space-between, center);
+	height: 48px;
+	padding-right: 8px;
+	box-sizing: border-box;
+	.search{
+		color: #c5c6c8;
+		margin-right: 8px;
+	}
+	.searchInput{
+		width:236px;
+		height:32px;
+		background:rgba(255,255,255,1);
+		border-radius:16px;
+		font-size:14px;
+		font-family:PingFangSC-Regular,PingFang SC;
+		font-weight:400;
+		color:rgba(187,187,187,1);
+		margin-left: 16px;
+		text-align: center;
+		outline: none;
+	}
+	.flex(space-between, center);
 
-  .p {
-    padding-left: 10px;
-    .fontStyle(18px, #000, blod);
-    flex: 1;
-  }
+	.p {
+		padding-left: 10px;
+		.fontStyle(18px, #000, blod);
+		flex: 1;
+	}
 
-  .icon-close {
-    color: #c5c6c8;
-  }
+	.icon-close {
+		color: #c5c6c8;
+	}
 }
 
 .box {
@@ -370,16 +388,13 @@ export default {
   .flex();
   flex-direction: column;
   .bottom {
-    padding: 15px 15px;
+    padding: 10px 10px;
   }
 
   .top {
     height: calc(100% - 60px);
     flex: 1;
-    padding: 14px 8px;
     .input {
-      padding: 0 12px;
-      box-sizing: border-box;
       height: 100%;
       input {
         background-color: #f4f4f4;
@@ -393,15 +408,19 @@ export default {
       .member {
         height: calc(100% - 32px);
         overflow-y: auto;
+		padding: 16px 0;
+		box-sizing: border-box;
         .item {
           position: relative;
           .flex(flex-start, center);
-          padding: 8px 12px;
+          padding: 0 16px;
+		  box-sizing: border-box;
+		  margin-bottom: 16px;
           border-radius: 4px;
 
           img {
-            width: 36px;
-            height: 36px;
+            width: 28px;
+            height: 28px;
             margin-right: 10px;
             border: 0;
             border-radius: 20px;
@@ -417,6 +436,10 @@ export default {
               text-overflow: ellipsis;
               white-space: nowrap;
               margin-left: 4px;
+			  font-size:14px;
+			  font-family:PingFangSC-Regular,PingFang SC !important;
+			  font-weight:400;
+			  color:rgba(30,33,38,1);
             }
           }
 
@@ -530,23 +553,30 @@ export default {
   }
 
   .bottom {
-    height: 60px !important;
+    height: 52px !important;
     .flex(space-between);
-
+	.lockMeeting{
+		width: 27.5%;
+		background:rgba(17,139,251,1);
+		border-radius:16px;
+		font-size:14px;
+		font-weight:400;
+		color:rgba(255,255,255,1) !important;
+	}
     button {
+	  border-radius:16px;
+	  border:1px solid rgba(17,139,251,1) !important;
       padding: 0;
       background-color: #fff;
-      border-radius: 4px;
-      border: 1px solid #118bfb;
-      height: 100%;
+      height:32px;
       width: 30%;
       min-width: 90px;
-      color: #118bfb;
-      font-size: 14px;
+      font-size:14px;
+      font-weight:400;
+      color:rgba(17,139,251,1) !important;
     }
   }
 
-  margin-bottom: 10px;
 }
 
 button {

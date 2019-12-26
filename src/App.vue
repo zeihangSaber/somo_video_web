@@ -2,57 +2,58 @@
     <div id="app">
         <div class="content" @mouseenter="Enter($event)" @mouseleave="Leave($event)" ref="content">
            <transition enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
-            <ctrl
-                v-show="isShowCtrl"
-                @handleSide="handleSide"
-                :data="meetingInfo"
-                :peopleNum="peopleNum"
-                :micNum="micNum"
-                :showSide="isShowSide"
-                :showMessage="isShowMessage"
-                :ShowShare="isShowShare"
-                :showParty="isShowParty"
-                :playerNum="playerNum"
-                :barrage="barrage"
-                :maxSlide="maxSlide"
-                :shareData="shareData"
-                :slideCount="slideCount"
-                @handleMessage="handleMessage"
-                @ShowShare="ShowShare"
-                @handleParty="handleParty"
-                @prevSlide="prevSlide"
-                @nextSlide="nextSlide"
-                @selectNine="() => (playerNum = 9)"
-                @selectFour="() => (playerNum = 4)"
-                @barrageTrue="() => (barrage = true)"
-                @barrageFalse="() => (barrage = false)"
-                @selectSlide="(num) => slideCount = num"
-                ></ctrl>
+				<ctrl
+					v-show="isShowCtrl"
+					@handleSide="handleSide"
+					:data="meetingInfo"
+					:peopleNum="peopleNum"
+					:micNum="micNum"
+					:showSide="isShowSide"
+					:showMessage="isShowMessage"
+					:ShowShare="isShowShare"
+					:showParty="isShowParty"
+					:playerNum="playerNum"
+					:barrage="barrage"
+					:maxSlide="maxSlide"
+					:shareData="shareData"
+					:slideCount="slideCount"
+					@handleMessage="handleMessage"
+					@ShowShare="ShowShare"
+					@handleParty="handleParty"
+					@prevSlide="prevSlide"
+					@nextSlide="nextSlide"
+					@selectNine="() => (playerNum = 9)"
+					@selectFour="() => (playerNum = 4)"
+					@barrageTrue="() => (barrage = true)"
+					@barrageFalse="() => (barrage = false)"
+					@selectSlide="(num) => slideCount = num"
+					></ctrl>
            </transition>
-            
-            <div :class="`playerBigBox ${howMany}`" ref="playerBigBox">
-                <div :class="`dragBox ${mineFlag}`">
-                    <div class="drag" ref="draggable">
-                        <div :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
-                            <i class="font_family icon-camera-none"></i>
-                        </div>
-                        <player-status :data="meetingInfo.mine"></player-status>
-                    </div>
-                </div>
-                <player
-                        v-if="!(speakFlag || shareFlag)"
-                        v-for="item in nowPlayerNum"
-                        ref="players"
-                        :key="item + 333"
-                        :meetingInfo="meetingInfo"
-                        :hawMany="howMany"
-                        :data="members[playerNum * (realCount - 1) + item - 1]">
-                </player>
-                <div
-                        class="space playerBox"
-                        v-if="!(speakFlag || shareFlag)"
-                        v-for="item of playerNum - nowPlayerNum"
-                ></div>
+            <div class="videoBox">
+				<div :class="`playerBigBox ${howMany}`" ref="playerBigBox">
+				    <div :class="`dragBox ${mineFlag}`">
+				        <div class="drag" ref="draggable">
+				            <div :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
+				                <i class="font_family icon-camera-none"></i>
+				            </div>
+				            <player-status :data="meetingInfo.mine"></player-status>
+				        </div>
+				    </div>
+				    <player
+				            v-if="!(speakFlag || shareFlag)"
+				            v-for="item in nowPlayerNum"
+				            ref="players"
+				            :key="item + 333"
+				            :meetingInfo="meetingInfo"
+				            :hawMany="howMany"
+				            :data="members[playerNum * (realCount - 1) + item - 1]">
+				    </player>
+				    <div
+				            class="space playerBox"
+				            v-if="!(speakFlag || shareFlag)"
+				            v-for="item of playerNum - nowPlayerNum"
+				    ></div>
+			</div>
                 <template v-if="meetingInfo.mine.speaker !== 1">
                     <player v-if="speakFlag && !shareFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
                     <player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo" :isShare="true"></player>
@@ -122,13 +123,17 @@
                 test: false,
                 waiting: true,
                 message: [],
-				upspring:0
+				joinStatus:1,
+				
             };
         },
         beforeCreate() {
-            window.onbeforeunload = (e) => {
-                e.returnValue = ("确定离开当前页面吗？");
-            };
+			if(this.joinStatus == 1){
+				window.onbeforeunload = (e) => {
+					e.returnValue = ("确定离开当前页面吗？");
+				};	
+			}
+           
         },
         created() {
             antiquity.on("getMsg", (msg) => {
@@ -137,6 +142,7 @@
                 this.message.push(msg)
             });
             antiquity.on('getMidInfo', meetingInfo => {
+				console.log(meetingInfo)
                 this.meetingInfo = meetingInfo;
             });
             antiquity.on('getMembers', members => {
@@ -292,12 +298,14 @@
                         })
                         .then(res => {
                             if (res.code == 1) {
+								this.joinStatus = 0
                                 this.$Toast.success({message: '会议号错误'});
                                 setTimeout(() => {
                                     window.location.href = 'https://http://182.61.17.228/joinConference';
                                 }, 2000);
                                 return
                             } else if (res.code == 2011) {
+								this.joinStatus = 0
                                 this.$Toast.success({message: '会议密码输入错误'});
                                 setTimeout(() => {
                                     window.location.href = 'https://http://182.61.17.228/joinConference';

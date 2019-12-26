@@ -155,19 +155,21 @@
 			}
 		},
 		mounted() {
-			console.log(this.data)
-			if(this.data.start){
-				setInterval(() => {
-						let timestamp = (new Date()).getTime();//当前时间戳
-						this.time =  timestamp - this.data.start;
-						this.time_meeting = this.formatDuring(this.time)
-				}, 1000)
-			}else if(!this.data.start){
-				setInterval(() => {
-						this.not_time = this.not_time + 1000
-						this.time_meeting = this.formatDuring(this.not_time)
-				}, 1000)
-			}
+			setTimeout(() => {
+				console.log(this.data)
+				if(this.data.start){
+					setInterval(() => {
+							let timestamp = (new Date()).getTime();//当前时间戳
+							this.time =  timestamp - this.data.start;
+							this.time_meeting = this.formatDuring(this.time)
+					}, 1000)
+				}else if(!this.data.start){
+					setInterval(() => {
+							this.not_time = this.not_time + 1000
+							this.time_meeting = this.formatDuring(this.not_time)
+					}, 1000)
+				}
+			}, 700);
 
 		},
 		methods:{

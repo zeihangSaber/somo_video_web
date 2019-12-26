@@ -81,7 +81,7 @@ export default {
     }
     .foot {
         height: 100%;
-        padding: 15px 16px;
+        // padding: 15px 16px;
         width: 100%;
         overflow: hidden;
         .flex();

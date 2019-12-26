@@ -43,7 +43,7 @@
                         v-if="!(speakFlag || shareFlag)"
                         v-for="item in nowPlayerNum"
                         ref="players"
-                        :key="item + 333"
+                        :key="members[playerNum * (realCount - 1) + item - 1].uid"
                         :meetingInfo="meetingInfo"
                         :hawMany="howMany"
                         :data="members[playerNum * (realCount - 1) + item - 1]">
@@ -461,7 +461,7 @@
         overflow: hidden;
     }
 
-    .vjs-tech {
+    .vjs-tech>object {
         transform: translateZ(0) !important;
     }
 

@@ -42,14 +42,14 @@
         components: {
             playerStatus
         },
-        // watch: {
-        //     src() {
-        //         if (this.data.uid === this.meetingInfo.mine.uid) return;
-        //         this.player && this.player.dispose();
-        //         if (!this.$refs.playerBox) return;
-        //         this.createVideo();
-        //     }
-        // },
+        watch: {
+            src() {
+                if (this.data.uid === this.meetingInfo.mine.uid) return;
+                this.player && this.player.dispose();
+                if (!this.$refs.playerBox) return;
+                this.Aliplayer();
+            }
+        },
         computed: {
             src() {
                 return this.isShare ? this.data.shareUrl : this.data.url
@@ -84,7 +84,7 @@
                     }, () => {
                         this.player.pause();
                         this.src && this.player.src(this.src);
-                        this.src && this.player.play();
+                        this.src && this.player.replay();
                     });
                 });
             },
@@ -94,6 +94,7 @@
                         "source": this.src,
                         "width": `${100 *16 / 12}%`,
                         "height": `${100 *16 / 12}%`,
+                        // "rtmpBufferLength": 0,
                         "autoplay": true,
                         "isLive": true,
                         "useFlashPrism": true,
@@ -101,7 +102,11 @@
                         "autoPlayDelay": 0,
                         "controlBarVisibility": "click"
                 });
-                this.player.on("liveStreamStop", )
+                this.player.on("liveStreamStop", () => {
+                    console.log("error~~~~~~~~~~~~~~~~~~~, 没有取到播放源");
+                    this.player.pause();
+                    this.player.play();
+                })
             }
         },
         beforeDestroy() {
@@ -151,6 +156,7 @@
         }
     }
     .vjs-tech {
+        background-color: #444;
     }
     .hasCamera {
         display: none;
@@ -175,6 +181,7 @@
         position: absolute;
         top: 0;
         left: 0;
+        background-color: #444;
         .flex(center, center);
         overflow: hidden;
     }

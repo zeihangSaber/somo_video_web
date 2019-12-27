@@ -8,7 +8,7 @@
         <player-status :data="data"></player-status>
         <div class="grail">
             <div :id="`player_${data.uid}_tc`" class="vjs-tech"></div>
-            <div :id="`player_${data.uid}_ali`" class="vjs-tech"></div>
+            <div :id="`player_${data.uid}_ali`" ref="ali" class="vjs-tech"></div>
         </div>
         <div :class="`${data.camera === 0 ? 'hasCamera' : 'noCamera'}`">
             <i class="font_family icon-camera-none"></i>
@@ -34,7 +34,8 @@
             },
             meetingInfo: {},
             howMany: "zero",
-            isShare: false
+            isShare: false,
+            mineFlag: false
         },
         data() {
             return {
@@ -97,7 +98,7 @@
             },
             Aliplayer() {
                 this.$nextTick(() => {
-                    setTimeout(() => {
+                    if (this.$refs.ali) {
                         this.player = new Aliplayer({
                             "id": `player_${this.data.uid}_ali`,
                             "source": this.src,
@@ -125,7 +126,11 @@
                                 this.player.play();
                             }
                         })
-                    })
+                    } else {
+                        setTimeout(() => {
+                            this.Aliplayer();
+                        }, 300)
+                    }
                 });
             },
             tcPlayer() {

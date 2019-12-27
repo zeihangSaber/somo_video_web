@@ -23,7 +23,7 @@
 					{{time_meeting}}
 				</span>
 			</div>
-			<i class="font_family icon-wifi-high"></i>
+			<i class="font_family icon-wifi-high" style="font-size: 16px !important;"></i>
 		</div>
 		<div :class="`ctrlLeft ${slideCount === 0 ? 'disable' : ''}`" @click="$emit('prevSlide')" v-if="maxSlide > 1"><i class="font_family icon-left"></i></div>
 		<div :class="`ctrlRight ${slideCount === maxSlide ? 'disable' : ''}`" @click="$emit('nextSlide')" v-if="maxSlide > 1"><i class="font_family icon-right"></i></div>
@@ -173,7 +173,7 @@
 							this.time_meeting = this.formatDuring(this.not_time)
 					}, 1000)
 				}
-			}, 700);
+			}, 1000);
 
 		},
 		methods:{

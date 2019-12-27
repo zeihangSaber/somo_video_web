@@ -1,6 +1,6 @@
 <template>
     <div class="ctrlMiddle" >
-        <div class="ctrlMiddleName">{{data.name ? data.name : data.uid}}</div>
+        <div class="ctrlMiddleName" >{{data.name ? data.name : data.uid}}</div>
         <i class="font_family icon-mic" v-if="data.mic === 0"></i>
         <svg v-else class="icon" aria-hidden="true">
             <use xlink:href="#icon-mic-no"></use>

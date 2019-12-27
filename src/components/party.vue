@@ -143,10 +143,10 @@
             <div class="line" v-if="hasControl"></div>
             <div class="bottom" v-if="hasControl" >
                 <button :disabled="!hasControl" @click="setMicAllOff">全体静音</button>
-                <button :disabled="!hasControl" @click="handleRemoveMicAllOn">
+                <button :disabled="!hasControl" @click="handleRemoveMicAllOn" style="width:108px;">
                     解除全体静音
                 </button>
-                <button :disabled="!hasControl" @click="handleLock">锁定会议</button>
+                <button :disabled="!hasControl" @click="handleLock" class="lockMeeting">锁定会议</button>
             </div>
         </div>
       </transition-group>
@@ -333,6 +333,16 @@
 </script>
 <style lang="less" scoped>
 @import "../common/common";
+.lockMeeting{
+	width:88px;
+	height:32px;
+	background:rgba(17,139,251,1);
+	border-radius:16px;
+	font-size:14px;
+	font-family:PingFangSC-Regular,PingFang SC;
+	font-weight:400;
+	color:rgba(255,255,255,1);
+}
 .title {
 	height: 48px;
 	padding-right: 8px;
@@ -357,7 +367,7 @@
 	.flex(space-between, center);
 
 	.p {
-		padding-left: 10px;
+		padding-left: 16px;
 		.fontStyle(18px, #000, blod);
 		flex: 1;
 	}
@@ -556,7 +566,7 @@
       padding: 0;
       background-color: #fff;
       height:32px;
-      width: 30%;
+      // width: 30%;
       min-width: 90px;
       font-size:14px;
       font-weight:400;

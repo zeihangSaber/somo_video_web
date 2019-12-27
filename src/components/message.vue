@@ -278,6 +278,7 @@
 				font-size:14px;
 				font-weight:400;
 				color:rgba(68,68,68,1);
+				display: inline-block;
 			}
 			.my_content{
 				// height:36px;

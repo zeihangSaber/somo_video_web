@@ -20,7 +20,7 @@
 				</span>
 				<span>
 					<i class="font_family icon-time"></i>
-					{{time_meeting}}
+					{{timer}}
 				</span>
 			</div>
 			<i class="font_family icon-wifi-high" style="font-size: 16px !important;"></i>
@@ -64,7 +64,7 @@
 				</button>
 			</div>
 			<button class="zoomIn" @click="$emit('handleSide')">
-				<i :class="`font_family ${changeScreen ? 'icon-zoomOut' : 'icon-zoomIn'}`"></i>
+				<i :class="`font_family ${changeScreen ? 'icon-zoomOut' : 'icon-zoomIn'}`" style="font-size: 32px;"></i>
 			</button>
 		</div>
 		<transition enter-active-class="animated flipInY fast" leave-active-class="animated flipOutY fast">
@@ -145,7 +145,8 @@
 			"ShowShare",
 			"maxSlide",
 			"slideCount",
-			"shareData"
+			"shareData",
+			"timer"
 		],
 		components: {},
 		computed:{
@@ -159,24 +160,24 @@
 			}
 		},
 		mounted() {
-			setTimeout(() => {
-				console.log(this.data)
-				if(this.data.start){
+
+		},
+		methods:{
+			set_meetingTime(type){
+				alert(type)
+				if(type == 1){
 					setInterval(() => {
 							let timestamp = (new Date()).getTime();//当前时间戳
 							this.time =  timestamp - this.data.start;
 							this.time_meeting = this.formatDuring(this.time)
 					}, 1000)
-				}else if(!this.data.start){
+				}else if(type == 0){
 					setInterval(() => {
 							this.not_time = this.not_time + 1000
 							this.time_meeting = this.formatDuring(this.not_time)
 					}, 1000)
 				}
-			}, 1000);
-
-		},
-		methods:{
+			},
 			// 复制成功
 			    onCopy(e){
 					this.$Toast.success({message: '邀请链接已复制到剪贴板'});
@@ -260,7 +261,7 @@
 		justify-content: space-between;
 		align-items: center;
 		padding: 0 20px 0 24px;
-		border-bottom: 1px solid #333333;
+		// border-bottom: 1px solid #333333;
 		font-size:28px;
 		font-weight:600;
 		color:rgba(255,255,255,1);
@@ -380,7 +381,7 @@
 				margin: 0 20px;
 				i {
 					display: block;
-					font-size: 32px;
+					font-size: 44px;
 				}
 				.icon-camera-no, .icon-mic-no {
 					color: #ff6b6f;

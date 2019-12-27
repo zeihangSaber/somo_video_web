@@ -5,6 +5,7 @@
             <ctrl
                 v-show="isShowCtrl"
                 @handleSide="handleSide"
+				:timer="timer"
                 :data="meetingInfo"
                 :peopleNum="peopleNum"
                 :micNum="micNum"
@@ -31,45 +32,46 @@
                 @selectSlide="(num) => slideCount = num"
                 ></ctrl>
            </transition>
-			<div style="width: 100%;height: 100vh;background: #000000;display: flex;justify-content: center;align-items: center;">
-				<div :class="`playerBigBox ${howMany}`" ref="playerBigBox">
-					<!-- 自己的推流 -->
-				    <div :class="`dragBox ${mineFlag}`"style="display: flex;position: absolute;" v-if="members.length <= 2">
-						<div style="width: 0;padding-bottom: 56%;"></div>
-						<div style="position: absolute;top: 0;left: 0;z-index: 1000;width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;overflow: hidden;">
-							<player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
-							<div style="width: 133.33%;height: 133.33%;">
-								<div class="drag" ref="draggable">
-									<div v-if="meetingInfo.mine && meetingInfo.mine.camera === 0" :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
+			<div class="leftBig_box">
+					<div :class="`playerBigBox ${howMany} `" ref="playerBigBox" id="playerBigBox">
+						<!-- 自己的推流 -->
+					    <div :class="`dragBox ${mineFlag}`"style="display: flex;position: absolute;" v-if="members.length <= 2">
+							<div style="width: 0;padding-bottom: 56%;"></div>
+							<div style="position: absolute;top: 0;left: 0;z-index: 1000;width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;overflow: hidden;">
+								<player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
+								<div style="width: 133.33%;height: 133.33%;">
+									<div class="drag" ref="draggable">
+										<div v-if="meetingInfo.mine && meetingInfo.mine.camera === 0" :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					<div :class="`dragBox ${mineFlag}`"style="display: flex;position: relative;" v-if="members.length > 2">
-						<div style="width: 0;padding-bottom: 56%;"></div>
-						<div style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;overflow: hidden;">
-							<player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
-							<div style="width: 133.33%;height: 133.33%;">
-								<div class="drag" ref="draggable">
-									<div v-if="meetingInfo.mine && meetingInfo.mine.camera === 0" :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
+						<div :class="`dragBox ${mineFlag}`"style="display: flex;position: relative;" v-if="members.length > 2">
+							<div style="width: 0;padding-bottom: 56%;"></div>
+							<div style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;overflow: hidden;">
+								<player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
+								<div style="width: 133.33%;height: 133.33%;">
+									<div class="drag" ref="draggable">
+										<div v-if="meetingInfo.mine && meetingInfo.mine.camera === 0" :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
+						<!-- 他人的 -->
+					    <player
+					            v-if="!(speakFlag || shareFlag)"
+					            v-for="item in nowPlayerNum"
+					            ref="players"
+					            :key="members[playerNum * (realCount - 1) + item - 1].uid"
+					            :meetingInfo="meetingInfo"
+					            :hawMany="howMany"
+					            :data="members[playerNum * (realCount - 1) + item - 1]">
+					    </player>
+					    <div class="space playerBox" v-if="!(speakFlag || shareFlag)" v-for="item of playerNum - nowPlayerNum"></div>
 					</div>
-					<!-- 他人的 -->
-				    <player
-				            v-if="!(speakFlag || shareFlag)"
-				            v-for="item in nowPlayerNum"
-				            ref="players"
-				            :key="members[playerNum * (realCount - 1) + item - 1].uid"
-				            :meetingInfo="meetingInfo"
-				            :hawMany="howMany"
-				            :data="members[playerNum * (realCount - 1) + item - 1]">
-				    </player>
-				    <div class="space playerBox" v-if="!(speakFlag || shareFlag)" v-for="item of playerNum - nowPlayerNum"></div>
-				</div>
+				
             
                 <template v-if="meetingInfo.mine.speaker !== 1">
                     <player v-if="speakFlag && !shareFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
@@ -77,6 +79,18 @@
                 </template>
                 <div v-if="waiting" class="waiting"><i class="font_family icon-camera-none"></i></div>
             </div>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
             <share :isShowShare_="isShowShare_" :shareData="shareData" @share_status="share_status"></share>
         </div>
         <transition enter-active-class="animated bounceIn faster" leave-active-class="animated bounceOut faster">
@@ -137,11 +151,13 @@
                 barrage: false,
                 shareData: {},
                 timer: '',
+				time:'',
+				not_time:1000,
                 test: false,
                 waiting: true,
                 message: [],
 				joinStatus:1,
-				
+				screenStatus:0,
             };
         },
         beforeCreate() {
@@ -185,6 +201,18 @@
 
         },
         async mounted() {
+			
+			window.onresize = function(){
+			    // alert(document.getElementById('playerBigBox').offsetTop);
+				console.log(document.getElementById('playerBigBox'))
+				console.log(document.getElementById('playerBigBox').offsetTop)
+				if(document.getElementById('playerBigBox').offsetTop < 36){
+					this.screenStatus = 1
+				}else if(document.getElementById('playerBigBox').offsetTop >= 36){
+					this.screenStatus = 0
+				}
+			}
+			
             window.addEventListener('offline', () => {
                 //网络由正常常到异常时触发
                 this.$Toast.success({message: '您的网络已断开，请检查网络设置。'})
@@ -323,6 +351,22 @@
                 console.log('离开会议',antiquity)
                 window.location.href = 'https://182.61.17.228/joinConference';
             },
+			formatDuring(mss) {
+					let days = parseInt(mss / (1000 * 60 * 60 * 24));
+					let hours = parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) + days * 24;
+					let minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60));
+					let seconds = parseInt((mss % (1000 * 60)) / 1000);
+					if(hours<10){
+						hours = '0' + hours
+					}
+					if(minutes<10){
+						minutes = '0' + minutes
+					}
+					if(seconds<10){
+						seconds = '0' + seconds
+					}
+					return hours + ":" + minutes + ":" + seconds;
+			},
             init() {
                 this.$nextTick(async () => {
                     this.shareData = {
@@ -355,6 +399,23 @@
                                 return
                             }
                             this.waiting = false;
+							if(this.meetingInfo.start){
+								setInterval(() => {
+										let timestamp = (new Date()).getTime();//当前时间戳
+										this.time =  timestamp - this.meetingInfo.start;
+										this.timer = this.formatDuring(this.time)
+								}, 1000)
+							}else if(!this.meetingInfo.start){
+								setInterval(() => {
+										this.not_time = this.not_time + 1000
+										this.timer = this.formatDuring(this.not_time)
+								}, 1000)
+							}
+							
+							
+							
+							
+							
                         });
                     antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
                 });
@@ -366,18 +427,40 @@
 <style lang="less">
     @import "./common/base";
     @import "./common/common";
-		.videoBox{
-			width: 100%;
-			height: 100%;
-			background: #000000;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
+	.leftBig_box{
+		 width: 100%;
+		 height: 100vh;
+		 background: #000000;
+		 display: flex;
+		 justify-content: center;
+		 align-items: center;
+		 padding-top: 36rpx;
+		 box-sizing: border-box;
+	}
+	.videoBox{
+		width: 100%;
+		height: 100%;
+		background: #000000;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.playerBigBox_act {
+		width: 100%;
+		height: calc(100vh - 72px);
+		background: #000000;
+		padding-bottom: 56.25%;
+		position: relative;
+	    overflow: hidden;
+		background: yellow;
+	    .flex(flex-start, flex-start);
+	    align-content: flex-start;
+	    flex-wrap: wrap;
+	}
     .playerBigBox {
 		width: 100%;
 		height: 0;
-		background: #000000;
+		background: #2E2E2E;
 		padding-bottom: 56.25%;
 		position: relative;
         overflow: hidden;
@@ -411,7 +494,7 @@
             .dragBox {
                 width: 410px;
                 height: 232px;
-                border: 4px solid #91949C;
+                border: 2px solid #2E2E2E;
                 position: absolute;
                 z-index: 5;
                 top: 0px;

@@ -33,20 +33,32 @@
            </transition>
 			<div style="width: 100%;height: 100vh;background: #000000;display: flex;justify-content: center;align-items: center;">
 				<div :class="`playerBigBox ${howMany}`" ref="playerBigBox">
-				    <div :class="`dragBox ${mineFlag}`"style="display: flex;position: relative;">
-						<div style="width: 0;padding-bottom: 56%;border: 1px solid red;"></div>
+					<!-- 自己的推流 -->
+				    <div :class="`dragBox ${mineFlag}`"style="display: flex;position: absolute;" v-if="members.length <= 2">
+						<div style="width: 0;padding-bottom: 56%;"></div>
+						<div style="position: absolute;top: 0;left: 0;z-index: 1000;width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;overflow: hidden;">
+							<player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
+							<div style="width: 133.33%;height: 133.33%;">
+								<div class="drag" ref="draggable">
+									<div v-if="meetingInfo.mine && meetingInfo.mine.camera === 0" :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div :class="`dragBox ${mineFlag}`"style="display: flex;position: relative;" v-if="members.length > 2">
+						<div style="width: 0;padding-bottom: 56%;"></div>
 						<div style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;overflow: hidden;">
 							<player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
 							<div style="width: 133.33%;height: 133.33%;">
 								<div class="drag" ref="draggable">
 									<div v-if="meetingInfo.mine && meetingInfo.mine.camera === 0" :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
-										<!-- <i class="font_family icon-camera-none"></i> -->
 									</div>
 								</div>
 							</div>
 						</div>
-						
-				    </div>
+					</div>
+					<!-- 他人的 -->
 				    <player
 				            v-if="!(speakFlag || shareFlag)"
 				            v-for="item in nowPlayerNum"
@@ -57,7 +69,7 @@
 				            :data="members[playerNum * (realCount - 1) + item - 1]">
 				    </player>
 				    <div class="space playerBox" v-if="!(speakFlag || shareFlag)" v-for="item of playerNum - nowPlayerNum"></div>
-			</div>
+				</div>
             
                 <template v-if="meetingInfo.mine.speaker !== 1">
                     <player v-if="speakFlag && !shareFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
@@ -394,13 +406,13 @@
             }
 
             .dragBox {
-                width: 328px;
-                height: 188px;
+                width: 410px;
+                height: 232px;
                 border: 4px solid #91949C;
                 position: absolute;
                 z-index: 5;
-                top: 50px;
-                right: 20px;
+                top: 0px;
+                right: 0px;
             }
         }
 
@@ -424,7 +436,7 @@
 
             .dragBox {
                 width: 33.133%;
-                height: 33.133%;
+                // height: 33.133%;
             }
         }
 

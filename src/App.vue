@@ -321,7 +321,7 @@
             LeaveMeeting(){
                 antiquity.leaveMeeting()
                 console.log('离开会议',antiquity)
-                window.location.href = 'http://localhost:8080/joinConference';
+                window.location.href = 'https://182.61.17.228/joinConference';
             },
             init() {
                 this.$nextTick(async () => {

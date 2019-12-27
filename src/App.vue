@@ -201,7 +201,6 @@
             },3000)
             document.addEventListener("fullscreenchange",()=>{
                 this.changeScreen =!this.changeScreen
-
             })
         },
         computed: {
@@ -275,6 +274,8 @@
                     const cfs = el.cancalFullScreen || el.webkitCancelFullScreen || el.mozCancelFullScreen || el.exitFullscreen
                     if(typeof cfs !="undefined" && cfs){
                        cfs.call(el)
+					   this.isShowParty = true
+					   this.isShowMessage = true
                     }
                     return
                 }else{
@@ -282,6 +283,8 @@
                     const rfs = el.requestFullscreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullScreen;
                     if(typeof rfs !== "undefined" && rfs){
                         rfs.call(el)
+						this.isShowParty = false
+						this.isShowMessage = false
                     }
                     return
                 }

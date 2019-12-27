@@ -5,7 +5,7 @@
         v-if="data.uid !== meetingInfo.mine.uid"
         :id="data.uid === meetingInfo.mine.uid ? 'mine' : ''"
     >
-<!--        <player-status :data="data"></player-status>-->
+        <player-status :data="data"></player-status>
         <div class="grail">
             <div :id="`player_${data.uid}_tc`" class="vjs-tech"></div>
             <div :id="`player_${data.uid}_ali`" class="vjs-tech"></div>
@@ -96,34 +96,35 @@
             },
             Aliplayer() {
                 this.$nextTick(() => {
-                    this.player = new Aliplayer({
-                        "id": `player_${this.data.uid}_ali`,
-                        "source": this.src,
-                        // "width": `800px`,
-                        // "height": `450px`,
-                        "width": `${100 *16 / 12}%`,
-                        "height": `${100 *16 / 12}%`,
-                        // "rtmpBufferLength": 0,
-                        "autoplay": true,
-                        "isLive": true,
-                        "useFlashPrism": true,
-                        "definition": "FD",
-                        "autoPlayDelay": 0,
-                        "controlBarVisibility": "click"
-                    });
-                    this.player.on("liveStreamStop", () => {
-                        console.log("error~~~~~~~~~~~~~~~~~~~, 没有取到播放源");
-                        if (this.count === 3) {
-                            this.count = 0;
-                            this.reset();
-                            console.log('error~~~~~~~~~~~~~~~~~~~, 重置播放器')
-                        } else {
-                            ++this.count;
-                            this.player.pause();
-                            this.player.play();
-                        }
+                    setTimeout(() => {
+                        this.player = new Aliplayer({
+                            "id": `player_${this.data.uid}_ali`,
+                            "source": this.src,
+                            // "width": `800px`,
+                            // "height": `450px`,
+                            "width": `${100 *16 / 12}%`,
+                            "height": `${100 *16 / 12}%`,
+                            // "rtmpBufferLength": 0,
+                            "autoplay": true,
+                            "isLive": true,
+                            "useFlashPrism": true,
+                            "definition": "FD",
+                            "autoPlayDelay": 0,
+                            "controlBarVisibility": "click"
+                        });
+                        this.player.on("liveStreamStop", () => {
+                            console.log("error~~~~~~~~~~~~~~~~~~~, 没有取到播放源");
+                            if (this.count === 3) {
+                                this.count = 0;
+                                this.reset();
+                                console.log('error~~~~~~~~~~~~~~~~~~~, 重置播放器')
+                            } else {
+                                ++this.count;
+                                this.player.pause();
+                                this.player.play();
+                            }
+                        })
                     })
-
                 });
             },
             tcPlayer() {

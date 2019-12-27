@@ -145,7 +145,7 @@
             }
         },
         beforeDestroy() {
-            this.data.uid !== this.meetingInfo.mine.uid && this.player.dispose();
+            this.data.uid !== this.meetingInfo.mine.uid && this.player && this.player.dispose();
         }
     };
 </script>

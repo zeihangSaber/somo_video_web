@@ -1,6 +1,6 @@
 <template>
     <div class="ctrlMiddle" >
-        {{data.name ? data.name : data.uid}}
+        <div class="ctrlMiddleName">{{data.name ? data.name : data.uid}}</div>
         <i class="font_family icon-mic" v-if="data.mic === 0"></i>
         <svg v-else class="icon" aria-hidden="true">
             <use xlink:href="#icon-mic-no"></use>
@@ -17,6 +17,12 @@
 
 <style lang="less" scoped>
     @import "../common/common";
+	.ctrlMiddleName{
+		max-width: 200px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
     .ctrlMiddle {
         padding: 0 16px 0 12px;
         height: 32px;
@@ -25,10 +31,10 @@
         font-size: 16px;
         position: absolute;
         left: 0;
-        top: 50px;
+        top: 0px;
         background-color: rgba(0, 0, 0, 0.6);
         border-radius: 0 20px 20px 0;
-        z-index: 9999;
+        z-index: 500;
         .flex(center, center);
         svg {
             margin-left: 5px;

@@ -59,6 +59,9 @@
 				<button @click="() => showSetting = !showSetting">
 					<i :class="`font_family icon-setting ${showSetting ? 'active' : ''}`"></i>设置
 				</button>
+				<button @click="$emit('LeaveMeeting')">
+					<i style="color:#FF5245" class="font_family icon-tuichu-normal "></i>离开
+				</button>
 			</div>
 			<button class="zoomIn" @click="$emit('handleSide')">
 				<i :class="`font_family ${changeScreen ? 'icon-zoomOut' : 'icon-zoomIn'}`"></i>
@@ -156,19 +159,21 @@
 			}
 		},
 		mounted() {
-			console.log(this.data)
-			if(this.data.start){
-				setInterval(() => {
-						let timestamp = (new Date()).getTime();//当前时间戳
-						this.time =  timestamp - this.data.start;
-						this.time_meeting = this.formatDuring(this.time)
-				}, 1000)
-			}else if(!this.data.start){
-				setInterval(() => {
-						this.not_time = this.not_time + 1000
-						this.time_meeting = this.formatDuring(this.not_time)
-				}, 1000)
-			}
+			setTimeout(() => {
+				console.log(this.data)
+				if(this.data.start){
+					setInterval(() => {
+							let timestamp = (new Date()).getTime();//当前时间戳
+							this.time =  timestamp - this.data.start;
+							this.time_meeting = this.formatDuring(this.time)
+					}, 1000)
+				}else if(!this.data.start){
+					setInterval(() => {
+							this.not_time = this.not_time + 1000
+							this.time_meeting = this.formatDuring(this.not_time)
+					}, 1000)
+				}
+			}, 700);
 
 		},
 		methods:{

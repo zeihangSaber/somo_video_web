@@ -68,9 +68,10 @@
                 if (this.data.uid === this.meetingInfo.mine.uid) return;
                 this.player && this.player.dispose();
                 if (!this.$refs.playerBox) return;
-                this.$nextTick(() => {
+                clearTimeout(this.timer);
+                this.timer = setTimeout(() => {
                     this.Aliplayer();
-                });
+                }, 300);
             },
             createVideo() {
                 if (this.data.uid === this.meetingInfo.mine.uid) return;
@@ -99,6 +100,7 @@
             Aliplayer() {
                 this.$nextTick(() => {
                     if (this.$refs.ali) {
+                        console.log(this.$refs.ali);
                         this.player = new Aliplayer({
                             "id": `player_${this.data.uid}_ali`,
                             "source": this.src,
@@ -112,22 +114,24 @@
                             "useFlashPrism": true,
                             "definition": "FD",
                             "autoPlayDelay": 0,
-                            "controlBarVisibility": "click"
+                            "controlBarVisibility": "click",
+                            "liveRetry": 10
                         });
                         this.player.on("liveStreamStop", () => {
-                            console.log("error~~~~~~~~~~~~~~~~~~~, 没有取到播放源");
-                            if (this.count === 3) {
+                            if (this.count === 2) {
                                 this.count = 0;
                                 this.reset();
                                 console.log('error~~~~~~~~~~~~~~~~~~~, 重置播放器')
                             } else {
+                                console.log("error~~~~~~~~~~~~~~~~~~~, 没有取到播放源");
                                 ++this.count;
                                 this.player.pause();
                                 this.player.play();
                             }
                         })
                     } else {
-                        setTimeout(() => {
+                        clearTimeout(this.timer);
+                        this.timer = setTimeout(() => {
                             this.Aliplayer();
                         }, 300)
                     }
@@ -145,6 +149,7 @@
             }
         },
         beforeDestroy() {
+            clearTimeout(this.timer);
             this.data.uid !== this.meetingInfo.mine.uid && this.player && this.player.dispose();
         }
     };

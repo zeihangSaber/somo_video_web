@@ -81,14 +81,14 @@
 								<svg class="icon" aria-hidden="true" v-if="playerNum === 4">
 									<use xlink:href="#icon-select"></use>
 								</svg>
-								<i class="font_family icon-select-no" v-else></i>
+								<i class="font_family set_icon icon-select-no" v-else></i>
 								<span>四分屏</span>
 							</div>
 							<div @click="$emit('selectNine')">
 								<svg class="icon" aria-hidden="true" v-if="playerNum === 9">
 									<use xlink:href="#icon-select"></use>
 								</svg>
-								<i class="font_family icon-select-no" v-else></i>
+								<i class="font_family set_icon icon-select-no" v-else></i>
 								<span>九分屏</span>
 							</div>
 						</div>
@@ -100,14 +100,14 @@
 								<svg class="icon" aria-hidden="true" v-if="barrage">
 									<use xlink:href="#icon-select"></use>
 								</svg>
-								<i class="font_family icon-select-no" v-else></i>
+								<i class="font_family set_icon icon-select-no" v-else></i>
 								<span>开启</span>
 							</div>
 							<div @click="$emit('barrageFalse')">
 								<svg class="icon" aria-hidden="true" v-if="!barrage">
 									<use xlink:href="#icon-select"></use>
 								</svg>
-								<i class="font_family icon-select-no" v-else></i>
+								<i class="font_family set_icon icon-select-no" v-else></i>
 								<span>关闭</span>
 							</div>
 						</div>
@@ -218,6 +218,9 @@
 
 <style lang="less" scoped>
 @import "../common/common";
+.set_icon{
+	font-size: 16px !important;
+}
 .set_box{
 	width: 320px;
 	background:rgba(0, 0, 0, .6);

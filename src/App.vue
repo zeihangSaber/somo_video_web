@@ -1,6 +1,13 @@
 <template>
     <div id="app">
         <div class="content" @mouseenter="Enter($event)" @mouseleave="Leave($event)" ref="content">
+			<!-- 30分钟 -->
+			<div v-if="endMeeting" class="timeUseUP_box">
+				<div class="timeUseUP">
+					<div>30分钟免费限时会议已结束</div>
+					<div class="timeUseUP_btn" @click="LeaveMeeting()">退出会议 {{ten}}s</div>
+				</div>
+			</div>
            <transition enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <ctrl
                 v-show="isShowCtrl"
@@ -36,10 +43,10 @@
 					<div :class="`playerBigBox ${howMany} `" ref="playerBigBox">
 						<!-- 自己的推流  v-if="howMany != 'two'&&howMany != 'fir'"-->
 					    <div :class="`dragBox ${mineFlag}`" style="display: flex;">
-							<div style="width: 0;padding-bottom: 56.25%;"></div>
-							<div style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+							<div class="set_height"></div>
+							<div class="set_myBox">
 								<player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
-								<div style="width: 133.33%;height: 133.33%;">
+								<div class="my_plugFlow">
 									<div class="drag" ref="draggable">
 										<div v-if="meetingInfo.mine.camera === 1" :class="`${meetingInfo.mine.camera === 1 ? '' : 'dragHasCamera'}`">
 											<img src="https://182.61.17.228/common/logoGif.gif">
@@ -135,6 +142,9 @@
                 message: [],
 				joinStatus:1,
 				screenStatus:0,
+				destroy_timer:'',
+				endMeeting:0,
+				ten:10000
             };
         },
         beforeCreate() {
@@ -163,6 +173,37 @@
                         return item;
                     }
                 }).length;
+				if(this.peopleNum >=2){
+					this.isShowShare_ = false
+				}
+				if(this.peopleNum==3 && MeetingStatus){
+					// alert(Date.parse(new Date()))
+					let NowTime = Date.parse(new Date())
+					let start3 = this.meetingInfo.start3 + 1800000
+					// console.log(this.meetingInfo.start3)
+					if(NowTime - start3 == 10000){
+						this.endMeeting = 1
+						setInterval(()=>{
+							this.ten - 1000
+						},1000)
+					}
+				}
+				if(this.peopleNum>=2){
+					clearInterval(this.destroy_timer)
+					if(this.meetingInfo.start){
+						this.destroy_timer = setInterval(() => {
+								let timestamp = (new Date()).getTime();//当前时间戳
+								this.time =  timestamp - this.meetingInfo.start;
+								this.timer = this.formatDuring(this.time)
+						}, 1000)
+					}else if(!this.meetingInfo.start){
+						this.destroy_timer = setInterval(() => {
+								this.not_time = this.not_time + 1000
+								this.timer = this.formatDuring(this.not_time)
+						}, 1000)
+					}
+					
+				}
             });
             antiquity.on('getShareUrl', sharer => {
                 this.sharer = sharer;
@@ -188,8 +229,10 @@
             })
 
         },
+		destroyed(){
+			clearInterval(this.destroy_timer)
+		},
         async mounted() {
-
 			window.onresize = function(){
 			    // alert(document.getElementById('playerBigBox').offsetTop);
 				console.log(document.getElementById('playerBigBox'))
@@ -222,6 +265,11 @@
 			// playerNum 几分屏
 			// members   成员
 			// slideCount几个切屏
+			end(){
+				if(this.ten == 0){
+					this.LeaveMeeting()
+				}
+			},
             maxSlide() {//
                 let maxSlide = Math.max(Math.ceil(this.members.length / this.playerNum), 1);
                 (this.speaker || this.sharer) && ++maxSlide;
@@ -392,23 +440,9 @@
                                 return
                             }
                             this.waiting = false;
-							if(this.meetingInfo.start){
-								setInterval(() => {
-										let timestamp = (new Date()).getTime();//当前时间戳
-										this.time =  timestamp - this.meetingInfo.start;
-										this.timer = this.formatDuring(this.time)
-								}, 1000)
-							}else if(!this.meetingInfo.start){
-								setInterval(() => {
-										this.not_time = this.not_time + 1000
-										this.timer = this.formatDuring(this.not_time)
-								}, 1000)
-							}
-
-
-
-
-
+							
+							
+							
                         });
                     antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
                 });
@@ -420,6 +454,62 @@
 <style lang="less">
     @import "./common/base";
     @import "./common/common";
+	.timeUseUP_btn{
+		width:160px;
+		height:32px;
+		margin: 0 auto;
+		background:linear-gradient(180deg,rgba(255,114,97,1) 0%,rgba(255,82,69,1) 100%);
+		border-radius:24px;
+		margin-top: 24px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size:16px;
+		font-weight:400;
+		color:rgba(255,255,255,1);
+	}
+	.timeUseUP_box{
+		width: 100%;
+		height: 100vh;
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 10000;
+		background: red;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.timeUseUP{
+		width:284px;
+		height:168px;
+		background:rgba(255,255,255,1);
+		border-radius:8px;
+		font-size:18px;
+		font-weight:500;
+		color:rgba(51,51,51,1);
+		padding: 40px 32px;
+		box-sizing: border-box;
+	}
+	.my_plugFlow{
+		width: 133.33%;
+		height: 133.33%;
+	}
+	.set_myBox{
+		position: absolute;
+		top: 0px; 
+		left: 0px; 
+		width: 100%; 
+		height: 100%; 
+		display: flex; 
+		justify-content: center; 
+		align-items: center; 
+		overflow: hidden;
+	}
+	.set_height{
+		width: 0;
+		padding-bottom: 56.25%;
+	}
 	.leftBig_box{
 		 width: 100%;
 		 height: 100vh;

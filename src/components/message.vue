@@ -10,7 +10,7 @@
                 <div class="topBox" ref="topBox">
                     <div ref="topBox_">
                         <div class="msgBox" v-for="itme in message">
-                            <div v-if="itme.uid != meetingInfo.mine.uid" class="msg">
+                            <div v-if="itme.uid != meetingInfo.mine.uid" class="msg rests_msg">
 								<div class="user_name-time">
 									<div class="msgBox-name">{{itme.name}}</div>
 									<span class="msg_time">{{itme.time}}</span>
@@ -31,7 +31,7 @@
 				<div class="send_box">
 					<div class="textarea_box"><textarea class="textarea" wrap="virtual" maxlength="70" placeholder="在此处输入消息…" rows="3" v-model="msgContent"></textarea></div>
 					<button :disabled=disabled @click="send_msg()">
-						<i class="font_family icon-fasong"></i><br>
+						<i class="font_family icon-fasong" ></i><br>
 						{{msgContent.length}}/70
 					</button>
 				</div>
@@ -151,6 +151,12 @@
 </script>
 <style lang="less" scoped>
     @import "../common/common";
+	.rests_msg{
+		padding-left: 16px;
+		padding-right: 40px;
+		box-sizing: border-box;
+		letter-spacing: 1px;
+	}
 	.my_time{
 		margin-right: 8px;
 	}
@@ -207,7 +213,7 @@
         flex-direction: column;
         .top,
         .bottom {
-            padding: 20px 16px;
+            padding: 20px 0;
             padding-right: 0px;
             box-sizing: border-box;
         }
@@ -227,8 +233,8 @@
             .topBox {
                 height: 100%;
                 overflow-y: overlay;
-                padding-right: 20px;
-                box-sizing: border-box;
+                // padding-right: 20px;
+                // box-sizing: border-box;
 
             }
             .myScroll(topBox)
@@ -238,14 +244,17 @@
 				color: #BBBBBB;
 				margin-left: 10px;
 				font-size: 12px;
+				font-weight: 400;
 			}
             .ME-msg {
                 text-align: right;
-                padding-right: 10px;
+                padding-right: 16px;
+				padding-left: 40px;
                 box-sizing: border-box;
             }
             .msg {
                 margin-bottom: 16px;
+				box-sizing: border-box;
             }
 			.user_name-time{
 				display: flex;
@@ -255,7 +264,7 @@
             .msgBox-name {
 				font-size:12px;
 				font-weight:600;
-				color:rgba(51,51,51,1);
+				color:#555555;
 				// border: 1px solid red;
 				white-space: nowrap;
 				overflow: hidden;
@@ -272,24 +281,27 @@
             }
 			.others_content{
 				background:rgba(244,244,244,1);
-				border-radius:4px 18px 18px 18px;
+				border-radius:4px;
 				padding: 8px 12px;
 				box-sizing: border-box;
-				font-size:14px;
+				font-size:13px;
 				font-weight:400;
 				color:rgba(68,68,68,1);
 				display: inline-block;
 			}
 			.my_content{
+				text-align: left;
 				// height:36px;
 				background:rgba(17,165,251,1);
-				border-radius:18px 4px 18px 18px !important;
-				font-size:14px;
+				border-radius:4px !important;
+				font-size:13px;
 				font-weight:400;
 				color:rgba(255,255,255,1);
 				display: inline-block;
 				padding: 8px 12px;
 				box-sizing: border-box;
+				line-height: 20px;
+				letter-spacing: 1px;
 			}
         }
         .line {

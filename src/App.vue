@@ -41,7 +41,8 @@
 								<player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
 								<div style="width: 133.33%;height: 133.33%;">
 									<div class="drag" ref="draggable">
-										<div v-if="meetingInfo.mine && meetingInfo.mine.camera === 0" :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
+										<div v-if="meetingInfo.mine.camera === 1" :class="`${meetingInfo.mine.camera === 1 ? '' : 'dragHasCamera'}`">
+											<img src="https://182.61.17.228/common/logoGif.gif">
 										</div>
 									</div>
 								</div>
@@ -53,16 +54,14 @@
 								<player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
 								<div style="width: 133.33%;height: 133.33%;">
 									<div class="drag" ref="draggable">
-										<div v-if="meetingInfo.mine && meetingInfo.mine.camera === 0" :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
+										<div v-if="meetingInfo.mine.camera === 1" :class="`${meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
+											<img src="https://182.61.17.228/common/logoGif.gif">
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 						<!-- <div style="position: absolute;top: 0;left: 0;width: 100px;height: 100px;background: #FFFFFF;z-index: 1111111;">{{howMany}}</div> -->
-						
-						
-						
 						<!-- 他人的 -->
 					    <player
 					            v-if="!(speakFlag || shareFlag)"
@@ -84,7 +83,7 @@
             </div>
             <share :isShowShare_="isShowShare_" :shareData="shareData" @share_status="share_status"></share>
         </div>
-        <transition enter-active-class="animated bounceIn faster" leave-active-class="animated bounceOut faster">
+        <transition enter-active-class="animated slideInRight faster" leave-active-class="animated slideOutRight faster">
             <side-box
                     :data="meetingInfo"
                     :members="speaker ? [speaker, ...members] : members"
@@ -155,9 +154,9 @@
 			if(this.joinStatus == 1){
 				window.onbeforeunload = (e) => {
 					e.returnValue = ("确定离开当前页面吗？");
-				};	
+				};
 			}
-           
+
         },
         created() {
             antiquity.on("getMsg", (msg) => {
@@ -166,7 +165,7 @@
                 this.message.push(msg)
             });
             antiquity.on('getMidInfo', meetingInfo => {
-				console.log(meetingInfo)
+				console.log('xxxxxx',meetingInfo)
                 this.meetingInfo = meetingInfo;
             });
             antiquity.on('getMembers', members => {
@@ -198,7 +197,7 @@
 
         },
         async mounted() {
-			
+
 			window.onresize = function(){
 			    // alert(document.getElementById('playerBigBox').offsetTop);
 				console.log(document.getElementById('playerBigBox'))
@@ -208,8 +207,8 @@
 				}else if(document.getElementById('playerBigBox').offsetTop >= 36){
 					this.screenStatus = 0
 				}
-			}
-			
+			};
+
             window.addEventListener('offline', () => {
                 //网络由正常常到异常时触发
                 this.$Toast.success({message: '您的网络已断开，请检查网络设置。'})
@@ -220,13 +219,10 @@
             });
             this.$nextTick(() => {
                 this.init();
-            })
+            });
             this.showCtrlTime = setTimeout(()=>{
                 this.isShowCtrl = false
-            },3000)
-            document.addEventListener("fullscreenchange",()=>{
-                this.changeScreen =!this.changeScreen
-            })
+            },3000);
         },
         computed: {
             maxSlide() {
@@ -294,24 +290,27 @@
             ShowShare() {
             },
             handleSide() {
-                if(this.changeScreen){
-                    const el = document
-                    const cfs = el.cancalFullScreen || el.webkitCancelFullScreen || el.mozCancelFullScreen || el.exitFullscreen
-                    if(typeof cfs !="undefined" && cfs){
-                       cfs.call(el)
-					   this.isShowParty = true
-					   this.isShowMessage = true
-                    }
-                    return
-                }else{
-                    const el = document.documentElement;
+                if (this.changeScreen) {
+					if (document.exitFullscreen) {
+						document.exitFullscreen();
+					} else if (document.msExitFullscreen) {
+						document.msExitFullscreen();
+					} else if (document.mozCancelFullScreen) {
+						document.mozCancelFullScreen();
+					} else if (document.webkitCancelFullScreen) {
+						document.webkitCancelFullScreen();
+					}
+					this.changeScreen = false;
+
+				} else {
+					this.changeScreen = true;
+					const el = document.documentElement;
                     const rfs = el.requestFullscreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullScreen;
                     if(typeof rfs !== "undefined" && rfs){
-                        rfs.call(el)
-						this.isShowParty = false
+                        rfs.call(el);
+						this.isShowParty = false;
 						this.isShowMessage = false
                     }
-                    return
                 }
             },
             handleMessage() {
@@ -408,11 +407,11 @@
 										this.timer = this.formatDuring(this.not_time)
 								}, 1000)
 							}
-							
-							
-							
-							
-							
+
+
+
+
+
                         });
                     antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
                 });
@@ -551,7 +550,7 @@
                 top: 0;
                 left: 0;
                 z-index: 5;
-                background-color: #444;
+                background-color: #343D4F;
                 .flex(center, center);
 
                 .icon-camera-none {

@@ -4,14 +4,13 @@
       <p class="p" v-if="search_show == 0">参会方(<span>{{ members.length }}</span>)</p>
 	  <input v-if="search_show == 1" type="text" placeholder="搜索账号名称" v-model="search" @input="search_member" class="searchInput"/>
 	  <div>
-		  <i class="font_family icon-chazhaoanniu search" @click="searchShow()"></i>
+		  <i :class="search_show == 1?'font_family icon-chazhaoanniu search_act':'font_family icon-chazhaoanniu search'" @click="searchShow()"></i>
 		  <i class="font_family icon-close" @click="$emit('handleParty')"></i>
 	  </div>
     </div>
     <div class="box">
       <transition-group class="top" name="list-complete" tag="div">
         <div key="search" class="input">
-          
           <div class="member">
             <div
               v-if="search == ''"
@@ -33,18 +32,20 @@
 				
                 <!-- <span v-if="item.speaker === 1" class="speaker">主讲</span> -->
               </p>
-              <button
+              <!-- <button
                 v-if="item.role !== 4"
                 class="permissionBtn"
                 @click="setMic(item)"
               >
-                {{ item.mic === 1 ? "取消静音" : "静音" }}
-              </button>
+              </button> -->
               <button class="permissionBtn more" @click="more(item)">
                 更多
                 <div v-show="permissionShow" class="permission">
                   <span class="permission_header"></span>
                   <div class="permission_content">
+                    <div @click="setMic(item)">
+                      {{ item.mic === 1 ? "取消静音" : "静音" }}
+                    </div>
                     <div
                       v-if="permissionType.setSpeaker"
                       @click="setSpeaker(item)"
@@ -88,21 +89,24 @@
 								
                                 <span v-if="item.speaker === 1" class="speaker">主讲</span>
                             </p>
-                            <button
+                            <!-- <button
                                     v-if="item.role !== 4"
                                     class="permissionBtn"
                                     @click="setMic(item)"
                             >
                                 {{ item.mic === 1 ? "取消静音" : "静音" }}
-                            </button>
+                            </button> -->
                             <button class="permissionBtn more" @click="more(item)">
                                 更多
                                 <div v-show="permissionShow" class="permission">
                                     <span class="permission_header"></span>
                                     <div class="permission_content">
+                                        <div @click="setMic(item)">
+                                          {{ item.mic === 1 ? "取消静音" : "静音" }}
+                                        </div>
                                         <div
-                                                v-if="permissionType.setSpeaker"
-                                                @click="setSpeaker(item)"
+                                            v-if="permissionType.setSpeaker"
+                                            @click="setSpeaker(item)"
                                         >
                                             {{ item.speaker === 1 ? "结束主讲" : "设为主讲" }}
                                         </div>
@@ -110,8 +114,8 @@
                                             设为主持人
                                         </div>
                                         <div
-                                                v-if="permissionType.setCamera"
-                                                @click="setCamera(item)"
+                                            v-if="permissionType.setCamera"
+                                            @click="setCamera(item)"
                                         >
                                             {{ item.camera === 1 ? "开启摄像头" : "关闭摄像头" }}
                                         </div>
@@ -153,7 +157,7 @@
                 <button :disabled="!hasControl" @click="handleRemoveMicAllOn" style="width:108px;">
                     解除全体静音
                 </button>
-                <button :disabled="!hasControl" @click="handleLock" class="lockMeeting">锁定会议</button>
+                <button :disabled="!hasControl" @click="handleLock" :class="data.locked ?'lockMeeting':'lockMeeting noLockMeeting'">锁定会议</button>
             </div>
         </div>
       </transition-group>
@@ -212,6 +216,7 @@
 		  }
 		},
 		more(item) {
+      console.log("xxxx",item)
 		  this.permissionType = {
 			setSpeaker: true,
 			setRole: true,
@@ -340,20 +345,14 @@
 </script>
 <style lang="less" scoped>
 @import "../common/common";
-.lockMeeting{
-	width:88px;
-	height:32px;
-	background:rgba(17,139,251,1);
-	border-radius:16px;
-	font-size:14px;
-	font-family:PingFangSC-Regular,PingFang SC;
-	font-weight:400;
-	color:rgba(255,255,255,1);
-}
 .title {
 	height: 48px;
 	padding-right: 8px;
 	box-sizing: border-box;
+	.search_act{
+		color: #118BFB;
+		margin-right: 8px;
+	}
 	.search{
 		color: #c5c6c8;
 		margin-right: 8px;
@@ -391,10 +390,6 @@
   flex: 1;
   .flex();
   flex-direction: column;
-  .bottom {
-    padding: 10px 10px;
-  }
-
   .top {
     height: calc(100% - 60px);
     flex: 1;
@@ -485,8 +480,7 @@
           .permission {
             position: absolute;
             right: 12px;
-            top: 30px;
-
+            top: 15px;
             .permission_header {
               border-radius: 1px;
               position: relative;
@@ -551,25 +545,28 @@
       }
     }
   }
-
   .line {
     border-bottom: 2px solid #f4f4f4;
   }
-
   .bottom {
     height: 52px !important;
     .flex(space-between);
-	.lockMeeting{
-		width: 27.5%;
-		background:rgba(17,139,251,1);
-		border-radius:16px;
-		font-size:14px;
-		font-weight:400;
-		color:rgba(255,255,255,1) !important;
-	}
+    padding: 10px 10px;
+    .lockMeeting{
+      width: 27.5%;
+      background:rgba(17,139,251,1);
+      border-radius:16px;
+      font-size:14px;
+      font-weight:400;
+      color:rgba(255,255,255,1) !important;
+    }
+    .noLockMeeting{
+      color: #118bfb !important;
+      background-color: #fff !important;
+    }
     button {
-	  border-radius:16px;
-	  border:1px solid rgba(17,139,251,1) !important;
+      border-radius:16px;
+      border:1px solid rgba(17,139,251,1) !important;
       padding: 0;
       background-color: #fff;
       height:32px;
@@ -578,6 +575,7 @@
       font-size:14px;
       font-weight:400;
       color:rgba(17,139,251,1) !important;
+      outline: none;  
     }
   }
 

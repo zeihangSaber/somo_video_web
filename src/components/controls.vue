@@ -5,9 +5,11 @@
 			<div class="center">
 				<span class="bigSpan">会议号：{{this.data.code}}</span>
 				<span class="bigSpan" v-if="data.pwd">密码：{{this.data.pwd}}</span>
+				<span class="bigSpan">
+					<i v-if="this.data.locked" class="font_family icon-lock"></i>
+				</span>
 				<span v-show="this.data.name">
 					{{ this.data.name }}
-					<i v-if="this.data.locked" class="font_family icon-lock"></i>
 				</span>
 				<span>
 					<i class="font_family icon-people-num"></i>
@@ -119,102 +121,110 @@
 </template>
 
 <script>
-	import antiquity from "../utils/Antiquity"
-	let interval;
-	export default {
-		name: "app",
-		data(){
-			return{
-				showSetting: false,
-				time:'',
-				time_meeting:'',
-				not_time:1000
-				// sysAppIds:''
-			}
-		},
-		props: [
-			"data",
-			"peopleNum",
-			"micNum",
-			"showSide",
-			"changeScreen",
-			"showMessage",
-			"showParty",
-			"playerNum",
-			"barrage",
-			"ShowShare",
-			"maxSlide",
-			"slideCount",
-			"shareData",
-			"timer"
-		],
-		components: {},
-		computed:{
-			sysAppIds(){
-				let data = '您好：' + '\n'
-		        + '蓝猫微会视频会议正在进行中，特邀请您参加。' + '\n'
-		        + '会议号：' + this.shareData.mid +  '\n'
-		        + '会议链接：https://182.61.17.228/sharePage?invite_code=' + this.shareData.mid +  '\n'
-		        + '您可以直接输入会议号加入会议， 也可以点击会议链接直接入会。'
-				return data
-			}
-		},
-		mounted() {
-
-		},
-		methods:{
-			set_meetingTime(type){
-				alert(type)
-				if(type == 1){
-					setInterval(() => {
-							let timestamp = (new Date()).getTime();//当前时间戳
-							this.time =  timestamp - this.data.start;
-							this.time_meeting = this.formatDuring(this.time)
-					}, 1000)
-				}else if(type == 0){
-					setInterval(() => {
-							this.not_time = this.not_time + 1000
-							this.time_meeting = this.formatDuring(this.not_time)
-					}, 1000)
-				}
-			},
-			// 复制成功
-			    onCopy(e){
-					this.$Toast.success({message: '邀请链接已复制到剪贴板'});
-				},
-			    // 复制失败
-			    onError(e){
-					this.$Toast.success({message: '复制失败'});
-			},
-			formatDuring(mss) {
-					let days = parseInt(mss / (1000 * 60 * 60 * 24));
-					let hours = parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) + days * 24;
-					let minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60));
-					let seconds = parseInt((mss % (1000 * 60)) / 1000);
-					if(hours<10){
-						hours = '0' + hours
-					}
-					if(minutes<10){
-						minutes = '0' + minutes
-					}
-					if(seconds<10){
-						seconds = '0' + seconds
-					}
-					return hours + ":" + minutes + ":" + seconds;
-			},
-			handleMic() {
-				this.data.mine.mic === 0 ? antiquity.muteAudio() : antiquity.unmuteAudio();
-			},
-			handleCamera() {
-				this.data.mine.camera === 0
-					? antiquity.muteVideo()
-					: antiquity.unmuteVideo(this.data.video_url);
-			}
-		},
-		destroyed() {
-			clearInterval(interval)
-		}
-	};
+import antiquity from "../utils/Antiquity";
+let interval;
+export default {
+  name: "app",
+  data() {
+    return {
+      showSetting: false,
+      time: "",
+      time_meeting: "",
+      not_time: 1000
+      // sysAppIds:''
+    };
+  },
+  props: [
+    "data",
+    "peopleNum",
+    "micNum",
+    "showSide",
+    "changeScreen",
+    "showMessage",
+    "showParty",
+    "playerNum",
+    "barrage",
+    "ShowShare",
+    "maxSlide",
+    "slideCount",
+    "shareData",
+    "timer"
+  ],
+  components: {},
+  computed: {
+    sysAppIds() {
+      let data =
+        "您好：" +
+        "\n" +
+        "蓝猫微会视频会议正在进行中，特邀请您参加。" +
+        "\n" +
+        "会议号：" +
+        this.shareData.mid +
+        "\n" +
+        "会议链接：https://182.61.17.228/sharePage?invite_code=" +
+        this.shareData.mid +
+        "\n" +
+        "您可以直接输入会议号加入会议， 也可以点击会议链接直接入会。";
+      return data;
+    }
+  },
+  mounted() {},
+  methods: {
+    set_meetingTime(type) {
+      alert(type);
+      if (type == 1) {
+        setInterval(() => {
+          let timestamp = new Date().getTime(); //当前时间戳
+          this.time = timestamp - this.data.start;
+          this.time_meeting = this.formatDuring(this.time);
+        }, 1000);
+      } else if (type == 0) {
+        setInterval(() => {
+          this.not_time = this.not_time + 1000;
+          this.time_meeting = this.formatDuring(this.not_time);
+        }, 1000);
+      }
+    },
+    // 复制成功
+    onCopy(e) {
+      this.$Toast.success({ message: "邀请链接已复制到剪贴板" });
+    },
+    // 复制失败
+    onError(e) {
+      this.$Toast.success({ message: "复制失败" });
+    },
+    formatDuring(mss) {
+      let days = parseInt(mss / (1000 * 60 * 60 * 24));
+      let hours =
+        parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) + days * 24;
+      let minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60));
+      let seconds = parseInt((mss % (1000 * 60)) / 1000);
+      if (hours < 10) {
+        hours = "0" + hours;
+      }
+      if (minutes < 10) {
+        minutes = "0" + minutes;
+      }
+      if (seconds < 10) {
+        seconds = "0" + seconds;
+      }
+      return hours + ":" + minutes + ":" + seconds;
+    },
+    handleMic() {
+      this.data.mine.mic === 0
+        ? antiquity.muteAudio()
+        : antiquity.unmuteAudio();
+    },
+    handleCamera() {
+      this.data.mine.camera === 0
+        ? antiquity.muteVideo()
+        : antiquity.unmuteVideo(this.data.video_url);
+    }
+  },
+  destroyed() {
+    clearInterval(interval);
+  }
+};
 </script>
 
 <style lang="less" scoped>
@@ -275,150 +285,151 @@
 	}
 }
 .ctrlBox {
-	width: 100%;
-	.ctrlHeader {
-		padding: 0 20px;
-		height: 36px;
-		position: absolute;
-		left: 0;
-		top: 0;
-		width: 100%;
-		background-color: rgba(0, 0, 0, 1);
-		z-index: 9999;
-		color: #fff;
-		line-height: 36px;
-		.flex(space-between, center);
-		text-align: center;
-		.bigSpan {
-			font-weight: bolder;
-		}
-		.center {
-			flex: 1;
-			span {
-				margin: 0 20px;
-			}
-		}
-	}
-	.ctrlLeft {
-		position: absolute;
-		left: 0;
-		bottom: 50%;
-		color: rgba(255, 255, 255, .7);
-		background-color: rgba(0, 0, 0, .6);
-		border-radius: 0 27px 27px 0;
-		z-index: 999;
-		.disable {
-			background-color: rgba(0, 0, 0, .4);
-			color: rgba(255, 255, 255, .5);
-		}
-		.icon-left {
-			font-size: 50px;
-			cursor: pointer;
-		}
-	}
-	.ctrlRight {
-		position: absolute;
-		right: 0;
-		bottom: 50%;
-		color: rgba(255, 255, 255, .7);
-		background-color: rgba(0, 0, 0, .6);
-		border-radius: 27px 0 0 27px;
-		z-index: 999;
-		.disable {
-			background-color: rgba(0, 0, 0, .4);
-			color: rgba(255, 255, 255, .5);
-		}
-		.icon-right {
-			font-size: 50px;
-			cursor: pointer;
-		}
-	}
-	.invite:hover{
-		color: #118BFB;
-	}
-	.ctrlPoint {
-		position: absolute;
-		z-index: 9999;
-		top: 90%;
-		left: 50%;
-		height: 15px;
-		background-color: rgba(0, 0, 0, .4);
-		border-radius: 8px;
-		padding: 0 3px;
-		transform: translateX(-50%);
-		.flex(space-around, center);
-		.point {
-			height: 8px;
-			width: 8px;
-			margin: 0 2px;
-			border-radius: 50%;
-			background-color: rgba(216, 216, 216, .4);
-			&.active {
-				background-color: rgba(216, 216, 216);
-			}
-		}
-	}
-	.ctrlFooter {
-		padding: 0 20px;
-		height: 80px;
-		position: absolute;
-		left: 0;
-		bottom: 0;
-		width: 100%;
-		background-color: rgba(0, 0, 0, 0.6);
-		z-index: 9999;
-		color: #fff;
-		line-height: 80px;
-		.flex(space-between, center);
-		.center {
-			flex: 1;
-			text-align: center;
-			.flex(center, center);
-			padding-bottom: 5px;
-			button {
-				background-color: transparent;
-				outline: none;
-				border: none;
-				color: #fff;
-				font-size: 16px;
-				font-weight: normal;
-				margin: 0 20px;
-				i {
-					display: block;
-					font-size: 44px;
-				}
-				.icon-camera-no, .icon-mic-no {
-					color: #ff6b6f;
-				}
-			}
-		}
-		.zoomIn {
-			background-color: transparent;
-			outline: none;
-			border: 2px solid #fff;
-			border-radius: 4px;
-			color: #fff;
-			font-size: 16px;
-			width: 32px;
-			height: 32px;
-			overflow: hidden;
-			i {
-				font-size: 38px;
-				position: relative;
-				left: -10px;
-				top: -8px;
-			}
-		}
-	}
+  width: 100%;
+  .ctrlHeader {
+    padding: 0 20px;
+    height: 36px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 1);
+    z-index: 9999;
+    color: #fff;
+    line-height: 36px;
+    .flex(space-between, center);
+    text-align: center;
+    .bigSpan {
+      font-weight: bolder;
+    }
+    .center {
+      flex: 1;
+      span {
+        margin: 0 20px;
+      }
+    }
+  }
+  .ctrlLeft {
+    position: absolute;
+    left: 0;
+    bottom: 50%;
+    color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 0 27px 27px 0;
+    z-index: 999;
+    .disable {
+      background-color: rgba(0, 0, 0, 0.4);
+      color: rgba(255, 255, 255, 0.5);
+    }
+    .icon-left {
+      font-size: 50px;
+      cursor: pointer;
+    }
+  }
+  .ctrlRight {
+    position: absolute;
+    right: 0;
+    bottom: 50%;
+    color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 27px 0 0 27px;
+    z-index: 999;
+    .disable {
+      background-color: rgba(0, 0, 0, 0.4);
+      color: rgba(255, 255, 255, 0.5);
+    }
+    .icon-right {
+      font-size: 50px;
+      cursor: pointer;
+    }
+  }
+  .invite:hover {
+    color: #118bfb;
+  }
+  .ctrlPoint {
+    position: absolute;
+    z-index: 9999;
+    top: 90%;
+    left: 50%;
+    height: 15px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+    padding: 0 3px;
+    transform: translateX(-50%);
+    .flex(space-around, center);
+    .point {
+      height: 8px;
+      width: 8px;
+      margin: 0 2px;
+      border-radius: 50%;
+      background-color: rgba(216, 216, 216, 0.4);
+      &.active {
+        background-color: rgba(216, 216, 216);
+      }
+    }
+  }
+  .ctrlFooter {
+    padding: 0 20px;
+    height: 80px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    color: #fff;
+    line-height: 80px;
+    .flex(space-between, center);
+    .center {
+      flex: 1;
+      text-align: center;
+      .flex(center, center);
+      padding-bottom: 5px;
+      button {
+        background-color: transparent;
+        outline: none;
+        border: none;
+        color: #fff;
+        font-size: 16px;
+        font-weight: normal;
+        margin: 0 20px;
+        i {
+          display: block;
+          font-size: 44px;
+        }
+        .icon-camera-no,
+        .icon-mic-no {
+          color: #ff6b6f;
+        }
+      }
+    }
+    .zoomIn {
+      background-color: transparent;
+      outline: none;
+      border: 2px solid #fff;
+      border-radius: 4px;
+      color: #fff;
+      font-size: 16px;
+      width: 32px;
+      height: 32px;
+      overflow: hidden;
+      i {
+        font-size: 38px;
+        position: relative;
+        left: -10px;
+        top: -8px;
+      }
+    }
+  }
 }
 .active {
-	color: #118BFB;
+  color: #118bfb;
 }
 .font_family {
   font-size: 20px;
 }
-.font_family:hover{
-	cursor:pointer;
-	// color: #DDDDDD;
+.font_family:hover {
+  cursor: pointer;
+  // color: #DDDDDD;
 }
 </style>

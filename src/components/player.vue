@@ -13,7 +13,7 @@
         <div :class="`${data.camera === 0 ? 'hasCamera' : 'noCamera'}`">
             <i class="font_family icon-camera-none"></i>
         </div>
-		<!-- <player-status v-if="mineFlag !== 'two'" :data="{name:data.name}"></player-status> -->
+		<player-status v-if="mineFlag !== 'two'" :data="{name:data.name}"></player-status>
         <div class="holder"></div>
     </div>
 </template>
@@ -153,7 +153,7 @@
 <style lang="less" scoped>
     @import "../common/common";
     .playerBox {
-        position: relative;
+       position: relative;
         .ctrlMiddle {
             padding: 0 16px 0 12px;
             height: 32px;

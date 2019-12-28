@@ -38,7 +38,7 @@
         position: absolute;
         top: 15%;
         left: 50%;
-        z-index: 100;
+        z-index: 1001;
         transform: translateX(-50%);
     }
     .toastBox {

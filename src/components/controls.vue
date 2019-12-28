@@ -64,7 +64,7 @@
 				</button>
 			</div>
 			<button class="zoomIn" @click="$emit('handleSide')">
-				<i :class="`font_family ${changeScreen ? 'icon-zoomOut' : 'icon-zoomIn'}`" style="font-size: 32px;"></i>
+				<i :class="`font_family ${changeScreen ? 'icon-zoomOut' : 'icon-zoomIn'}`" style="font-size: 37px;"></i>
 			</button>
 		</div>
 		<transition enter-active-class="animated flipInY fast" leave-active-class="animated flipOutY fast">
@@ -221,10 +221,11 @@
 @import "../common/common";
 .set_icon{
 	font-size: 16px !important;
+	color: #DDDDDD;
 }
 .set_box{
 	width: 320px;
-	background:rgba(0, 0, 0, .6);
+	background:#FFFFFF;
 	border-radius:8px;
 	position: absolute;
 	bottom: 115px;
@@ -234,7 +235,7 @@
 		padding: 25px 0;
 		font-size:16px;
 		font-weight:400;
-		color:rgba(255,255,255,1);
+		color:rgba(153,153,153,1);
 		.set_main_box{
 			width: 60%;
 			display: flex;
@@ -243,6 +244,9 @@
 			margin: 0 auto 16px;
 			.set_main_title{
 				width: 40%;
+				font-size:16px;
+				font-weight:400;
+				color:rgba(102,102,102,1);
 			}
 			.set_gongneng{
 				width: 50%;
@@ -262,9 +266,9 @@
 		align-items: center;
 		padding: 0 20px 0 24px;
 		// border-bottom: 1px solid #333333;
-		font-size:28px;
+		font-size:18px;
 		font-weight:600;
-		color:rgba(255,255,255,1);
+		color:rgba(51,51,51,1);
 		& i{
 			color: #C5C6C8;
 		}

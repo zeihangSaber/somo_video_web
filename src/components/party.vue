@@ -23,8 +23,14 @@
               <img :src="item.avarter? item.avarter : 'https://182.61.17.228/common/defaultHead.png' " />
               <p>
                 <span>{{ item.name }}</span>
-                <span v-if="item.role === 4" class="handle">主持人</span>
-                <span v-if="item.speaker === 1" class="speaker">主讲</span>
+				<svg v-if="item.role === 4" class="icon" aria-hidden="true" style="font-size: 34px;margin-left: 2px;">
+				    <use xlink:href="#iconzhuchiren" style="font-size: 42px;"></use>
+				</svg>
+				<svg v-if="item.speaker === 1" class="icon" aria-hidden="true" style="font-size: 28px;margin-left: 2px;">
+				    <use xlink:href="#iconzhujiang" style="font-size: 32px;"></use>
+				</svg>
+				
+                <!-- <span v-if="item.speaker === 1" class="speaker">主讲</span> -->
               </p>
               <!-- <button
                 v-if="item.role !== 4"
@@ -80,6 +86,7 @@
                             <p>
                                 <span>{{ item.name }}</span>
                                 <span v-if="item.role === 4" class="handle">主持人</span>
+								
                                 <span v-if="item.speaker === 1" class="speaker">主讲</span>
                             </p>
                             <!-- <button

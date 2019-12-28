@@ -1,189 +1,123 @@
 <template>
-  <div class="ctrlBox">
-    <div class="ctrlHeader">
-      <i></i>
-      <div class="center">
-        <span class="bigSpan">会议号：{{ this.data.code }}</span>
-        <span class="bigSpan" v-if="data.pwd">密码：{{ this.data.pwd }}</span>
-        <span class="bigSpan">
-          <i v-if="this.data.locked" class="font_family icon-lock"></i>
-        </span>
-        <span v-show="this.data.name">
-          {{ this.data.name }}
-        </span>
-        <span>
-          <i class="font_family icon-people-num"></i>
-          {{ this.peopleNum }}
-        </span>
-        <span v-if="this.data.muteAll">全体静音</span>
-        <span>
-          <i class="font_family icon-noMute"></i>
-          {{ this.micNum }}
-        </span>
-        <span>
-          <i class="font_family icon-time"></i>
-          {{ timer }}
-        </span>
-      </div>
-      <i
-        class="font_family icon-wifi-high"
-        style="font-size: 16px !important;"
-      ></i>
-    </div>
-    <div
-      :class="`ctrlLeft ${slideCount === 0 ? 'disable' : ''}`"
-      @click="$emit('prevSlide')"
-      v-if="maxSlide > 1"
-    >
-      <i class="font_family icon-left"></i>
-    </div>
-    <div
-      :class="`ctrlRight ${slideCount === maxSlide ? 'disable' : ''}`"
-      @click="$emit('nextSlide')"
-      v-if="maxSlide > 1"
-    >
-      <i class="font_family icon-right"></i>
-    </div>
-    <div class="ctrlPoint" v-if="maxSlide > 1">
-      <div
-        :class="`point ${index === slideCount ? 'active' : ''}`"
-        v-for="index of maxSlide"
-        @click="() => $emit('selectSlide', index)"
-      ></div>
-    </div>
-    <div class="ctrlFooter">
-      <i></i>
-      <div class="center">
-        <button @click="handleMic">
-          <i
-            :class="
-              `font_family ${
-                data.mine && data.mine.mic === 0 ? 'icon-mic' : 'icon-mic-no'
-              }`
-            "
-          ></i>
-          静音
-        </button>
-        <button @click="handleCamera">
-          <i
-            :class="
-              `font_family ${
-                data.mine && data.mine.camera === 0
-                  ? 'icon-camera'
-                  : 'icon-camera-no'
-              }`
-            "
-          ></i>
-          视频
-        </button>
-        <button style="margin: 0;">
-          <!--${ShowShare ? 'active' : ''}-->
-          <button
-            class="ml10"
-            type="text"
-            size="medium"
-            v-clipboard:copy="sysAppIds"
-            v-clipboard:success="onCopy"
-            v-clipboard:error="onError"
-          >
-            <i :class="`font_family icon-sharing`"></i>邀请
-          </button>
-        </button>
-        <button @click="$emit('handleMessage')">
-          <i
-            :class="
-              `font_family icon-barrage ${
-                showSide && showMessage ? 'active' : ''
-              }`
-            "
-          ></i
-          >消息
-        </button>
-        <button @click="$emit('handleParty')">
-          <i
-            :class="
-              `font_family icon-members ${
-                showSide && showParty ? 'active' : ''
-              }`
-            "
-          ></i
-          >参会方
-        </button>
-        <button @click="() => (showSetting = !showSetting)">
-          <i
-            :class="`font_family icon-setting ${showSetting ? 'active' : ''}`"
-          ></i
-          >设置
-        </button>
-        <button @click="$emit('LeaveMeeting')">
-          <i style="color:#FF5245" class="font_family icon-tuichu-normal "></i
-          >离开
-        </button>
-      </div>
-      <button class="zoomIn" @click="$emit('handleSide')">
-        <i
-          :class="
-            `font_family ${changeScreen ? 'icon-zoomOut' : 'icon-zoomIn'}`
-          "
-          style="font-size: 32px;"
-        ></i>
-      </button>
-    </div>
-    <transition
-      enter-active-class="animated flipInY fast"
-      leave-active-class="animated flipOutY fast"
-    >
-      <div class="set_box" v-if="showSetting">
-        <div class="set_title">
-          <div>设置</div>
-          <i
-            class="font_family icon-close "
-            @click="() => (showSetting = !showSetting)"
-          ></i>
-        </div>
-        <div class="set_main">
-          <div class="set_main_box">
-            <div class="set_main_title">视频布局:</div>
-            <div class="set_gongneng">
-              <div @click="$emit('selectFour')">
-                <svg class="icon" aria-hidden="true" v-if="playerNum === 4">
-                  <use xlink:href="#icon-select"></use>
-                </svg>
-                <i class="font_family set_icon icon-select-no" v-else></i>
-                <span>四分屏</span>
-              </div>
-              <div @click="$emit('selectNine')">
-                <svg class="icon" aria-hidden="true" v-if="playerNum === 9">
-                  <use xlink:href="#icon-select"></use>
-                </svg>
-                <i class="font_family set_icon icon-select-no" v-else></i>
-                <span>九分屏</span>
-              </div>
-            </div>
-          </div>
-          <div class="set_main_box">
-            <div class="set_main_title">弹幕消息:</div>
-            <div class="set_gongneng">
-              <div @click="$emit('barrageTrue')">
-                <svg class="icon" aria-hidden="true" v-if="barrage">
-                  <use xlink:href="#icon-select"></use>
-                </svg>
-                <i class="font_family set_icon icon-select-no" v-else></i>
-                <span>开启</span>
-              </div>
-              <div @click="$emit('barrageFalse')">
-                <svg class="icon" aria-hidden="true" v-if="!barrage">
-                  <use xlink:href="#icon-select"></use>
-                </svg>
-                <i class="font_family set_icon icon-select-no" v-else></i>
-                <span>关闭</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </transition>
-  </div>
+	<div class="ctrlBox">
+		<div class="ctrlHeader">
+			<i></i>
+			<div class="center">
+				<span class="bigSpan">会议号：{{this.data.code}}</span>
+				<span class="bigSpan" v-if="data.pwd">密码：{{this.data.pwd}}</span>
+				<span class="bigSpan">
+					<i v-if="this.data.locked" class="font_family icon-lock"></i>
+				</span>
+				<span v-show="this.data.name">
+					{{ this.data.name }}
+				</span>
+				<span>
+					<i class="font_family icon-people-num"></i>
+					{{this.peopleNum}}
+				</span>
+				<span v-if="this.data.muteAll">全体静音</span>
+				<span>
+					<i class="font_family icon-noMute"></i>
+					{{this.micNum}}
+				</span>
+				<span>
+					<i class="font_family icon-time"></i>
+					{{timer}}
+				</span>
+			</div>
+			<i class="font_family icon-wifi-high" style="font-size: 16px !important;"></i>
+		</div>
+		<div :class="`ctrlLeft ${slideCount === 0 ? 'disable' : ''}`" @click="$emit('prevSlide')" v-if="maxSlide > 1"><i class="font_family icon-left"></i></div>
+		<div :class="`ctrlRight ${slideCount === maxSlide ? 'disable' : ''}`" @click="$emit('nextSlide')" v-if="maxSlide > 1"><i class="font_family icon-right"></i></div>
+		<div class="ctrlPoint" v-if="maxSlide > 1">
+			<div :class="`point ${index === slideCount ? 'active' : ''}`" v-for="index of maxSlide" @click="() => $emit('selectSlide', index)"></div>
+		</div>
+		<div class="ctrlFooter">
+			<i></i>
+			<div class="center">
+				<button @click="handleMic">
+					<i :class="`font_family ${data.mine && data.mine.mic === 0 ? 'icon-mic' : 'icon-mic-no'}`"></i>
+					静音
+				</button>
+				<button @click="handleCamera">
+					<i :class="`font_family ${data.mine && data.mine.camera === 0 ? 'icon-camera' : 'icon-camera-no'}`"></i>
+					视频
+				</button>
+				<button style="margin: 0;">
+					<!--${ShowShare ? 'active' : ''}-->
+					<button class="ml10" type="text" size="medium"
+					        v-clipboard:copy="sysAppIds"
+					        v-clipboard:success="onCopy"
+					        v-clipboard:error="onError">
+							<i :class="`font_family icon-sharing`"></i>邀请
+					</button>
+				</button>
+				<button @click="$emit('handleMessage')">
+					<i :class="`font_family icon-barrage ${showSide && showMessage ? 'active' : ''}`"></i>消息
+				</button>
+				<button @click="$emit('handleParty')">
+					<i :class="`font_family icon-members ${showSide && showParty ? 'active' : ''}`"></i>参会方
+				</button>
+				<button @click="() => showSetting = !showSetting">
+					<i :class="`font_family icon-setting ${showSetting ? 'active' : ''}`"></i>设置
+				</button>
+				<button @click="$emit('LeaveMeeting')">
+					<i style="color:#FF5245" class="font_family icon-tuichu-normal "></i>离开
+				</button>
+			</div>
+			<button class="zoomIn" @click="$emit('handleSide')">
+				<i :class="`font_family ${changeScreen ? 'icon-zoomOut' : 'icon-zoomIn'}`" style="font-size: 37px;"></i>
+			</button>
+		</div>
+		<transition enter-active-class="animated flipInY fast" leave-active-class="animated flipOutY fast">
+			<div class="set_box" v-if="showSetting">
+				<div class="set_title">
+					<div>设置</div>
+					<i class="font_family icon-close " @click="() => showSetting = !showSetting"></i>
+				</div>
+				<div class="set_main">
+					<div class="set_main_box">
+						<div class="set_main_title">视频布局:</div>
+						<div class="set_gongneng">
+							<div @click="$emit('selectFour')">
+								<svg class="icon" aria-hidden="true" v-if="playerNum === 4">
+									<use xlink:href="#icon-select"></use>
+								</svg>
+								<i class="font_family set_icon icon-select-no" v-else></i>
+								<span>四分屏</span>
+							</div>
+							<div @click="$emit('selectNine')">
+								<svg class="icon" aria-hidden="true" v-if="playerNum === 9">
+									<use xlink:href="#icon-select"></use>
+								</svg>
+								<i class="font_family set_icon icon-select-no" v-else></i>
+								<span>九分屏</span>
+							</div>
+						</div>
+					</div>
+					<div class="set_main_box">
+						<div class="set_main_title">弹幕消息:</div>
+						<div class="set_gongneng">
+							<div @click="$emit('barrageTrue')">
+								<svg class="icon" aria-hidden="true" v-if="barrage">
+									<use xlink:href="#icon-select"></use>
+								</svg>
+								<i class="font_family set_icon icon-select-no" v-else></i>
+								<span>开启</span>
+							</div>
+							<div @click="$emit('barrageFalse')">
+								<svg class="icon" aria-hidden="true" v-if="!barrage">
+									<use xlink:href="#icon-select"></use>
+								</svg>
+								<i class="font_family set_icon icon-select-no" v-else></i>
+								<span>关闭</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</transition>
+	</div>
 </template>
 
 <script>
@@ -295,56 +229,60 @@ export default {
 
 <style lang="less" scoped>
 @import "../common/common";
-.set_icon {
-  font-size: 16px !important;
+.set_icon{
+	font-size: 16px !important;
+	color: #DDDDDD;
 }
-.set_box {
-  width: 320px;
-  background: rgba(0, 0, 0, 0.6);
-  border-radius: 8px;
-  position: absolute;
-  bottom: 115px;
-  left: 55%;
-  z-index: 110000;
-  .set_main {
-    padding: 25px 0;
-    font-size: 16px;
-    font-weight: 400;
-    color: rgba(255, 255, 255, 1);
-    .set_main_box {
-      width: 60%;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      margin: 0 auto 16px;
-      .set_main_title {
-        width: 40%;
-      }
-      .set_gongneng {
-        width: 50%;
-        & div {
-          margin-bottom: 6px;
-        }
-        & div > span {
-          margin-left: 9px;
-        }
-      }
-    }
-  }
-  .set_title {
-    height: 68px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px 0 24px;
-    // border-bottom: 1px solid #333333;
-    font-size: 28px;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 1);
-    & i {
-      color: #c5c6c8;
-    }
-  }
+.set_box{
+	width: 320px;
+	background:#FFFFFF;
+	border-radius:8px;
+	position: absolute;
+	bottom: 115px;
+	left: 55%;
+	z-index: 110000;
+	.set_main{
+		padding: 25px 0;
+		font-size:16px;
+		font-weight:400;
+		color:rgba(153,153,153,1);
+		.set_main_box{
+			width: 60%;
+			display: flex;
+			justify-content: center;
+			align-items: flex-start;
+			margin: 0 auto 16px;
+			.set_main_title{
+				width: 40%;
+				font-size:16px;
+				font-weight:400;
+				color:rgba(102,102,102,1);
+			}
+			.set_gongneng{
+				width: 50%;
+				& div{
+					margin-bottom: 6px;
+				}
+				& div>span{
+					margin-left: 9px;
+				}
+			}
+		}
+	}
+	.set_title{
+		height: 68px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0 20px 0 24px;
+		// border-bottom: 1px solid #333333;
+		font-size:18px;
+		font-weight:600;
+		color:rgba(51,51,51,1);
+		& i{
+			color: #C5C6C8;
+		}
+	}
 }
 .ctrlBox {
   width: 100%;

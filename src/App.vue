@@ -33,9 +33,9 @@
                 ></ctrl>
            </transition>
 			<div class="leftBig_box">
-					<div :class="`playerBigBox ${howMany} `" ref="playerBigBox" id="playerBigBox">
+					<div :class="`playerBigBox ${howMany} `" ref="playerBigBox">
 						<!-- 自己的推流 -->
-					    <div :class="`dragBox ${mineFlag}`"style="display: flex;position: absolute;" v-if="members.length <= 2">
+					    <div :class="`dragBox ${mineFlag}`"style="display: flex;position: relative;" v-if="members.length <= 2">
 							<div style="width: 0;padding-bottom: 56%;"></div>
 							<div style="position: absolute;top: 0;left: 0;z-index: 1000;width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;overflow: hidden;">
 								<player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
@@ -61,6 +61,7 @@
 								</div>
 							</div>
 						</div>
+						<!-- <div style="position: absolute;top: 0;left: 0;width: 100px;height: 100px;background: #FFFFFF;z-index: 1111111;">{{howMany}}</div> -->
 						<!-- 他人的 -->
 					    <player
 					            v-if="!(speakFlag || shareFlag)"
@@ -71,12 +72,13 @@
 					            :hawMany="howMany"
 					            :data="members[playerNum * (realCount - 1) + item - 1]">
 					    </player>
-					    <div class="space playerBox" v-if="!(speakFlag || shareFlag)" v-for="item of playerNum - nowPlayerNum"></div>
+						<div class="space playerBox" v-if="!(speakFlag || shareFlag)" v-for="item of playerNum - nowPlayerNum"></div>
+						<!-- 主讲人 -->
+						<template v-if="meetingInfo.mine.speaker !== 1">
+						    <player v-if="speakFlag && !shareFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
+						    <player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo" :isShare="true"></player>
+						</template>
 					</div>
-                <template v-if="meetingInfo.mine.speaker !== 1">
-                    <player v-if="speakFlag && !shareFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
-                    <player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo" :isShare="true"></player>
-                </template>
                 <div v-if="waiting" class="waiting"><i class="font_family icon-camera-none"></i></div>
             </div>
             <share :isShowShare_="isShowShare_" :shareData="shareData" @share_status="share_status"></share>
@@ -181,6 +183,12 @@
             antiquity.on('getSpeaker', speaker => {
                 this.speaker = speaker;
             });
+			antiquity.on('countDown', msg => {
+			    console.log(mas.code)
+				if(mas.code == 2008){
+					
+				}
+			});
             this.$nextTick(() => {
                 antiquity.on('getToast', msg => {
                     this.$Toast.success({message: msg});
@@ -237,7 +245,7 @@
             howMany() {
                 if (this.membersNum === 1) return 'fir';
                 if ((this.shareFlag || this.speakFlag) && this.slideCount === 1) return 'one';
-                if (!(this.shareFlag || this.speakFlag) && this.membersNum === 2) return 'two';
+                if (!(this.sharer || this.speaker) && this.membersNum === 2) return 'two';
                 if (this.playerNum === 4) return 'four';
                 if (this.playerNum === 9) return 'nine';
                 return 'fir'
@@ -589,7 +597,7 @@
     button,
     .icon-close {
         cursor: pointer;
-
+		color: #999999;
         &:disabled {
             cursor: not-allowed;
             color: #ccc !important;

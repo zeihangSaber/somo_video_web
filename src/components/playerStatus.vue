@@ -1,6 +1,6 @@
 <template>
     <div class="ctrlMiddle" >
-        <div class="ctrlMiddleName">{{data.name ? data.name : data.uid}}</div>
+        <div class="ctrlMiddleName" >{{data.name ? data.name : data.uid}}</div>
         <i class="font_family icon-mic" v-if="data.mic === 0"></i>
         <svg v-else class="icon" aria-hidden="true">
             <use xlink:href="#icon-mic-no"></use>
@@ -31,10 +31,10 @@
         font-size: 16px;
         position: absolute;
         left: 0;
-        top: 50px;
+        top: 0px;
         background-color: rgba(0, 0, 0, 0.6);
         border-radius: 0 20px 20px 0;
-        z-index: 9999;
+        z-index: 500;
         .flex(center, center);
         svg {
             margin-left: 5px;

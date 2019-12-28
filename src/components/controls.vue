@@ -20,10 +20,10 @@
 				</span>
 				<span>
 					<i class="font_family icon-time"></i>
-					{{time_meeting}}
+					{{timer}}
 				</span>
 			</div>
-			<i class="font_family icon-wifi-high"></i>
+			<i class="font_family icon-wifi-high" style="font-size: 16px !important;"></i>
 		</div>
 		<div :class="`ctrlLeft ${slideCount === 0 ? 'disable' : ''}`" @click="$emit('prevSlide')" v-if="maxSlide > 1"><i class="font_family icon-left"></i></div>
 		<div :class="`ctrlRight ${slideCount === maxSlide ? 'disable' : ''}`" @click="$emit('nextSlide')" v-if="maxSlide > 1"><i class="font_family icon-right"></i></div>
@@ -64,7 +64,7 @@
 				</button>
 			</div>
 			<button class="zoomIn" @click="$emit('handleSide')">
-				<i :class="`font_family ${changeScreen ? 'icon-zoomOut' : 'icon-zoomIn'}`"></i>
+				<i :class="`font_family ${changeScreen ? 'icon-zoomOut' : 'icon-zoomIn'}`" style="font-size: 32px;"></i>
 			</button>
 		</div>
 		<transition enter-active-class="animated flipInY fast" leave-active-class="animated flipOutY fast">
@@ -81,14 +81,14 @@
 								<svg class="icon" aria-hidden="true" v-if="playerNum === 4">
 									<use xlink:href="#icon-select"></use>
 								</svg>
-								<i class="font_family icon-select-no" v-else></i>
+								<i class="font_family set_icon icon-select-no" v-else></i>
 								<span>四分屏</span>
 							</div>
 							<div @click="$emit('selectNine')">
 								<svg class="icon" aria-hidden="true" v-if="playerNum === 9">
 									<use xlink:href="#icon-select"></use>
 								</svg>
-								<i class="font_family icon-select-no" v-else></i>
+								<i class="font_family set_icon icon-select-no" v-else></i>
 								<span>九分屏</span>
 							</div>
 						</div>
@@ -100,14 +100,14 @@
 								<svg class="icon" aria-hidden="true" v-if="barrage">
 									<use xlink:href="#icon-select"></use>
 								</svg>
-								<i class="font_family icon-select-no" v-else></i>
+								<i class="font_family set_icon icon-select-no" v-else></i>
 								<span>开启</span>
 							</div>
 							<div @click="$emit('barrageFalse')">
 								<svg class="icon" aria-hidden="true" v-if="!barrage">
 									<use xlink:href="#icon-select"></use>
 								</svg>
-								<i class="font_family icon-select-no" v-else></i>
+								<i class="font_family set_icon icon-select-no" v-else></i>
 								<span>关闭</span>
 							</div>
 						</div>
@@ -145,7 +145,8 @@
 			"ShowShare",
 			"maxSlide",
 			"slideCount",
-			"shareData"
+			"shareData",
+			"timer"
 		],
 		components: {},
 		computed:{
@@ -159,24 +160,24 @@
 			}
 		},
 		mounted() {
-			setTimeout(() => {
-				console.log(this.data)
-				if(this.data.start){
+
+		},
+		methods:{
+			set_meetingTime(type){
+				alert(type)
+				if(type == 1){
 					setInterval(() => {
 							let timestamp = (new Date()).getTime();//当前时间戳
 							this.time =  timestamp - this.data.start;
 							this.time_meeting = this.formatDuring(this.time)
 					}, 1000)
-				}else if(!this.data.start){
+				}else if(type == 0){
 					setInterval(() => {
 							this.not_time = this.not_time + 1000
 							this.time_meeting = this.formatDuring(this.not_time)
 					}, 1000)
 				}
-			}, 700);
-
-		},
-		methods:{
+			},
 			// 复制成功
 			    onCopy(e){
 					this.$Toast.success({message: '邀请链接已复制到剪贴板'});
@@ -218,6 +219,9 @@
 
 <style lang="less" scoped>
 @import "../common/common";
+.set_icon{
+	font-size: 16px !important;
+}
 .set_box{
 	width: 320px;
 	background:rgba(0, 0, 0, .6);
@@ -257,7 +261,7 @@
 		justify-content: space-between;
 		align-items: center;
 		padding: 0 20px 0 24px;
-		border-bottom: 1px solid #333333;
+		// border-bottom: 1px solid #333333;
 		font-size:28px;
 		font-weight:600;
 		color:rgba(255,255,255,1);
@@ -377,7 +381,7 @@
 				margin: 0 20px;
 				i {
 					display: block;
-					font-size: 32px;
+					font-size: 44px;
 				}
 				.icon-camera-no, .icon-mic-no {
 					color: #ff6b6f;

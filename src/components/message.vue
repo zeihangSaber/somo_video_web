@@ -192,7 +192,7 @@
         .p {
 			cursor:pointer;
             .fontStyle(18px, #000, blod);
-            padding-left: 10px;
+            padding-left: 16px;
             flex: 1;
         }
         .icon-close {
@@ -278,6 +278,7 @@
 				font-size:14px;
 				font-weight:400;
 				color:rgba(68,68,68,1);
+				display: inline-block;
 			}
 			.my_content{
 				// height:36px;
@@ -354,7 +355,11 @@
 	textarea:-ms-input-placeholder{
 	  color:#BBBBBB;
 	}
+	button:disabled i{
+		color: #70b9fc !important;
+	}
 	button[disabled] {
 	  color: #70b9fc !important;
+	  cursor:default;
 	}
 </style>

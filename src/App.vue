@@ -5,6 +5,7 @@
             <ctrl
                 v-show="isShowCtrl"
                 @handleSide="handleSide"
+				:timer="timer"
                 :data="meetingInfo"
                 :peopleNum="peopleNum"
                 :micNum="micNum"
@@ -31,32 +32,47 @@
                 @selectSlide="(num) => slideCount = num"
                 ></ctrl>
            </transition>
-			<div style="width: 100%;height: 100vh;background: #ffffff;display: flex;justify-content: center;align-items: center;">
-				<div :class="`playerBigBox ${howMany}`" ref="playerBigBox">
-				    <div :class="`dragBox ${mineFlag}`" style="height: 50%;">
-				        <div class="drag" ref="draggable">
-				            <div v-if="meetingInfo.mine && meetingInfo.mine.camera === 0" :class="`${meetingInfo.mine && meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
-				                <i class="font_family icon-camera-none"></i>
-				            </div>
-				            <player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
-				        </div>
-				    </div>
-				    <player
-				            v-if="!(speakFlag || shareFlag)"
-				            v-for="item in nowPlayerNum"
-				            ref="players"
-				            :key="members[playerNum * (realCount - 1) + item - 1].uid"
-				            :meetingInfo="meetingInfo"
-				            :hawMany="howMany"
-				            :data="members[playerNum * (realCount - 1) + item - 1]">
-				    </player>
-				    <div
-				            class="space playerBox"
-				            v-if="!(speakFlag || shareFlag)"
-				            v-for="item of playerNum - nowPlayerNum"
-				    ></div>
-			</div>
-            
+			<div class="leftBig_box">
+					<div :class="`playerBigBox ${howMany} `" ref="playerBigBox" id="playerBigBox">
+						<!-- 自己的推流 -->
+					    <div :class="`dragBox ${mineFlag}`"style="display: flex;position: absolute;" v-if="members.length <= 2">
+							<div style="width: 0;padding-bottom: 56%;"></div>
+							<div style="position: absolute;top: 0;left: 0;z-index: 1000;width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;overflow: hidden;">
+								<player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
+								<div style="width: 133.33%;height: 133.33%;">
+									<div class="drag" ref="draggable">
+										<div v-if="meetingInfo.mine.camera === 1" :class="`${meetingInfo.mine.camera === 1 ? '' : 'dragHasCamera'}`">
+											<img src="https://182.61.17.228/common/logoGif.gif">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div :class="`dragBox ${mineFlag}`"style="display: flex;position: relative;" v-if="members.length > 2">
+							<div style="width: 0;padding-bottom: 56%;"></div>
+							<div style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;overflow: hidden;">
+								<player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
+								<div style="width: 133.33%;height: 133.33%;">
+									<div class="drag" ref="draggable">
+										<div v-if="meetingInfo.mine.camera === 1" :class="`${meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
+											<img src="https://182.61.17.228/common/logoGif.gif">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- 他人的 -->
+					    <player
+					            v-if="!(speakFlag || shareFlag)"
+					            v-for="item in nowPlayerNum"
+					            ref="players"
+					            :key="members[playerNum * (realCount - 1) + item - 1].uid"
+					            :meetingInfo="meetingInfo"
+					            :hawMany="howMany"
+					            :data="members[playerNum * (realCount - 1) + item - 1]">
+					    </player>
+					    <div class="space playerBox" v-if="!(speakFlag || shareFlag)" v-for="item of playerNum - nowPlayerNum"></div>
+					</div>
                 <template v-if="meetingInfo.mine.speaker !== 1">
                     <player v-if="speakFlag && !shareFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
                     <player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo" :isShare="true"></player>
@@ -123,20 +139,22 @@
                 barrage: false,
                 shareData: {},
                 timer: '',
+				time:'',
+				not_time:1000,
                 test: false,
                 waiting: true,
                 message: [],
 				joinStatus:1,
-				
+				screenStatus:0,
             };
         },
         beforeCreate() {
 			if(this.joinStatus == 1){
 				window.onbeforeunload = (e) => {
 					e.returnValue = ("确定离开当前页面吗？");
-				};	
+				};
 			}
-           
+
         },
         created() {
             antiquity.on("getMsg", (msg) => {
@@ -171,6 +189,18 @@
 
         },
         async mounted() {
+
+			window.onresize = function(){
+			    // alert(document.getElementById('playerBigBox').offsetTop);
+				console.log(document.getElementById('playerBigBox'))
+				console.log(document.getElementById('playerBigBox').offsetTop)
+				if(document.getElementById('playerBigBox').offsetTop < 36){
+					this.screenStatus = 1
+				}else if(document.getElementById('playerBigBox').offsetTop >= 36){
+					this.screenStatus = 0
+				}
+			};
+
             window.addEventListener('offline', () => {
                 //网络由正常常到异常时触发
                 this.$Toast.success({message: '您的网络已断开，请检查网络设置。'})
@@ -181,14 +211,10 @@
             });
             this.$nextTick(() => {
                 this.init();
-            })
+            });
             this.showCtrlTime = setTimeout(()=>{
                 this.isShowCtrl = false
-            },3000)
-            document.addEventListener("fullscreenchange",()=>{
-                this.changeScreen =!this.changeScreen
-
-            })
+            },3000);
         },
         computed: {
             maxSlide() {
@@ -256,20 +282,27 @@
             ShowShare() {
             },
             handleSide() {
-                if(this.changeScreen){
-                    const el = document
-                    const cfs = el.cancalFullScreen || el.webkitCancelFullScreen || el.mozCancelFullScreen || el.exitFullscreen
-                    if(typeof cfs !="undefined" && cfs){
-                       cfs.call(el)
-                    }
-                    return
-                }else{
-                    const el = document.documentElement;
+                if (this.changeScreen) {
+					if (document.exitFullscreen) {
+						document.exitFullscreen();
+					} else if (document.msExitFullscreen) {
+						document.msExitFullscreen();
+					} else if (document.mozCancelFullScreen) {
+						document.mozCancelFullScreen();
+					} else if (document.webkitCancelFullScreen) {
+						document.webkitCancelFullScreen();
+					}
+					this.changeScreen = false;
+
+				} else {
+					this.changeScreen = true;
+					const el = document.documentElement;
                     const rfs = el.requestFullscreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullScreen;
                     if(typeof rfs !== "undefined" && rfs){
-                        rfs.call(el)
+                        rfs.call(el);
+						this.isShowParty = false;
+						this.isShowMessage = false
                     }
-                    return
                 }
             },
             handleMessage() {
@@ -304,8 +337,24 @@
             LeaveMeeting(){
                 antiquity.leaveMeeting()
                 console.log('离开会议',antiquity)
-                window.location.href = 'http://localhost:8080/joinConference';
+                window.location.href = 'https://182.61.17.228/joinConference';
             },
+			formatDuring(mss) {
+					let days = parseInt(mss / (1000 * 60 * 60 * 24));
+					let hours = parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) + days * 24;
+					let minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60));
+					let seconds = parseInt((mss % (1000 * 60)) / 1000);
+					if(hours<10){
+						hours = '0' + hours
+					}
+					if(minutes<10){
+						minutes = '0' + minutes
+					}
+					if(seconds<10){
+						seconds = '0' + seconds
+					}
+					return hours + ":" + minutes + ":" + seconds;
+			},
             init() {
                 this.$nextTick(async () => {
                     this.shareData = {
@@ -338,6 +387,23 @@
                                 return
                             }
                             this.waiting = false;
+							if(this.meetingInfo.start){
+								setInterval(() => {
+										let timestamp = (new Date()).getTime();//当前时间戳
+										this.time =  timestamp - this.meetingInfo.start;
+										this.timer = this.formatDuring(this.time)
+								}, 1000)
+							}else if(!this.meetingInfo.start){
+								setInterval(() => {
+										this.not_time = this.not_time + 1000
+										this.timer = this.formatDuring(this.not_time)
+								}, 1000)
+							}
+
+
+
+
+
                         });
                     antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
                 });
@@ -349,18 +415,40 @@
 <style lang="less">
     @import "./common/base";
     @import "./common/common";
-		.videoBox{
-			width: 100%;
-			height: 100%;
-			background: #000000;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
+	.leftBig_box{
+		 width: 100%;
+		 height: 100vh;
+		 background: #000000;
+		 display: flex;
+		 justify-content: center;
+		 align-items: center;
+		 padding-top: 36rpx;
+		 box-sizing: border-box;
+	}
+	.videoBox{
+		width: 100%;
+		height: 100%;
+		background: #000000;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.playerBigBox_act {
+		width: 100%;
+		height: calc(100vh - 72px);
+		background: #000000;
+		padding-bottom: 56.25%;
+		position: relative;
+	    overflow: hidden;
+		background: yellow;
+	    .flex(flex-start, flex-start);
+	    align-content: flex-start;
+	    flex-wrap: wrap;
+	}
     .playerBigBox {
 		width: 100%;
 		height: 0;
-		background: #800080;
+		background: #2E2E2E;
 		padding-bottom: 56.25%;
 		position: relative;
         overflow: hidden;
@@ -392,13 +480,13 @@
             }
 
             .dragBox {
-                width: 328px;
-                height: 188px;
-                border: 4px solid #91949C;
+                width: 410px;
+                height: 232px;
+                border: 2px solid #2E2E2E;
                 position: absolute;
                 z-index: 5;
-                top: 50px;
-                right: 20px;
+                top: 0px;
+                right: 0px;
             }
         }
 
@@ -410,7 +498,7 @@
 
             .dragBox {
                 width: 49.8%;
-                height: 49.8%;
+                // height: 49.8%;
             }
         }
 
@@ -422,7 +510,7 @@
 
             .dragBox {
                 width: 33.133%;
-                height: 33.133%;
+                // height: 33.133%;
             }
         }
 
@@ -454,7 +542,7 @@
                 top: 0;
                 left: 0;
                 z-index: 5;
-                background-color: #444;
+                background-color: #343D4F;
                 .flex(center, center);
 
                 .icon-camera-none {

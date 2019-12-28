@@ -5,14 +5,15 @@
         v-if="data.uid !== meetingInfo.mine.uid"
         :id="data.uid === meetingInfo.mine.uid ? 'mine' : ''"
     >
-<!--        <player-status :data="data"></player-status>-->
+        <player-status :data="data"></player-status>
         <div class="grail">
             <div :id="`player_${data.uid}_tc`" class="vjs-tech"></div>
-            <div :id="`player_${data.uid}_ali`" class="vjs-tech"></div>
+            <div :id="`player_${data.uid}_ali`" ref="ali" class="vjs-tech"></div>
         </div>
         <div :class="`${data.camera === 0 ? 'hasCamera' : 'noCamera'}`">
             <i class="font_family icon-camera-none"></i>
         </div>
+		<!-- <player-status v-if="mineFlag !== 'two'" :data="{name:data.name}"></player-status> -->
         <div class="holder"></div>
     </div>
 </template>
@@ -33,7 +34,8 @@
             },
             meetingInfo: {},
             howMany: "zero",
-            isShare: false
+            isShare: false,
+            mineFlag: false
         },
         data() {
             return {
@@ -66,9 +68,10 @@
                 if (this.data.uid === this.meetingInfo.mine.uid) return;
                 this.player && this.player.dispose();
                 if (!this.$refs.playerBox) return;
-                this.$nextTick(() => {
+                clearTimeout(this.timer);
+                this.timer = setTimeout(() => {
                     this.Aliplayer();
-                });
+                }, 300);
             },
             createVideo() {
                 if (this.data.uid === this.meetingInfo.mine.uid) return;
@@ -96,34 +99,43 @@
             },
             Aliplayer() {
                 this.$nextTick(() => {
-                    this.player = new Aliplayer({
-                        "id": `player_${this.data.uid}_ali`,
-                        "source": this.src,
-                        // "width": `800px`,
-                        // "height": `450px`,
-                        "width": `${100 *16 / 12}%`,
-                        "height": `${100 *16 / 12}%`,
-                        // "rtmpBufferLength": 0,
-                        "autoplay": true,
-                        "isLive": true,
-                        "useFlashPrism": true,
-                        "definition": "FD",
-                        "autoPlayDelay": 0,
-                        "controlBarVisibility": "click"
-                    });
-                    this.player.on("liveStreamStop", () => {
-                        console.log("error~~~~~~~~~~~~~~~~~~~, 没有取到播放源");
-                        if (this.count === 3) {
-                            this.count = 0;
-                            this.reset();
-                            console.log('error~~~~~~~~~~~~~~~~~~~, 重置播放器')
-                        } else {
-                            ++this.count;
-                            this.player.pause();
-                            this.player.play();
-                        }
-                    })
-
+                    if (this.$refs.ali) {
+                        console.log(this.$refs.ali);
+                        this.player = new Aliplayer({
+                            "id": `player_${this.data.uid}_ali`,
+                            "source": this.src,
+                            controls: false,
+                            // "width": `800px`,
+                            // "height": `450px`,
+                            "width": `${100 *16 / 12}%`,
+                            "height": `${100 *16 / 12}%`,
+                            // "rtmpBufferLength": 0,
+                            "autoplay": true,
+                            "isLive": true,
+                            "useFlashPrism": true,
+                            "definition": "FD",
+                            "autoPlayDelay": 0,
+                            "controlBarVisibility": "click",
+                            "liveRetry": 10
+                        });
+                        this.player.on("liveStreamStop", () => {
+                            if (this.count === 1) {
+                                this.count = 0;
+                                this.reset();
+                                console.log('error~~~~~~~~~~~~~~~~~~~, 重置播放器')
+                            } else {
+                                console.log("error~~~~~~~~~~~~~~~~~~~, 没有取到播放源");
+                                ++this.count;
+                                this.player.pause();
+                                this.player.play();
+                            }
+                        })
+                    } else {
+                        clearTimeout(this.timer);
+                        this.timer = setTimeout(() => {
+                            this.Aliplayer();
+                        }, 300)
+                    }
                 });
             },
             tcPlayer() {
@@ -138,7 +150,8 @@
             }
         },
         beforeDestroy() {
-            this.data.uid !== this.meetingInfo.mine.uid && this.player.dispose();
+            clearTimeout(this.timer);
+            this.data.uid !== this.meetingInfo.mine.uid && this.player && this.player.dispose();
         }
     };
 </script>
@@ -155,10 +168,10 @@
             font-size: 18px;
             position: absolute;
             left: 0;
-            top: 50px;
+            top: 0px;
             background-color: rgba(0, 0, 0, 0.6);
             border-radius: 0 20px 20px 0;
-            z-index: 9999;
+            z-index: 500;
             .flex(center, center);
             svg {
                 margin-left: 5px;

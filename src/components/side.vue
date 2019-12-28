@@ -11,10 +11,10 @@
             <!-- <div class="myImg" :style="`background-image: url(${data.avarter ? data.avarter : ''});`"></div> -->
         </div>
         <div class="foot">
-            <transition enter-active-class="animated bounceInRight faster" leave-active-class="animated bounceOutRight faster">
+            <transition enter-active-class="animated slideInRight faster" leave-active-class="animated slideOutRight faster">
                 <party v-if="showParty" :data="data" @handleParty="() => $emit('handleParty')" :members="members" :hasControl="data.control"></party>
             </transition>
-            <transition enter-active-class="animated bounceInUp faster" leave-active-class="animated bounceOutDown faster">
+            <transition enter-active-class="animated slideInRight faster" leave-active-class="animated slideOutRight faster">
                 <message v-if="showMessage" @handleMessage="() => $emit('handleMessage')" :barrage="barrage" :meetingInfo="data" :message="message"></message>
             </transition>
         </div>

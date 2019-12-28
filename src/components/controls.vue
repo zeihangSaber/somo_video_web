@@ -13,7 +13,7 @@
 					<i class="font_family icon-people-num"></i>
 					{{this.peopleNum}}
 				</span>
-				<span v-if="!this.data.muteAll">全体静音</span>
+				<span v-if="this.data.muteAll">全体静音</span>
 				<span>
 					<i class="font_family icon-noMute"></i>
 					{{this.micNum}}

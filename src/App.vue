@@ -65,7 +65,7 @@
             </div>
             <share :isShowShare_="isShowShare_" :shareData="shareData" @share_status="share_status"></share>
         </div>
-        <transition enter-active-class="animated bounceIn faster" leave-active-class="animated bounceOut faster">
+        <transition enter-active-class="animated slideInRight faster" leave-active-class="animated slideOutRight faster">
             <side-box
                     :data="meetingInfo"
                     :members="speaker ? [speaker, ...members] : members"
@@ -145,7 +145,7 @@
                 this.message.push(msg)
             });
             antiquity.on('getMidInfo', meetingInfo => {
-				console.log(meetingInfo)
+				console.log('xxxxxx',meetingInfo)
                 this.meetingInfo = meetingInfo;
             });
             antiquity.on('getMembers', members => {

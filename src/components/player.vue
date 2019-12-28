@@ -104,6 +104,7 @@
                         this.player = new Aliplayer({
                             "id": `player_${this.data.uid}_ali`,
                             "source": this.src,
+                            controls: false,
                             // "width": `800px`,
                             // "height": `450px`,
                             "width": `${100 *16 / 12}%`,
@@ -118,7 +119,7 @@
                             "liveRetry": 10
                         });
                         this.player.on("liveStreamStop", () => {
-                            if (this.count === 2) {
+                            if (this.count === 1) {
                                 this.count = 0;
                                 this.reset();
                                 console.log('error~~~~~~~~~~~~~~~~~~~, 重置播放器')

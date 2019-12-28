@@ -4,7 +4,7 @@
       <p class="p" v-if="search_show == 0">参会方(<span>{{ members.length }}</span>)</p>
 	  <input v-if="search_show == 1" type="text" placeholder="搜索账号名称" v-model="search" @input="search_member" class="searchInput"/>
 	  <div>
-		  <i class="font_family icon-chazhaoanniu search" @click="searchShow()"></i>
+		  <i :class="search_show == 1?'font_family icon-chazhaoanniu search_act':'font_family icon-chazhaoanniu search'" @click="searchShow()"></i>
 		  <i class="font_family icon-close" @click="$emit('handleParty')"></i>
 	  </div>
     </div>
@@ -354,6 +354,10 @@
 	height: 48px;
 	padding-right: 8px;
 	box-sizing: border-box;
+	.search_act{
+		color: #118BFB;
+		margin-right: 8px;
+	}
 	.search{
 		color: #c5c6c8;
 		margin-right: 8px;

@@ -34,27 +34,14 @@
            </transition>
 			<div class="leftBig_box">
 					<div :class="`playerBigBox ${howMany} `" ref="playerBigBox">
-						<!-- 自己的推流 -->
-					    <div :class="`dragBox ${mineFlag}`"style="display: flex;position: relative;" v-if="members.length <= 2">
-							<div style="width: 0;padding-bottom: 56%;"></div>
-							<div style="position: absolute;top: 0;left: 0;z-index: 1000;width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;overflow: hidden;">
+						<!-- 自己的推流  v-if="howMany != 'two'&&howMany != 'fir'"-->
+					    <div :class="`dragBox ${mineFlag}`" style="display: flex;">
+							<div style="width: 0;padding-bottom: 56.25%;"></div>
+							<div style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; overflow: hidden;">
 								<player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
 								<div style="width: 133.33%;height: 133.33%;">
 									<div class="drag" ref="draggable">
 										<div v-if="meetingInfo.mine.camera === 1" :class="`${meetingInfo.mine.camera === 1 ? '' : 'dragHasCamera'}`">
-											<img src="https://182.61.17.228/common/logoGif.gif">
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div :class="`dragBox ${mineFlag}`"style="display: flex;position: relative;" v-if="members.length > 2">
-							<div style="width: 0;padding-bottom: 56%;"></div>
-							<div style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;overflow: hidden;">
-								<player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
-								<div style="width: 133.33%;height: 133.33%;">
-									<div class="drag" ref="draggable">
-										<div v-if="meetingInfo.mine.camera === 1" :class="`${meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
 											<img src="https://182.61.17.228/common/logoGif.gif">
 										</div>
 									</div>
@@ -186,7 +173,12 @@
 			antiquity.on('countDown', msg => {
 			    console.log(mas.code)
 				if(mas.code == 2008){
-					
+					if (this.store.data.meetingStart3Time !== 0) {
+						const now = 40 * 60 * 1000 - (new Date().getTime() - this.store.data.meetingStart3Time)
+						this.countDown(now)
+					} else {
+						this.countDown(10 * 60 * 1000)
+					}
 				}
 			});
             this.$nextTick(() => {
@@ -225,24 +217,29 @@
             },3000);
         },
         computed: {
-            maxSlide() {
+			// speaker   主讲
+			// sharer	  分享
+			// playerNum 几分屏
+			// members   成员
+			// slideCount几个切屏
+            maxSlide() {//
                 let maxSlide = Math.max(Math.ceil(this.members.length / this.playerNum), 1);
                 (this.speaker || this.sharer) && ++maxSlide;
                 return maxSlide;
             },
-            speakFlag() {
+            speakFlag() {//是否有主讲人
                 if (this.meetingInfo.mine.speaker === 1 && this.slideCount === 1) return true;
                 return this.speaker && this.slideCount === 1 && !this.sharer;
             },
-            shareFlag() {
+            shareFlag() {//是否有分屏
                 return this.sharer && this.slideCount === 1;
             },
-            membersNum() {
+            membersNum() {//获取成员数量
                 if (this.meetingInfo.mine.speaker) return this.members.length + 1;
                 if (this.speaker || this.sharer) return this.members.length + 1;
                 return this.members.length
             },
-            howMany() {
+            howMany() {//返回当前是几分屏
                 if (this.membersNum === 1) return 'fir';
                 if ((this.shareFlag || this.speakFlag) && this.slideCount === 1) return 'one';
                 if (!(this.sharer || this.speaker) && this.membersNum === 2) return 'two';
@@ -250,12 +247,12 @@
                 if (this.playerNum === 9) return 'nine';
                 return 'fir'
             },
-            realCount() {
+            realCount() {//不算主讲和分屏，剩余多少分屏
                 let realCount = 0;
                 if (this.speaker || this.sharer) realCount = -1;
                 return Math.max(this.slideCount + realCount, 0);
             },
-            mineFlag() {
+            mineFlag() {//是否是我
                 if (this.sharer && this.meetingInfo.mine.speaker) return 'boxOut';
                 if (this.slideCount !== 1 && this.meetingInfo.mine.speaker) return 'boxOut';
                 if (this.meetingInfo.mine.speaker) return 'playerBox';
@@ -263,7 +260,7 @@
                 if (!this.speaker && !this.sharer && this.slideCount === 1) return 'playerBox';
                 return 'boxOut';
             },
-            nowPlayerNum() {
+            nowPlayerNum() {//当前页需要展示几个人
                 return Math.min(this.members.length - this.playerNum * (this.realCount - 1), this.playerNum)
             },
         },
@@ -339,7 +336,7 @@
             },
             Leave(e){
                 this.showCtrlTime = setTimeout(()=>{
-                    this.isShowCtrl = false
+                    // this.isShowCtrl = false
                 },3000)
             },
             LeaveMeeting(){
@@ -502,6 +499,7 @@
             .playerBox {
                 width: 49.8%;
                 margin: 0.1%;
+				position: relative;
             }
 
             .dragBox {
@@ -527,7 +525,7 @@
             .flex(center, center);
             overflow: hidden;
             background-color: #444;
-
+			position: relative;
             &.space {
                 background-color: #ccc;
             }
@@ -562,6 +560,8 @@
 
         .boxOut {
             position: absolute;
+			width: 360px;
+			height: 240px;
             z-index: -200;
         }
 

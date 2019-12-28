@@ -93,7 +93,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="set_main_box">
+					<div class="set_main_box" style="margin-top: 10px;">
 						<div class="set_main_title">弹幕消息:</div>
 						<div class="set_gongneng">
 							<div @click="$emit('barrageTrue')">
@@ -224,7 +224,8 @@
 	color: #DDDDDD;
 }
 .set_box{
-	width: 320px;
+	width: 230px;
+	height: 206px;
 	background:#FFFFFF;
 	border-radius:8px;
 	position: absolute;
@@ -232,18 +233,18 @@
 	left: 55%;
 	z-index: 110000;
 	.set_main{
-		padding: 25px 0;
+		padding: 0 48px 0 32px;
 		font-size:16px;
 		font-weight:400;
 		color:rgba(153,153,153,1);
 		.set_main_box{
-			width: 60%;
+			// width: 60%;
 			display: flex;
 			justify-content: center;
 			align-items: flex-start;
-			margin: 0 auto 16px;
+			// margin: 0 auto 16px;
 			.set_main_title{
-				width: 40%;
+				width: 80px;
 				font-size:16px;
 				font-weight:400;
 				color:rgba(102,102,102,1);
@@ -254,17 +255,16 @@
 					margin-bottom: 6px;
 				}
 				& div>span{
-					margin-left: 9px;
+					margin-left: 4px;
 				}
 			}
 		}
 	}
 	.set_title{
-		height: 68px;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding: 0 20px 0 24px;
+		padding: 16px 20px 24px 24px;
 		// border-bottom: 1px solid #333333;
 		font-size:18px;
 		font-weight:600;

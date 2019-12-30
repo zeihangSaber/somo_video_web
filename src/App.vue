@@ -189,7 +189,6 @@
 						},1000)
 					}
 				}
-				
 				if(this.meetingInfo.start){
 					clearInterval(this.destroy_timer)
 					this.destroy_timer = setInterval(() => {
@@ -204,7 +203,6 @@
 							this.timer = this.formatDuring(this.not_time)
 					}, 1000)
 				}
-				
             });
             antiquity.on('getShareUrl', sharer => {
                 this.sharer = sharer;
@@ -260,6 +258,13 @@
                 this.isShowCtrl = false
             },3000);
         },
+		watch:{
+			maxSlide (){
+				if(this.maxSlide < this.slideCount){
+					this.slideCount = this.maxSlide
+				}
+			}
+		},
         computed: {
 			// speaker   主讲
 			// sharer	  分享
@@ -429,14 +434,21 @@
 								this.joinStatus = 0
                                 this.$Toast.success({message: '会议号错误'});
                                 setTimeout(() => {
-                                    window.location.href = 'https://http://182.61.17.228/joinConference';
+                                    window.location.href = 'https://182.61.17.228/joinConference';
                                 }, 2000);
                                 return
                             } else if (res.code == 2011) {
 								this.joinStatus = 0
                                 this.$Toast.success({message: '会议密码输入错误'});
                                 setTimeout(() => {
-                                    window.location.href = 'https://http://182.61.17.228/joinConference';
+                                    window.location.href = 'https://182.61.17.228/joinConference';
+                                }, 2000);
+                                return
+                            }else if (res.code == 2004) {//会议锁定状态
+								this.joinStatus = 0
+                                this.$Toast.success({message: '会议已锁定,请联系管理员'});
+                                setTimeout(() => {
+                                    window.location.href = 'https://182.61.17.228/joinConference';
                                 }, 2000);
                                 return
                             }

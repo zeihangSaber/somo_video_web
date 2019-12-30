@@ -189,7 +189,7 @@
 						},1000)
 					}
 				}
-				
+
 				if(this.meetingInfo.start){
 					clearInterval(this.destroy_timer)
 					this.destroy_timer = setInterval(() => {
@@ -204,7 +204,7 @@
 							this.timer = this.formatDuring(this.not_time)
 					}, 1000)
 				}
-				
+
             });
             antiquity.on('getShareUrl', sharer => {
                 this.sharer = sharer;
@@ -213,8 +213,7 @@
                 this.speaker = speaker;
             });
 			antiquity.on('countDown', msg => {
-			    console.log(mas.code)
-				if(mas.code == 2008){
+				if(msg.code == 2008){
 					if (this.store.data.meetingStart3Time !== 0) {
 						const now = 40 * 60 * 1000 - (new Date().getTime() - this.store.data.meetingStart3Time)
 						this.countDown(now)
@@ -234,25 +233,25 @@
 			clearInterval(this.destroy_timer)
 		},
         async mounted() {
-			window.onresize = function(){
-			    // alert(document.getElementById('playerBigBox').offsetTop);
-				console.log(document.getElementById('playerBigBox'))
-				console.log(document.getElementById('playerBigBox').offsetTop)
-				if(document.getElementById('playerBigBox').offsetTop < 36){
-					this.screenStatus = 1
-				}else if(document.getElementById('playerBigBox').offsetTop >= 36){
-					this.screenStatus = 0
-				}
-			};
-
-            window.addEventListener('offline', () => {
-                //网络由正常常到异常时触发
-                this.$Toast.success({message: '您的网络已断开，请检查网络设置。'})
-            });
-            window.addEventListener('online', () => {
-                //从异常到正常时触发
-                this.$Toast.success({message: '正常尝试连接网络中，请稍等~'})
-            });
+			// window.onresize = function(){
+			//     // alert(document.getElementById('playerBigBox').offsetTop);
+			// 	console.log(document.getElementById('playerBigBox'))
+			// 	console.log(document.getElementById('playerBigBox').offsetTop)
+			// 	if(document.getElementById('playerBigBox').offsetTop < 36){
+			// 		this.screenStatus = 1
+			// 	}else if(document.getElementById('playerBigBox').offsetTop >= 36){
+			// 		this.screenStatus = 0
+			// 	}
+			// };
+			//
+            // window.addEventListener('offline', () => {
+            //     //网络由正常常到异常时触发
+            //     this.$Toast.success({message: '您的网络已断开，请检查网络设置。'})
+            // });
+            // window.addEventListener('online', () => {
+            //     //从异常到正常时触发
+            //     this.$Toast.success({message: '正常尝试连接网络中，请稍等~'})
+            // });
             this.$nextTick(() => {
                 this.init();
             });
@@ -442,8 +441,15 @@
                             }
                             this.waiting = false;
                         });
-						console.log(antiquity)
-                    antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
+                    try {
+						setTimeout(() => {
+							antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
+						}, 300)
+                    } catch (e) {
+						setTimeout(() => {
+							antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
+						}, 300)
+					}
                 });
             }
         }
@@ -496,13 +502,13 @@
 	}
 	.set_myBox{
 		position: absolute;
-		top: 0px; 
-		left: 0px; 
-		width: 100%; 
-		height: 100%; 
-		display: flex; 
-		justify-content: center; 
-		align-items: center; 
+		top: 0px;
+		left: 0px;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		overflow: hidden;
 	}
 	.set_height{

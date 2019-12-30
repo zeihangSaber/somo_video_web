@@ -15,7 +15,7 @@
 									<div class="msgBox-name">{{itme.name}}</div>
 									<span class="msg_time">{{itme.time}}</span>
 								</div>
-                                
+
                                 <div class="msgBox-content others_content">{{itme.text}}</div>
                             </div>
                             <div v-if="itme.uid == meetingInfo.mine.uid" class="ME-msg msg">
@@ -60,7 +60,7 @@
             this._time()
         },
 		watch:{
-			message:function (newValue, oldVal) {
+			message: function (newValue, oldVal) {
 			  // console.log( newValue, oldVal )
 			  this.Talk(2)
 			}
@@ -108,7 +108,7 @@
 					    this.$refs.topBox.scrollTop = this.$refs.topBox_.offsetHeight;
 					}, 100)
 				}
-                
+
             },
             send_msg() {
                 this.Talk(1);

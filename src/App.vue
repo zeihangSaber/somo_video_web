@@ -177,7 +177,6 @@
 					this.isShowShare_ = false
 				}
 				if(this.peopleNum==3 && MeetingStatus){
-					alert(2)
 					// alert(Date.parse(new Date()))
 					let NowTime = Date.parse(new Date())
 					let start3 = this.meetingInfo.start3 + 1800000
@@ -189,7 +188,6 @@
 						},1000)
 					}
 				}
-
 				if(this.meetingInfo.start){
 					clearInterval(this.destroy_timer)
 					this.destroy_timer = setInterval(() => {
@@ -204,7 +202,6 @@
 							this.timer = this.formatDuring(this.not_time)
 					}, 1000)
 				}
-
             });
             antiquity.on('getShareUrl', sharer => {
                 this.sharer = sharer;
@@ -213,7 +210,8 @@
                 this.speaker = speaker;
             });
 			antiquity.on('countDown', msg => {
-				if(msg.code == 2008){
+			    console.log(mas.code)
+				if(mas.code == 2008){
 					if (this.store.data.meetingStart3Time !== 0) {
 						const now = 40 * 60 * 1000 - (new Date().getTime() - this.store.data.meetingStart3Time)
 						this.countDown(now)
@@ -233,25 +231,25 @@
 			clearInterval(this.destroy_timer)
 		},
         async mounted() {
-			// window.onresize = function(){
-			//     // alert(document.getElementById('playerBigBox').offsetTop);
-			// 	console.log(document.getElementById('playerBigBox'))
-			// 	console.log(document.getElementById('playerBigBox').offsetTop)
-			// 	if(document.getElementById('playerBigBox').offsetTop < 36){
-			// 		this.screenStatus = 1
-			// 	}else if(document.getElementById('playerBigBox').offsetTop >= 36){
-			// 		this.screenStatus = 0
-			// 	}
-			// };
-			//
-            // window.addEventListener('offline', () => {
-            //     //网络由正常常到异常时触发
-            //     this.$Toast.success({message: '您的网络已断开，请检查网络设置。'})
-            // });
-            // window.addEventListener('online', () => {
-            //     //从异常到正常时触发
-            //     this.$Toast.success({message: '正常尝试连接网络中，请稍等~'})
-            // });
+			window.onresize = function(){
+			    // alert(document.getElementById('playerBigBox').offsetTop);
+				console.log(document.getElementById('playerBigBox'))
+				console.log(document.getElementById('playerBigBox').offsetTop)
+				if(document.getElementById('playerBigBox').offsetTop < 36){
+					this.screenStatus = 1
+				}else if(document.getElementById('playerBigBox').offsetTop >= 36){
+					this.screenStatus = 0
+				}
+			};
+
+            window.addEventListener('offline', () => {
+                //网络由正常常到异常时触发
+                this.$Toast.success({message: '您的网络已断开，请检查网络设置。'})
+            });
+            window.addEventListener('online', () => {
+                //从异常到正常时触发
+                this.$Toast.success({message: '正常尝试连接网络中，请稍等~'})
+            });
             this.$nextTick(() => {
                 this.init();
             });
@@ -259,6 +257,13 @@
                 this.isShowCtrl = false
             },3000);
         },
+		watch:{
+			maxSlide (){
+				if(this.maxSlide < this.slideCount){
+					this.slideCount = this.maxSlide
+				}
+			}
+		},
         computed: {
 			// speaker   主讲
 			// sharer	  分享
@@ -428,28 +433,28 @@
 								this.joinStatus = 0
                                 this.$Toast.success({message: '会议号错误'});
                                 setTimeout(() => {
-                                    window.location.href = 'https://http://182.61.17.228/joinConference';
+                                    window.location.href = 'https://182.61.17.228/joinConference';
                                 }, 2000);
                                 return
                             } else if (res.code == 2011) {
 								this.joinStatus = 0
                                 this.$Toast.success({message: '会议密码输入错误'});
                                 setTimeout(() => {
-                                    window.location.href = 'https://http://182.61.17.228/joinConference';
+                                    window.location.href = 'https://182.61.17.228/joinConference';
+                                }, 2000);
+                                return
+                            }else if (res.code == 2004) {//会议锁定状态
+								this.joinStatus = 0
+                                this.$Toast.success({message: '会议已锁定,请联系管理员'});
+                                setTimeout(() => {
+                                    window.location.href = 'https://182.61.17.228/joinConference';
                                 }, 2000);
                                 return
                             }
                             this.waiting = false;
                         });
-                    try {
-						setTimeout(() => {
-							antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
-						}, 300)
-                    } catch (e) {
-						setTimeout(() => {
-							antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
-						}, 300)
-					}
+						console.log(antiquity)
+                    antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
                 });
             }
         }
@@ -502,13 +507,13 @@
 	}
 	.set_myBox{
 		position: absolute;
-		top: 0px;
-		left: 0px;
-		width: 100%;
-		height: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
+		top: 0px; 
+		left: 0px; 
+		width: 100%; 
+		height: 100%; 
+		display: flex; 
+		justify-content: center; 
+		align-items: center; 
 		overflow: hidden;
 	}
 	.set_height{

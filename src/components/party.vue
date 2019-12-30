@@ -166,7 +166,6 @@
 </template>
 <script>
 	import antiquity from "../utils/Antiquity";
-
 	export default {
 	  name: "party",
 	  props: ["members", "hasControl", "data"],

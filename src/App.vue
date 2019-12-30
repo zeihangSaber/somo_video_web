@@ -177,7 +177,6 @@
 					this.isShowShare_ = false
 				}
 				if(this.peopleNum==3 && MeetingStatus){
-					alert(2)
 					// alert(Date.parse(new Date()))
 					let NowTime = Date.parse(new Date())
 					let start3 = this.meetingInfo.start3 + 1800000

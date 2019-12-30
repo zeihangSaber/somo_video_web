@@ -171,7 +171,6 @@ export default {
   mounted() {},
   methods: {
     set_meetingTime(type) {
-      alert(type);
       if (type == 1) {
         setInterval(() => {
           let timestamp = new Date().getTime(); //当前时间戳

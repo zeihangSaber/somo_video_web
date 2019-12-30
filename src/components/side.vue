@@ -15,7 +15,7 @@
                 <party v-if="showParty" :data="data" @handleParty="() => $emit('handleParty')" :members="members" :hasControl="data.control"></party>
             </transition>
             <transition enter-active-class="animated slideInRight faster" leave-active-class="animated slideOutRight faster">
-                <message v-if="showMessage" @handleMessage="() => $emit('handleMessage')" :barrage="barrage" :meetingInfo="data" :message="message"></message>
+                <message v-if="showMessage" @handleMsg="(arr) => $emit('handleMsg', arr)" @handleMessage="() => $emit('handleMessage')" :barrage="barrage" :meetingInfo="data" :message="message"></message>
             </transition>
         </div>
     </div>

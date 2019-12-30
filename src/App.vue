@@ -26,6 +26,8 @@
                 :maxSlide="maxSlide"
                 :shareData="shareData"
                 :slideCount="slideCount"
+				:speaker="speaker"
+				:msgBox="msgBox"
                 @handleMessage="handleMessage"
                 @ShowShare="ShowShare"
                 @handleParty="handleParty"
@@ -87,6 +89,7 @@
                     :message="message"
                     @handleMessage="handleMessage"
                     @handleParty="handleParty"
+					@handleMsg="handleMsg"
             ></side-box>
         </transition>
     </div>
@@ -144,7 +147,8 @@
 				screenStatus:0,
 				destroy_timer:'',
 				endMeeting:0,
-				ten:10000
+				ten:10000,
+				msgBox: []
             };
         },
         beforeCreate() {
@@ -337,8 +341,11 @@
             share_status() {
                 this.isShowShare_ = false
             },
-            ShowShare() {
+            handleMsg(arr) {
+				console.log('~~~~~~~~~~~~~~~~~', arr)
+				this.msgBox = arr;
             },
+			ShowShare() {},
             handleSide() {
                 if (this.changeScreen) {
 					if (document.exitFullscreen) {
@@ -507,13 +514,13 @@
 	}
 	.set_myBox{
 		position: absolute;
-		top: 0px; 
-		left: 0px; 
-		width: 100%; 
-		height: 100%; 
-		display: flex; 
-		justify-content: center; 
-		align-items: center; 
+		top: 0px;
+		left: 0px;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		overflow: hidden;
 	}
 	.set_height{

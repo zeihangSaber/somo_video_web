@@ -13,12 +13,12 @@
 				</span>
 				<span>
 					<i class="font_family icon-people-num"></i>
-					{{this.peopleNum}}
+					{{this.speaker ? this.peopleNum + 1 : this.peopleNum}}
 				</span>
 				<span v-if="this.data.muteAll">全体静音</span>
 				<span>
 					<i class="font_family icon-noMute"></i>
-					{{this.micNum}}
+					{{this.speaker && this.speaker.mic === 0 ? this.micNum + 1 : this.micNum}}
 				</span>
 				<span>
 					<i class="font_family icon-time"></i>
@@ -69,6 +69,7 @@
 				<i :class="`font_family ${changeScreen ? 'icon-zoomOut' : 'icon-zoomIn'}`" style="font-size: 37px;"></i>
 			</button>
 		</div>
+		<bullet-screen v-if="barrage" :msgBox="msgBox"></bullet-screen>
 		<transition enter-active-class="animated flipInY fast" leave-active-class="animated flipOutY fast">
 			<div class="set_box" v-if="showSetting">
 				<div class="set_title">
@@ -122,6 +123,7 @@
 
 <script>
 import antiquity from "../utils/Antiquity";
+import bulletScreen from "./bulletScreen";
 let interval;
 export default {
   name: "app",
@@ -148,9 +150,13 @@ export default {
     "maxSlide",
     "slideCount",
     "shareData",
-    "timer"
+    "timer",
+	"speaker",
+	"msgBox"
   ],
-  components: {},
+  components: {
+	  bulletScreen
+  },
   computed: {
     sysAppIds() {
       let data =

@@ -1,34 +1,29 @@
 <template>
-	<div>
-		<div class="bulletScreen" >
-		    <div v-for="item in arr" class="bulletScreen-msg">
+		<div class="bulletScreenZ" >
+		    <div v-for="item in msgBox" class="bulletScreen-msg">
 		        <span class="bulletScreen-name">{{item.name}}：</span>
 		        <span class="bulletScreen-main">{{item.text}}</span>
 		    </div>
 		</div>
-		<!-- v-if="barrage" -->
-		
-		
-	</div>
 </template>
 
 <script>
 	export default{
+		props: ["msgBox"],
 		data(){
 			return{
-				
+
 			}
 		},
 		methods:{
-			
+
 		}
 	}
 </script>
 
-<style> 
-	.bulletScreen {
+<style>
+	.bulletScreenZ {
 	    width: 360px;
-		background: #FFFFFF;
 	    position: fixed;
 	    bottom: 100px;
 	    left: 30px;

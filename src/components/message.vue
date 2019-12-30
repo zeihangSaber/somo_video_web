@@ -37,12 +37,6 @@
 				</div>
             </div>
         </div>
-        <div class="bulletScreen" v-if="barrage">
-            <div v-for="item in arr" class="bulletScreen-msg">
-                <span class="bulletScreen-name">{{item.name}}：</span>
-                <span class="bulletScreen-main">{{item.text}}</span>
-            </div>
-        </div>
     </div>
 </template>
 <script>
@@ -60,10 +54,15 @@
             this._time()
         },
 		watch:{
-			message: function (newValue, oldVal) {
-			  // console.log( newValue, oldVal )
-			  this.Talk(2)
-			}
+			message: function () {
+			    this.Talk(2)
+                const newArr = [
+                    this.message[this.message.length - 3],
+                    this.message[this.message.length - 2],
+                    this.message[this.message.length - 1]
+                ];
+                this.$emit('handleMsg', newArr)
+            }
 		},
         computed: {
             disabled() {
@@ -74,41 +73,21 @@
                     disabled = false
                 }
                 return disabled
-            },
-            arr() {
-                let newArr = [];
-                if (this.message.length > 3) {
-                    newArr = [
-                        this.message[this.message.length - 3],
-                        this.message[this.message.length - 2],
-                        this.message[this.message.length - 1]
-                    ];
-                    this.Talk()
-                } else {
-                    newArr = this.message;
-                    this.Talk()
-                }
-                return newArr
             }
         },
         methods: {
             Talk(type) {
-				// scrollTop + clientHeight == scrollHeight
-				// console.log(parseInt(this.$refs.topBox.scrollTop + this.$refs.topBox.clientHeight))
-				// console.log(this.$refs.topBox.scrollHeight)
 				this.height = parseInt(this.$refs.topBox.scrollTop + this.$refs.topBox.clientHeight)
-				if(type == 1){//自己发消息时触发
+                // 自己发消息时触发
+				if (type == 1){
 					setTimeout(() => {
 					    this.$refs.topBox.scrollTop = this.$refs.topBox_.offsetHeight;
 					}, 100)
-					// console.log(this.height)
 				}else if(type == 2 && this.$refs.topBox.scrollHeight == this.height){
-					// alert(222)
 					setTimeout(() => {
 					    this.$refs.topBox.scrollTop = this.$refs.topBox_.offsetHeight;
 					}, 100)
 				}
-
             },
             send_msg() {
                 this.Talk(1);
@@ -116,7 +95,6 @@
 				if(!Base64.encode(this.msgContent)){
 					return
 				}
-				// console.log(this.meetingInfo)
                 antiquity.ajax.broadcast({
                     "mid": this.meetingInfo.id,
                     "text": Base64.encode(this.msgContent)
@@ -132,7 +110,6 @@
             },
             // 实时获取当前电脑时间
             _time() {
-                // setInterval(() => {
                     let t = new Date();
                     let hour = t.getHours(); //得到小时
                     let minu = t.getMinutes(); //得到分钟
@@ -144,7 +121,6 @@
                         sec = '0' + sec
                     }
                     return hour + ':' + minu + ':' + sec
-                // }, 1000)
             },
         }
     }

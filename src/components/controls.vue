@@ -69,7 +69,7 @@
 				<i :class="`font_family ${changeScreen ? 'icon-zoomOut' : 'icon-zoomIn'}`" style="font-size: 37px;"></i>
 			</button>
 		</div>
-		<bullet-screen v-if="barrage" :msgBox="msgBox"></bullet-screen>
+		<bullet-screen v-if="barrage && !showMessage" :msgBox="msgBox"></bullet-screen>
 		<transition enter-active-class="animated flipInY fast" leave-active-class="animated flipOutY fast">
 			<div class="set_box" v-if="showSetting">
 				<div class="set_title">

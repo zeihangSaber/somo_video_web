@@ -48,7 +48,7 @@
 								<player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
 								<div class="my_plugFlow">
 									<div class="drag" ref="draggable">
-										<div v-if="meetingInfo.mine.camera === 1" :class="`${meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
+										<div v-if="meetingInfo.mine.camera === 1" :class="`${meetingInfo.mine.camera === 1 ? '' : 'dragHasCamera'}`">
 											<img src="https://182.61.17.228/common/logoGif.gif">
 										</div>
 									</div>
@@ -177,6 +177,7 @@
 					this.isShowShare_ = false
 				}
 				if(this.peopleNum==3 && MeetingStatus){
+					alert(2)
 					// alert(Date.parse(new Date()))
 					let NowTime = Date.parse(new Date())
 					let start3 = this.meetingInfo.start3 + 1800000
@@ -188,22 +189,22 @@
 						},1000)
 					}
 				}
-				if(this.peopleNum>=2){
+				
+				if(this.meetingInfo.start){
 					clearInterval(this.destroy_timer)
-					if(this.meetingInfo.start){
-						this.destroy_timer = setInterval(() => {
-								let timestamp = (new Date()).getTime();//当前时间戳
-								this.time =  timestamp - this.meetingInfo.start;
-								this.timer = this.formatDuring(this.time)
-						}, 1000)
-					}else if(!this.meetingInfo.start){
-						this.destroy_timer = setInterval(() => {
-								this.not_time = this.not_time + 1000
-								this.timer = this.formatDuring(this.not_time)
-						}, 1000)
-					}
-
+					this.destroy_timer = setInterval(() => {
+							let timestamp = (new Date()).getTime();//当前时间戳
+							this.time =  timestamp - this.meetingInfo.start;
+							this.timer = this.formatDuring(this.time)
+					}, 1000)
+				}else if(this.peopleNum>=2 && !this.meetingInfo.start){
+					clearInterval(this.destroy_timer)
+					this.destroy_timer = setInterval(() => {
+							this.not_time = this.not_time + 1000
+							this.timer = this.formatDuring(this.not_time)
+					}, 1000)
 				}
+				
             });
             antiquity.on('getShareUrl', sharer => {
                 this.sharer = sharer;
@@ -440,10 +441,8 @@
                                 return
                             }
                             this.waiting = false;
-
-
-
                         });
+						console.log(antiquity)
                     antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
                 });
             }
@@ -497,13 +496,13 @@
 	}
 	.set_myBox{
 		position: absolute;
-		top: 0px;
-		left: 0px;
-		width: 100%;
-		height: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
+		top: 0px; 
+		left: 0px; 
+		width: 100%; 
+		height: 100%; 
+		display: flex; 
+		justify-content: center; 
+		align-items: center; 
 		overflow: hidden;
 	}
 	.set_height{

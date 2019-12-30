@@ -157,7 +157,7 @@
                 <button :disabled="!hasControl" @click="handleRemoveMicAllOn" style="width:108px;">
                     解除全体静音
                 </button>
-                <button :disabled="!hasControl" @click="handleLock" :class="data.locked ?'lockMeeting':'lockMeeting noLockMeeting'">锁定会议</button>
+                <button :disabled="!hasControl" @click="handleLock" :class="data.locked ?'lockMeeting':'lockMeeting noLockMeeting'">{{data.locked ?'解锁会议':'锁定会议'}}</button>
             </div>
         </div>
       </transition-group>

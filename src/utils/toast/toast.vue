@@ -23,12 +23,13 @@
                 };
                 obj.timer = setTimeout(() => {
                     this.remove(obj);
-                }, 1500);
+                }, 3000);
                 this.layers.push(obj);
             },
             remove(layer) {
                 clearTimeout(layer.timer);
                 this.layers = this.layers.filter(item => item.id !== layer.id)
+				console.log(this.layers)
             }
         }
     }

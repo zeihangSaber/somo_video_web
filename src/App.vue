@@ -48,7 +48,7 @@
 								<player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
 								<div class="my_plugFlow">
 									<div class="drag" ref="draggable">
-										<div v-if="meetingInfo.mine.camera === 1" :class="`${meetingInfo.mine.camera === 1 ? '' : 'dragHasCamera'}`">
+										<div v-if="meetingInfo.mine.camera === 1" :class="`${meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
 											<img src="https://182.61.17.228/common/logoGif.gif">
 										</div>
 									</div>
@@ -202,7 +202,7 @@
 								this.timer = this.formatDuring(this.not_time)
 						}, 1000)
 					}
-					
+
 				}
             });
             antiquity.on('getShareUrl', sharer => {
@@ -440,9 +440,9 @@
                                 return
                             }
                             this.waiting = false;
-							
-							
-							
+
+
+
                         });
                     antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
                 });
@@ -497,13 +497,13 @@
 	}
 	.set_myBox{
 		position: absolute;
-		top: 0px; 
-		left: 0px; 
-		width: 100%; 
-		height: 100%; 
-		display: flex; 
-		justify-content: center; 
-		align-items: center; 
+		top: 0px;
+		left: 0px;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		overflow: hidden;
 	}
 	.set_height{

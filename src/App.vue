@@ -8,7 +8,7 @@
 					<div class="timeUseUP_btn" @click="LeaveMeeting()">退出会议 {{ten}}s</div>
 				</div>
 			</div>
-           <transition enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <transition enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <ctrl
                 v-show="isShowCtrl"
                 @handleSide="handleSide"
@@ -235,16 +235,13 @@
 			clearInterval(this.destroy_timer)
 		},
         async mounted() {
-			window.onresize = function(){
-			    // alert(document.getElementById('playerBigBox').offsetTop);
-				console.log(document.getElementById('playerBigBox'))
-				console.log(document.getElementById('playerBigBox').offsetTop)
-				if(document.getElementById('playerBigBox').offsetTop < 36){
-					this.screenStatus = 1
-				}else if(document.getElementById('playerBigBox').offsetTop >= 36){
-					this.screenStatus = 0
-				}
-			};
+			// window.onresize = () => {
+			// 	if(this.$refs.playerBigBox && this.$refs.playerBigBox.offsetTop < 36) {
+			// 		this.screenStatus = 1
+			// 	}else if(this.$refs.playerBigBox && this.$refs.playerBigBox.offsetTop >= 36) {
+			// 		this.screenStatus = 0
+			// 	}
+			// };
 
             window.addEventListener('offline', () => {
                 //网络由正常常到异常时触发
@@ -342,7 +339,7 @@
                 this.isShowShare_ = false
             },
             handleMsg(arr) {
-				console.log('~~~~~~~~~~~~~~~~~', arr)
+				console.log('~~~~~~~~~~~~~~', arr)
 				this.msgBox = arr;
             },
 			ShowShare() {},

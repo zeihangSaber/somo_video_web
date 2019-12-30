@@ -555,6 +555,7 @@
             .playerBox {
                 width: 0;
                 height: 0;
+				position: absolute;
             }
 
             .dragBox {

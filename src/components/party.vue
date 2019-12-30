@@ -40,7 +40,7 @@
               </button> -->
               <button class="permissionBtn more" @click="more(item)">
                 更多
-                <div v-show="permissionShow" class="permission">
+                <div v-if="permissionShow" class="permission">
                   <span class="permission_header"></span>
                   <div class="permission_content">
                     <div @click="setMic(item)">
@@ -98,7 +98,7 @@
                             </button> -->
                             <button class="permissionBtn more" @click="more(item)">
                                 更多
-                                <div v-show="permissionShow" class="permission">
+                                <div v-if="permissionShow" class="permission">
                                     <span class="permission_header"></span>
                                     <div class="permission_content">
                                         <div @click="setMic(item)">
@@ -207,15 +207,15 @@
 		  }
 		},
 		leave(event) {
-		  // event.target.className = "item";
-		  // this.permissionShow = false;
-		  if (this.hasControl) {
+		  event.target.className = "item";
+		  this.permissionShow = false;
+		  if (this.hasControl) {//不是主持人的时候
 			this.permissionShow = false;
 			event.target.className = "item";
 		  }
 		},
 		more(item) {
-      console.log("xxxx",item)
+			console.log("xxxx",item)
 		  this.permissionType = {
 			setSpeaker: true,
 			setRole: true,

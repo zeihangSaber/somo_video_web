@@ -21,7 +21,8 @@
 	}
 </script>
 
-<style>
+<style lang="less" scoped>
+	@import "../common/common";
 	.bulletScreenZ {
 	    width: 360px;
 	    position: fixed;

@@ -22,7 +22,7 @@
 				</span>
 				<span>
 					<i class="font_family icon-time"></i>
-					{{timer}}
+					{{timer || '00:00:00'}}
 				</span>
 			</div>
 			<i class="font_family icon-wifi-high" style="font-size: 16px !important;"></i>

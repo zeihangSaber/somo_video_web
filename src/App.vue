@@ -475,7 +475,7 @@
 		top: 0;
 		left: 0;
 		z-index: 10000;
-		background: red;
+		// background: red;
 		display: flex;
 		justify-content: center;
 		align-items: center;

@@ -98,8 +98,8 @@
 <script>
     import animate from 'animate.css';
     import Player from './components/player';
-    import Ctrl from './components/controls';
-    import SideBox from './components/side';
+    import Ctrl from './components/controls';//左边的顶部和底部
+    import SideBox from './components/side';//右边模块的组件
     import share from './components/share';
     import playerStatus from "./components/playerStatus";
     import antiquity, {myMid, Password, MeetingStatus, myCamera, myMic} from './utils/Antiquity';

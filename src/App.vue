@@ -45,6 +45,10 @@
 					<div :class="`playerBigBox ${howMany} `" ref="playerBigBox">
 						<!-- 自己的推流  v-if="howMany != 'two'&&howMany != 'fir'"-->
 					    <div :class="`dragBox ${mineFlag}`" style="display: flex;">
+							<div class="end_speaker" @click="setSpeaker()" v-if="meetingInfo.mine.speaker == 1">
+								<i class="font_family icon-jieshuzhujiang"></i>
+								<span>结束主讲</span>
+							</div>
 							<div class="set_height"></div>
 							<div class="set_myBox">
 								<player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
@@ -77,7 +81,7 @@
 					</div>
                 <div v-if="waiting" class="waiting"><i class="font_family icon-camera-none"></i></div>
             </div>
-            <share :isShowShare_="isShowShare_" :shareData="shareData" @share_status="share_status"></share>
+            <!-- <share :isShowShare_="isShowShare_" :shareData="shareData" @share_status="share_status"></share> -->
         </div>
         <transition enter-active-class="animated slideInRight faster" leave-active-class="animated slideOutRight faster">
             <side-box
@@ -100,17 +104,17 @@
     import Player from './components/player';
     import Ctrl from './components/controls';//左边的顶部和底部
     import SideBox from './components/side';//右边模块的组件
-    import share from './components/share';
+    // import share from './components/share';
     import playerStatus from "./components/playerStatus";
-    import antiquity, {myMid, Password, MeetingStatus, myCamera, myMic} from './utils/Antiquity';
-
+    import antiquity, {myDevice, myCookie, myMid, Password, MeetingStatus, myCamera, myMic} from './utils/Antiquity';
+	
     export default {
         name: 'app',
         components: {
             Player,
             Ctrl,
             SideBox,
-            share,
+            // share,
             playerStatus
         },
         data() {
@@ -130,7 +134,7 @@
                 isShowMessage: true,
                 isShowParty: true,
                 isShowShare: false,
-                isShowShare_: false,
+                // isShowShare_: false,
                 speaker: null,
                 sharer: null,
                 playerNum: 4,
@@ -178,9 +182,9 @@
                         return item;
                     }
                 }).length;
-				if(this.peopleNum >=2){
-					this.isShowShare_ = false
-				}
+				// if(this.peopleNum >=2){
+				// 	this.isShowShare_ = false
+				// }
 				if(this.peopleNum==3 && MeetingStatus){
 					// alert(Date.parse(new Date()))
 					let NowTime = Date.parse(new Date())
@@ -320,6 +324,24 @@
             },
         },
         methods: {
+			// 结束主讲
+			setSpeaker(item) {
+			  // const speaker = this.meetingInfo.speaker === 1 ? 0 : 1;
+			  console.log(this.meetingInfo.uid)
+			  const data = {
+				admin: this.meetingInfo.mine.uid,
+				uid: this.meetingInfo.mine.uid,
+				dt: this.meetingInfo.mine.dt,
+				device: this.meetingInfo.mine.device,
+				speaker:0,
+				cookie: myCookie,
+				device: this.meetingInfo.mine.device
+			  };
+			  antiquity.ajax.speakerSet(data).then(res => {
+				console.log(res);
+			  });
+			  console.log(antiquity.ajax);
+			},
 			// 实时获取当前电脑时间
 			_time() {
 			    // setInterval(() => {
@@ -336,9 +358,9 @@
 			        return hour + ':' + minu + ':' + sec
 			    // }, 1000)
 			},
-            share_status() {
-                this.isShowShare_ = false
-            },
+            // share_status() {
+            //     this.isShowShare_ = false
+            // },
             handleMsg(arr) {
 				console.log('~~~~~~~~~~~~~~', arr)
 				this.msgBox = arr;
@@ -424,7 +446,7 @@
                         mid: myMid,
                         password: Password,
                     };
-                    this.isShowShare_ = MeetingStatus;
+                    // this.isShowShare_ = MeetingStatus;
                     await antiquity
                         .joinMeeting({
                             code: myMid,
@@ -436,14 +458,14 @@
                         .then(res => {
                             if (res.code == 1) {
 								this.joinStatus = 0
-                                this.$Toast.success({message: '会议号错误'});
+                                this.$Toast.success({message: '会议号不存在,请重新输入'});
                                 setTimeout(() => {
                                     window.location.href = 'https://182.61.17.228/joinConference';
                                 }, 2000);
                                 return
                             } else if (res.code == 2011) {
 								this.joinStatus = 0
-                                this.$Toast.success({message: '会议密码输入错误'});
+                                this.$Toast.success({message: '会议密码错误'});
                                 setTimeout(() => {
                                     window.location.href = 'https://182.61.17.228/joinConference';
                                 }, 2000);
@@ -457,6 +479,7 @@
                                 return
                             }
                             this.waiting = false;
+							
                         });
 						console.log(antiquity)
                     antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
@@ -469,6 +492,27 @@
 <style lang="less">
     @import "./common/base";
     @import "./common/common";
+	.end_speaker>i{
+		margin-right: 4px;
+	}
+	.end_speaker{
+		width:100px;
+		height:32px;
+		background:rgba(255,255,255,1);
+		box-shadow:0px 0px 4px 0px rgba(0,0,0,0.5);
+		border-radius:4px;
+		position: absolute;
+		top: 20px;
+		right: 20px;
+		z-index: 100;
+		font-size:14px;
+		font-family:PingFangSC-Medium,PingFang SC;
+		font-weight:500;
+		color:rgba(255,96,89,1);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 	.timeUseUP_btn{
 		width:160px;
 		height:32px;
@@ -527,10 +571,10 @@
 	}
 	.leftBig_box{
 		 width: 100%;
-		 // height: calc(100vh - 36px);
+		 height: calc(100vh - 36px);
 		 margin: 0 auto;
 		 margin-top: 36px;
-		 background: pink;
+		 background: #000000;
 		 display: flex;
 		 justify-content: center;
 		 align-items: center;

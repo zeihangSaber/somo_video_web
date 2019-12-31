@@ -148,7 +148,8 @@
 				destroy_timer:'',
 				endMeeting:0,
 				ten:10000,
-				msgBox: []
+				msgBox: [],
+				max_width:''
             };
         },
         beforeCreate() {

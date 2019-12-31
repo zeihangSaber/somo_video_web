@@ -41,7 +41,7 @@
                 @selectSlide="(num) => slideCount = num"
                 ></ctrl>
            </transition>
-			<div class="leftBig_box">
+			<div class="leftBig_box" ref="setBox" :style="`max-width: ${max_width};`">
 					<div :class="`playerBigBox ${howMany} `" ref="playerBigBox">
 						<!-- 自己的推流  v-if="howMany != 'two'&&howMany != 'fir'"-->
 					    <div :class="`dragBox ${mineFlag}`" style="display: flex;">
@@ -236,13 +236,13 @@
 			clearInterval(this.destroy_timer)
 		},
         async mounted() {
-			// window.onresize = () => {
-			// 	if(this.$refs.playerBigBox && this.$refs.playerBigBox.offsetTop < 36) {
-			// 		this.screenStatus = 1
-			// 	}else if(this.$refs.playerBigBox && this.$refs.playerBigBox.offsetTop >= 36) {
-			// 		this.screenStatus = 0
-			// 	}
-			// };
+			// this.$refs.setBox.style.maxWidth = ' 100px'
+			// document.getElementsByClassName('leftBig_box').style.width = '100px'
+			window.onresize = () => {
+				let height = window.screen.availHeight - 36
+				this.max_width = height/9*16 + 'px'
+				console.log(this.max_width)
+			};
 
             window.addEventListener('offline', () => {
                 //网络由正常常到异常时触发
@@ -394,7 +394,7 @@
             },
             Leave(e){
                 this.showCtrlTime = setTimeout(()=>{
-                    // this.isShowCtrl = false
+                    this.isShowCtrl = false
                 },3000)
             },
             LeaveMeeting(){
@@ -527,8 +527,10 @@
 	}
 	.leftBig_box{
 		 width: 100%;
-		 height: 100vh;
-		 background: #000000;
+		 // height: calc(100vh - 36px);
+		 margin: 0 auto;
+		 margin-top: 36px;
+		 background: pink;
 		 display: flex;
 		 justify-content: center;
 		 align-items: center;
@@ -728,7 +730,7 @@
             position: relative;
             height: 100%;
             flex: 1;
-            background-color: #91949c;
+            background-color: #000000;
         }
     }
 

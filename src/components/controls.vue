@@ -4,7 +4,7 @@
 			<i></i>
 			<div class="center">
 				<span class="bigSpan">会议号：{{this.data.code}}</span>
-				<span class="bigSpan" v-if="data.pwd">密码：{{this.data.pwd}}</span>
+				<span class="bigSpan" v-if="password != ''">密码：{{password}}</span>
 				<span class="bigSpan">
 					<i v-if="this.data.locked" class="font_family icon-lock"></i>
 				</span>
@@ -122,7 +122,7 @@
 </template>
 
 <script>
-import antiquity from "../utils/Antiquity";
+import antiquity,{ Password } from "../utils/Antiquity";
 import bulletScreen from "./bulletScreen";
 let interval;
 export default {
@@ -132,7 +132,8 @@ export default {
       showSetting: false,
       time: "",
       time_meeting: "",
-      not_time: 1000
+      not_time: 1000,
+	  password:''
       // sysAppIds:''
     };
   },
@@ -168,13 +169,16 @@ export default {
         this.shareData.mid +
         "\n" +
         "会议链接：https://182.61.17.228/sharePage?invite_code=" +
-        this.shareData.mid +
+        this.shareData.mid + '&verification_code=' + this.password + 
         "\n" +
         "您可以直接输入会议号加入会议， 也可以点击会议链接直接入会。";
       return data;
     }
   },
-  mounted() {},
+  mounted() {
+	  console.log(55555,Password)
+	  this.password = Password
+  },
   methods: {
     set_meetingTime(type) {
       if (type == 1) {

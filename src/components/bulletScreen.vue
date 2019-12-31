@@ -1,6 +1,6 @@
 <template>
 		<div class="bulletScreenZ" >
-		    <div v-for="item in msgBox" class="bulletScreen-msg">
+		    <div v-for="item in realMsg" class="bulletScreen-msg">
 		        <span class="bulletScreen-name">{{item.name}}：</span>
 		        <span class="bulletScreen-main">{{item.text}}</span>
 		    </div>
@@ -15,8 +15,10 @@
 
 			}
 		},
-		methods:{
-
+		computed: {
+			realMsg() {
+				return this.msgBox.filter(item => item)
+			}
 		}
 	}
 </script>

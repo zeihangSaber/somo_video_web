@@ -72,7 +72,7 @@
                 this.player && this.player.reset();
                 this.player.src({type: 'rtmp', src: this.src});
                 this.player.on("loadeddata", () => {
-                    console.log('获取到第一帧~~~~~~~~~~~~~~~~');
+                    console.log('获取到第一帧~~~~~~~~~~~~~~~~~');
                     this.player.play();
                 })
                 // this.player && this.player.dispose();

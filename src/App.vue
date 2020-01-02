@@ -222,8 +222,8 @@
                 this.speaker = speaker;
             });
 			antiquity.on('countDown', msg => {
-			    console.log(mas.code)
-				if(mas.code == 2008){
+			    console.log(msg.code)
+				if(msg.code == 2008){
 					if (this.store.data.meetingStart3Time !== 0) {
 						const now = 40 * 60 * 1000 - (new Date().getTime() - this.store.data.meetingStart3Time)
 						this.countDown(now)

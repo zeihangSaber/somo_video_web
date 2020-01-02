@@ -5,18 +5,27 @@
         <svg v-else class="icon" aria-hidden="true">
             <use xlink:href="#icon-mic-no"></use>
         </svg>
+		<svg v-if="data.speaker == 1" class="icon speaker_icon" aria-hidden="true">
+		    <use xlink:href="#iconzhujiang"></use>
+		</svg>
         <div v-if="data.role === 4" class="tag">主持人</div>
     </div>
 </template>
 
 <script>
     export default {
-        props: ['data']
+        props: ['data'],
+		mounted() {
+			console.log(this.data)
+		}
     };
 </script>
 
 <style lang="less" scoped>
     @import "../common/common";
+	.speaker_icon{
+		font-size: 40px;
+	}
 	.ctrlMiddleName{
 		max-width: 200px;
 		white-space: nowrap;

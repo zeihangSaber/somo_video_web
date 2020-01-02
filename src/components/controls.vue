@@ -43,7 +43,7 @@
 					<i :class="`font_family ${data.mine && data.mine.camera === 0 ? 'icon-camera' : 'icon-camera-no'}`"></i>
 					视频
 				</button>
-				<button style="margin: 0;">
+				<button style="margin: 0;position: relative;">
 					<!--${ShowShare ? 'active' : ''}-->
 					<button class="ml10" type="text" size="medium"
 					        v-clipboard:copy="sysAppIds"
@@ -252,7 +252,7 @@
 	height: 100px;
 	position: absolute;
 	top: -100px;
-	left: 32.5%;
+	left: -27.5%;
 }
 .set_icon{
 	font-size: 16px !important;

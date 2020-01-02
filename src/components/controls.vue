@@ -51,6 +51,11 @@
 					        v-clipboard:error="onError">
 							<i :class="`font_family icon-sharing`"></i>邀请
 					</button>
+					<div class="invite_hint" v-if="inviteHint">
+						<svg  class="icon invite_hint_icon" aria-hidden="true">
+						    <use xlink:href="#iconhuiyiyaoqingmax"></use>
+						</svg>
+					</div>
 				</button>
 				<button @click="$emit('handleMessage')">
 					<i :class="`font_family icon-barrage ${showSide && showMessage ? 'active' : ''}`"></i>消息
@@ -122,122 +127,133 @@
 </template>
 
 <script>
-import antiquity,{ Password } from "../utils/Antiquity";
-import bulletScreen from "./bulletScreen";
-let interval;
-export default {
-  name: "app",
-  data() {
-    return {
-      showSetting: false,
-      time: "",
-      time_meeting: "",
-      not_time: 1000,
-	  password:''
-      // sysAppIds:''
-    };
-  },
-  props: [
-    "data",
-    "peopleNum",
-    "micNum",
-    "showSide",
-    "changeScreen",
-    "showMessage",
-    "showParty",
-    "playerNum",
-    "barrage",
-    "ShowShare",
-    "maxSlide",
-    "slideCount",
-    "shareData",
-    "timer",
-	"speaker",
-	"msgBox"
-  ],
-  components: {
-	  bulletScreen
-  },
-  computed: {
-    sysAppIds() {
-      let data =
-        "您好：" +
-        "\n" +
-        "蓝猫微会视频会议正在进行中，特邀请您参加。" +
-        "\n" +
-        "会议号：" +
-        this.shareData.mid +
-        "\n" +
-        "会议链接：https://182.61.17.228/sharePage?invite_code=" +
-        this.shareData.mid + '&verification_code=' + this.password + 
-        "\n" +
-        "您可以直接输入会议号加入会议， 也可以点击会议链接直接入会。";
-      return data;
-    }
-  },
-  mounted() {
-	  console.log(55555,Password)
-	  this.password = Password
-  },
-  methods: {
-    set_meetingTime(type) {
-      if (type == 1) {
-        setInterval(() => {
-          let timestamp = new Date().getTime(); //当前时间戳
-          this.time = timestamp - this.data.start;
-          this.time_meeting = this.formatDuring(this.time);
-        }, 1000);
-      } else if (type == 0) {
-        setInterval(() => {
-          this.not_time = this.not_time + 1000;
-          this.time_meeting = this.formatDuring(this.not_time);
-        }, 1000);
-      }
-    },
-    // 复制成功
-    onCopy(e) {
-      this.$Toast.success({ message: "邀请链接已复制到剪贴板" });
-    },
-    // 复制失败
-    onError(e) {
-      this.$Toast.success({ message: "复制失败" });
-    },
-    formatDuring(mss) {
-      let days = parseInt(mss / (1000 * 60 * 60 * 24));
-      let hours =
-        parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) + days * 24;
-      let minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60));
-      let seconds = parseInt((mss % (1000 * 60)) / 1000);
-      if (hours < 10) {
-        hours = "0" + hours;
-      }
-      if (minutes < 10) {
-        minutes = "0" + minutes;
-      }
-      if (seconds < 10) {
-        seconds = "0" + seconds;
-      }
-      return hours + ":" + minutes + ":" + seconds;
-    },
-    handleMic() {
-      this.data.mine.mic === 0
-        ? antiquity.muteAudio()
-        : antiquity.unmuteAudio();
-    },
-    handleCamera() {
-      this.data.mine.camera === 0
-        ? antiquity.muteVideo()
-        : antiquity.unmuteVideo(this.data.video_url);
-    }
-  },
-  destroyed() {
-    clearInterval(interval);
-  }
-};
+	import antiquity,{ Password } from "../utils/Antiquity";
+	import bulletScreen from "./bulletScreen";
+	let interval;
+	export default {
+	  name: "app",
+	  data() {
+		return {
+		  showSetting: false,
+		  time: "",
+		  time_meeting: "",
+		  not_time: 1000,
+		  password:''
+		  // sysAppIds:''
+		};
+	  },
+	  props: [
+		"inviteHint",
+		"data",
+		"peopleNum",
+		"micNum",
+		"showSide",
+		"changeScreen",
+		"showMessage",
+		"showParty",
+		"playerNum",
+		"barrage",
+		"ShowShare",
+		"maxSlide",
+		"slideCount",
+		"shareData",
+		"timer",
+		"speaker",
+		"msgBox"
+	  ],
+	  components: {
+		  bulletScreen
+	  },
+	  computed: {
+		sysAppIds() {
+		  let data =
+			"您好：" +
+			"\n" +
+			"蓝猫微会视频会议正在进行中，特邀请您参加。" +
+			"\n" +
+			"会议号：" +
+			this.shareData.mid +
+			"\n" +
+			"会议链接：https://182.61.17.228/sharePage?invite_code=" +
+			this.shareData.mid + '&verification_code=' + this.password + 
+			"\n" +
+			"您可以直接输入会议号加入会议， 也可以点击会议链接直接入会。";
+		  return data;
+		}
+	  },
+	  mounted() {
+		  console.log(55555,Password)
+		  this.password = Password
+	  },
+	  methods: {
+		set_meetingTime(type) {
+		  if (type == 1) {
+			setInterval(() => {
+			  let timestamp = new Date().getTime(); //当前时间戳
+			  this.time = timestamp - this.data.start;
+			  this.time_meeting = this.formatDuring(this.time);
+			}, 1000);
+		  } else if (type == 0) {
+			setInterval(() => {
+			  this.not_time = this.not_time + 1000;
+			  this.time_meeting = this.formatDuring(this.not_time);
+			}, 1000);
+		  }
+		},
+		// 复制成功
+		onCopy(e) {
+		  this.$Toast.success({ message: "邀请链接已复制到剪贴板" });
+		},
+		// 复制失败
+		onError(e) {
+		  this.$Toast.success({ message: "复制失败" });
+		},
+		formatDuring(mss) {
+		  let days = parseInt(mss / (1000 * 60 * 60 * 24));
+		  let hours =
+			parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) + days * 24;
+		  let minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60));
+		  let seconds = parseInt((mss % (1000 * 60)) / 1000);
+		  if (hours < 10) {
+			hours = "0" + hours;
+		  }
+		  if (minutes < 10) {
+			minutes = "0" + minutes;
+		  }
+		  if (seconds < 10) {
+			seconds = "0" + seconds;
+		  }
+		  return hours + ":" + minutes + ":" + seconds;
+		},
+		handleMic() {
+		  this.data.mine.mic === 0
+			? antiquity.muteAudio()
+			: antiquity.unmuteAudio();
+		},
+		handleCamera() {
+		  this.data.mine.camera === 0
+			? antiquity.muteVideo()
+			: antiquity.unmuteVideo(this.data.video_url);
+		}
+	  },
+	  destroyed() {
+		clearInterval(interval);
+	  }
+	};
 </script>
 
 <style lang="less" scoped>
 @import "../common/common";
+.invite_hint_icon{
+	font-size: 160px;
+}
+.invite_hint{
+	width: 100px;
+	height: 100px;
+	position: absolute;
+	top: -100px;
+	left: 32.5%;
+}
 .set_icon{
 	font-size: 16px !important;
 	color: #DDDDDD;

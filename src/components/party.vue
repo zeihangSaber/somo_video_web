@@ -43,7 +43,7 @@
                 <div v-if="permissionShow" class="permission">
                   <span class="permission_header"></span>
                   <div class="permission_content">
-                    <div @click="setMic(item)">
+                    <div @click="setMic(item)" v-if="item.role !== 4">
                       {{ item.mic === 1 ? "取消静音" : "静音" }}
                     </div>
                     <div

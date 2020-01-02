@@ -114,7 +114,7 @@
                                             设为主持人
                                         </div>
                                         <div
-                                            v-if="permissionType.setCamera"
+                                            v-if="permissionType.setCamera && item.dt!==8"
                                             @click="setCamera(item)"
                                         >
                                             {{ item.camera === 1 ? "开启摄像头" : "关闭摄像头" }}
@@ -153,7 +153,7 @@
             </transition-group>
             <div class="line" v-if="hasControl"></div>
             <div class="bottom" v-if="hasControl" >
-                <button :disabled="!hasControl" @click="() => ( micAll = true )">全体静音</button>
+                <button :disabled="!hasControl" @click="() => ( micAll = true )" :class="data.muteAll?'lockMeeting':''">全体静音</button>
                 <button :disabled="!hasControl" @click="handleRemoveMicAllOn" style="width:108px;">
                     解除全体静音
                 </button>

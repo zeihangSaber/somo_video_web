@@ -11,24 +11,40 @@
         data() {
             return {
                 layers: [],
-                id: 0
+                id: 0,
+                msg: []
             }
         },
         methods: {
             add(options) {
+                this.msg = this.layers.map(item => {
+                    return item.message
+                });
+
+                if (this.msg.includes(options.message)) return;
+
                 let obj = {
                     duration: 300,
                     ...options,
                     id: ++this.id
                 };
+
                 obj.timer = setTimeout(() => {
                     this.remove(obj);
                 }, 3000);
+
+
+                if (this.layers.length > 2) {
+                    const fir = this.layers.shift();
+                    clearTimeout(fir.timer);
+                    this.remove(fir);
+                }
+
                 this.layers.push(obj);
             },
             remove(layer) {
                 clearTimeout(layer.timer);
-                this.layers = this.layers.filter(item => item.id !== layer.id)
+                this.layers = this.layers.filter(item => item.id !== layer.id);
 				console.log(this.layers)
             }
         }

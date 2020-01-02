@@ -1,14 +1,14 @@
 <template>
     <div
         class="playerBox"
-        ref="playerBox"
         v-if="data.uid !== meetingInfo.mine.uid"
         :id="data.uid === meetingInfo.mine.uid ? 'mine' : ''"
     >
         <player-status :data="data"></player-status>
-        <div class="grail">
+        <div class="grail" ref="grail">
             <div :id="`player_${data.uid}_tc`" class="vjs-tech"></div>
             <div :id="`player_${data.uid}_ali`" ref="ali" class="vjs-tech"></div>
+            <video :id="`player_${data.uid}_ks`" ref="ks"></video>
         </div>
         <div :class="`${data.camera === 0 ? 'hasCamera' : 'noCamera'}`">
             <i class="font_family icon-camera-none"></i>
@@ -60,29 +60,41 @@
         mounted() {
             this.$nextTick(() => {
                 // this.tcPlayer();
-                this.Aliplayer();
+                // this.Aliplayer();
+                // this.createVideo();
+                this.ksPlayer();
+                console.log('================', this.src)
             });
         },
         methods: {
             reset() {
                 if (this.data.uid === this.meetingInfo.mine.uid) return;
-                this.player && this.player.dispose();
-                if (!this.$refs.playerBox) return;
-                clearTimeout(this.timer);
-                this.timer = setTimeout(() => {
-                    this.Aliplayer();
-                }, 300);
+                this.player && this.player.reset();
+                this.player.src({type: 'rtmp', src: this.src});
+                this.player.on("loadeddata", () => {
+                    console.log('获取到第一帧~~~~~~~~~~~~~~~~');
+                    this.player.play();
+                })
+                // this.player && this.player.dispose();
+                // if (!this.$refs.playerBox) return;
+                // clearTimeout(this.timer);
+                // this.timer = setTimeout(() => {
+                //     this.Aliplayer();
+                // }, 300);
             },
             createVideo() {
                 if (this.data.uid === this.meetingInfo.mine.uid) return;
                 let dom = document.createElement("video");
                 dom.className = "video-js vjs-default-skin";
-                this.$refs.playerBox.append(dom);
+                this.$refs.grail.append(dom);
                 this.$nextTick(() => {
                     this.player = window["videojs"](dom, {
                         techOrder: ["flash"],
                         aspectRatio: "16:9",
                         preload: "none",
+                        width: 480,
+                        height: 360,
+                        showBuffer: false,
                         autoplay: true,
                         flash: {
                             swf: "https://cdn.bootcss.com/videojs-swf/5.4.2/video-js.swf"
@@ -105,17 +117,17 @@
                             "id": `player_${this.data.uid}_ali`,
                             "source": this.src,
                             controls: false,
-                            // "width": `800px`,
-                            // "height": `450px`,
-                            "width": `${100 *16 / 12}%`,
-                            "height": `${100 *16 / 12}%`,
-                            // "rtmpBufferLength": 0,
+                            // "width": `${100 *16 / 12}%`,
+                            // "height": `${100 *16 / 12}%`,
+                            "width": `480px`,
+                            "height": `360px`,
                             "autoplay": true,
                             "isLive": true,
                             "useFlashPrism": true,
                             "definition": "FD",
                             "autoPlayDelay": 0,
                             "controlBarVisibility": "click",
+                            "showBuffer": false,
                             "liveRetry": 10
                         });
                         this.player.on("liveStreamStop", () => {
@@ -140,13 +152,31 @@
             },
             tcPlayer() {
                 this.player = new TcPlayer(`player_${this.data.uid}_tc`, {
-                    "rtmp": this.src, //请替换成实际可用的播放地址
+                    "rtmp_sd": this.src, //请替换成实际可用的播放地址
                     "autoplay" : true,
                     "live": true,
                     "poster" : "http://www.test.com/myimage.jpg",
-                    "width" :  `800`,
-                    "height" : `450`
+                    "width" :  `480`,
+                    "height" : `360`
                 });
+            },
+            ksPlayer() {
+                setTimeout(() => {
+                    this.player = window['ksplayer'](`player_${this.data.uid}_ks`, {
+                        controls: false,
+                        autoplay: true,
+                        preload: true,
+                        poster: 'https://182.61.17.228/common/poster.png'
+                    }, () => {
+                        console.log('播放器准备完毕~~~~~~~~~~~~~~~~~~');
+                        this.player.src({type: 'rtmp', src: this.src});
+                        // this.player.load(this.src);
+                    });
+                    this.player.on("loadeddata", () => {
+                        console.log('获取到第一帧~~~~~~~~~~~~~~~~');
+                        this.player.play();
+                    })
+                }, 300);
             }
         },
         beforeDestroy() {
@@ -225,5 +255,14 @@
         background-color: #444;
         .flex(center, center);
         overflow: hidden;
+    }
+    .vcp-video {
+        object {
+            transform: translateZ(0)!important;
+        }
+    }
+    .vjs-playing {
+        width: 133.33333%;
+        height: 133.33333%;
     }
 </style>

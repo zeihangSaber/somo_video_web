@@ -68,10 +68,10 @@
 					            v-if="!(speakFlag || shareFlag)"
 					            v-for="item in nowPlayerNum"
 					            ref="players"
-					            :key="members[playerNum * (realCount - 1) + item - 1].uid"
+					            :key="realMembers[playerNum * (realCount - 1) + item - 1].uid"
 					            :meetingInfo="meetingInfo"
 					            :hawMany="howMany"
-					            :data="members[playerNum * (realCount - 1) + item - 1]">
+					            :data="realMembers[playerNum * (realCount - 1) + item - 1]">
 					    </player>
 						<div class="space playerBox" v-if="!(speakFlag || shareFlag)" v-for="item of playerNum - nowPlayerNum"></div>
 						<!-- 主讲人 -->
@@ -285,8 +285,12 @@
 					this.LeaveMeeting()
 				}
 			},
+            realMembers() {
+			    if (this.speaker && this.speaker.shareUrl) return [this.speaker, ...this.members]
+                return this.members;
+            },
             maxSlide() {//
-                let maxSlide = Math.max(Math.ceil(this.members.length / this.playerNum), 1);
+                let maxSlide = Math.max(Math.ceil(this.realMembers.length / this.playerNum), 1);
                 (this.speaker || this.sharer) && ++maxSlide;
                 return maxSlide;
             },
@@ -324,7 +328,7 @@
                 return 'boxOut';
             },
             nowPlayerNum() {//当前页需要展示几个人
-                return Math.min(this.members.length - this.playerNum * (this.realCount - 1), this.playerNum)
+                return Math.min(this.realMembers.length - this.playerNum * (this.realCount - 1), this.playerNum)
             },
         },
         methods: {

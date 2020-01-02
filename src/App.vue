@@ -286,6 +286,7 @@
 				}
 			},
             realMembers() {
+			    console.log('既是主讲又分享了~~~~~~~~~~', this.speaker)
 			    if (this.speaker && this.speaker.shareUrl) return [this.speaker, ...this.members]
                 return this.members;
             },

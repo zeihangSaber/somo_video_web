@@ -73,6 +73,7 @@
                 if (this.data.uid === this.meetingInfo.mine.uid) return;
                 this.player && this.player.reset();
                 this.player.src({type: 'rtmp', src: this.src});
+                console.log('播发器重置完毕~~~~~~~~~~~~~~~~~~~');
                 clearTimeout(this.timer);
                 this.timer = setTimeout(() => {
                     console.log('没有取到播放源~~~~~~~~~~~~~~~~~');

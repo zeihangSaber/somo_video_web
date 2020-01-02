@@ -258,6 +258,7 @@
             window.addEventListener('online', () => {
                 //从异常到正常时触发
                 this.$Toast.success({message: '正常尝试连接网络中，请稍等~'})
+                window.location.reload(); 
             });
             this.$nextTick(() => {
                 this.init();

@@ -153,7 +153,7 @@
             </transition-group>
             <div class="line" v-if="hasControl"></div>
             <div class="bottom" v-if="hasControl" >
-                <button :disabled="!hasControl" @click="setMicAllOff">全体静音</button>
+                <button :disabled="!hasControl" @click="() => ( micAll = true )">全体静音</button>
                 <button :disabled="!hasControl" @click="handleRemoveMicAllOn" style="width:108px;">
                     解除全体静音
                 </button>
@@ -161,7 +161,14 @@
             </div>
         </div>
       </transition-group>
-     
+      <div class="allMute" v-if="micAll">
+        <h3>全体静音</h3>
+        <h4>操作全体静音后，全体成员包括新参会者都会被静音</h4>
+        <div class="allMute_btn">
+          <button @click="() => (micAll = false)">取消</button>
+          <button class="affirm" @click="setMicAllOff">确认</button>
+        </div>
+      </div>
     </div>
 </template>
 <script>
@@ -173,13 +180,14 @@
 		return {
 		  search_show:0,
 		  s_members: [],
-		  search: "",
+      search: "",
+      micAll:false,
 		  permissionShow: false,
 		  permissionType: {
-			setSpeaker: true,
-			setRole: true,
-			setCamera: true,
-			setKick: true
+        setSpeaker: true,
+        setRole: true,
+        setCamera: true,
+        setKick: true,
 		  }
 		};
 	  },
@@ -316,7 +324,9 @@
 			rule: 1001,
 			value: "2"
 		  };
-		  antiquity.ajax.ruleSet(data).then(res => {});
+		  antiquity.ajax.ruleSet(data).then(res => {
+        this.micAll = false;
+      });
 		},
 		handleRemoveMicAllOn() {
 		  const data = {
@@ -583,6 +593,49 @@
 button {
   background-color: #fff;
   border: none;
+}
+
+.allMute{
+  padding: 0 32px;
+  z-index: 1000;
+  position: fixed;
+  left: 40%;
+  top: 50%;
+  transform: translate(-40%,-50%);
+  width:290px;
+  height:174px;
+  background:rgba(255,255,255,1);
+  border-radius:8px;
+  flex-direction: column;
+  .flex(flex-start,center);
+  h3{
+    margin: 20px 0 12px 0;
+    font-size:20px;
+    font-weight:500;
+    color:rgba(51,51,51,1);
+  }
+  h4{
+    font-size:16px;
+    font-weight:400;
+    color:rgba(102,102,102,1);
+  }
+  .allMute_btn{
+    margin-top: 16px;
+    button{
+      margin-left: 12px;
+      width:100px;
+      height:32px;
+      border-radius:24px;
+      border:1px solid rgba(17,139,251,1);
+      color:rgba(17,139,251,1);
+      outline: none;    
+    }
+    .affirm{
+      color:rgba(255,255,255,1);
+      background:linear-gradient(180deg,rgba(47,184,255,1) 0%,rgba(17,139,251,1) 100%);
+    }
+  }
+  
 }
 
 .list-complete-item {

@@ -108,7 +108,7 @@
     // import share from './components/share';
     import playerStatus from "./components/playerStatus";
     import antiquity, {myDevice, myCookie, myMid, Password, MeetingStatus, myCamera, myMic} from './utils/Antiquity';
-
+	
     export default {
         name: 'app',
         components: {
@@ -258,7 +258,7 @@
             window.addEventListener('online', () => {
                 //从异常到正常时触发
                 this.$Toast.success({message: '正常尝试连接网络中，请稍等~'})
-                window.location.reload();
+                window.location.reload(); 
             });
             this.$nextTick(() => {
                 this.init();
@@ -486,12 +486,10 @@
                                 return
                             }
                             this.waiting = false;
-
+							
                         });
 						console.log(antiquity)
-                    setTimeout(() => {
-                        antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
-                    }, 300)
+                    antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
                 });
             }
         }

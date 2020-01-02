@@ -488,10 +488,12 @@
                             this.waiting = false;
 							
                         });
-						console.log(antiquity)
+                        console.log(antiquity)
+                        console.log("myMic,myCamera",myCamera,myMic)
                     antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
                 });
-            }
+            },
+           
         }
     };
 </script>

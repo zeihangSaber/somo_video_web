@@ -225,10 +225,10 @@
 		more(item) {
 			console.log("xxxx",item)
 		  this.permissionType = {
-			setSpeaker: true,
-			setRole: true,
-			setCamera: true,
-			setKick: true
+        setSpeaker: true,
+        setRole: true,
+        setCamera: true,
+        setKick: true
 		  };
 		  if (item.uid === antiquity.uid) {
 			this.permissionType = {
@@ -268,11 +268,11 @@
 		setSpeaker(item) {
 		  const speaker = item.speaker === 1 ? 0 : 1;
 		  const data = {
-			admin: antiquity.uid,
-			uid: item.uid,
-			dt: item.dt,
-			device: item.device,
-			speaker
+        admin: antiquity.uid,
+        uid: item.uid,
+        dt: item.dt,
+        device: item.device,
+        speaker
 		  };
 		  antiquity.ajax.speakerSet(data).then(res => {
 			console.log(res);
@@ -281,11 +281,11 @@
 		},
 		setRole(item) {
 		  const data = {
-			admin: antiquity.uid,
-			uid: item.uid,
-			dt: item.dt,
-			device: item.device,
-			role: 4
+        admin: antiquity.uid,
+        uid: item.uid,
+        dt: item.dt,
+        device: item.device,
+        role: 4
 		  };
 		  antiquity.ajax.roleSet(data).then(res => {
 			console.log("主持人设置", res);
@@ -308,10 +308,10 @@
 		},
 		setKick(item) {
 		  const data = {
-			admin: antiquity.uid,
-			uid: item.uid,
-			dt: item.dt,
-			device: item.device
+        admin: antiquity.uid,
+        uid: item.uid,
+        dt: item.dt,
+        device: item.device
 		  };
 		  antiquity.ajax.kick(data).then(res => {
 			console.log(res);
@@ -320,9 +320,9 @@
 		},
 		setMicAllOff() {
 		  const data = {
-			admin: antiquity.uid,
-			rule: 1001,
-			value: "2"
+        admin: antiquity.uid,
+        rule: 1001,
+        value: "2"
 		  };
 		  antiquity.ajax.ruleSet(data).then(res => {
         this.micAll = false;
@@ -330,9 +330,9 @@
 		},
 		handleRemoveMicAllOn() {
 		  const data = {
-			admin: antiquity.uid,
-			rule: 1001,
-			value: "0"
+        admin: antiquity.uid,
+        rule: 1001,
+        value: "0"
 		  };
 		  antiquity.ajax.ruleSet(data).then(res => {
 			console.log(res);

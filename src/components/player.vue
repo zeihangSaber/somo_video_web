@@ -10,10 +10,9 @@
             <div :id="`player_${data.uid}_ali`" ref="ali" class="vjs-tech"></div>
             <video :id="`player_${data.uid}_ks`" ref="ks"></video>
         </div>
-        <div :class="`${data.camera === 0 ? 'hasCamera' : 'noCamera'}`">
+        <div :class="`${data.camera === 0 && isPlay ? 'hasCamera' : 'noCamera'}`">
             <i class="font_family icon-camera-none"></i>
         </div>
-		<!-- <player-status v-if="mineFlag !== 'two'" :data="{name:data.name}"></player-status> -->
         <div class="holder"></div>
     </div>
 </template>
@@ -28,6 +27,7 @@
                         mic: 0,
                         name: "wait",
                         role: -1,
+                        camera: 1,
                         url: "rtmp://58.200.131.2:1935/livetv/hunantv"
                     }
                 },
@@ -40,7 +40,9 @@
         data() {
             return {
                 player: null,
-                count: 0
+                isPlay: false,
+                count: 0,
+                timer: null
             };
         },
         components: {
@@ -71,10 +73,25 @@
                 if (this.data.uid === this.meetingInfo.mine.uid) return;
                 this.player && this.player.reset();
                 this.player.src({type: 'rtmp', src: this.src});
+                console.log('播发器重置完毕~~~~~~~~~~~~~~~~~~~');
+                clearTimeout(this.timer);
+                this.timer = setTimeout(() => {
+                    console.log('没有取到播放源~~~~~~~~~~~~~~~~~');
+                    this.reset();
+                }, 5000);
+
                 this.player.on("loadeddata", () => {
-                    console.log('获取到第一帧~~~~~~~~~~~~~~~~');
+                    clearTimeout(this.timer);
+                    console.log('获取到第一帧~~~~~~~~~~~~~~~~~');
+                    this.isPlay = true;
                     this.player.play();
-                })
+                });
+                this.player.on("error", () => {
+                    console.log('播放器报错，重置~~~~~~~~~~~~~~~~');
+                    this.isPlay = false;
+                    this.reset()
+                });
+
                 // this.player && this.player.dispose();
                 // if (!this.$refs.playerBox) return;
                 // clearTimeout(this.timer);
@@ -170,11 +187,23 @@
                     }, () => {
                         console.log('播放器准备完毕~~~~~~~~~~~~~~~~~~');
                         this.player.src({type: 'rtmp', src: this.src});
+                        clearTimeout(this.timer);
+                        this.timer = setTimeout(() => {
+                            console.log('没有取到播放源~~~~~~~~~~~~~~~~~');
+                            this.reset();
+                        }, 5000)
                         // this.player.load(this.src);
                     });
                     this.player.on("loadeddata", () => {
+                        clearTimeout(this.timer);
                         console.log('获取到第一帧~~~~~~~~~~~~~~~~');
+                        this.isPlay = true;
                         this.player.play();
+                    });
+                    this.player.on("error", () => {
+                        console.log('播放器报错，重置~~~~~~~~~~~~~~~~');
+                        this.isPlay = false;
+                        this.reset()
                     })
                 }, 300);
             }

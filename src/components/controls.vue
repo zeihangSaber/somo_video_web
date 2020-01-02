@@ -182,7 +182,7 @@
 		}
 	  },
 	  mounted() {
-		  console.log(55555,Password)
+		  console.log(55555,this.inviteHint)
 		  this.password = Password
 	  },
 	  methods: {

@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div id="app" @click="bigBox()">
         <div class="content" @mouseenter="Enter($event)" @mouseleave="Leave($event)" ref="content">
 			<!-- 30分钟 -->
 			<div v-if="endMeeting" class="timeUseUP_box">
@@ -28,6 +28,7 @@
                 :slideCount="slideCount"
 				:speaker="speaker"
 				:msgBox="msgBox"
+				:inviteHint=invite_hint
                 @handleMessage="handleMessage"
                 @ShowShare="ShowShare"
                 @handleParty="handleParty"
@@ -153,7 +154,8 @@
 				endMeeting:0,
 				ten:10000,
 				msgBox: [],
-				max_width:''
+				max_width:'',
+				invite_hint:1
             };
         },
         beforeCreate() {
@@ -176,6 +178,7 @@
             });
             antiquity.on('getMembers', members => {
                 this.members = members;
+				console.log(this.members)
                 this.peopleNum = members.length;
                 this.micNum = members.filter(item => {
                     if (item.mic === 0) {
@@ -325,6 +328,9 @@
             },
         },
         methods: {
+			bigBox(){
+				this.invite_hint = 0
+			},
 			// 结束主讲
 			setSpeaker(item) {
 			  // const speaker = this.meetingInfo.speaker === 1 ? 0 : 1;

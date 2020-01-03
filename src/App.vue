@@ -1,6 +1,6 @@
 <template>
     <div id="app" @click="bigBox()">
-        <div class="content" @mouseenter="Enter($event)" @mouseleave="Leave($event)" ref="content">
+        <div class="content" @mousemove="Enter($event)" @mouseenter="Enter($event)" @mouseleave="Leave($event)" ref="content">
 			<!-- 30分钟 -->
 			<div v-if="endMeeting" class="timeUseUP_box">
 				<div class="timeUseUP">
@@ -446,8 +446,12 @@
             Enter(e){
                 clearTimeout(this.showCtrlTime)
                 this.isShowCtrl = true
+                this.showCtrlTime = setTimeout(()=>{
+                    this.isShowCtrl = false
+                },3000)
             },
             Leave(e){
+                clearTimeout(this.showCtrlTime)
                 this.showCtrlTime = setTimeout(()=>{
                     this.isShowCtrl = false
                 },3000)

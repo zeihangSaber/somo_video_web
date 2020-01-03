@@ -10,7 +10,8 @@
 			</div>
             <transition enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <ctrl
-                v-show="isShowCtrl"
+				:isShowCtrl="isShowCtrl"
+				:message="message"
                 @handleSide="handleSide"
 				:timer="timer"
                 :data="meetingInfo"
@@ -155,7 +156,8 @@
 				ten:10000,
 				msgBox: [],
 				max_width:'',
-				invite_hint:1
+				invite_hint:1,
+				leftHeight:''
             };
         },
         beforeCreate() {
@@ -222,15 +224,21 @@
                 this.speaker = speaker;
             });
 			antiquity.on('countDown', msg => {
-			    console.log(msg.code)
-				if(msg.code == 2008){
-					if (this.store.data.meetingStart3Time !== 0) {
-						const now = 40 * 60 * 1000 - (new Date().getTime() - this.store.data.meetingStart3Time)
-						this.countDown(now)
-					} else {
-						this.countDown(10 * 60 * 1000)
-					}
+			    console.log(msg)
+				if(msg == 2008){//还剩10分钟会议结束
+					this.countDown = 600 
+					setInterval(()=>{
+						this.countDown --
+						console.log('十分钟倒计时',this.countDown)
+					},1000)
+					// if (this.store.data.meetingStart3Time !== 0) {
+					// 	const now = 40 * 60 * 1000 - (new Date().getTime() - this.store.data.meetingStart3Time)
+					// 	this.countDown(now)
+					// } else {
+					// 	this.countDown(10 * 60 * 1000)
+					// }
 				}
+				// if(msg == 9)
 			});
             this.$nextTick(() => {
                 antiquity.on('getToast', msg => {
@@ -243,14 +251,13 @@
 			clearInterval(this.destroy_timer)
 		},
         async mounted() {
-			// this.$refs.setBox.style.maxWidth = ' 100px'
+			// this.leftHeight = document.getElementsByClassName('leftBig_box')[0].offsetWidth
 			// document.getElementsByClassName('leftBig_box').style.width = '100px'
 			window.onresize = () => {
-				let height = window.screen.availHeight - 36
+				let height = document.body.clientHeight - 36
 				this.max_width = height/9*16 + 'px'
 				console.log(this.max_width)
 			};
-
             window.addEventListener('offline', () => {
                 //网络由正常常到异常时触发
                 this.$Toast.success({message: '您的网络已断开，请检查网络设置。'})
@@ -272,7 +279,21 @@
 				if(this.maxSlide < this.slideCount){
 					this.slideCount = this.maxSlide
 				}
-			}
+			},
+			isShowMessage(){
+				if(!this.isShowMessage && !this.isShowParty){
+					let height = document.body.clientHeight - 36
+					this.max_width = height/9*16 + 'px'
+					console.log(this.max_width)
+				}
+			},
+			isShowParty(){
+				if(!this.isShowMessage && !this.isShowParty){
+					let height = document.body.clientHeight - 36
+					this.max_width = height/9*16 + 'px'
+					console.log(this.max_width)
+				}
+			},
 		},
         computed: {
 			// speaker   主讲

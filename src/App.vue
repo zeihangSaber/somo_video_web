@@ -1,6 +1,6 @@
 <template>
     <div id="app" @click="bigBox()">
-        <div class="content" @mouseenter="Enter($event)" @mouseleave="Leave($event)" ref="content">
+        <div class="content" @mousemove="Enter($event)" @mouseenter="Enter($event)" @mouseleave="Leave($event)" ref="content">
 			<!-- 30分钟 -->
 			<div v-if="endMeeting" class="timeUseUP_box">
 				<div class="timeUseUP">
@@ -10,7 +10,8 @@
 			</div>
             <transition enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <ctrl
-                v-show="isShowCtrl"
+				:isShowCtrl="isShowCtrl"
+				:message="message"
                 @handleSide="handleSide"
 				:timer="timer"
                 :data="meetingInfo"
@@ -108,7 +109,7 @@
     // import share from './components/share';
     import playerStatus from "./components/playerStatus";
     import antiquity, {myDevice, myCookie, myMid, Password, MeetingStatus, myCamera, myMic} from './utils/Antiquity';
-
+	
     export default {
         name: 'app',
         components: {
@@ -131,6 +132,7 @@
                 isShowCtrl: true,
                 showCtrlTime:"",
                 changeScreen: false,
+                isShowSide: true,
                 isShowMessage: true,
                 isShowParty: true,
                 isShowShare: false,
@@ -154,8 +156,17 @@
 				ten:10000,
 				msgBox: [],
 				max_width:'',
-				invite_hint:1
+				invite_hint:1,
+				leftHeight:''
             };
+        },
+        beforeCreate() {
+			if(this.joinStatus == 1){
+				window.onbeforeunload = (e) => {
+					e.returnValue = ("确定离开当前页面吗？");
+				};
+			}
+
         },
         created() {
             antiquity.on("getMsg", (msg) => {
@@ -213,15 +224,21 @@
                 this.speaker = speaker;
             });
 			antiquity.on('countDown', msg => {
-			    console.log(msg.code)
-				if(msg.code == 2008){
-					if (this.store.data.meetingStart3Time !== 0) {
-						const now = 40 * 60 * 1000 - (new Date().getTime() - this.store.data.meetingStart3Time)
-						this.countDown(now)
-					} else {
-						this.countDown(10 * 60 * 1000)
-					}
+			    console.log(msg)
+				if(msg == 2008){//还剩10分钟会议结束
+					this.countDown = 600 
+					setInterval(()=>{
+						this.countDown --
+						console.log('十分钟倒计时',this.countDown)
+					},1000)
+					// if (this.store.data.meetingStart3Time !== 0) {
+					// 	const now = 40 * 60 * 1000 - (new Date().getTime() - this.store.data.meetingStart3Time)
+					// 	this.countDown(now)
+					// } else {
+					// 	this.countDown(10 * 60 * 1000)
+					// }
 				}
+				// if(msg == 9)
 			});
             this.$nextTick(() => {
                 antiquity.on('getToast', msg => {
@@ -234,22 +251,21 @@
 			clearInterval(this.destroy_timer)
 		},
         async mounted() {
-			// this.$refs.setBox.style.maxWidth = ' 100px'
+			// this.leftHeight = document.getElementsByClassName('leftBig_box')[0].offsetWidth
 			// document.getElementsByClassName('leftBig_box').style.width = '100px'
 			window.onresize = () => {
-				let height = window.screen.availHeight - 36;
-				this.max_width = height/9*16 + 'px';
+				let height = document.body.clientHeight - 36
+				this.max_width = height/9*16 + 'px'
 				console.log(this.max_width)
 			};
-
             window.addEventListener('offline', () => {
                 //网络由正常常到异常时触发
-                this.$Toast.success({message: '您的网络已断开，请检查网络设置。'});
+                this.$Toast.success({message: '您的网络已断开，请检查网络设置。'})
             });
             window.addEventListener('online', () => {
                 //从异常到正常时触发
-                this.$Toast.success({message: '正常尝试连接网络中，请稍等~'});
-                window.location.reload();
+                this.$Toast.success({message: '正常尝试连接网络中，请稍等~'})
+                window.location.reload(); 
             });
             this.$nextTick(() => {
                 this.init();
@@ -258,16 +274,26 @@
                 this.isShowCtrl = false
             },3000);
         },
-		watch: {
+		watch:{
 			maxSlide (){
-			    console.log('watch~~~~~~~~~~~~~~~~~~~~~~~')
 				if(this.maxSlide < this.slideCount){
 					this.slideCount = this.maxSlide
 				}
 			},
-            isShowMessage() {
-			    console.log('~~~~~~~~~~~~~~~~~~~~~~~~$$$$$$$$$$$$')
-            }
+			isShowMessage(){
+				if(!this.isShowMessage && !this.isShowParty){
+					let height = document.body.clientHeight - 36
+					this.max_width = height/9*16 + 'px'
+					console.log(this.max_width)
+				}
+			},
+			isShowParty(){
+				if(!this.isShowMessage && !this.isShowParty){
+					let height = document.body.clientHeight - 36
+					this.max_width = height/9*16 + 'px'
+					console.log(this.max_width)
+				}
+			},
 		},
         computed: {
 			// speaker   主讲
@@ -280,9 +306,6 @@
 					this.LeaveMeeting()
 				}
 			},
-            isShowSide() {
-
-            },
             realMembers() {
 			    console.log('既是主讲又分享了~~~~~~~~~~', this.speaker)
 			    if (this.speaker && this.speaker.shareUrl) return [this.speaker, ...this.members]
@@ -423,8 +446,12 @@
             Enter(e){
                 clearTimeout(this.showCtrlTime)
                 this.isShowCtrl = true
+                this.showCtrlTime = setTimeout(()=>{
+                    this.isShowCtrl = false
+                },3000)
             },
             Leave(e){
+                clearTimeout(this.showCtrlTime)
                 this.showCtrlTime = setTimeout(()=>{
                     this.isShowCtrl = false
                 },3000)
@@ -489,12 +516,14 @@
                                 return
                             }
                             this.waiting = false;
-
+							
                         });
-						console.log(antiquity)
+                        console.log(antiquity)
+                        console.log("myMic,myCamera",myCamera,myMic)
                     antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
                 });
-            }
+            },
+           
         }
     };
 </script>

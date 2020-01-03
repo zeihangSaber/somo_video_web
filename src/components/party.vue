@@ -43,7 +43,7 @@
                 <div v-if="permissionShow" class="permission">
                   <span class="permission_header"></span>
                   <div class="permission_content">
-                    <div @click="setMic(item)">
+                    <div @click="setMic(item)" v-if="item.role !== 4">
                       {{ item.mic === 1 ? "取消静音" : "静音" }}
                     </div>
                     <div
@@ -114,7 +114,7 @@
                                             设为主持人
                                         </div>
                                         <div
-                                            v-if="permissionType.setCamera"
+                                            v-if="permissionType.setCamera && item.dt!==8"
                                             @click="setCamera(item)"
                                         >
                                             {{ item.camera === 1 ? "开启摄像头" : "关闭摄像头" }}
@@ -153,7 +153,7 @@
             </transition-group>
             <div class="line" v-if="hasControl"></div>
             <div class="bottom" v-if="hasControl" >
-                <button :disabled="!hasControl" @click="() => ( micAll = true )">全体静音</button>
+                <button :disabled="!hasControl" @click="() => ( micAll = true )" :class="data.muteAll?'lockMeeting':''">全体静音</button>
                 <button :disabled="!hasControl" @click="handleRemoveMicAllOn" style="width:108px;">
                     解除全体静音
                 </button>
@@ -225,10 +225,10 @@
 		more(item) {
 			console.log("xxxx",item)
 		  this.permissionType = {
-			setSpeaker: true,
-			setRole: true,
-			setCamera: true,
-			setKick: true
+        setSpeaker: true,
+        setRole: true,
+        setCamera: true,
+        setKick: true
 		  };
 		  if (item.uid === antiquity.uid) {
 			this.permissionType = {
@@ -268,11 +268,11 @@
 		setSpeaker(item) {
 		  const speaker = item.speaker === 1 ? 0 : 1;
 		  const data = {
-			admin: antiquity.uid,
-			uid: item.uid,
-			dt: item.dt,
-			device: item.device,
-			speaker
+        admin: antiquity.uid,
+        uid: item.uid,
+        dt: item.dt,
+        device: item.device,
+        speaker
 		  };
 		  antiquity.ajax.speakerSet(data).then(res => {
 			console.log(res);
@@ -281,11 +281,11 @@
 		},
 		setRole(item) {
 		  const data = {
-			admin: antiquity.uid,
-			uid: item.uid,
-			dt: item.dt,
-			device: item.device,
-			role: 4
+        admin: antiquity.uid,
+        uid: item.uid,
+        dt: item.dt,
+        device: item.device,
+        role: 4
 		  };
 		  antiquity.ajax.roleSet(data).then(res => {
 			console.log("主持人设置", res);
@@ -308,10 +308,10 @@
 		},
 		setKick(item) {
 		  const data = {
-			admin: antiquity.uid,
-			uid: item.uid,
-			dt: item.dt,
-			device: item.device
+        admin: antiquity.uid,
+        uid: item.uid,
+        dt: item.dt,
+        device: item.device
 		  };
 		  antiquity.ajax.kick(data).then(res => {
 			console.log(res);
@@ -320,9 +320,9 @@
 		},
 		setMicAllOff() {
 		  const data = {
-			admin: antiquity.uid,
-			rule: 1001,
-			value: "2"
+        admin: antiquity.uid,
+        rule: 1001,
+        value: "2"
 		  };
 		  antiquity.ajax.ruleSet(data).then(res => {
         this.micAll = false;
@@ -330,9 +330,9 @@
 		},
 		handleRemoveMicAllOn() {
 		  const data = {
-			admin: antiquity.uid,
-			rule: 1001,
-			value: "0"
+        admin: antiquity.uid,
+        rule: 1001,
+        value: "0"
 		  };
 		  antiquity.ajax.ruleSet(data).then(res => {
 			console.log(res);

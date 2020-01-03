@@ -17,6 +17,7 @@
 		},
 		computed: {
 			realMsg() {
+				console.log(this.msgBox)
 				return this.msgBox.filter(item => item)
 			}
 		}

@@ -1,6 +1,6 @@
 <template>
 	<div class="ctrlBox">
-		<div class="ctrlHeader">
+		<div class="ctrlHeader" v-show="isShowCtrl">
 			<i></i>
 			<div class="center">
 				<span class="bigSpan">会议号：{{this.data.code}}</span>
@@ -27,12 +27,12 @@
 			</div>
 			<i class="font_family icon-wifi-high" style="font-size: 16px !important;"></i>
 		</div>
-		<div :class="`ctrlLeft ${slideCount === 0 ? 'disable' : ''}`" @click="$emit('prevSlide')" v-if="maxSlide > 1"><i class="font_family icon-left"></i></div>
-		<div :class="`ctrlRight ${slideCount === maxSlide ? 'disable' : ''}`" @click="$emit('nextSlide')" v-if="maxSlide > 1"><i class="font_family icon-right"></i></div>
-		<div class="ctrlPoint" v-if="maxSlide > 1">
+		<div v-show="isShowCtrl" :class="`ctrlLeft ${slideCount === 0 ? 'disable' : ''}`" @click="$emit('prevSlide')" v-if="maxSlide > 1"><i class="font_family icon-left"></i></div>
+		<div v-show="isShowCtrl" :class="`ctrlRight ${slideCount === maxSlide ? 'disable' : ''}`" @click="$emit('nextSlide')" v-if="maxSlide > 1"><i class="font_family icon-right"></i></div>
+		<div v-show="isShowCtrl" class="ctrlPoint" v-if="maxSlide > 1">
 			<div :class="`point ${index === slideCount ? 'active' : ''}`" v-for="index of maxSlide" @click="() => $emit('selectSlide', index)"></div>
 		</div>
-		<div class="ctrlFooter">
+		<div v-show="isShowCtrl" class="ctrlFooter">
 			<i></i>
 			<div class="center">
 				<button @click="handleMic">
@@ -74,8 +74,7 @@
 				<i :class="`font_family ${changeScreen ? 'icon-zoomOut' : 'icon-zoomIn'}`" style="font-size: 37px;"></i>
 			</button>
 		</div>
-		<bullet-screen v-if="barrage && !showMessage" :msgBox="msgBox"></bullet-screen>
-		<transition enter-active-class="animated flipInY fast" leave-active-class="animated flipOutY fast">
+		<transition v-show="isShowCtrl" enter-active-class="animated flipInY fast" leave-active-class="animated flipOutY fast">
 			<div class="set_box" v-if="showSetting">
 				<div class="set_title">
 					<div>设置</div>
@@ -123,6 +122,7 @@
 				</div>
 			</div>
 		</transition>
+		<bullet-screen v-if="barrage" :msgBox="msgBox"></bullet-screen>
 	</div>
 </template>
 
@@ -143,6 +143,7 @@
 		};
 	  },
 	  props: [
+		"isShowCtrl",
 		"inviteHint",
 		"data",
 		"peopleNum",
@@ -159,7 +160,8 @@
 		"shareData",
 		"timer",
 		"speaker",
-		"msgBox"
+		"msgBox",
+		"message"
 	  ],
 	  components: {
 		  bulletScreen

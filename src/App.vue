@@ -108,7 +108,7 @@
     // import share from './components/share';
     import playerStatus from "./components/playerStatus";
     import antiquity, {myDevice, myCookie, myMid, Password, MeetingStatus, myCamera, myMic} from './utils/Antiquity';
-	
+
     export default {
         name: 'app',
         components: {
@@ -131,7 +131,6 @@
                 isShowCtrl: true,
                 showCtrlTime:"",
                 changeScreen: false,
-                isShowSide: true,
                 isShowMessage: true,
                 isShowParty: true,
                 isShowShare: false,
@@ -157,14 +156,6 @@
 				max_width:'',
 				invite_hint:1
             };
-        },
-        beforeCreate() {
-			if(this.joinStatus == 1){
-				window.onbeforeunload = (e) => {
-					e.returnValue = ("确定离开当前页面吗？");
-				};
-			}
-
         },
         created() {
             antiquity.on("getMsg", (msg) => {
@@ -246,19 +237,19 @@
 			// this.$refs.setBox.style.maxWidth = ' 100px'
 			// document.getElementsByClassName('leftBig_box').style.width = '100px'
 			window.onresize = () => {
-				let height = window.screen.availHeight - 36
-				this.max_width = height/9*16 + 'px'
+				let height = window.screen.availHeight - 36;
+				this.max_width = height/9*16 + 'px';
 				console.log(this.max_width)
 			};
 
             window.addEventListener('offline', () => {
                 //网络由正常常到异常时触发
-                this.$Toast.success({message: '您的网络已断开，请检查网络设置。'})
+                this.$Toast.success({message: '您的网络已断开，请检查网络设置。'});
             });
             window.addEventListener('online', () => {
                 //从异常到正常时触发
-                this.$Toast.success({message: '正常尝试连接网络中，请稍等~'})
-                window.location.reload(); 
+                this.$Toast.success({message: '正常尝试连接网络中，请稍等~'});
+                window.location.reload();
             });
             this.$nextTick(() => {
                 this.init();
@@ -267,12 +258,16 @@
                 this.isShowCtrl = false
             },3000);
         },
-		watch:{
+		watch: {
 			maxSlide (){
+			    console.log('watch~~~~~~~~~~~~~~~~~~~~~~~')
 				if(this.maxSlide < this.slideCount){
 					this.slideCount = this.maxSlide
 				}
-			}
+			},
+            isShowMessage() {
+			    console.log('~~~~~~~~~~~~~~~~~~~~~~~~$$$$$$$$$$$$')
+            }
 		},
         computed: {
 			// speaker   主讲
@@ -285,6 +280,9 @@
 					this.LeaveMeeting()
 				}
 			},
+            isShowSide() {
+
+            },
             realMembers() {
 			    console.log('既是主讲又分享了~~~~~~~~~~', this.speaker)
 			    if (this.speaker && this.speaker.shareUrl) return [this.speaker, ...this.members]
@@ -491,7 +489,7 @@
                                 return
                             }
                             this.waiting = false;
-							
+
                         });
 						console.log(antiquity)
                     antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);

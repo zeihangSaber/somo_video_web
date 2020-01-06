@@ -177,7 +177,7 @@
 			this.shareData.mid +
 			"\n" +
 			"会议链接：https://182.61.17.228/sharePage?invite_code=" +
-			this.shareData.mid + '&verification_code=' + this.password + 
+			this.shareData.mid + '&verification_code=' + this.password +
 			"\n" +
 			"您可以直接输入会议号加入会议， 也可以点击会议链接直接入会。";
 		  return data;
@@ -364,6 +364,7 @@
     .disable {
       background-color: rgba(0, 0, 0, 0.4);
       color: rgba(255, 255, 255, 0.5);
+		display: none;
     }
     .icon-right {
       font-size: 50px;

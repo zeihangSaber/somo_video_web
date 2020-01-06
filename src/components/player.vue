@@ -10,8 +10,8 @@
             <div :id="`player_${data.uid}_ali`" ref="ali" class="vjs-tech"></div>
             <video :id="`player_${data.uid}_ks`" ref="ks"></video>
         </div>
-        <div :class="`${data.camera === 0 && isPlay ? 'hasCamera' : 'noCamera'}`">
-            <i class="font_family icon-camera-none"></i>
+        <div :class="`${(data.camera === 0 && isPlay) || isShare ? 'hasCamera' : 'noCamera'}`">
+            isShare ? <img src="https://182.61.17.228/common/logoGif.gif"> : <i class="font_family icon-camera-none"></i>
         </div>
         <div class="holder"></div>
     </div>

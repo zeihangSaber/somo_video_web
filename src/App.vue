@@ -109,7 +109,7 @@
     // import share from './components/share';
     import playerStatus from "./components/playerStatus";
     import antiquity, {myDevice, myCookie, myMid, Password, MeetingStatus, myCamera, myMic} from './utils/Antiquity';
-	
+
     export default {
         name: 'app',
         components: {
@@ -226,10 +226,10 @@
                 this.speaker = speaker;
             });
 			antiquity.on('countDown', msg => {
-				
+
 			    // console.log(msg)
 				if(msg == 2008){//还剩10分钟会议结束
-					this.countDown = 600 
+					this.countDown = 600
 					setInterval(()=>{
 						this.countDown --
 						console.log('十分钟倒计时',this.countDown)
@@ -265,7 +265,7 @@
             window.addEventListener('online', () => {
                 //从异常到正常时触发
                 this.$Toast.success({message: '正常尝试连接网络中，请稍等~'})
-                window.location.reload(); 
+                window.location.reload();
             });
             this.$nextTick(() => {
                 this.init();
@@ -314,8 +314,8 @@
 				}
 			},
             realMembers() {
-			    console.log('既是主讲又分享了~~~~~~~~~~', this.speaker)
-			    if (this.speaker && this.speaker.shareUrl) return [this.speaker, ...this.members]
+			    console.log('既是主讲又分享了~~~~~~~~~~', this.speaker);
+			    if (this.speaker && this.sharer && this.speaker.shareUrl) return [this.speaker, ...this.members];
                 return this.members;
             },
             maxSlide() {//
@@ -537,14 +537,14 @@
                                 return
                             }
                             this.waiting = false;
-							
+
                         });
                         console.log(antiquity)
                         console.log("myMic,myCamera",myCamera,myMic)
                     antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
                 });
             },
-           
+
         }
     };
 </script>

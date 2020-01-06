@@ -5,7 +5,7 @@
 			<div v-if="endMeeting" class="timeUseUP_box">
 				<div class="timeUseUP">
 					<div>30分钟免费限时会议已结束</div>
-					<div class="timeUseUP_btn" @click="LeaveMeeting()">退出会议 {{ten}}s</div>
+					<div class="timeUseUP_btn" @click="LeaveMeeting()">退出会议 {{countDown}}s</div>
 				</div>
 			</div>
             <transition enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
@@ -57,7 +57,8 @@
 								<div class="my_plugFlow">
 									<div class="drag" ref="draggable">
 										<div v-if="meetingInfo.mine.camera === 1" :class="`${meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
-											<img src="https://182.61.17.228/common/logoGif.gif">
+											<!-- <img src="https://182.61.17.228/common/logoGif.gif"> -->
+											<div class="waiting"><i class="font_family icon-camera-none"></i></div>
 										</div>
 									</div>
 								</div>
@@ -109,7 +110,7 @@
     // import share from './components/share';
     import playerStatus from "./components/playerStatus";
     import antiquity, {myDevice, myCookie, myMid, Password, MeetingStatus, myCamera, myMic} from './utils/Antiquity';
-	
+
     export default {
         name: 'app',
         components: {
@@ -153,19 +154,25 @@
 				screenStatus:0,
 				destroy_timer:'',
 				endMeeting:0,
-				ten:10000,
+				// ten:10000,
 				msgBox: [],
 				max_width:'',
 				invite_hint:1,
-				leftHeight:''
+				// leftHeight:'',
+				countDown:'',
+				tenTimer:''
             };
         },
         beforeCreate() {
-			if(this.joinStatus == 1){
 				window.onbeforeunload = (e) => {
-					e.returnValue = ("确定离开当前页面吗？");
+					// if(this.joinStatus == 1){
+					// 	e.returnValue = ("确定离开当前页面吗？");
+					// }
+					if(this.countDown != ''){//10分钟倒计时已经开始了
+						clearInterval(this.tenFENTimer)
+						localStorage.setItem('countDown',this.countDown)
+					}
 				};
-			}
 
         },
         created() {
@@ -190,18 +197,18 @@
 				// if(this.peopleNum >=2){
 				// 	this.isShowShare_ = false
 				// }
-				if(this.peopleNum==3 && MeetingStatus){
-					// alert(Date.parse(new Date()))
-					let NowTime = Date.parse(new Date())
-					let start3 = this.meetingInfo.start3 + 1800000
-					// console.log(this.meetingInfo.start3)
-					if(NowTime - start3 == 10000){
-						this.endMeeting = 1
-						setInterval(()=>{
-							this.ten - 1000
-						},1000)
-					}
-				}
+				// if(this.peopleNum==3 && MeetingStatus){
+				// 	// alert(Date.parse(new Date()))
+				// 	let NowTime = Date.parse(new Date())
+				// 	let start3 = this.meetingInfo.start3 + 1800000
+				// 	// console.log(this.meetingInfo.start3)
+				// 	if(NowTime - start3 == 10000){
+				// 		this.endMeeting = 1
+				// 		setInterval(()=>{
+				// 			this.ten - 1000
+				// 		},1000)
+				// 	}
+				// }
 				if(this.meetingInfo.start){
 					clearInterval(this.destroy_timer)
 					this.destroy_timer = setInterval(() => {
@@ -224,25 +231,25 @@
                 this.speaker = speaker;
             });
 			antiquity.on('countDown', msg => {
-			    console.log(msg)
-				if(msg == 2008){//还剩10分钟会议结束
-					this.countDown = 600 
-					setInterval(()=>{
-						this.countDown --
-						console.log('十分钟倒计时',this.countDown)
-					},1000)
-					// if (this.store.data.meetingStart3Time !== 0) {
-					// 	const now = 40 * 60 * 1000 - (new Date().getTime() - this.store.data.meetingStart3Time)
-					// 	this.countDown(now)
-					// } else {
-					// 	this.countDown(10 * 60 * 1000)
-					// }
+			    // console.log(msg)
+				if(this.countDown == '' && localStorage.getItem('countDown') == null){
+					if(msg == 2008){//还剩10分钟会议结束
+						this.countDown = parseInt(antiquity.getLostTime()/1000)
+						// this.tenFENTimer = setInterval(()=>{
+						// 	this.countDown --
+						// 	console.log('十分钟倒计时',this.countDown)
+						// },1000)
+						// this.endMeeting = 1
+					}
 				}
-				// if(msg == 9)
 			});
             this.$nextTick(() => {
                 antiquity.on('getToast', msg => {
                     this.$Toast.success({message: msg});
+					if(msg == "会议结束了" || msg == "管理员关闭了该会议室" || msg == "余额不足，会议室已关闭"){//30分钟体验时间到了，关闭会议室
+						this.close()
+						clearInterval(this.tenTimer)
+					}
                 });
             })
 
@@ -251,8 +258,18 @@
 			clearInterval(this.destroy_timer)
 		},
         async mounted() {
+			alert(antiquity.getLostTime())
+			// alert(parseInt(antiquity.getLostTime()/1000))
 			// this.leftHeight = document.getElementsByClassName('leftBig_box')[0].offsetWidth
 			// document.getElementsByClassName('leftBig_box').style.width = '100px'
+			if(localStorage.getItem('countDown')){
+				this.countDown = localStorage.getItem('countDown')
+				this.tenFENTimer = setInterval(()=>{
+					// this.endMeeting = 1
+					this.countDown --
+					console.log('十分钟倒计时',this.countDown)
+				},1000)
+			}
 			window.onresize = () => {
 				let height = document.body.clientHeight - 36
 				this.max_width = height/9*16 + 'px'
@@ -265,7 +282,7 @@
             window.addEventListener('online', () => {
                 //从异常到正常时触发
                 this.$Toast.success({message: '正常尝试连接网络中，请稍等~'})
-                window.location.reload(); 
+                window.location.reload();
             });
             this.$nextTick(() => {
                 this.init();
@@ -275,6 +292,13 @@
             },3000);
         },
 		watch:{
+			countDown(){
+				if(this.countDown == 10){
+					this.tenTimer = setInterval(()=>{
+						this.endMeeting = 1
+					},1000)
+				}
+			},
 			maxSlide (){
 				if(this.maxSlide < this.slideCount){
 					this.slideCount = this.maxSlide
@@ -308,7 +332,7 @@
 			},
             realMembers() {
 			    console.log('既是主讲又分享了~~~~~~~~~~', this.speaker)
-			    if (this.speaker && this.speaker.shareUrl) return [this.speaker, ...this.members]
+			    if (this.speaker && this.sharer && this.speaker.shareUrl) return [this.speaker, ...this.members]
                 return this.members;
             },
             maxSlide() {//
@@ -354,6 +378,20 @@
             },
         },
         methods: {
+			close(){
+				Antiquity.ajax.close({
+					// "uid": this.meetingInfo.mine.uid,
+					// "dt": this.meetingInfo.mine.dt,
+					// "device": this.meetingInfo.mine.device,
+					// "cookie": myCookie,
+					"mid": myMid,
+					reason: 2,
+					// "uid", "dt", "device", "cookie"
+				}).then(res=>{
+					alert('关闭会议成功')
+					window.location.href = 'https://182.61.17.228/joinConference';
+				})
+			},
 			bigBox(){
 				this.invite_hint = 0
 			},
@@ -368,7 +406,7 @@
 				device: this.meetingInfo.mine.device,
 				speaker:0,
 				cookie: myCookie,
-				device: this.meetingInfo.mine.device
+				// device: this.meetingInfo.mine.device
 			  };
 			  antiquity.ajax.speakerSet(data).then(res => {
 				console.log(res);
@@ -459,7 +497,10 @@
             LeaveMeeting(){
                 antiquity.leaveMeeting()
                 console.log('离开会议',antiquity)
-                window.location.href = 'https://182.61.17.228/joinConference';
+				this.$Toast.success({message: '正在离开会议....'});
+				setTimeout(() => {
+					window.location.href = 'https://182.61.17.228/joinConference';
+				}, 2000);
             },
 			formatDuring(mss) {
 					let days = parseInt(mss / (1000 * 60 * 60 * 24));
@@ -516,14 +557,14 @@
                                 return
                             }
                             this.waiting = false;
-							
+
                         });
                         console.log(antiquity)
                         console.log("myMic,myCamera",myCamera,myMic)
                     antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
                 });
             },
-           
+
         }
     };
 </script>
@@ -535,6 +576,7 @@
 		margin-right: 4px;
 	}
 	.end_speaker{
+		cursor:pointer;
 		width:100px;
 		height:32px;
 		background:rgba(255,255,255,1);

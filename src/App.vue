@@ -5,7 +5,7 @@
 			<div v-if="endMeeting" class="timeUseUP_box">
 				<div class="timeUseUP">
 					<div>30分钟免费限时会议已结束</div>
-					<div class="timeUseUP_btn" @click="LeaveMeeting()">退出会议 {{ten}}s</div>
+					<div class="timeUseUP_btn" @click="LeaveMeeting()">退出会议 {{countDown}}s</div>
 				</div>
 			</div>
             <transition enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
@@ -153,11 +153,13 @@
 				screenStatus:0,
 				destroy_timer:'',
 				endMeeting:0,
-				ten:10000,
+				// ten:10000,
 				msgBox: [],
 				max_width:'',
 				invite_hint:1,
-				leftHeight:''
+				// leftHeight:'',
+				countDown:'',
+				tenTimer:''
             };
         },
         beforeCreate() {
@@ -224,21 +226,19 @@
                 this.speaker = speaker;
             });
 			antiquity.on('countDown', msg => {
-			    console.log(msg)
+				
+			    // console.log(msg)
 				if(msg == 2008){//还剩10分钟会议结束
 					this.countDown = 600 
 					setInterval(()=>{
 						this.countDown --
 						console.log('十分钟倒计时',this.countDown)
 					},1000)
-					// if (this.store.data.meetingStart3Time !== 0) {
-					// 	const now = 40 * 60 * 1000 - (new Date().getTime() - this.store.data.meetingStart3Time)
-					// 	this.countDown(now)
-					// } else {
-					// 	this.countDown(10 * 60 * 1000)
-					// }
 				}
-				// if(msg == 9)
+				if(msg == 9){//30分钟体验时间到了，关闭会议室
+					this.close()
+					clearInterval(this.tenTimer)
+				}
 			});
             this.$nextTick(() => {
                 antiquity.on('getToast', msg => {
@@ -275,6 +275,13 @@
             },3000);
         },
 		watch:{
+			countDown(){
+				if(this.countDown == 10){
+					this.tenTimer = setInterval(()=>{
+						this.endMeeting = 1
+					},1000)
+				}
+			},
 			maxSlide (){
 				if(this.maxSlide < this.slideCount){
 					this.slideCount = this.maxSlide
@@ -354,6 +361,20 @@
             },
         },
         methods: {
+			close(){
+				Antiquity.ajax.close({
+					// "uid": this.meetingInfo.mine.uid,
+					// "dt": this.meetingInfo.mine.dt,
+					// "device": this.meetingInfo.mine.device,
+					// "cookie": myCookie,
+					"mid": myMid,
+					reason: 2,
+					// "uid", "dt", "device", "cookie"
+				}).then(res=>{
+					alert('关闭会议成功')
+					window.location.href = 'https://182.61.17.228/joinConference';
+				})
+			},
 			bigBox(){
 				this.invite_hint = 0
 			},
@@ -368,7 +389,7 @@
 				device: this.meetingInfo.mine.device,
 				speaker:0,
 				cookie: myCookie,
-				device: this.meetingInfo.mine.device
+				// device: this.meetingInfo.mine.device
 			  };
 			  antiquity.ajax.speakerSet(data).then(res => {
 				console.log(res);

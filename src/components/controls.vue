@@ -27,8 +27,8 @@
 			</div>
 			<i class="font_family icon-wifi-high" style="font-size: 16px !important;"></i>
 		</div>
-		<div v-show="isShowCtrl" :class="`ctrlLeft ${slideCount === 0 ? 'disable' : ''}`" @click="$emit('prevSlide')" v-if="maxSlide > 1"><i class="font_family icon-left"></i></div>
-		<div v-show="isShowCtrl" :class="`ctrlRight ${slideCount === maxSlide ? 'disable' : ''}`" @click="$emit('nextSlide')" v-if="maxSlide > 1"><i class="font_family icon-right"></i></div>
+		<div v-show="isShowCtrl" :class="`ctrlLeft ${slideCount === 1 ? 'disable_' : ''}`" @click="$emit('prevSlide')" v-if="maxSlide > 1"><i class="font_family icon-left"></i></div>
+		<div v-show="isShowCtrl" :class="`ctrlRight ${slideCount === maxSlide ? 'disable_' : ''}`" @click="$emit('nextSlide')" v-if="maxSlide > 1"><i class="font_family icon-right"></i></div>
 		<div v-show="isShowCtrl" class="ctrlPoint" v-if="maxSlide > 1">
 			<div :class="`point ${index === slideCount ? 'active' : ''}`" v-for="index of maxSlide" @click="() => $emit('selectSlide', index)"></div>
 		</div>
@@ -177,7 +177,7 @@
 			this.shareData.mid +
 			"\n" +
 			"会议链接：https://182.61.17.228/sharePage?invite_code=" +
-			this.shareData.mid + '&verification_code=' + this.password +
+			this.shareData.mid + '&verification_code=' + this.password + 
 			"\n" +
 			"您可以直接输入会议号加入会议， 也可以点击会议链接直接入会。";
 		  return data;
@@ -336,6 +336,9 @@
       }
     }
   }
+  .disable_ {
+    opacity: 0;
+  }
   .ctrlLeft {
     position: absolute;
     left: 0;
@@ -344,10 +347,6 @@
     background-color: rgba(0, 0, 0, 0.6);
     border-radius: 0 27px 27px 0;
     z-index: 999;
-    .disable {
-      background-color: rgba(0, 0, 0, 0.4);
-      color: rgba(255, 255, 255, 0.5);
-    }
     .icon-left {
       font-size: 50px;
       cursor: pointer;
@@ -361,11 +360,6 @@
     background-color: rgba(0, 0, 0, 0.6);
     border-radius: 27px 0 0 27px;
     z-index: 999;
-    .disable {
-      background-color: rgba(0, 0, 0, 0.4);
-      color: rgba(255, 255, 255, 0.5);
-		display: none;
-    }
     .icon-right {
       font-size: 50px;
       cursor: pointer;

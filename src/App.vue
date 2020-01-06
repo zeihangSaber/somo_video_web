@@ -57,7 +57,8 @@
 								<div class="my_plugFlow">
 									<div class="drag" ref="draggable">
 										<div v-if="meetingInfo.mine.camera === 1" :class="`${meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
-											<img src="https://182.61.17.228/common/logoGif.gif">
+											<!-- <img src="https://182.61.17.228/common/logoGif.gif"> -->
+											<div class="waiting"><i class="font_family icon-camera-none"></i></div>
 										</div>
 									</div>
 								</div>
@@ -163,11 +164,15 @@
             };
         },
         beforeCreate() {
-			if(this.joinStatus == 1){
 				window.onbeforeunload = (e) => {
-					e.returnValue = ("确定离开当前页面吗？");
+					// if(this.joinStatus == 1){
+					// 	e.returnValue = ("确定离开当前页面吗？");
+					// }
+					if(this.countDown != ''){//10分钟倒计时已经开始了
+						clearInterval(this.tenFENTimer)
+						localStorage.setItem('countDown',this.countDown)
+					}
 				};
-			}
 
         },
         created() {
@@ -192,18 +197,18 @@
 				// if(this.peopleNum >=2){
 				// 	this.isShowShare_ = false
 				// }
-				if(this.peopleNum==3 && MeetingStatus){
-					// alert(Date.parse(new Date()))
-					let NowTime = Date.parse(new Date())
-					let start3 = this.meetingInfo.start3 + 1800000
-					// console.log(this.meetingInfo.start3)
-					if(NowTime - start3 == 10000){
-						this.endMeeting = 1
-						setInterval(()=>{
-							this.ten - 1000
-						},1000)
-					}
-				}
+				// if(this.peopleNum==3 && MeetingStatus){
+				// 	// alert(Date.parse(new Date()))
+				// 	let NowTime = Date.parse(new Date())
+				// 	let start3 = this.meetingInfo.start3 + 1800000
+				// 	// console.log(this.meetingInfo.start3)
+				// 	if(NowTime - start3 == 10000){
+				// 		this.endMeeting = 1
+				// 		setInterval(()=>{
+				// 			this.ten - 1000
+				// 		},1000)
+				// 	}
+				// }
 				if(this.meetingInfo.start){
 					clearInterval(this.destroy_timer)
 					this.destroy_timer = setInterval(() => {
@@ -226,23 +231,25 @@
                 this.speaker = speaker;
             });
 			antiquity.on('countDown', msg => {
-				
 			    // console.log(msg)
-				if(msg == 2008){//还剩10分钟会议结束
-					this.countDown = 600 
-					setInterval(()=>{
-						this.countDown --
-						console.log('十分钟倒计时',this.countDown)
-					},1000)
-				}
-				if(msg == 9){//30分钟体验时间到了，关闭会议室
-					this.close()
-					clearInterval(this.tenTimer)
+				if(this.countDown == '' && localStorage.getItem('countDown') == null){
+					if(msg == 2008){//还剩10分钟会议结束
+						this.countDown = parseInt(antiquity.getLostTime()/1000)
+						// this.tenFENTimer = setInterval(()=>{
+						// 	this.countDown --
+						// 	console.log('十分钟倒计时',this.countDown)
+						// },1000)
+						// this.endMeeting = 1
+					}
 				}
 			});
             this.$nextTick(() => {
                 antiquity.on('getToast', msg => {
                     this.$Toast.success({message: msg});
+					if(msg == "会议结束了" || msg == "管理员关闭了该会议室" || msg == "余额不足，会议室已关闭"){//30分钟体验时间到了，关闭会议室
+						this.close()
+						clearInterval(this.tenTimer)
+					}
                 });
             })
 
@@ -251,8 +258,18 @@
 			clearInterval(this.destroy_timer)
 		},
         async mounted() {
+			alert(antiquity.getLostTime())
+			// alert(parseInt(antiquity.getLostTime()/1000))
 			// this.leftHeight = document.getElementsByClassName('leftBig_box')[0].offsetWidth
 			// document.getElementsByClassName('leftBig_box').style.width = '100px'
+			if(localStorage.getItem('countDown')){
+				this.countDown = localStorage.getItem('countDown')
+				this.tenFENTimer = setInterval(()=>{
+					// this.endMeeting = 1
+					this.countDown --
+					console.log('十分钟倒计时',this.countDown)
+				},1000)
+			}
 			window.onresize = () => {
 				let height = document.body.clientHeight - 36
 				this.max_width = height/9*16 + 'px'
@@ -480,7 +497,10 @@
             LeaveMeeting(){
                 antiquity.leaveMeeting()
                 console.log('离开会议',antiquity)
-                window.location.href = 'https://182.61.17.228/joinConference';
+				this.$Toast.success({message: '正在离开会议....'});
+				setTimeout(() => {
+					window.location.href = 'https://182.61.17.228/joinConference';
+				}, 2000);
             },
 			formatDuring(mss) {
 					let days = parseInt(mss / (1000 * 60 * 60 * 24));
@@ -556,6 +576,7 @@
 		margin-right: 4px;
 	}
 	.end_speaker{
+		cursor:pointer;
 		width:100px;
 		height:32px;
 		background:rgba(255,255,255,1);

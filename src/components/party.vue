@@ -2,9 +2,7 @@
   <div class="bigBox">
     <div class="title">
       <p class="p" v-if="search_show == 0">
-        参会方(
-        <span>{{ members.length }}</span
-        >)
+        参会方( {{ members.length }} )
       </p>
       <input
         v-if="search_show == 1"

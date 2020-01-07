@@ -160,7 +160,8 @@
 				invite_hint:1,
 				// leftHeight:'',
 				countDown:'',
-				tenTimer:''
+				tenTimer:'',
+				NOtenTimer:0
             };
         },
         beforeCreate() {
@@ -168,10 +169,10 @@
 					// if(this.joinStatus == 1){
 					// 	e.returnValue = ("确定离开当前页面吗？");
 					// }
-					if(this.countDown != ''){//10分钟倒计时已经开始了
-						clearInterval(this.tenFENTimer)
-						localStorage.setItem('countDown',this.countDown)
-					}
+					// if(this.countDown != ''){//10分钟倒计时已经开始了
+					// 	clearInterval(this.tenFENTimer)
+					// 	localStorage.setItem('countDown',this.countDown)
+					// }
 				};
 
         },
@@ -232,23 +233,26 @@
             });
 			antiquity.on('countDown', msg => {
 			    // console.log(msg)
-				if(this.countDown == '' && localStorage.getItem('countDown') == null){
+				// if(this.countDown == '' && localStorage.getItem('countDown') == null){
 					if(msg == 2008){//还剩10分钟会议结束
-						this.countDown = parseInt(antiquity.getLostTime()/1000)
-						// this.tenFENTimer = setInterval(()=>{
-						// 	this.countDown --
-						// 	console.log('十分钟倒计时',this.countDown)
-						// },1000)
-						// this.endMeeting = 1
+						if(this.NOtenTimer == 0){
+							this.NOtenTimer = 1
+							this.countDown = antiquity.getLostTime()
+							this.tenFENTimer = setInterval(()=>{
+								this.countDown --
+								console.log('十分钟倒计时',this.countDown)
+							},1000)
+							this.endMeeting = 1
+						}
 					}
-				}
+				// }
 			});
             this.$nextTick(() => {
                 antiquity.on('getToast', msg => {
                     this.$Toast.success({message: msg});
 					if(msg == "会议结束了" || msg == "管理员关闭了该会议室" || msg == "余额不足，会议室已关闭"){//30分钟体验时间到了，关闭会议室
 						this.close()
-						clearInterval(this.tenTimer)
+						clearInterval(this.tenFENTimer)
 					}
                 });
             })
@@ -256,20 +260,22 @@
         },
 		destroyed(){
 			clearInterval(this.destroy_timer)
+			clearInterval(this.tenFENTimer)
 		},
         async mounted() {
-			alert(antiquity.getLostTime())
 			// alert(parseInt(antiquity.getLostTime()/1000))
 			// this.leftHeight = document.getElementsByClassName('leftBig_box')[0].offsetWidth
 			// document.getElementsByClassName('leftBig_box').style.width = '100px'
-			if(localStorage.getItem('countDown')){
-				this.countDown = localStorage.getItem('countDown')
-				this.tenFENTimer = setInterval(()=>{
-					// this.endMeeting = 1
-					this.countDown --
-					console.log('十分钟倒计时',this.countDown)
-				},1000)
-			}
+			
+			// this.countDown = localStorage.getItem('countDown')
+			// this.tenFENTimer = setInterval(()=>{
+			// 	// this.endMeeting = 1
+			// 	this.countDown --
+			// 	console.log('十分钟倒计时',this.countDown)
+			// },1000)
+			
+			
+			
 			window.onresize = () => {
 				let height = document.body.clientHeight - 36
 				this.max_width = height/9*16 + 'px'
@@ -557,7 +563,6 @@
                                 return
                             }
                             this.waiting = false;
-
                         });
                         console.log(antiquity)
                         console.log("myMic,myCamera",myCamera,myMic)

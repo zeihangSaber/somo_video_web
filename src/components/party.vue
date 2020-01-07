@@ -83,7 +83,7 @@
                       v-if="permissionType.setCamera"
                       @click="setCamera(item)"
                     >
-                      {{ item.camera === 1 ? "开启摄像头" : "关闭摄像头" }}
+                      {{ item.camera === 1 ? "请求开启摄像头" : "关闭摄像头" }}
                     </div>
                     <div v-if="permissionType.setKick" @click="()=>(kickShow = true)">
                       移除
@@ -171,7 +171,7 @@
                       v-if="permissionType.setCamera && item.dt !== 8"
                       @click="setCamera(item)"
                     >
-                      {{ item.camera === 1 ? "开启摄像头" : "关闭摄像头" }}
+                      {{ item.camera === 1 ? "请求开启摄像头" : "关闭摄像头" }}
                     </div>
                     <div
                       v-if="permissionType.setKick"
@@ -420,6 +420,7 @@ export default {
         value: "2"
       };
       antiquity.ajax.ruleSet(data).then(res => {
+        this.$Toast.success({message:"全体包括新参会方已被静音"})
         this.micAll = false;
       });
     },

@@ -36,11 +36,11 @@
 			<i></i>
 			<div class="center">
 				<button @click="handleMic">
-					<i :class="`font_family ${data.mine && data.mine.mic === 0 ? 'icon-mic' : 'icon-mic-no'}`"></i>
+					<i :class="`font_family ${data.mine && data.mine.mic === 1 ? 'icon-mic-no' : 'icon-mic'}`"></i>
 					静音
 				</button>
 				<button @click="handleCamera">
-					<i :class="`font_family ${data.mine && data.mine.camera === 0 ? 'icon-camera' : 'icon-camera-no'}`"></i>
+					<i :class="`font_family ${data.mine && data.mine.camera === 1 ? 'icon-camera-no' : 'icon-camera'}`"></i>
 					视频
 				</button>
 				<button style="margin: 0;position: relative;">
@@ -371,7 +371,7 @@
   .ctrlPoint {
     position: absolute;
     z-index: 9999;
-    top: 90%;
+    bottom: 100px;
     left: 50%;
     height: 15px;
     background-color: rgba(0, 0, 0, 0.4);

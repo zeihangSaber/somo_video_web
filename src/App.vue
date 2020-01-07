@@ -53,7 +53,7 @@
 							</div>
 							<div class="set_height"></div>
 							<div class="set_myBox">
-								<player-status v-if="mineFlag !== 'two'" :data="meetingInfo.mine"></player-status>
+								<player-status :data="meetingInfo.mine"></player-status>
 								<div class="my_plugFlow">
 									<div class="drag" ref="draggable">
 										<div v-if="meetingInfo.mine.camera === 1" :class="`${meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
@@ -140,7 +140,7 @@
                 // isShowShare_: false,
                 speaker: null,
                 sharer: null,
-                playerNum: 4,
+                playerNum: 6,
                 slideCount: 1,
                 barrage: false,
                 shareData: {},
@@ -160,7 +160,6 @@
 				invite_hint:1,
 				// leftHeight:'',
 				countDown:'',
-				tenTimer:'',
 				NOtenTimer:0
             };
         },
@@ -181,6 +180,14 @@
 				console.log(msg)
 				msg.time = this._time()
                 this.message.push(msg)
+				if(this.isShowMessage == false){
+					this.msgBox = ''
+					this.msgBox = [
+					    this.message[this.message.length - 3],
+					    this.message[this.message.length - 2],
+					    this.message[this.message.length - 1]
+					];
+				}
             });
             antiquity.on('getMidInfo', meetingInfo => {
 				console.log('xxxxxx',meetingInfo)
@@ -235,6 +242,7 @@
 			    // console.log(msg)
 				// if(this.countDown == '' && localStorage.getItem('countDown') == null){
 					if(msg == 2008){//还剩10分钟会议结束
+					console.log(antiquity.getLostTime())
 						if(this.NOtenTimer == 0){
 							this.NOtenTimer = 1
 							this.countDown = antiquity.getLostTime()
@@ -251,8 +259,9 @@
                 antiquity.on('getToast', msg => {
                     this.$Toast.success({message: msg});
 					if(msg == "会议结束了" || msg == "管理员关闭了该会议室" || msg == "余额不足，会议室已关闭"){//30分钟体验时间到了，关闭会议室
-						this.close()
 						clearInterval(this.tenFENTimer)
+						this.LeaveMeeting()
+						
 					}
                 });
             })
@@ -273,9 +282,6 @@
 			// 	this.countDown --
 			// 	console.log('十分钟倒计时',this.countDown)
 			// },1000)
-			
-			
-			
 			window.onresize = () => {
 				let height = document.body.clientHeight - 36
 				this.max_width = height/9*16 + 'px'
@@ -300,9 +306,7 @@
 		watch:{
 			countDown(){
 				if(this.countDown == 10){
-					this.tenTimer = setInterval(()=>{
-						this.endMeeting = 1
-					},1000)
+					this.endMeeting = 1
 				}
 			},
 			maxSlide (){
@@ -364,6 +368,10 @@
                 if (!(this.sharer || this.speaker) && this.membersNum === 2) return 'two';
                 if (this.playerNum === 4) return 'four';
                 if (this.playerNum === 9) return 'nine';
+				if (this.membersNum >= 3){
+					this.playerNum = 4
+					return 'four';
+				} 
                 return 'fir'
             },
             realCount() {//不算主讲和分屏，剩余多少分屏
@@ -384,6 +392,14 @@
             },
         },
         methods: {
+			//判断浏览器种类函数-处理兼容性
+			myBrowser(){
+			    var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
+			    if (userAgent.indexOf("Safari") > -1) {
+					
+			        return "Safari";
+			    } //判断是否Safari浏览器
+			},
 			close(){
 				Antiquity.ajax.close({
 					// "uid": this.meetingInfo.mine.uid,

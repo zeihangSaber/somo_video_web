@@ -1,6 +1,7 @@
 <template>
-    <div class="ctrlMiddle">
-        <div class="ctrlMiddleName" >{{data.name ? data.name : data.uid}}</div>
+    <div class="ctrlMiddle" v-if="data.name">
+        <div class="ctrlMiddleName" v-if="!isShare">{{data.name ? data.name : data.uid}}</div>
+		<div  v-if="isShare">{{data.name ? data.name : data.uid}}<span>-屏幕共享中</span></div>
         <i class="font_family icon-mic" v-if="data.mic === 0"></i>
         <svg v-else class="icon" aria-hidden="true">
             <use xlink:href="#icon-mic-no"></use>
@@ -14,9 +15,14 @@
 
 <script>
     export default {
+		data(){
+			return{
+				
+			}
+		},
         props: {
             data: null,
-            isShare: false
+            isShare: false,
         },
 		mounted() {
 			console.log(this.data)
@@ -34,8 +40,11 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		display: inline-block;
+		vertical-align: top;
 	}
     .ctrlMiddle {
+		display: none;
         padding: 0 16px 0 12px;
         height: 32px;
         line-height: 32px;

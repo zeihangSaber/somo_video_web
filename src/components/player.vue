@@ -11,8 +11,8 @@
             <video :id="`player_${data.uid}_ks`" ref="ks"></video>
         </div>
         <div :class="`${(data.camera === 0 && isPlay) || isShare ? 'hasCamera' : 'noCamera'}`">
-            <img v-if="isShare" src="https://182.61.17.228/common/logoGif.gif">
-            <i v-else class="font_family icon-camera-none"></i>
+            <img v-if="(isShare || !isPlay) && data.camera !== 1" src="https://182.61.17.228/common/logoGif.gif">
+            <i v-if="data.camera === 1" class="font_family icon-camera-none"></i>
         </div>
         <div class="holder"></div>
     </div>
@@ -73,32 +73,8 @@
             reset() {
                 if (this.data.uid === this.meetingInfo.mine.uid) return;
                 this.player && this.player.reset();
-                this.player.src({type: 'rtmp', src: this.src});
-                console.log('播发器重置完毕~~~~~~~~~~~~~~~~~~~', this.src);
-                clearTimeout(this.timer);
-                this.timer = setTimeout(() => {
-                    console.log('没有取到播放源~~~~~~~~~~~~~~~~~');
-                    this.reset();
-                }, 5000);
-
-                this.player.on("loadeddata", () => {
-                    clearTimeout(this.timer);
-                    console.log('获取到第一帧~~~~~~~~~~~~~~~~~');
-                    this.isPlay = true;
-                    this.player.play();
-                });
-                this.player.on("error", () => {
-                    console.log('播放器报错，重置~~~~~~~~~~~~~~~~');
-                    this.isPlay = false;
-                    this.reset()
-                });
-
-                // this.player && this.player.dispose();
-                // if (!this.$refs.playerBox) return;
-                // clearTimeout(this.timer);
-                // this.timer = setTimeout(() => {
-                //     this.Aliplayer();
-                // }, 300);
+                this.isPlay = false;
+                this.ksInit();
             },
             createVideo() {
                 if (this.data.uid === this.meetingInfo.mine.uid) return;
@@ -180,36 +156,67 @@
             },
             ksPlayer() {
                 setTimeout(() => {
+
                     this.player = window['ksplayer'](`player_${this.data.uid}_ks`, {
                         controls: false,
                         autoplay: true,
                         preload: true,
+                        isLive: true,
                         poster: 'https://182.61.17.228/common/poster.png'
                     }, () => {
                         console.log('播放器准备完毕~~~~~~~~~~~~~~~~~~');
-                        this.player.src({type: 'rtmp', src: this.src});
-                        clearTimeout(this.timer);
-                        this.timer = setTimeout(() => {
-                            console.log('没有取到播放源~~~~~~~~~~~~~~~~~');
-                            this.reset();
-                        }, 5000)
-                        // this.player.load(this.src);
+                        this.ksInit();
                     });
-                    this.player.on("loadeddata", () => {
-                        clearTimeout(this.timer);
-                        console.log('获取到第一帧~~~~~~~~~~~~~~~~');
-                        this.isPlay = true;
-                        this.player.play();
-                    });
-                    this.player.on("error", () => {
-                        console.log('播放器报错，重置~~~~~~~~~~~~~~~~');
-                        this.isPlay = false;
-                        this.reset()
-                    })
+
                 }, 300);
+            },
+            ksInit() {
+
+                this.player.src({type: 'rtmp', src: this.src});
+
+                clearTimeout(this.timer);
+
+                this.handleNet();
+
+                this.timer = setTimeout(() => {
+                    console.log('没有取到播放源~~~~~~~~~~~~~~~~~');
+                    this.reset();
+                }, 5000);
+
+                this.player.on("loadeddata", () => {
+                    clearTimeout(this.timer);
+                    console.log('获取到第一帧~~~~~~~~~~~~~~~~');
+                    this.$nextTick(() => {
+                        this.player.bufferTimeMax(0.8);
+                    });
+                    this.isPlay = true;
+                    this.player.play();
+                });
+
+                this.player.on("error", () => {
+                    console.log('播放器报错，重置~~~~~~~~~~~~~~~~');
+                    this.isPlay = false;
+                    this.reset()
+                });
+
+
+            },
+            handleNet() {
+                clearInterval(this.interval);
+                this.interval = setInterval(() => {
+                    const res = this.player.networkState();
+                    const State = this.player.readyState();
+                    console.log('player net~~~~~~~~~~~~~~~', State);
+
+                    if (res === 3) {
+                        console.log('~~~~~~~~~~~~~~~~~~~~hei hei');
+                        this.reset();
+                    }
+                }, 1000);
             }
         },
         beforeDestroy() {
+            clearInterval(this.interval);
             clearTimeout(this.timer);
             this.data.uid !== this.meetingInfo.mine.uid && this.player && this.player.dispose();
         }

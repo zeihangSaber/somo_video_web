@@ -4,14 +4,15 @@
         v-if="data.uid !== meetingInfo.mine.uid"
         :id="data.uid === meetingInfo.mine.uid ? 'mine' : ''"
     >
-        <player-status :data="data"></player-status>
+        <player-status :data="data" :isShare="isShare"></player-status>
         <div class="grail" ref="grail">
             <div :id="`player_${data.uid}_tc`" class="vjs-tech"></div>
             <div :id="`player_${data.uid}_ali`" ref="ali" class="vjs-tech"></div>
             <video :id="`player_${data.uid}_ks`" ref="ks"></video>
         </div>
         <div :class="`${(data.camera === 0 && isPlay) || isShare ? 'hasCamera' : 'noCamera'}`">
-            isShare ? <img src="https://182.61.17.228/common/logoGif.gif"> : <i class="font_family icon-camera-none"></i>
+            <img v-if="isShare" src="https://182.61.17.228/common/logoGif.gif">
+            <i v-else class="font_family icon-camera-none"></i>
         </div>
         <div class="holder"></div>
     </div>

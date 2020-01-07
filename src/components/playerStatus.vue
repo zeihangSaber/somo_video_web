@@ -14,7 +14,10 @@
 
 <script>
     export default {
-        props: ['data'],
+        props: {
+            data: null,
+            isShare: false
+        },
 		mounted() {
 			console.log(this.data)
 		}

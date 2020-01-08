@@ -244,13 +244,13 @@
 					if(msg == 2008){//还剩10分钟会议结束
 					console.log(antiquity.getLostTime())
 						if(this.NOtenTimer == 0){
-							this.NOtenTimer = 1
-							this.countDown = antiquity.getLostTime()
+							this.NOtenTimer = 1;
+							this.countDown = antiquity.getLostTime();
 							this.tenFENTimer = setInterval(()=>{
-								this.countDown --
+								this.countDown --;
 								console.log('十分钟倒计时',this.countDown)
 							},1000)
-							this.endMeeting = 1
+							// this.endMeeting = 1
 						}
 					}
 				// }
@@ -259,23 +259,23 @@
                 antiquity.on('getToast', msg => {
                     this.$Toast.success({message: msg});
 					if(msg == "会议结束了" || msg == "管理员关闭了该会议室" || msg == "余额不足，会议室已关闭"){//30分钟体验时间到了，关闭会议室
-						clearInterval(this.tenFENTimer)
+						clearInterval(this.tenFENTimer);
 						this.LeaveMeeting()
-						
+
 					}
                 });
             })
 
         },
 		destroyed(){
-			clearInterval(this.destroy_timer)
+			clearInterval(this.destroy_timer);
 			clearInterval(this.tenFENTimer)
 		},
         async mounted() {
 			// alert(parseInt(antiquity.getLostTime()/1000))
 			// this.leftHeight = document.getElementsByClassName('leftBig_box')[0].offsetWidth
 			// document.getElementsByClassName('leftBig_box').style.width = '100px'
-			
+
 			// this.countDown = localStorage.getItem('countDown')
 			// this.tenFENTimer = setInterval(()=>{
 			// 	// this.endMeeting = 1
@@ -371,7 +371,7 @@
 				if (this.membersNum >= 3){
 					this.playerNum = 4
 					return 'four';
-				} 
+				}
                 return 'fir'
             },
             realCount() {//不算主讲和分屏，剩余多少分屏
@@ -396,7 +396,7 @@
 			myBrowser(){
 			    var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
 			    if (userAgent.indexOf("Safari") > -1) {
-					
+
 			        return "Safari";
 			    } //判断是否Safari浏览器
 			},

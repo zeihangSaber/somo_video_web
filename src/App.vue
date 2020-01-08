@@ -99,6 +99,12 @@
 					@handleMsg="handleMsg"
             ></side-box>
         </transition>
+        <div class="mask_app" v-if="!meetingShow">
+            <div class="mask_content">
+                <img src="https://182.61.17.228/common/somo_log.png">
+                <div class="text">当前浏览器无法使用flash插件<br>建议使用Google Chrome 65.0及以上版本的浏览器</div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -127,6 +133,7 @@
                         speaker: 0
                     }
                 },
+                meetingShow:true,
                 members: [],
                 peopleNum: 0,
                 micNum: 0,
@@ -137,7 +144,6 @@
                 isShowMessage: true,
                 isShowParty: true,
                 isShowShare: false,
-                // isShowShare_: false,
                 speaker: null,
                 sharer: null,
                 playerNum: 6,
@@ -176,6 +182,11 @@
 
         },
         created() {
+            console.log("浏览器数据：~~~~",antiquity.getBrowserInfo)
+            if(Boolean(antiquity.getBrowserInfo.match(/firefox/gi)) || Boolean(antiquity.getBrowserInfo.match(/msie/gi)) || Boolean(antiquity.getBrowserInfo.match(/opera/gi))){
+                this.meetingShow = false;
+                return false
+            }
             antiquity.on("getMsg", (msg) => {
 				console.log(msg)
 				msg.time = this._time()
@@ -272,6 +283,10 @@
 			clearInterval(this.tenFENTimer)
 		},
         async mounted() {
+            if(Boolean(antiquity.getBrowserInfo.match(/firefox/gi)) || Boolean(antiquity.getBrowserInfo.match(/msie/gi)) || Boolean(antiquity.getBrowserInfo.match(/opera/gi))){
+                this.meetingShow = false;
+                return false
+            }
 			// alert(parseInt(antiquity.getLostTime()/1000))
 			// this.leftHeight = document.getElementsByClassName('leftBig_box')[0].offsetWidth
 			// document.getElementsByClassName('leftBig_box').style.width = '100px'
@@ -898,5 +913,34 @@
         width: 100% !important;
         height: 100% !important;
     }
-
+    .mask_app{
+        z-index: 10000;
+        background-color: #2E2E2E;
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        left: 0;
+        top: 0;
+        // .flex(center, center);
+        .mask_content{
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            flex-direction: column;
+            .flex(center, center);
+            img{
+                width: 148px;
+                height: 39px;
+            }
+            .text{
+                margin-top: 172px;
+                text-align: center;
+                font-size:18px;
+                font-weight:400;
+                color:rgba(255,255,255,1);
+                line-height:30px;
+            }
+        }
+    }
 </style>

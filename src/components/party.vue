@@ -93,17 +93,17 @@
               </button>
               <Confirm
                 v-if="roleShow"
-                :item="item"
+                :item="pitchonItem"
                 :confirmTitle="'设为主持人'"
-                :confirmText="`确认将【${item.name}】设为主持人？`"
+                :confirmText="`确认将【${pitchonItem.name}】设为主持人？`"
                 v-on:cancel="() => (roleShow = false)"
                 v-on:affirm="setRole"
               ></Confirm>
               <Confirm
                 v-if="kickShow"
-                :item="item"
+                :item="pitchonItem"
                 :confirmTitle="'移除'"
-                :confirmText="`确认要移除【${item.name}】？`"
+                :confirmText="`确认要移除【${pitchonItem.name}】？`"
                 v-on:cancel="() => (kickShow = false)"
                 v-on:affirm="setKick"
               ></Confirm>
@@ -143,13 +143,6 @@
 
                 <span v-if="item.speaker === 1" class="speaker">主讲</span>
               </p>
-              <!-- <button
-                                    v-if="item.role !== 4"
-                                    class="permissionBtn"
-                                    @click="setMic(item)"
-                            >
-                                {{ item.mic === 1 ? "取消静音" : "静音" }}
-              </button>-->
               <button class="permissionBtn more" @click="more(item)">
                 更多
                 <div v-if="permissionShow" class="permission">
@@ -182,17 +175,17 @@
                   </div>
                   <Confirm
                     v-if="roleShow"
-                    :item="item"
+                    :item="pitchonItem"
                     :confirmTitle="'设为主持人'"
-                    :confirmText="`确认将【${item.name}】设为主持人？`"
+                    :confirmText="`确认将【${pitchonItem.name}】设为主持人？`"
                     v-on:cancel="() => (roleShow = false)"
                     v-on:affirm="setRole"
                   ></Confirm>
                   <Confirm
                       v-if="kickShow"
-                      :item="item"
+                      :item="pitchonItem"
                       :confirmTitle="'移除'"
-                      :confirmText="`确认要移除【${item.name}】？`"
+                      :confirmText="`确认要移除【${pitchonItem.name}】？`"
                       v-on:cancel="() => (kickShow = false)"
                       v-on:affirm="setKick"
                   ></Confirm>
@@ -271,6 +264,7 @@ export default {
       search_show: 0,
       s_members: [],
       search: "",
+      pitchonItem:"", //被选中
       micAll: false,
       kickShow:false,
       lockedShow: false,
@@ -318,7 +312,7 @@ export default {
       }
     },
     more(item) {
-      console.log("xxxx", item);
+      this.pitchonItem = item;
       this.permissionType = {
         setSpeaker: true,
         setRole: true,

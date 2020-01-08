@@ -40,9 +40,9 @@ export default {
   background: rgba(255, 255, 255, 1);
   border-radius: 8px;
   flex-direction: column;
-  .flex(flex-start, center);
+  .flex(center, center);
   h3 {
-    margin: 20px 0 12px 0;
+    margin: 0px 0 12px 0;
     font-size: 20px;
     font-weight: 500;
     color: rgba(51, 51, 51, 1);

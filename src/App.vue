@@ -859,7 +859,7 @@
         overflow: hidden;
     }
 
-    .vjs-tech>object {
+    object {
         transform: translateZ(0) !important;
     }
 
@@ -912,7 +912,8 @@
     .video-js {
         width: 100% !important;
         height: 100% !important;
-    }
+		transform: translateZ(0) !important;
+	}
     .mask_app{
         z-index: 10000;
         background-color: #2E2E2E;

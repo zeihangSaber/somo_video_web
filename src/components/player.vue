@@ -12,7 +12,7 @@
         </div>
         <div :class="`${(data.camera === 0 && isPlay) ? 'hasCamera' : 'noCamera'} ${(isShare || !isPlay) && data.camera !== 1 ? 'deepBg' : ''}`">
             <img v-if="(isShare || !isPlay) && data.camera !== 1" src="https://182.61.17.228/common/logoGif.gif">
-            <i v-if="data.camera === 1" class="font_family icon-camera-none"></i>
+            <i v-if="data.camera === 1" class="font_family icon-camera-none" :class="`${(data.camera === 0 && isPlay) || isShare ? 'hasCamera' : '_noCamera'}`"></i>
         </div>
         <div class="holder"></div>
     </div>
@@ -290,6 +290,20 @@
     .hasCamera {
         display: none;
     }
+	._noCamera{
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 2;
+		background-color: #444;
+		width: 100%;
+		height: 100%;
+		.flex(center, center);
+		.icon-camera-none {
+		    font-size: 80px;
+		    color: #666;
+		}
+	}
     .noCamera {
         &.deepBg {
             background-color: #343D4F;
@@ -298,7 +312,7 @@
         top: 0;
         left: 0;
         z-index: 2;
-        background-color: #444;
+        background-color: #343D4F;
         width: 100%;
         height: 100%;
         .flex(center, center);

@@ -32,93 +32,145 @@
 		<div v-show="isShowCtrl" class="ctrlPoint" v-if="maxSlide > 1">
 			<div :class="`point ${index === slideCount ? 'active' : ''}`" v-for="index of maxSlide" @click="() => $emit('selectSlide', index)"></div>
 		</div>
-		<div v-show="isShowCtrl" class="ctrlFooter">
-			<i></i>
-			<div class="center">
-				<button @click="handleMic">
-					<i :class="`font_family ${data.mine && data.mine.mic === 1 ? 'icon-mic-no' : 'icon-mic'}`"></i>
-					静音
-				</button>
-				<button @click="handleCamera">
-					<i :class="`font_family ${data.mine && data.mine.camera === 1 ? 'icon-camera-no' : 'icon-camera'}`"></i>
-					视频
-				</button>
-				<button style="margin: 0;position: relative;">
-					<!--${ShowShare ? 'active' : ''}-->
-					<button class="ml10" type="text" size="medium"
-					        v-clipboard:copy="sysAppIds"
-					        v-clipboard:success="onCopy"
-					        v-clipboard:error="onError">
-							<i :class="`font_family icon-sharing`"></i>邀请
+		<div  class="ctrlFooter">
+			<div v-show="isShowCtrl">
+				<i></i>
+				<div class="center">
+					<button @click="handleMic" v-if="data.hasMic">
+						<i :class="`font_family ${data.mine && data.mine.mic === 1 ? 'icon-mic-no' : 'icon-mic'}`"></i>
+						静音
 					</button>
-					<div class="invite_hint" v-if="inviteHint">
-						<svg  class="icon invite_hint_icon" aria-hidden="true">
-						    <use xlink:href="#iconhuiyiyaoqingmax"></use>
-						</svg>
-					</div>
-				</button>
-				<button @click="$emit('handleMessage')">
-					<i :class="`font_family icon-barrage ${showSide && showMessage ? 'active' : ''}`"></i>消息
-				</button>
-				<button @click="$emit('handleParty')">
-					<i :class="`font_family icon-members ${showSide && showParty ? 'active' : ''}`"></i>参会方
-				</button>
-				<button @click="() => showSetting = !showSetting">
-					<i :class="`font_family icon-setting ${showSetting ? 'active' : ''}`"></i>设置
-				</button>
-				<button @click="$emit('LeaveMeeting')">
-					<i style="color:#FF5245" class="font_family icon-tuichu-normal "></i>离开
-				</button>
+					<button v-if="!data.hasMic">
+						<i class="font_family icon-mic-no"></i>
+						静音
+					</button>
+					<button @click="handleCamera" v-if="data.hasCam">
+						<i :class="`font_family ${data.mine && data.mine.camera === 1 ? 'icon-camera-no' : 'icon-camera'}`"></i>
+						视频
+					</button>
+					<button v-if="!data.hasCam">
+						<i class="font_family icon-camera-no"></i>
+						视频
+					</button>
+					<button style="margin: 0;position: relative;">
+						<!--${ShowShare ? 'active' : ''}-->
+						<button class="ml10" type="text" size="medium"
+						        v-clipboard:copy="sysAppIds"
+						        v-clipboard:success="onCopy"
+						        v-clipboard:error="onError">
+								<i :class="`font_family icon-sharing`"></i>邀请
+						</button>
+						<div class="invite_hint" v-if="inviteHint">
+							<svg  class="icon invite_hint_icon" aria-hidden="true">
+							    <use xlink:href="#iconhuiyiyaoqingmax"></use>
+							</svg>
+						</div>
+					</button>
+					<button @click="$emit('handleMessage')">
+						<i :class="`font_family icon-barrage ${showSide && showMessage ? 'active' : ''}`"></i>消息
+					</button>
+					<button @click="$emit('handleParty')">
+						<i :class="`font_family icon-members ${showSide && showParty ? 'active' : ''}`"></i>参会方
+					</button>
+					<button @click="() => showSetting = !showSetting">
+						<i :class="`font_family icon-setting ${showSetting ? 'active' : ''}`"></i>设置
+					</button>
+					<button @click="$emit('LeaveMeeting')">
+						<i style="color:#FF5245" class="font_family icon-tuichu-normal "></i>离开
+					</button>
+				</div>
 			</div>
-			<button class="zoomIn" @click="$emit('handleSide')">
+			<button :class="isShowCtrl?'zoomIn':'zoomIn_yc'" @click="$emit('handleSide')">
 				<i :class="`font_family ${changeScreen ? 'icon-zoomOut' : 'icon-zoomIn'}`" style="font-size: 37px;"></i>
 			</button>
 		</div>
-		<transition v-show="isShowCtrl" enter-active-class="animated flipInY fast" leave-active-class="animated flipOutY fast">
-			<div class="set_box" v-if="showSetting">
+		<transition enter-active-class="animated flipInY fast" leave-active-class="animated flipOutY fast">
+			<div v-show="isShowCtrl" class="set_box" v-if="showSetting">
 				<div class="set_title">
 					<div>设置</div>
 					<i class="font_family icon-close " @click="() => showSetting = !showSetting"></i>
 				</div>
 				<div class="set_main">
 					<div class="set_main_box">
-						<div class="set_main_title">视频布局:</div>
-						<div class="set_gongneng">
-							<div @click="$emit('selectFour')">
-								<svg class="icon" aria-hidden="true" v-if="playerNum === 4">
-									<use xlink:href="#icon-select"></use>
-								</svg>
-								<i class="font_family set_icon icon-select-no" v-else></i>
-								<span>四分屏</span>
-							</div>
-							<div @click="$emit('selectNine')">
-								<svg class="icon" aria-hidden="true" v-if="playerNum === 9">
-									<use xlink:href="#icon-select"></use>
-								</svg>
-								<i class="font_family set_icon icon-select-no" v-else></i>
-								<span>九分屏</span>
-							</div>
-						</div>
-					</div>
-					<div class="set_main_box" style="margin-top: 10px;">
 						<div class="set_main_title">弹幕消息:</div>
 						<div class="set_gongneng">
-							<div @click="$emit('barrageTrue')">
-								<svg class="icon" aria-hidden="true" v-if="barrage">
-									<use xlink:href="#icon-select"></use>
-								</svg>
-								<i class="font_family set_icon icon-select-no" v-else></i>
-								<span>开启</span>
-							</div>
-							<div @click="$emit('barrageFalse')">
+							<!-- <div> -->
+								<div v-if="barrage" @click="$emit('barrageFalse')" class="barrage_">
+									<svg class="icon" aria-hidden="true">
+										<use xlink:href="#iconfuxuan-xuanzhongx"></use>
+									</svg>
+									<span style="margin-left: 4px;">开启</span>
+								</div>
+								<div v-if="!barrage" @click="$emit('barrageTrue')" class="barrage_">
+									<svg class="icon" aria-hidden="true">
+										<use xlink:href="#iconbianzubeifenx"></use>
+									</svg>
+									<span style="margin-left: 4px;">开启</span>
+								</div>
+							<!-- </div> -->
+							<!-- <div>
 								<svg class="icon" aria-hidden="true" v-if="!barrage">
 									<use xlink:href="#icon-select"></use>
 								</svg>
 								<i class="font_family set_icon icon-select-no" v-else></i>
 								<span>关闭</span>
+							</div> -->
+						</div>
+					</div>
+					<div class="set_main_box" v-if="howMany == 'two'">
+						<div class="set_main_title">视频清晰度:</div>
+						<div class="set_gongneng">
+							<div @click="setDef()">
+								<svg class="icon" aria-hidden="true" v-if="setDef_ == 1">
+									<use xlink:href="#iconfuxuan-xuanzhongx"></use>
+								</svg>
+								<svg class="icon" aria-hidden="true" v-if="setDef_ == 0">
+									<use xlink:href="#iconbianzubeifenx"></use>
+								</svg>
+								<span>高清</span>
 							</div>
 						</div>
 					</div>
+					
+					<div class="set_main_box" title="仅在两路会议时生效" v-if="howMany != 'two'">
+						<div class="set_main_title">视频清晰度:</div>
+						<div class="set_gongneng" style="opacity: 0.4;">
+							<div>
+								<svg class="icon" aria-hidden="true" v-if="setDef_ == 1">
+									<use xlink:href="#iconbianzubeifenx"></use>
+								</svg>
+								<span>高清</span>
+							</div>
+						</div>
+					</div>
+					
+					
+					
+					
+					<div class="set_main_box">
+						<div class="set_main_title">视频布局:</div>
+						<div class="set_gongneng">
+							<div @click="$emit('selectFour')">
+								<svg class="icon" aria-hidden="true" v-if="new_playerNum === 4">
+									<use xlink:href="#icon-select"></use>
+								</svg>
+								<svg class="icon" aria-hidden="true" v-else>
+									<use xlink:href="#icon-unselect"></use>
+								</svg>
+								<span>四分屏</span>
+							</div>
+							<div @click="$emit('selectNine')">
+								<svg class="icon" aria-hidden="true" v-if="new_playerNum === 9">
+									<use xlink:href="#icon-select"></use>
+								</svg>
+								<svg class="icon" aria-hidden="true" v-else>
+									<use xlink:href="#icon-unselect"></use>
+								</svg>
+								<span>九分屏</span>
+							</div>
+						</div>
+					</div>
+					
 				</div>
 			</div>
 		</transition>
@@ -138,11 +190,14 @@
 		  time: "",
 		  time_meeting: "",
 		  not_time: 1000,
-		  password:''
+		  password:'',
+		  new_playerNum:'',
+		  setDef_:1
 		  // sysAppIds:''
 		};
 	  },
 	  props: [
+		"howMany",
 		"isShowCtrl",
 		"inviteHint",
 		"data",
@@ -166,6 +221,14 @@
 	  components: {
 		  bulletScreen
 	  },
+	  watch:{
+		  data:function(){
+			 console.log(this.data) 
+		  },
+		  playerNum:function(){
+			  this.new_playerNum = this.playerNum
+		  },
+	  },
 	  computed: {
 		sysAppIds() {
 		  let data =
@@ -184,10 +247,22 @@
 		}
 	  },
 	  mounted() {
+		  this.new_playerNum = this.playerNum
+		  if(this.new_playerNum == 6){
+		  	this.new_playerNum = 4
+		  }
 		  console.log(55555,this.inviteHint)
 		  this.password = Password
 	  },
 	  methods: {
+		setDef(){
+			this.setDef_ = !this.setDef_
+			if(this.setDef_ == 0){
+				this.$emit('setDef',480)
+			}else{
+				this.$emit('setDef',720)
+			}
+		},
 		set_meetingTime(type) {
 		  if (type == 1) {
 			setInterval(() => {
@@ -246,6 +321,9 @@
 
 <style lang="less" scoped>
 @import "../common/common";
+.barrage_{
+	margin-left: 0;
+}
 .invite_hint_icon{
 	font-size: 160px;
 }
@@ -262,7 +340,7 @@
 }
 .set_box{
 	width: 230px;
-	height: 206px;
+	height: 201px;
 	background:#FFFFFF;
 	border-radius:8px;
 	position: absolute;
@@ -271,9 +349,12 @@
 	z-index: 110000;
 	.set_main{
 		padding: 0 48px 0 32px;
-		font-size:16px;
+		font-size:14px;
 		font-weight:400;
 		color:rgba(153,153,153,1);
+		.icon{
+			font-size: 16px;
+		}
 		.set_main_box{
 			// width: 60%;
 			display: flex;
@@ -282,14 +363,16 @@
 			// margin: 0 auto 16px;
 			.set_main_title{
 				width: 80px;
-				font-size:16px;
+				font-size:14px;
 				font-weight:400;
 				color:rgba(102,102,102,1);
+				text-align: right;
 			}
 			.set_gongneng{
 				width: 50%;
 				& div{
-					margin-bottom: 6px;
+					margin-bottom: 12px;
+					margin-left: 8px;
 				}
 				& div>span{
 					margin-left: 4px;
@@ -397,11 +480,12 @@
     left: 0;
     bottom: 0;
     width: 100%;
+	// background: pink;
     background-color: rgba(0, 0, 0, 0.6);
     z-index: 9999;
     color: #fff;
     line-height: 80px;
-    .flex(space-between, center);
+    .flex(center, center);
     .center {
       flex: 1;
       text-align: center;
@@ -425,6 +509,26 @@
         }
       }
     }
+	.zoomIn_yc {
+	  background-color: transparent;
+	  outline: none;
+	  border: 2px solid #fff;
+	  border-radius: 4px;
+	  color: #fff;
+	  font-size: 16px;
+	  width: 32px;
+	  height: 32px;
+	  overflow: hidden;
+	  position: absolute;
+	  bottom: 13px;
+	  right: 13px;
+	  i {
+	    font-size: 38px;
+	    position: relative;
+	    left: -10px;
+	    top: -8px;
+	  }
+	}
     .zoomIn {
       background-color: transparent;
       outline: none;
@@ -435,6 +539,9 @@
       width: 32px;
       height: 32px;
       overflow: hidden;
+	  position: absolute;
+	  top: -45px;
+	  right: 13px;
       i {
         font-size: 38px;
         position: relative;

@@ -9,7 +9,8 @@
 				</div>
 			</div>
             <transition enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
-            <ctrl
+            <ctrl 
+				:howMany="howMany"
 				:isShowCtrl="isShowCtrl"
 				:message="message"
                 @handleSide="handleSide"
@@ -41,6 +42,7 @@
                 @barrageTrue="() => (barrage = true)"
                 @barrageFalse="() => (barrage = false)"
                 @selectSlide="(num) => slideCount = num"
+				@setDef="setDef"
                 ></ctrl>
            </transition>
 			<div class="leftBig_box" ref="setBox" :style="`max-width: ${max_width};`">
@@ -176,6 +178,11 @@
 
         },
         created() {
+			if(!sessionStorage.getItem('reloadStatus')){
+				sessionStorage.setItem('reloadStatus',true)
+				window.location.reload();
+			}
+			
             antiquity.on("getMsg", (msg) => {
 				console.log(msg)
 				msg.time = this._time()
@@ -202,21 +209,6 @@
                         return item;
                     }
                 }).length;
-				// if(this.peopleNum >=2){
-				// 	this.isShowShare_ = false
-				// }
-				// if(this.peopleNum==3 && MeetingStatus){
-				// 	// alert(Date.parse(new Date()))
-				// 	let NowTime = Date.parse(new Date())
-				// 	let start3 = this.meetingInfo.start3 + 1800000
-				// 	// console.log(this.meetingInfo.start3)
-				// 	if(NowTime - start3 == 10000){
-				// 		this.endMeeting = 1
-				// 		setInterval(()=>{
-				// 			this.ten - 1000
-				// 		},1000)
-				// 	}
-				// }
 				if(this.meetingInfo.start){
 					clearInterval(this.destroy_timer)
 					this.destroy_timer = setInterval(() => {
@@ -242,21 +234,22 @@
 			    // console.log(msg)
 				// if(this.countDown == '' && localStorage.getItem('countDown') == null){
 					if(msg == 2008){//还剩10分钟会议结束
-					console.log(antiquity.getLostTime())
-						if(this.NOtenTimer == 0){
-							this.NOtenTimer = 1
-							this.countDown = antiquity.getLostTime()
-							this.tenFENTimer = setInterval(()=>{
-								this.countDown --
-								console.log('十分钟倒计时',this.countDown)
-							},1000)
-							this.endMeeting = 1
-						}
+						console.log(antiquity.getLostTime())
+						// if(this.NOtenTimer == 0){
+						// 	this.NOtenTimer = 1
+						// 	this.countDown = antiquity.getLostTime()
+						// 	this.tenFENTimer = setInterval(()=>{
+						// 		this.countDown --
+						// 		console.log('十分钟倒计时',this.countDown)
+						// 	},1000)
+						// 	this.endMeeting = 1
+						// }
 					}
 				// }
 			});
             this.$nextTick(() => {
                 antiquity.on('getToast', msg => {
+					console.log(111111111111111,this.meetingInfo)
                     this.$Toast.success({message: msg});
 					if(msg == "会议结束了" || msg == "管理员关闭了该会议室" || msg == "余额不足，会议室已关闭"){//30分钟体验时间到了，关闭会议室
 						clearInterval(this.tenFENTimer)
@@ -392,11 +385,19 @@
             },
         },
         methods: {
+			setDef(def){
+				console.log(antiquity)
+				antiquity.setDef({
+					def:def
+				})
+				// .then(res => {
+				// 	alert(res)
+				// })
+			},
 			//判断浏览器种类函数-处理兼容性
 			myBrowser(){
 			    var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
 			    if (userAgent.indexOf("Safari") > -1) {
-					
 			        return "Safari";
 			    } //判断是否Safari浏览器
 			},

@@ -3,8 +3,8 @@
     <h3>{{ confirmTitle }}</h3>
     <h4>{{ confirmText }}</h4>
     <div class="confirm_btn">
-      <button @click="cancel">取消</button>
-      <button class="affirm" @click="affirm">确认</button>
+      <button @click="cancel" style="margin-left:0px">取消</button>
+      <button class="affirm" style="margin-right:0px" @click="affirm">确认</button>
     </div>
   </div>
 </template>
@@ -40,9 +40,9 @@ export default {
   background: rgba(255, 255, 255, 1);
   border-radius: 8px;
   flex-direction: column;
-  .flex(flex-start, center);
+  .flex(center, center);
   h3 {
-    margin: 20px 0 12px 0;
+    margin: 0px 0 12px 0;
     font-size: 20px;
     font-weight: 500;
     color: rgba(51, 51, 51, 1);
@@ -56,7 +56,7 @@ export default {
     margin-top: 16px;
     button {
       background-color: #fff;
-      margin-left: 12px;
+      margin:0 6px;
       width: 100px;
       height: 32px;
       border-radius: 24px;

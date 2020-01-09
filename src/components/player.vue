@@ -10,7 +10,7 @@
             <div :id="`player_${data.uid}_ali`" ref="ali" class="vjs-tech"></div>
             <video :id="`player_${data.uid}_ks`" ref="ks"></video>
         </div>
-        <div :class="`${(data.camera === 0 && isPlay) || isShare ? 'hasCamera' : 'noCamera'}`">
+        <div :class="`${(data.camera === 0 && isPlay) || isShare ? 'hasCamera' : 'noCamera'} ${(isShare || !isPlay) && data.camera !== 1 ? 'deepBg' : ''}`">
             <img v-if="(isShare || !isPlay) && data.camera !== 1" src="https://182.61.17.228/common/logoGif.gif">
             <i v-if="data.camera === 1" class="font_family icon-camera-none" :class="`${(data.camera === 0 && isPlay) || isShare ? 'hasCamera' : '_noCamera'}`"></i>
         </div>
@@ -284,6 +284,9 @@
 		}
 	}
     .noCamera {
+        &.deepBg {
+            background-color: #343D4F;
+        }
         position: absolute;
         top: 0;
         left: 0;

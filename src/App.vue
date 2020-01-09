@@ -8,82 +8,83 @@
 					<div class="timeUseUP_btn" @click="LeaveMeeting()">退出会议 {{countDown}}s</div>
 				</div>
 			</div>
+            <div class="breakLine" v-if="breakLine">
+                您的网络已断开，请检查网络设置
+            </div>
             <transition enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
-            <ctrl 
-				:howMany="howMany"
-				:isShowCtrl="isShowCtrl"
-				:message="message"
-                @handleSide="handleSide"
-				:timer="timer"
-                :data="meetingInfo"
-                :peopleNum="peopleNum"
-                :micNum="micNum"
-                :showSide="isShowSide"
-                :changeScreen="changeScreen"
-                :showMessage="isShowMessage"
-                :ShowShare="isShowShare"
-                :showParty="isShowParty"
-                :playerNum="playerNum"
-                :barrage="barrage"
-                :maxSlide="maxSlide"
-                :shareData="shareData"
-                :slideCount="slideCount"
-				:speaker="speaker"
-				:msgBox="msgBox"
-				:inviteHint=invite_hint
-                @handleMessage="handleMessage"
-                @ShowShare="ShowShare"
-                @handleParty="handleParty"
-                @prevSlide="prevSlide"
-                @nextSlide="nextSlide"
-                @LeaveMeeting="LeaveMeeting"
-                @selectNine="() => (playerNum = 9)"
-                @selectFour="() => (playerNum = 4)"
-                @barrageTrue="() => (barrage = true)"
-                @barrageFalse="() => (barrage = false)"
-                @selectSlide="(num) => slideCount = num"
-				@setDef="setDef"
-                ></ctrl>
-           </transition>
+                <ctrl
+                    :isShowCtrl="isShowCtrl"
+                    :message="message"
+                    @handleSide="handleSide"
+                    :timer="timer"
+                    :data="meetingInfo"
+                    :peopleNum="peopleNum"
+                    :micNum="micNum"
+                    :showSide="isShowSide"
+                    :changeScreen="changeScreen"
+                    :showMessage="isShowMessage"
+                    :ShowShare="isShowShare"
+                    :showParty="isShowParty"
+                    :playerNum="playerNum"
+                    :barrage="barrage"
+                    :maxSlide="maxSlide"
+                    :shareData="shareData"
+                    :slideCount="slideCount"
+                    :speaker="speaker"
+                    :msgBox="msgBox"
+                    :inviteHint=invite_hint
+                    @handleMessage="handleMessage"
+                    @ShowShare="ShowShare"
+                    @handleParty="handleParty"
+                    @prevSlide="prevSlide"
+                    @nextSlide="nextSlide"
+                    @LeaveMeeting="LeaveMeeting"
+                    @selectNine="() => (playerNum = 9)"
+                    @selectFour="() => (playerNum = 4)"
+                    @barrageTrue="() => (barrage = true)"
+                    @barrageFalse="() => (barrage = false)"
+                    @selectSlide="(num) => slideCount = num"
+                    ></ctrl>
+            </transition>
 			<div class="leftBig_box" ref="setBox" :style="`max-width: ${max_width};`">
-					<div :class="`playerBigBox ${howMany} `" ref="playerBigBox">
-						<!-- 自己的推流  v-if="howMany != 'two'&&howMany != 'fir'"-->
-					    <div :class="`dragBox ${mineFlag}`" style="display: flex;">
-							<div class="end_speaker" @click="setSpeaker()" v-if="meetingInfo.mine.speaker == 1">
-								<i class="font_family icon-jieshuzhujiang"></i>
-								<span>结束主讲</span>
-							</div>
-							<div class="set_height"></div>
-							<div class="set_myBox">
-								<player-status :data="meetingInfo.mine"></player-status>
-								<div class="my_plugFlow">
-									<div class="drag" ref="draggable">
-										<div v-if="meetingInfo.mine.camera === 1" :class="`${meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
-											<!-- <img src="https://182.61.17.228/common/logoGif.gif"> -->
-											<div class="waiting"><i class="font_family icon-camera-none"></i></div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- <div style="position: absolute;top: 0;left: 0;width: 100px;height: 100px;background: #FFFFFF;z-index: 1111111;">{{howMany}}</div> -->
-						<!-- 他人的 -->
-					    <player
-					            v-if="!(speakFlag || shareFlag)"
-					            v-for="item in nowPlayerNum"
-					            ref="players"
-					            :key="realMembers[playerNum * (realCount - 1) + item - 1].uid"
-					            :meetingInfo="meetingInfo"
-					            :hawMany="howMany"
-					            :data="realMembers[playerNum * (realCount - 1) + item - 1]">
-					    </player>
-						<div class="space playerBox" v-if="!(speakFlag || shareFlag)" v-for="item of playerNum - nowPlayerNum"></div>
-						<!-- 主讲人 -->
-						<template v-if="meetingInfo.mine.speaker !== 1">
-						    <player v-if="speakFlag && !shareFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
-						    <player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo" :isShare="true"></player>
-						</template>
-					</div>
+                <div :class="`playerBigBox ${howMany} `" ref="playerBigBox">
+                    <!-- 自己的推流  v-if="howMany != 'two'&&howMany != 'fir'"-->
+                    <div :class="`dragBox ${mineFlag}`" style="display: flex;">
+                        <div class="end_speaker" @click="setSpeaker()" v-if="meetingInfo.mine.speaker == 1">
+                            <i class="font_family icon-jieshuzhujiang"></i>
+                            <span>结束主讲</span>
+                        </div>
+                        <div class="set_height"></div>
+                        <div class="set_myBox">
+                            <player-status :data="meetingInfo.mine"></player-status>
+                            <div class="my_plugFlow">
+                                <div class="drag" ref="draggable">
+                                    <div v-if="meetingInfo.mine.camera === 1" :class="`${meetingInfo.mine.camera === 1 ? 'dragHasCamera' : ''}`">
+                                        <!-- <img src="https://182.61.17.228/common/logoGif.gif"> -->
+                                        <div class="waiting"><i class="font_family icon-camera-none"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div style="position: absolute;top: 0;left: 0;width: 100px;height: 100px;background: #FFFFFF;z-index: 1111111;">{{howMany}}</div> -->
+                    <!-- 他人的 -->
+                    <player
+                            v-if="!(speakFlag || shareFlag)"
+                            v-for="item in nowPlayerNum"
+                            ref="players"
+                            :key="realMembers[playerNum * (realCount - 1) + item - 1].uid"
+                            :meetingInfo="meetingInfo"
+                            :hawMany="howMany"
+                            :data="realMembers[playerNum * (realCount - 1) + item - 1]">
+                    </player>
+                    <div class="space playerBox" v-if="!(speakFlag || shareFlag)" v-for="item of playerNum - nowPlayerNum"></div>
+                    <!-- 主讲人 -->
+                    <template v-if="meetingInfo.mine.speaker !== 1">
+                        <player v-if="speakFlag && !shareFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
+                        <player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo" :isShare="true"></player>
+                    </template>
+                </div>
                 <div v-if="waiting" class="waiting"><i class="font_family icon-camera-none"></i></div>
             </div>
             <!-- <share :isShowShare_="isShowShare_" :shareData="shareData" @share_status="share_status"></share> -->
@@ -101,6 +102,12 @@
 					@handleMsg="handleMsg"
             ></side-box>
         </transition>
+        <div class="mask_app" v-if="!meetingShow">
+            <div class="mask_content">
+                <img src="https://182.61.17.228/common/somo_log.png">
+                <div class="text">当前浏览器无法使用flash插件<br>建议使用Google Chrome 65.0及以上版本的浏览器</div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -129,6 +136,7 @@
                         speaker: 0
                     }
                 },
+                meetingShow:true,
                 members: [],
                 peopleNum: 0,
                 micNum: 0,
@@ -139,7 +147,6 @@
                 isShowMessage: true,
                 isShowParty: true,
                 isShowShare: false,
-                // isShowShare_: false,
                 speaker: null,
                 sharer: null,
                 playerNum: 6,
@@ -162,7 +169,8 @@
 				invite_hint:1,
 				// leftHeight:'',
 				countDown:'',
-				NOtenTimer:0
+                NOtenTimer:0,
+                breakLine:false //断网
             };
         },
         beforeCreate() {
@@ -178,11 +186,11 @@
 
         },
         created() {
-			if(!sessionStorage.getItem('reloadStatus')){
-				sessionStorage.setItem('reloadStatus',true)
-				window.location.reload();
-			}
-			
+            console.log("浏览器数据：~~~~",antiquity.getBrowserInfo)
+            if(Boolean(antiquity.getBrowserInfo.match(/firefox/gi)) || Boolean(antiquity.getBrowserInfo.match(/msie/gi)) || Boolean(antiquity.getBrowserInfo.match(/opera/gi))){
+                this.meetingShow = false;
+                return false
+            }
             antiquity.on("getMsg", (msg) => {
 				console.log(msg)
 				msg.time = this._time()
@@ -234,16 +242,16 @@
 			    // console.log(msg)
 				// if(this.countDown == '' && localStorage.getItem('countDown') == null){
 					if(msg == 2008){//还剩10分钟会议结束
-						console.log(antiquity.getLostTime())
-						// if(this.NOtenTimer == 0){
-						// 	this.NOtenTimer = 1
-						// 	this.countDown = antiquity.getLostTime()
-						// 	this.tenFENTimer = setInterval(()=>{
-						// 		this.countDown --
-						// 		console.log('十分钟倒计时',this.countDown)
-						// 	},1000)
-						// 	this.endMeeting = 1
-						// }
+					console.log(antiquity.getLostTime())
+						if(this.NOtenTimer == 0){
+							this.NOtenTimer = 1;
+							this.countDown = antiquity.getLostTime();
+							this.tenFENTimer = setInterval(()=>{
+								this.countDown --;
+								console.log('十分钟倒计时',this.countDown)
+							},1000)
+							// this.endMeeting = 1
+						}
 					}
 				// }
 			});
@@ -252,23 +260,27 @@
 					console.log(111111111111111,this.meetingInfo)
                     this.$Toast.success({message: msg});
 					if(msg == "会议结束了" || msg == "管理员关闭了该会议室" || msg == "余额不足，会议室已关闭"){//30分钟体验时间到了，关闭会议室
-						clearInterval(this.tenFENTimer)
+						clearInterval(this.tenFENTimer);
 						this.LeaveMeeting()
-						
+
 					}
                 });
             })
 
         },
 		destroyed(){
-			clearInterval(this.destroy_timer)
+			clearInterval(this.destroy_timer);
 			clearInterval(this.tenFENTimer)
 		},
         async mounted() {
+            if(Boolean(antiquity.getBrowserInfo.match(/firefox/gi)) || Boolean(antiquity.getBrowserInfo.match(/msie/gi)) || Boolean(antiquity.getBrowserInfo.match(/opera/gi))){
+                this.meetingShow = false;
+                return false
+            }
 			// alert(parseInt(antiquity.getLostTime()/1000))
 			// this.leftHeight = document.getElementsByClassName('leftBig_box')[0].offsetWidth
 			// document.getElementsByClassName('leftBig_box').style.width = '100px'
-			
+
 			// this.countDown = localStorage.getItem('countDown')
 			// this.tenFENTimer = setInterval(()=>{
 			// 	// this.endMeeting = 1
@@ -282,10 +294,12 @@
 			};
             window.addEventListener('offline', () => {
                 //网络由正常常到异常时触发
+                this.breakLine = true;
                 this.$Toast.success({message: '您的网络已断开，请检查网络设置。'})
             });
             window.addEventListener('online', () => {
                 //从异常到正常时触发
+                this.breakLine = false
                 this.$Toast.success({message: '正常尝试连接网络中，请稍等~'})
                 window.location.reload();
             });
@@ -364,7 +378,7 @@
 				if (this.membersNum >= 3){
 					this.playerNum = 4
 					return 'four';
-				} 
+				}
                 return 'fir'
             },
             realCount() {//不算主讲和分屏，剩余多少分屏
@@ -899,5 +913,50 @@
         width: 100% !important;
         height: 100% !important;
     }
-
+    .mask_app{
+        z-index: 10000;
+        background-color: #2E2E2E;
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        left: 0;
+        top: 0;
+        // .flex(center, center);
+        .mask_content{
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            flex-direction: column;
+            .flex(center, center);
+            img{
+                width: 148px;
+                height: 39px;
+            }
+            .text{
+                margin-top: 172px;
+                text-align: center;
+                font-size:18px;
+                font-weight:400;
+                color:rgba(255,255,255,1);
+                line-height:30px;
+            }
+        }
+    }
+    .breakLine{
+        position: absolute;
+        top: 38px;
+        left: 50%;
+        transform: translateX(-50%);
+        width:310px;
+        height:44px;
+        background:rgba(255,255,255,1);
+        border-radius:0px 0px 6px 6px ;
+        font-size:18px;
+        font-weight:400;
+        color:rgba(255,96,89,1);
+        line-height:44px;
+        text-align: center;
+        z-index: 100;
+    }
 </style>

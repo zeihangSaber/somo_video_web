@@ -10,9 +10,9 @@
             <div :id="`player_${data.uid}_ali`" ref="ali" class="vjs-tech"></div>
             <video :id="`player_${data.uid}_ks`" ref="ks"></video>
         </div>
-        <div :class="`${(data.camera === 0 && isPlay) || isShare ? 'hasCamera' : 'noCamera'} ${(isShare || !isPlay) && data.camera !== 1 ? 'deepBg' : ''}`">
+        <div :class="`${(data.camera === 0 && isPlay) ? 'hasCamera' : 'noCamera'} ${(isShare || !isPlay) && data.camera !== 1 ? 'deepBg' : ''}`">
             <img v-if="(isShare || !isPlay) && data.camera !== 1" src="https://182.61.17.228/common/logoGif.gif">
-            <i v-if="data.camera === 1" class="font_family icon-camera-none"></i>
+            <i v-if="data.camera === 1" class="font_family icon-camera-none" :class="`${(data.camera === 0 && isPlay) || isShare ? 'hasCamera' : '_noCamera'}`"></i>
         </div>
         <div class="holder"></div>
     </div>
@@ -160,8 +160,9 @@
                     this.player = window['ksplayer'](`player_${this.data.uid}_ks`, {
                         controls: false,
                         autoplay: true,
-                        preload: true,
-                        isLive: true,
+                        preload: "auto",
+                        MediaLoader: false,
+                        ErrorDisplay: false,
                         poster: 'https://182.61.17.228/common/poster.png'
                     }, () => {
                         console.log('播放器准备完毕~~~~~~~~~~~~~~~~~~');
@@ -172,7 +173,9 @@
             },
             ksInit() {
 
-                this.player.src({type: 'rtmp', src: this.src});
+                // this.player.src({type: 'rtmp/flv', src: this.src});
+                // this.player.src("https://media.w3.org/2010/05/sintel/trailer.mp4");
+                // this.player.src("https://cn-zjwz-dx-v-09.bilivideo.com/upgcxcode/97/10/141021097/141021097-1-30015.m4s?expires=1578556200&platform=pc&ssig=v6lhFBsGPf8SP9a_SqnVLQ&oi=463103465&trid=fd5ecde82b964961b6adb2c3f5bf2c1eu&nfc=1&nfb=maPYqpoel5MI3qOUX6YpRA==&mid=17946327");
 
                 clearTimeout(this.timer);
 
@@ -186,9 +189,9 @@
                 this.player.on("loadeddata", () => {
                     clearTimeout(this.timer);
                     console.log('获取到第一帧~~~~~~~~~~~~~~~~');
-                    this.$nextTick(() => {
-                        this.player.bufferTimeMax(0.8);
-                    });
+                    // this.$nextTick(() => {
+                    //     this.player.bufferTimeMax(3);
+                    // });
                     this.isPlay = true;
                     this.player.play();
                 });
@@ -199,6 +202,21 @@
                     this.reset()
                 });
 
+                // this.player.on("waiting", (...res) => {
+                //     console.log("waiting~~~~~~~~~~~~~~~~~~~~~~~", res);
+                // });
+                //
+                // this.player.on("seeking", (...res) => {
+                //     console.log("seeking~~~~~~~~~~~~~~~~~~~~~~~", res);
+                // });
+                //
+                // this.player.on("durationchange", (...res) => {
+                //     console.log("durationchange~~~~~~~~~~~~~~~~~~~~~~~", res);
+                // });
+                //
+                // this.player.on("timeupdate", (...res) => {
+                //     // console.log("timeupdate~~~~~~~~~~~~~~~~~~~~~~~", res);
+                // });
 
             },
             handleNet() {
@@ -206,8 +224,11 @@
                 this.interval = setInterval(() => {
                     const res = this.player.networkState();
                     const State = this.player.readyState();
-                    console.log('player net~~~~~~~~~~~~~~~', State);
-
+                    console.log('player readyState networkState~~~~~~~~~~~~~~~', State, res);
+                    console.log('player networkState~~~~~~~~~~~~~~~', State);
+                    console.log('player buffered~~~~~~~~~~~~~~~', this.player.buffered().end(0));
+                    console.log('player bufferedEnd~~~~~~~~~~~~~~~', this.player.bufferedEnd());
+                    console.log('player bufferedPercent~~~~~~~~~~~~~~~', this.player.bufferedPercent());
                     if (res === 3) {
                         console.log('~~~~~~~~~~~~~~~~~~~~hei hei');
                         this.reset();
@@ -218,7 +239,7 @@
         beforeDestroy() {
             clearInterval(this.interval);
             clearTimeout(this.timer);
-            this.data.uid !== this.meetingInfo.mine.uid && this.player && this.player.dispose();
+            this.player && this.player.dispose();
         }
     };
 </script>
@@ -269,6 +290,20 @@
     .hasCamera {
         display: none;
     }
+	._noCamera{
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 2;
+		background-color: #444;
+		width: 100%;
+		height: 100%;
+		.flex(center, center);
+		.icon-camera-none {
+		    font-size: 80px;
+		    color: #666;
+		}
+	}
     .noCamera {
         &.deepBg {
             background-color: #343D4F;
@@ -277,7 +312,7 @@
         top: 0;
         left: 0;
         z-index: 2;
-        background-color: #444;
+        background-color: #343D4F;
         width: 100%;
         height: 100%;
         .flex(center, center);
@@ -302,7 +337,7 @@
         }
     }
     .vjs-playing {
-        width: 133.33333%;
-        height: 133.33333%;
+        width: 100%;
+        height: 100%;
     }
 </style>

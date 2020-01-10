@@ -81,8 +81,8 @@
                     <div class="space playerBox" v-if="!(speakFlag || shareFlag)" v-for="item of playerNum - nowPlayerNum"></div>
                     <!-- 主讲人 -->
                     <template v-if="meetingInfo.mine.speaker !== 1">
-                        <player v-if="speakFlag && !shareFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
-                        <player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo" :isShare="true"></player>
+                        <player v-if="speakFlag && !shareFlag" :data="speaker" :meetingInfo="meetingInfo" :hawMany="howMany"></player>
+                        <player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo" :isShare="true" :hawMany="howMany"></player>
                     </template>
                 </div>
                 <div v-if="waiting" class="waiting"><i class="font_family icon-camera-none"></i></div>
@@ -326,15 +326,15 @@
 			},
 			isShowMessage(){
 				if(!this.isShowMessage && !this.isShowParty){
-					let height = document.body.clientHeight - 36
-					this.max_width = height/9*16 + 'px'
+					let height = document.body.clientHeight - 36;
+					this.max_width = height/9*16 + 'px';
 					console.log(this.max_width)
 				}
 			},
 			isShowParty(){
 				if(!this.isShowMessage && !this.isShowParty){
-					let height = document.body.clientHeight - 36
-					this.max_width = height/9*16 + 'px'
+					let height = document.body.clientHeight - 36;
+					this.max_width = height/9*16 + 'px';
 					console.log(this.max_width)
 				}
 			},
@@ -379,7 +379,7 @@
                 if (this.playerNum === 4) return 'four';
                 if (this.playerNum === 9) return 'nine';
 				if (this.membersNum >= 3){
-					this.playerNum = 4
+					this.playerNum = 4;
 					return 'four';
 				}
                 return 'fir'

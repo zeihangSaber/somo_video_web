@@ -48,6 +48,9 @@ export default {
     color: rgba(51, 51, 51, 1);
   }
   h4 {
+    word-wrap: break-word;
+    white-space: normal;
+    word-break: break-all;
     font-size: 16px;
     font-weight: 400;
     color: rgba(102, 102, 102, 1);

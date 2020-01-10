@@ -263,7 +263,6 @@
 					if(msg == "会议结束了" || msg == "管理员关闭了该会议室" || msg == "余额不足，会议室已关闭"){//30分钟体验时间到了，关闭会议室
 						clearInterval(this.tenFENTimer);
 						this.LeaveMeeting()
-
 					}
                 });
             })
@@ -297,13 +296,13 @@
                 //网络由正常常到异常时触发
                 this.offlineTime = Date.parse(new Date())
                 this.breakLine = true;
-                this.$Toast.success({message: '您的网络已断开，请检查网络设置。'})
+                // this.$Toast.success({message: '您的网络已断开，请检查网络设置。'})
             });
             window.addEventListener('online', () => {
                 //从异常到正常时触发
                 this.breakLine = false
                 this.$Toast.success({message: '正常尝试连接网络中，请稍等~'})
-                if((Date.parse(new Date())-this.offlineTime)/1000 >= 15){
+                if((Date.parse(new Date())-this.offlineTime)/1000 >= 13){
                     window.location.reload();
                 }
             });
@@ -601,9 +600,17 @@
                             }
                             this.waiting = false;
                         });
-                        console.log(antiquity)
+                        console.log('antiquity',this.meetingInfo)
                         console.log("myMic,myCamera",myCamera,myMic)
-                    antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
+                        if(this.meetingInfo.hasCam && this.meetingInfo.hasMic){
+                            antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
+                        }else if (!this.meetingInfo.hasCam && this.meetingInfo.hasMic){
+                            antiquity.publish('' , false, myMic);
+                        }else if (this.meetingInfo.hasCam && !this.meetingInfo.hasMic){
+                            antiquity.publish(this.meetingInfo.video_url, myCamera, false);
+                        }else if (!this.meetingInfo.hasCam && !this.meetingInfo.hasMic){
+                            antiquity.publish('', false, false);
+                        }
                 });
             },
 

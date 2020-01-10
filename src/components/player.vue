@@ -6,20 +6,25 @@
     >
         <player-status :data="data" :isShare="isShare"></player-status>
         <div class="grail" ref="grail">
-            <div :id="`player_${data.uid}_tc`" class="vjs-tech"></div>
-            <div :id="`player_${data.uid}_ali`" ref="ali" class="vjs-tech"></div>
-            <video :id="`player_${data.uid}_ks`" ref="ks"></video>
+<!--            <div :id="`player_${data.uid}_tc`" class="vjs-tech"></div>-->
+<!--            <div :id="`player_${data.uid}_ali`" ref="ali" class="vjs-tech"></div>-->
+<!--            <video :id="`player_${data.uid}_ks`" ref="ks"></video>-->
+            <object>
+                <embed ref="saber" src="./Player.swf" bgcolor="#999999" quality="high"
+                       width="1260" height="720" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>
+            </object>
         </div>
-        <div :class="`${(data.camera === 0 && isPlay) || isShare ? 'hasCamera' : 'noCamera'} ${(isShare || !isPlay) && data.camera !== 1 ? 'deepBg' : ''}`">
-            <img v-if="(isShare || !isPlay) && data.camera !== 1" src="https://182.61.17.228/common/logoGif.gif">
-            <i v-if="data.camera === 1" class="font_family icon-camera-none" :class="`${(data.camera === 0 && isPlay) || isShare ? 'hasCamera' : '_noCamera'}`"></i>
-        </div>
+<!--        <div :class="`${(data.camera === 0 && isPlay) ? 'hasCamera' : 'noCamera'} ${(isShare || !isPlay) && data.camera !== 1 ? 'deepBg' : ''}`">-->
+<!--            <img v-if="(isShare || !isPlay) && data.camera !== 1" src="https://182.61.17.228/common/logoGif.gif">-->
+<!--            <i v-if="data.camera === 1" :class="`font_family icon-camera-none ${(data.camera === 0 && isPlay) || isShare ? 'hasCamera' : '_noCamera'}`"></i>-->
+<!--        </div>-->
         <div class="holder"></div>
     </div>
 </template>
 
 <script>
     import playerStatus from "./playerStatus";
+    import RtmpStreamer from "rtmp-streamer";
     export default {
         props: {
             data: {
@@ -52,6 +57,9 @@
         watch: {
             src() {
                 this.reset()
+            },
+            howMany() {
+                this.reset()
             }
         },
         computed: {
@@ -65,16 +73,17 @@
                 // this.tcPlayer();
                 // this.Aliplayer();
                 // this.createVideo();
-                this.ksPlayer();
+                // this.ksPlayer();
+                this.rtmpPlayer();
                 console.log('================', this.src)
             });
         },
         methods: {
             reset() {
-                if (this.data.uid === this.meetingInfo.mine.uid) return;
-                this.player && this.player.reset();
-                this.isPlay = false;
-                this.ksInit();
+                // if (this.data.uid === this.meetingInfo.mine.uid) return;
+                // this.player && this.player.reset();
+                // this.isPlay = false;
+                // this.ksInit();
             },
             createVideo() {
                 if (this.data.uid === this.meetingInfo.mine.uid) return;
@@ -102,6 +111,16 @@
                         this.src && this.player.replay();
                     });
                 });
+            },
+            rtmpPlayer() {
+                setTimeout(() => {
+                    this.player = new RtmpStreamer(this.$refs.saber);
+                }, 300);
+                setTimeout(() => {
+                    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~haha');
+                    let ss = this.src.split("/ppt/");
+                    this.player.play(`${ss[0]}/ppt/`, ss[1]);
+                }, 600);
             },
             Aliplayer() {
                 this.$nextTick(() => {
@@ -160,8 +179,10 @@
                     this.player = window['ksplayer'](`player_${this.data.uid}_ks`, {
                         controls: false,
                         autoplay: true,
-                        preload: true,
-                        isLive: true,
+                        preload: "auto",
+                        MediaLoader: false,
+                        ErrorDisplay: false,
+                        loop: true,
                         poster: 'https://182.61.17.228/common/poster.png'
                     }, () => {
                         console.log('播放器准备完毕~~~~~~~~~~~~~~~~~~');
@@ -172,7 +193,9 @@
             },
             ksInit() {
 
-                this.player.src({type: 'rtmp', src: this.src});
+                this.player.src({type: 'rtmp/flv', src: this.src});
+                // this.player.src("https://media.w3.org/2010/05/sintel/trailer.mp4");
+                // this.player.src("https://cn-zjwz-dx-v-09.bilivideo.com/upgcxcode/97/10/141021097/141021097-1-30015.m4s?expires=1578556200&platform=pc&ssig=v6lhFBsGPf8SP9a_SqnVLQ&oi=463103465&trid=fd5ecde82b964961b6adb2c3f5bf2c1eu&nfc=1&nfb=maPYqpoel5MI3qOUX6YpRA==&mid=17946327");
 
                 clearTimeout(this.timer);
 
@@ -186,9 +209,9 @@
                 this.player.on("loadeddata", () => {
                     clearTimeout(this.timer);
                     console.log('获取到第一帧~~~~~~~~~~~~~~~~');
-                    this.$nextTick(() => {
-                        this.player.bufferTimeMax(0.8);
-                    });
+                    // this.$nextTick(() => {
+                    //     this.player.bufferTimeMax(3);
+                    // });
                     this.isPlay = true;
                     this.player.play();
                 });
@@ -196,9 +219,24 @@
                 this.player.on("error", () => {
                     console.log('播放器报错，重置~~~~~~~~~~~~~~~~');
                     this.isPlay = false;
-                    this.reset()
+                    // this.reset()
                 });
 
+                // this.player.on("waiting", (...res) => {
+                //     console.log("waiting~~~~~~~~~~~~~~~~~~~~~~~", res);
+                // });
+                //
+                // this.player.on("seeking", (...res) => {
+                //     console.log("seeking~~~~~~~~~~~~~~~~~~~~~~~", res);
+                // });
+                //
+                // this.player.on("durationchange", (...res) => {
+                //     console.log("durationchange~~~~~~~~~~~~~~~~~~~~~~~", res);
+                // });
+                //
+                // this.player.on("timeupdate", (...res) => {
+                //     // console.log("timeupdate~~~~~~~~~~~~~~~~~~~~~~~", res);
+                // });
 
             },
             handleNet() {
@@ -206,8 +244,11 @@
                 this.interval = setInterval(() => {
                     const res = this.player.networkState();
                     const State = this.player.readyState();
-                    console.log('player net~~~~~~~~~~~~~~~', State);
-
+                    console.log('player readyState networkState~~~~~~~~~~~~~~~', State, res);
+                    // console.log('player networkState~~~~~~~~~~~~~~~', State);
+                    // console.log('player buffered~~~~~~~~~~~~~~~', this.player.buffered().end(0));
+                    // console.log('player bufferedEnd~~~~~~~~~~~~~~~', this.player.bufferedEnd());
+                    // console.log('player bufferedPercent~~~~~~~~~~~~~~~', this.player.bufferedPercent());
                     if (res === 3) {
                         console.log('~~~~~~~~~~~~~~~~~~~~hei hei');
                         this.reset();
@@ -218,7 +259,7 @@
         beforeDestroy() {
             clearInterval(this.interval);
             clearTimeout(this.timer);
-            this.data.uid !== this.meetingInfo.mine.uid && this.player && this.player.dispose();
+            this.player && this.player.dispose();
         }
     };
 </script>

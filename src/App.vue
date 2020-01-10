@@ -82,8 +82,8 @@
                     <div class="space playerBox" v-if="!(speakFlag || shareFlag)" v-for="item of playerNum - nowPlayerNum"></div>
                     <!-- 主讲人 -->
                     <template v-if="meetingInfo.mine.speaker !== 1">
-                        <player v-if="speakFlag && !shareFlag" :data="speaker" :meetingInfo="meetingInfo"></player>
-                        <player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo" :isShare="true"></player>
+                        <player v-if="speakFlag && !shareFlag" :data="speaker" :meetingInfo="meetingInfo" :hawMany="howMany"></player>
+                        <player v-if="shareFlag" :data="sharer" :meetingInfo="meetingInfo" :isShare="true" :hawMany="howMany"></player>
                     </template>
                 </div>
                 <div v-if="waiting" class="waiting"><i class="font_family icon-camera-none"></i></div>
@@ -174,6 +174,8 @@
                 breakLine:false ,//断网
 				TenSeconds:10,
 				myTime:1000
+                offlineTime:''
+
             };
         },
         beforeCreate() {
@@ -212,7 +214,6 @@
 				}
             });
             antiquity.on('getMidInfo', meetingInfo => {
-				console.log('xxxxxx',meetingInfo)
                 this.meetingInfo = meetingInfo;
             });
             antiquity.on('getMembers', members => {
@@ -279,9 +280,9 @@
 							this.TenSeconds -- 
 						},1000)
 						clearInterval(this.tenFENTimer);
-						// setTimeout(()=>{
-						// 	this.LeaveMeeting()
-						// },10000)
+						setTimeout(()=>{
+							this.LeaveMeeting()
+						},10000)
 
 					}else{
 						this.$Toast.success({message: msg});
@@ -309,14 +310,17 @@
 			};
             window.addEventListener('offline', () => {
                 //网络由正常常到异常时触发
+                this.offlineTime = Date.parse(new Date())
                 this.breakLine = true;
-                this.$Toast.success({message: '您的网络已断开，请检查网络设置。'})
+                // this.$Toast.success({message: '您的网络已断开，请检查网络设置。'})
             });
             window.addEventListener('online', () => {
                 //从异常到正常时触发
                 this.breakLine = false
                 this.$Toast.success({message: '正常尝试连接网络中，请稍等~'})
-                window.location.reload();
+                if((Date.parse(new Date())-this.offlineTime)/1000 >= 13){
+                    window.location.reload();
+                }
             });
             this.$nextTick(() => {
                 this.init();
@@ -339,15 +343,15 @@
 			},
 			isShowMessage(){
 				if(!this.isShowMessage && !this.isShowParty){
-					let height = document.body.clientHeight - 36
-					this.max_width = height/9*16 + 'px'
+					let height = document.body.clientHeight - 36;
+					this.max_width = height/9*16 + 'px';
 					console.log(this.max_width)
 				}
 			},
 			isShowParty(){
 				if(!this.isShowMessage && !this.isShowParty){
-					let height = document.body.clientHeight - 36
-					this.max_width = height/9*16 + 'px'
+					let height = document.body.clientHeight - 36;
+					this.max_width = height/9*16 + 'px';
 					console.log(this.max_width)
 				}
 			},
@@ -507,10 +511,12 @@
 						document.mozCancelFullScreen();
 					} else if (document.webkitCancelFullScreen) {
 						document.webkitCancelFullScreen();
-					}
+                    }
+                    // antiquity.rtmp.reset()
 					this.changeScreen = false;
 
 				} else {
+                    // antiquity.rtmp.reset()
 					this.changeScreen = true;
 					const el = document.documentElement;
                     const rfs = el.requestFullscreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullScreen;
@@ -618,9 +624,17 @@
                             }
                             this.waiting = false;
                         });
-                        console.log(antiquity)
+                        console.log('antiquity',this.meetingInfo)
                         console.log("myMic,myCamera",myCamera,myMic)
-                    antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
+                        if(this.meetingInfo.hasCam && this.meetingInfo.hasMic){
+                            antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
+                        }else if (!this.meetingInfo.hasCam && this.meetingInfo.hasMic){
+                            antiquity.publish('' , false, myMic);
+                        }else if (this.meetingInfo.hasCam && !this.meetingInfo.hasMic){
+                            antiquity.publish(this.meetingInfo.video_url, myCamera, false);
+                        }else if (!this.meetingInfo.hasCam && !this.meetingInfo.hasMic){
+                            antiquity.publish('', false, false);
+                        }
                 });
             },
 
@@ -882,7 +896,7 @@
         overflow: hidden;
     }
 
-    .vjs-tech>object {
+    object {
         transform: translateZ(0) !important;
     }
 
@@ -935,7 +949,8 @@
     .video-js {
         width: 100% !important;
         height: 100% !important;
-    }
+		transform: translateZ(0) !important;
+	}
     .mask_app{
         z-index: 10000;
         background-color: #2E2E2E;

@@ -170,7 +170,9 @@
 				// leftHeight:'',
 				countDown:'',
                 NOtenTimer:0,
-                breakLine:false //断网
+                breakLine:false ,//断网
+                offlineTime:''
+
             };
         },
         beforeCreate() {
@@ -205,7 +207,6 @@
 				}
             });
             antiquity.on('getMidInfo', meetingInfo => {
-				console.log('xxxxxx',meetingInfo)
                 this.meetingInfo = meetingInfo;
             });
             antiquity.on('getMembers', members => {
@@ -294,6 +295,7 @@
 			};
             window.addEventListener('offline', () => {
                 //网络由正常常到异常时触发
+                this.offlineTime = Date.parse(new Date())
                 this.breakLine = true;
                 this.$Toast.success({message: '您的网络已断开，请检查网络设置。'})
             });
@@ -301,7 +303,9 @@
                 //从异常到正常时触发
                 this.breakLine = false
                 this.$Toast.success({message: '正常尝试连接网络中，请稍等~'})
-                window.location.reload();
+                if((Date.parse(new Date())-this.offlineTime)/1000 >= 15){
+                    window.location.reload();
+                }
             });
             this.$nextTick(() => {
                 this.init();
@@ -484,10 +488,12 @@
 						document.mozCancelFullScreen();
 					} else if (document.webkitCancelFullScreen) {
 						document.webkitCancelFullScreen();
-					}
+                    }
+                    // antiquity.rtmp.reset()
 					this.changeScreen = false;
 
 				} else {
+                    // antiquity.rtmp.reset()
 					this.changeScreen = true;
 					const el = document.documentElement;
                     const rfs = el.requestFullscreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullScreen;

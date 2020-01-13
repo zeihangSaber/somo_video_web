@@ -1,19 +1,5 @@
 <template>
-    <div>
-        <object>
-            <embed
-                src="../Player.swf"
-                bgcolor="#999999"
-                quality="high"
-                ref="embed"
-                width="320"
-                height="240"
-                allowScriptAccess="always"
-                type="application/x-shockwave-flash"
-            >
-            </embed>
-        </object>
-    </div>
+    <div class="vjs-playing" ref="player"></div>
 </template>
 
 <script>
@@ -23,24 +9,76 @@
             data: {
                 default() {
                     return {
-
+                        mic: 0,
+                        name: "wait",
+                        role: -1,
+                        camera: 1,
+                        url: "rtmp://58.200.131.2:1935/livetv/hunantv"
                     }
-                }
-            }
+                },
+            },
+            isShare: false
         },
         data() {
             return {
-                player: null
+                player: null,
+                ref: `embed_${new Date().getTime()}`
+            }
+        },
+        computed: {
+            src() {
+                console.log(`~~~~~~~~~~~~~~~, 流地址发生变化`);
+                return this.isShare ? this.data.shareUrl : this.data.url
+            }
+        },
+        watch: {
+            src() {
+                this.reset();
             }
         },
         mounted() {
-            console.log('~~~~~~~~~~~~~~~~~~~~~~', this.data);
             setTimeout(() => {
-                this.player = new rtmpStreamer(this.$refs.embed);
-            }, 2000);
-            setTimeout(() => {
-                this.player.play("rtmp://rtmp2.video.somo.tech/video/", `${this.data.mid}U${this.data.uid}`)
-            }, 5000);
+                this.reset();
+            }, 100)
+        },
+        methods: {
+            reset() {
+                let object, embed;
+                this.player = null;
+                this.$refs.player.innerHTML = "";
+                object = document.createElement("object");
+                embed = document.createElement("embed");
+                embed.setAttribute("src", "./Player.swf");
+                embed.setAttribute("width", 480);
+                embed.setAttribute("height", 360);
+                embed.setAttribute("type", "application/x-shockwave-flash");
+                embed.setAttribute("quality", "high");
+                embed.setAttribute("bgcolor", "#444444");
+                embed.setAttribute("allowScriptAccess", "always");
+                object.appendChild(embed);
+                this.player = new rtmpStreamer(embed);
+                this.$refs.player.append(object);
+                setTimeout(() => {
+                    try {
+                        this.player.setScreenSize(480 * 1.05, 360 * 1.05);
+                        this.player.setScreenPosition(0, 0);
+                        this.player.setBufferTime(2);
+                        embed.setAttribute("width", "100%");
+                        embed.setAttribute("height", "100%");
+                        setTimeout(() => {
+                            if (this.isShare) {
+                                let src = this.src.split("/ppt/");
+                                this.player.play(`${src[0]}/ppt/`, src[1])
+                            } else {
+                                let src = this.src.split("/video/");
+                                this.player.play(`${src[0]}/video/`, src[1])
+                            }
+                        }, 100);
+                    } catch (e) {
+                        this.reset()
+                    }
+                }, 100);
+            }
         }
     }
 </script>

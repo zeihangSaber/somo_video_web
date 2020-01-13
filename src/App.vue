@@ -114,8 +114,11 @@
 <script>
     import animate from 'animate.css';
     import Player from './components/player';
-    import Ctrl from './components/controls';//左边的顶部和底部
-    import SideBox from './components/side';//右边模块的组件
+    // import Player from './components/myPlayer';
+    // 左边的顶部和底部
+    import Ctrl from './components/controls';
+    // 右边模块的组件
+    import SideBox from './components/side';
     // import share from './components/share';
     import playerStatus from "./components/playerStatus";
     import antiquity, {myDevice, myCookie, myMid, Password, MeetingStatus, myCamera, myMic} from './utils/Antiquity';
@@ -176,16 +179,15 @@
             };
         },
         beforeCreate() {
-				window.onbeforeunload = (e) => {
-					// if(this.joinStatus == 1){
-					// 	e.returnValue = ("确定离开当前页面吗？");
-					// }
-					// if(this.countDown != ''){//10分钟倒计时已经开始了
-					// 	clearInterval(this.tenFENTimer)
-					// 	localStorage.setItem('countDown',this.countDown)
-					// }
-				};
-
+            window.onbeforeunload = (e) => {
+                // if(this.joinStatus == 1){
+                // 	e.returnValue = ("确定离开当前页面吗？");
+                // }
+                // if(this.countDown != ''){//10分钟倒计时已经开始了
+                // 	clearInterval(this.tenFENTimer)
+                // 	localStorage.setItem('countDown',this.countDown)
+                // }
+            };
         },
         created() {
             console.log("浏览器数据：~~~~",antiquity.getBrowserInfo)

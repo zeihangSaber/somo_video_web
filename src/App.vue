@@ -173,7 +173,7 @@
                 NOtenTimer:0,
                 breakLine:false ,//断网
 				TenSeconds:10,
-				myTime:1000
+				myTime:1000,
                 offlineTime:''
 
             };

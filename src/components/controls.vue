@@ -226,7 +226,7 @@
 	  },
 	  watch:{
 		  countDown:function(){
-			  console.log(this.countDown)
+			  // console.log(this.countDown)
 			  let time1 = parseInt(this.countDown/60)
 			  let time2= this.countDown%60
 			  if(time1<10){

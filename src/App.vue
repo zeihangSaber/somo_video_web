@@ -255,7 +255,7 @@
 			    // console.log(msg)
 				// if(this.countDown == '' && localStorage.getItem('countDown') == null){
 					if(msg == 2008){//还剩10分钟会议结束
-					console.log(antiquity.getLostTime())
+					// console.log(antiquity.getLostTime())
 						if(this.NOtenTimer == 0){
 							this.NOtenTimer = 1;
 							this.countDown = antiquity.getLostTime();
@@ -264,7 +264,7 @@
 								if(this.countDown <= 0){
 									this.countDown = 0
 								}
-								console.log('十分钟倒计时',this.countDown)
+								// console.log('十分钟倒计时',this.countDown)
 							},1000)
 						}
 					}

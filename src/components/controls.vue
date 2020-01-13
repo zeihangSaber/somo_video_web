@@ -25,14 +25,15 @@
 					{{timer || '00:00:00'}}
 				</span>
 			</div>
-			<i class="font_family icon-wifi-high" style="font-size: 16px !important;"></i>
+			<!-- <i class="font_family icon-wifi-high" style="font-size: 16px !important;"></i> -->
 		</div>
 		<div v-show="isShowCtrl" :class="`ctrlLeft ${slideCount === 1 ? 'disable_' : ''}`" @click="$emit('prevSlide')" v-if="maxSlide > 1"><i class="font_family icon-left"></i></div>
 		<div v-show="isShowCtrl" :class="`ctrlRight ${slideCount === maxSlide ? 'disable_' : ''}`" @click="$emit('nextSlide')" v-if="maxSlide > 1"><i class="font_family icon-right"></i></div>
 		<div v-show="isShowCtrl" class="ctrlPoint" v-if="maxSlide > 1">
 			<div :class="`point ${index === slideCount ? 'active' : ''}`" v-for="index of maxSlide" @click="() => $emit('selectSlide', index)"></div>
 		</div>
-		<div  class="ctrlFooter">
+		<div  :class="isShowCtrl?'ctrlFooter':'ctrlFooter ctrlFooter_'">
+			<div v-if="countDown!=''" :class="isShowCtrl?'tenMinute':'tenMinute_'" >会议剩余时长:{{tentime}}</div>
 			<div v-show="isShowCtrl">
 				<i></i>
 				<div class="center">
@@ -192,11 +193,13 @@
 		  not_time: 1000,
 		  password:'',
 		  new_playerNum:'',
-		  setDef_:1
+		  setDef_:1,
 		  // sysAppIds:''
+		  tentime:''
 		};
 	  },
 	  props: [
+		"countDown",
 		"howMany",
 		"isShowCtrl",
 		"inviteHint",
@@ -222,6 +225,19 @@
 		  bulletScreen
 	  },
 	  watch:{
+		  countDown:function(){
+			  console.log(this.countDown)
+			  let time1 = parseInt(this.countDown/60)
+			  let time2= this.countDown%60
+			  if(time1<10){
+				time1 = '0' + time1
+			  }
+			  if(time2<10){
+			  	time2 = '0' + time2
+			  }
+			  this.tentime = time1 + ':' + time2
+			  // this.countDown = parseInt(this.countDown/60) + ':' + this.countDown - parseInt(this.countDown/60)*60
+		  },
 		  data:function(){
 			 console.log(this.data) 
 		  },
@@ -321,6 +337,40 @@
 
 <style lang="less" scoped>
 @import "../common/common";
+.tenMinute_{
+	width: 150px;
+	height: 36px;
+	padding: 8px 12px;
+	box-sizing: border-box;
+	background: rgba(0,0,0,0.6);
+	position: absolute;
+	bottom: 9px;
+	left: 0px;
+	font-size:14px;
+	font-family:PingFangSC-Regular,PingFang SC;
+	font-weight:400;
+	color:rgba(255,255,255,1);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.tenMinute{
+	width: 150px;
+	height: 36px;
+	padding: 8px 12px;
+	box-sizing: border-box;
+	background: rgba(0,0,0,0.6);
+	position: absolute;
+	top: -45px;
+	left: 0px;
+	font-size:14px;
+	font-family:PingFangSC-Regular,PingFang SC;
+	font-weight:400;
+	color:rgba(255,255,255,1);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
 .barrage_{
 	margin-left: 0;
 }
@@ -472,6 +522,9 @@
         background-color: rgba(216, 216, 216);
       }
     }
+  }
+  .ctrlFooter_{
+	  background: rgba(0,0,0,0) !important;
   }
   .ctrlFooter {
     padding: 0 20px;

@@ -173,7 +173,7 @@
                 NOtenTimer:0,
                 breakLine:false ,//断网
 				TenSeconds:10,
-				myTime:1000
+				myTime:1000,
                 offlineTime:''
 
             };
@@ -245,7 +245,7 @@
             antiquity.on('getShareUrl', sharer => {
                 this.sharer = sharer;
 				console.log('ooooo',this.meetingInfo)
-				
+
 				this.meeting_time(1)
             });
             antiquity.on('getSpeaker', speaker => {
@@ -277,7 +277,7 @@
 						console.log('开始显示倒计时')
 						this.endMeeting = 1
 						setInterval(()=>{
-							this.TenSeconds -- 
+							this.TenSeconds --
 						},1000)
 						clearInterval(this.tenFENTimer);
 						setTimeout(()=>{
@@ -362,7 +362,7 @@
 			// playerNum 几分屏
 			// members   成员
 			// slideCount几个切屏
-			
+
             realMembers() {
 			    console.log('既是主讲又分享了~~~~~~~~~~', this.speaker)
 			    if (this.speaker && this.sharer && this.speaker.shareUrl) return [this.speaker, ...this.members]

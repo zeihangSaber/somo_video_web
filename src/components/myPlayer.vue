@@ -3,7 +3,7 @@
 </template>
 
 <script>
-    import rtmpStreamer from 'rtmp-streamer'
+    import rtmpStreamer from 'rtmp-zeihang'
     export default {
         props: {
             data: {
@@ -77,7 +77,7 @@
                     } catch (e) {
                         this.reset()
                     }
-                }, 100);
+                }, 5000);
             }
         }
     }

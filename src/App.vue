@@ -198,10 +198,10 @@
             }
             antiquity.on("getMsg", (msg) => {
 				console.log(msg)
-				msg.time = this._time()
+				msg.time = this._time();
                 this.message.push(msg)
 				if(this.isShowMessage == false){
-					this.msgBox = ''
+					this.msgBox = '';
 					this.msgBox = [
 					    this.message[this.message.length - 3],
 					    this.message[this.message.length - 2],
@@ -240,7 +240,7 @@
             });
             antiquity.on('getShareUrl', sharer => {
                 this.sharer = sharer;
-				console.log('ooooo',this.meetingInfo)
+				console.log('ooooo',this.meetingInfo);
 
 				this.meeting_time(1)
             });
@@ -251,7 +251,7 @@
 			    // console.log(msg)
 				// if(this.countDown == '' && localStorage.getItem('countDown') == null){
 					if(msg == 2008){//还剩10分钟会议结束
-					// console.log(antiquity.getLostTime())
+						console.log(antiquity.getLostTime());
 						if(this.NOtenTimer == 0){
 							this.NOtenTimer = 1;
 							this.countDown = antiquity.getLostTime();
@@ -300,20 +300,20 @@
                 return false
             }
 			window.onresize = () => {
-				let height = document.body.clientHeight - 36
-				this.max_width = height/9*16 + 'px'
+				let height = document.body.clientHeight - 36;
+				this.max_width = height/9*16 + 'px';
 				console.log(this.max_width)
 			};
             window.addEventListener('offline', () => {
                 //网络由正常常到异常时触发
-                this.offlineTime = Date.parse(new Date())
+                this.offlineTime = Date.parse(new Date());
                 this.breakLine = true;
                 // this.$Toast.success({message: '您的网络已断开，请检查网络设置。'})
             });
             window.addEventListener('online', () => {
                 //从异常到正常时触发
-                this.breakLine = false
-                this.$Toast.success({message: '正常尝试连接网络中，请稍等~'})
+                this.breakLine = false;
+                this.$Toast.success({message: '正常尝试连接网络中，请稍等~'});
                 if((Date.parse(new Date())-this.offlineTime)/1000 >= 13){
                     window.location.reload();
                 }

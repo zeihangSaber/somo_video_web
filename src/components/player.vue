@@ -6,19 +6,15 @@
     >
         <player-status :data="data" :isShare="isShare"></player-status>
         <div class="grail" ref="grail">
-            <my-player :data="this.data" :isShare="this.isShare"></my-player>
+<!--            <my-player :data="this.data" :isShare="this.isShare" @handleIsPlay="(arg) => this.isPlay = arg"></my-player>-->
 <!--            <div :id="`player_${data.uid}_tc`" class="vjs-tech"></div>-->
 <!--            <div :id="`player_${data.uid}_ali`" ref="ali" class="vjs-tech"></div>-->
 <!--            <video :id="`player_${data.uid}_ks`" ref="ks"></video>-->
-<!--            <object>-->
-<!--                <embed ref="saber" src="./Player.swf" bgcolor="#999999" quality="high"-->
-<!--                       width="1260" height="720" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>-->
-<!--            </object>-->
         </div>
-<!--        <div :class="`${(data.camera === 0 && isPlay) ? 'hasCamera' : 'noCamera'} ${(isShare || !isPlay) && data.camera !== 1 ? 'deepBg' : ''}`">-->
-<!--            <img v-if="(isShare || !isPlay) && data.camera !== 1" src="https://182.61.17.228/common/logoGif.gif">-->
-<!--            <i v-if="data.camera === 1" :class="`font_family icon-camera-none ${(data.camera === 0 && isPlay) || isShare ? 'hasCamera' : '_noCamera'}`"></i>-->
-<!--        </div>-->
+        <div :class="`${(data.camera === 0 && isPlay) ? 'hasCamera' : 'noCamera'} ${(isShare || !isPlay) && data.camera !== 1 ? 'deepBg' : ''}`">
+            <img v-if="(isShare || !isPlay) && data.camera !== 1" src="https://182.61.17.228/common/logoGif.gif">
+            <i v-if="data.camera === 1" :class="`font_family icon-camera-none ${(data.camera === 0 && isPlay) || isShare ? 'hasCamera' : '_noCamera'}`"></i>
+        </div>
         <div class="holder"></div>
     </div>
 </template>
@@ -76,7 +72,6 @@
                 // this.Aliplayer();
                 // this.createVideo();
                 // this.ksPlayer();
-                // this.rtmpPlayer();
                 console.log('================', this.src)
             });
         },
@@ -113,16 +108,6 @@
                         this.src && this.player.replay();
                     });
                 });
-            },
-            rtmpPlayer() {
-                setTimeout(() => {
-                    this.player = new RtmpStreamer(this.$refs.saber);
-                }, 300);
-                setTimeout(() => {
-                    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~haha');
-                    let ss = this.src.split("/ppt/");
-                    this.player.play(`${ss[0]}/ppt/`, ss[1]);
-                }, 600);
             },
             Aliplayer() {
                 this.$nextTick(() => {

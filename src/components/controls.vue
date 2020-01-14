@@ -33,7 +33,7 @@
 			<div :class="`point ${index === slideCount ? 'active' : ''}`" v-for="index of maxSlide" @click="() => $emit('selectSlide', index)"></div>
 		</div>
 		<div  :class="isShowCtrl?'ctrlFooter':'ctrlFooter ctrlFooter_'">
-			<div v-if="countDown!=''" :class="isShowCtrl?'tenMinute':'tenMinute_'" >会议剩余时长:{{tentime}}</div>
+			<div v-if="countDown!=0" :class="isShowCtrl?'tenMinute':'tenMinute_'" >会议剩余时长:{{tentime}}</div>
 			<div v-show="isShowCtrl">
 				<i></i>
 				<div class="center">
@@ -226,7 +226,7 @@
 	  },
 	  watch:{
 		  countDown:function(){
-			  console.log(this.countDown)
+			  // console.log(this.countDown)
 			  let time1 = parseInt(this.countDown/60)
 			  let time2= this.countDown%60
 			  if(time1<10){

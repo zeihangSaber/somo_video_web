@@ -169,7 +169,7 @@
 				max_width:'',
 				invite_hint:1,
 				// leftHeight:'',
-				countDown:'',
+				countDown:0,
                 NOtenTimer:0,
                 breakLine:false ,//断网
 				TenSeconds:10,
@@ -186,10 +186,6 @@
 					clearTimeout(this.destroy_timer_)
 					// if(this.joinStatus == 1){
 					// 	e.returnValue = ("确定离开当前页面吗？");
-					// }
-					// if(this.countDown != ''){//10分钟倒计时已经开始了
-					// 	clearInterval(this.tenFENTimer)
-					// 	localStorage.setItem('countDown',this.countDown)
 					// }
 				};
 
@@ -255,7 +251,7 @@
 			    // console.log(msg)
 				// if(this.countDown == '' && localStorage.getItem('countDown') == null){
 					if(msg == 2008){//还剩10分钟会议结束
-					console.log(antiquity.getLostTime());
+						console.log(antiquity.getLostTime());
 						if(this.NOtenTimer == 0){
 							this.NOtenTimer = 1;
 							this.countDown = antiquity.getLostTime();
@@ -264,7 +260,7 @@
 								if(this.countDown <= 0){
 									this.countDown = 0
 								}
-								console.log('十分钟倒计时',this.countDown)
+								// console.log('十分钟倒计时',this.countDown)
 							},1000)
 						}
 					}
@@ -274,7 +270,7 @@
                 antiquity.on('getToast', msg => {
 					console.log(111111111111111,this.meetingInfo)
 					if(msg == "会议结束了" || msg == "管理员关闭了该会议室" || msg == "余额不足，会议室已关闭"){//30分钟体验时间到了，关闭会议室
-						console.log('开始显示倒计时')
+						console.log('开始显示倒计时',9999999999999999999999999999999999999999999999999999999999999999)
 						this.endMeeting = 1
 						setInterval(()=>{
 							this.TenSeconds --
@@ -503,6 +499,7 @@
 			ShowShare() {},
             handleSide() {
                 if (this.changeScreen) {
+					// 非全屏
 					if (document.exitFullscreen) {
 						document.exitFullscreen();
 					} else if (document.msExitFullscreen) {
@@ -516,10 +513,11 @@
 					this.changeScreen = false;
 
 				} else {
+					// 全屏
                     // antiquity.rtmp.reset()
 					this.changeScreen = true;
 					const el = document.documentElement;
-                    const rfs = el.requestFullscreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullScreen;
+                    const rfs = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullScreen;
                     if(typeof rfs !== "undefined" && rfs){
                         rfs.call(el);
 						this.isShowParty = false;

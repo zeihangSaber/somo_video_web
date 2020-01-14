@@ -191,6 +191,7 @@
 
         },
         created() {
+			console.log(antiquity.permission)
             console.log("浏览器数据：~~~~",antiquity.getBrowserInfo)
             if(Boolean(antiquity.getBrowserInfo.match(/firefox/gi)) || Boolean(antiquity.getBrowserInfo.match(/msie/gi)) || Boolean(antiquity.getBrowserInfo.match(/opera/gi))){
                 this.meetingShow = false;

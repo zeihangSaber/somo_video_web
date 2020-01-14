@@ -6,7 +6,7 @@
     >
         <player-status :data="data" :isShare="isShare"></player-status>
         <div class="grail" ref="grail">
-<!--            <my-player :data="this.data" :isShare="this.isShare" @handleIsPlay="(arg) => this.isPlay = arg"></my-player>-->
+            <my-player :data="this.data" :isShare="this.isShare" @handleIsPlay="(arg) => this.isPlay = arg"></my-player>
 <!--            <div :id="`player_${data.uid}_tc`" class="vjs-tech"></div>-->
 <!--            <div :id="`player_${data.uid}_ali`" ref="ali" class="vjs-tech"></div>-->
 <!--            <video :id="`player_${data.uid}_ks`" ref="ks"></video>-->

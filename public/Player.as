@@ -9,6 +9,7 @@ import flash.media.Video;
 import flash.media.VideoCodec;
 import flash.media.VideoStatus;
 import flash.media.VideoStreamSettings;
+import flash.utils.*;
 
 public class Player extends MovieClip {
 
@@ -21,7 +22,7 @@ public class Player extends MovieClip {
     internal var _screenX:int = 0;
     internal var _screenY:int = 0;
 
-    internal var _bufferTime:int = 0.5;
+    internal var _bufferTime:int = 1;
 
 
     public function Player() {
@@ -69,10 +70,12 @@ public class Player extends MovieClip {
         nc = new NetConnection();
         nc.addEventListener(NetStatusEvent.NET_STATUS, function (event:NetStatusEvent):void {
             ExternalInterface.call("console.log", "try to connect to " + url);
-            ExternalInterface.call("console.log", event.info.code);
-            ExternalInterface.call("getSwfStatus", "everyOK");
+            ExternalInterface.call("console.log", "Player." + event.info.code);
             if (event.info.code == "NetConnection.Connect.Success") {
                 callback(name);
+            }
+            if (event.info.code == "NetConnection.Connect.Closed") {
+                ExternalInterface.call("console.log", "播发器连接断开~~~~~~~~~~~~~~");
             }
         });
         nc.proxyType = "best";
@@ -86,20 +89,20 @@ public class Player extends MovieClip {
         vs.setMode(640, 480, 24);
         // vs.setQuality(16384*2, 1);
 
-        // nsPlayer.audioReliable = false;
-        // nsPlayer.audioSampleAccess = false;
-        // nsPlayer.videoReliable = false;
-        //
-        nsPlayer.multicastAvailabilityUpdatePeriod = 0.05;
-        nsPlayer.multicastFetchPeriod = 0.05;
+        setInterval(function ():void {
+            ExternalInterface.call("console.log", "bufferLength:" + nsPlayer.bufferLength + "~~~bufferTime:" + nsPlayer.bufferTime + "~~~bufferTimeMax:" + nsPlayer.bufferTimeMax);
+            ExternalInterface.call("console.log", "currentFPS:" + nsPlayer.currentFPS + "~~~liveDelay:" + nsPlayer.liveDelay);
+            ExternalInterface.call("console.log", "connected:" + nc.connected);
+        }, 1000);
 
         nsPlayer.bufferTime = _bufferTime;
-        nsPlayer.bufferTimeMax = _bufferTime;
+        nsPlayer.bufferTimeMax = 2;
         nsPlayer.inBufferSeek  = false;
         nsPlayer.checkPolicyFile = false;
         nsPlayer.videoStreamSettings = vs;
         nsPlayer.play(name);
-        nsPlayer.receiveVideoFPS(24);
+
+        // nsPlayer.receiveVideoFPS(5);
         vidPlayer = getPlayer();
         vidPlayer.attachNetStream(nsPlayer);
         addChild(vidPlayer);

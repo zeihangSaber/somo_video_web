@@ -191,7 +191,7 @@
 
         },
         created() {
-            console.log("浏览器数据：~~~~",antiquity.getBrowserInfo)
+            console.log("浏览器数据：~~~~",antiquity.getBrowserInfo);
             if(Boolean(antiquity.getBrowserInfo.match(/firefox/gi)) || Boolean(antiquity.getBrowserInfo.match(/msie/gi)) || Boolean(antiquity.getBrowserInfo.match(/opera/gi))){
                 this.meetingShow = false;
                 return false
@@ -199,7 +199,7 @@
             antiquity.on("getMsg", (msg) => {
 				console.log(msg)
 				msg.time = this._time();
-                this.message.push(msg)
+                this.message.push(msg);
 				if(this.isShowMessage == false){
 					this.msgBox = '';
 					this.msgBox = [

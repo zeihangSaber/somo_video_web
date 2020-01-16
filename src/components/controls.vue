@@ -33,23 +33,23 @@
 			<div :class="`point ${index === slideCount ? 'active' : ''}`" v-for="index of maxSlide" @click="() => $emit('selectSlide', index)"></div>
 		</div>
 		<div  :class="isShowCtrl?'ctrlFooter':'ctrlFooter ctrlFooter_'">
-			<div v-if="countDown!=0" :class="isShowCtrl?'tenMinute':'tenMinute_'" >会议剩余时长:{{tentime}}</div>
+			<div v-if="countDownshow" :class="isShowCtrl?'tenMinute':'tenMinute_'" >会议剩余时长:{{tentime}}</div>
 			<div v-show="isShowCtrl">
 				<i></i>
 				<div class="center">
-					<button @click="handleMic" v-if="data.hasMic">
-						<i :class="`font_family ${data.mine && data.mine.mic === 1 ? 'icon-mic-no' : 'icon-mic'}`"></i>
+					<button @click="handleMic()"  v-if="myMic == true || myMic == undefined">
+						<i  :class="`font_family ${data.mine && data.mine.mic === 1 ? 'icon-mic-no' : 'icon-mic'}`"></i>
 						静音
 					</button>
-					<button v-if="!data.hasMic">
+					<button v-if="myMic == false" @click="handleMic(MicStatus)" :title="MicTitle">
 						<i class="font_family icon-mic-no"></i>
 						静音
 					</button>
-					<button @click="handleCamera" v-if="data.hasCam">
+					<button @click="handleCamera" v-if="myCamera == true || myCamera == undefined">
 						<i :class="`font_family ${data.mine && data.mine.camera === 1 ? 'icon-camera-no' : 'icon-camera'}`"></i>
 						视频
 					</button>
-					<button v-if="!data.hasCam">
+					<button v-if="myCamera == false" @click="handleCamera(CameraStatus)" :title="CameraTitle">
 						<i class="font_family icon-camera-no"></i>
 						视频
 					</button>
@@ -195,7 +195,14 @@
 		  new_playerNum:'',
 		  setDef_:1,
 		  // sysAppIds:''
-		  tentime:''
+		  tentime:'',
+		  myMic:'',
+		  myCamera:'',
+		  CameraStatus:'',
+		  MicStatus:'',
+		  MicTitle:'',
+		  CameraTitle:'',
+		  countDownshow:0
 		};
 	  },
 	  props: [
@@ -224,9 +231,29 @@
 	  components: {
 		  bulletScreen
 	  },
+	  created() {
+	    this.myMic = this.data.hasMic
+	    this.myCamera = this.data.hasCam
+	  	antiquity.on("permission", (msg) => {
+	  		console.log(msg)
+			if(msg == false){//点击了拒绝按钮
+				this.CameraStatus = 1 
+				antiquity.muteAudio()
+				antiquity.muteVideo()
+			}
+			this.myMic = msg
+			this.myCamera = msg
+	  	});
+	  },
 	  watch:{
 		  countDown:function(){
 			  // console.log(this.countDown)
+			  if(this.countDown>0){
+				  this.countDownshow = 1
+			  }else if(this.countDown<=0){
+				  this.countDownshow = 0
+			  }
+			  
 			  let time1 = parseInt(this.countDown/60)
 			  let time2= this.countDown%60
 			  if(time1<10){
@@ -240,6 +267,16 @@
 		  },
 		  data:function(){
 			 console.log(this.data) 
+			 this.myMic = this.data.hasMic
+			 this.myCamera = this.data.hasCam
+			 if(this.data.hasMic == false){
+				 this.MicStatus = 1
+				 this.MicTitle = '当前无法检测到摄像头设备'
+			 }
+			 if(this.data.hasCam == false){
+				 this.CameraStatus = 2
+			 	this.CameraTitle = '当前无法检测到麦克风设备'
+			 }
 		  },
 		  playerNum:function(){
 			  this.new_playerNum = this.playerNum
@@ -263,6 +300,11 @@
 		}
 	  },
 	  mounted() {
+		  // console.log(document.getElementsByClassName('font_family'))
+		  // setTimeout(() => {
+			 //  document.getElementsByClassName('font_family')[3].classList.remove("cs")
+			 //  document.getElementsByClassName('font_family')[3].classList.remove("icon-mic")
+		  // }, 1000);
 		  this.new_playerNum = this.playerNum
 		  if(this.new_playerNum == 6){
 		  	this.new_playerNum = 4
@@ -318,15 +360,26 @@
 		  }
 		  return hours + ":" + minutes + ":" + seconds;
 		},
-		handleMic() {
-		  this.data.mine.mic === 0
-			? antiquity.muteAudio()
-			: antiquity.unmuteAudio();
+		handleMic(e) {
+			if(e != 1){
+				this.myMic = !this.myMic
+				this.data.mine.mic === 0
+				? antiquity.muteAudio()
+				: antiquity.unmuteAudio();
+			}
+			
 		},
-		handleCamera() {
-		  this.data.mine.camera === 0
-			? antiquity.muteVideo()
-			: antiquity.unmuteVideo(this.data.video_url);
+		handleCamera(e) {
+			if(e == 1){
+				history.go(0)
+			}else if(e == 2){
+				
+			}else{
+				this.data.mine.camera === 0
+				? antiquity.muteVideo()
+				: antiquity.unmuteVideo(this.data.video_url);
+			}
+		  
 		}
 	  },
 	  destroyed() {
@@ -556,6 +609,9 @@
           display: block;
           font-size: 44px;
         }
+		.cs{
+			color: #FFFFFF !important;
+		}
         .icon-camera-no,
         .icon-mic-no {
           color: #ff6b6f;

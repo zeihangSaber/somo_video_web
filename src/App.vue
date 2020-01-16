@@ -5,7 +5,7 @@
 			<div v-if="endMeeting" class="timeUseUP_box">
 				<div class="timeUseUP">
 					<div>30分钟免费限时会议已结束</div>
-					<div class="timeUseUP_btn" @click="LeaveMeeting()">退出会议 {{TenSeconds}}s</div>
+					<div class="timeUseUP_btn" @click="LeaveMeeting()">退出会议</div>
 				</div>
 			</div>
             <div class="breakLine" v-if="breakLine">
@@ -172,10 +172,10 @@
 				countDown:0,
                 NOtenTimer:0,
                 breakLine:false ,//断网
-				TenSeconds:10,
 				myTime:1000,
-                offlineTime:''
-
+                offlineTime:'',
+				metering:0,
+				// meteringTow:0
             };
         },
         beforeCreate() {
@@ -191,7 +191,13 @@
 
         },
         created() {
-            console.log("浏览器数据：~~~~",antiquity.getBrowserInfo);
+			console.log(antiquity.permission)
+            console.log("浏览器数据：~~~~",antiquity.getBrowserInfo)
+			if(Boolean(antiquity.getBrowserInfo.match(/safari/gi)) && sessionStorage.getItem('safari') != 1){
+				sessionStorage.setItem('safari',1)
+				history.go(0)
+			}
+			// safari
             if(Boolean(antiquity.getBrowserInfo.match(/firefox/gi)) || Boolean(antiquity.getBrowserInfo.match(/msie/gi)) || Boolean(antiquity.getBrowserInfo.match(/opera/gi))){
                 this.meetingShow = false;
                 return false
@@ -199,7 +205,7 @@
             antiquity.on("getMsg", (msg) => {
 				console.log(msg)
 				msg.time = this._time();
-                this.message.push(msg);
+                this.message.push(msg)
 				if(this.isShowMessage == false){
 					this.msgBox = '';
 					this.msgBox = [
@@ -213,30 +219,35 @@
                 this.meetingInfo = meetingInfo;
             });
             antiquity.on('getMembers', members => {
-                this.members = members;
-                this.peopleNum = members.length;
-                this.micNum = members.filter(item => {
-                    if (item.mic === 0) {
-                        return item;
-                    }
-                }).length;
-				if(this.peopleNum>=2){
-					this.meeting_time()
+				this.metering ++
+				if(this.metering == 10){
+					this.members = members;
+					this.peopleNum = members.length;
+					this.micNum = members.filter(item => {
+						if (item.mic === 0) {
+							return item;
+						}
+					}).length;
+					if(this.peopleNum>=2){
+						this.meeting_time()
+					}
+					this.metering = 0
+				}else{
+					if (timeout) clearTimeout(timeout);
+					let timeout = setTimeout(() => {
+					    this.members = members;
+					    this.peopleNum = members.length;
+					    this.micNum = members.filter(item => {
+					    	if (item.mic === 0) {
+					    		return item;
+					    	}
+					    }).length;
+					    if(this.peopleNum>=2){
+					    	this.meeting_time()
+					    }
+					}, 2000);
 				}
-				// if(this.meetingInfo.start){
-				// 	clearInterval(this.destroy_timer)
-				// 	this.destroy_timer = setInterval(() => {
-				// 			let timestamp = (new Date()).getTime();//当前时间戳
-				// 			this.time =  timestamp - this.meetingInfo.start;
-				// 			this.timer = this.formatDuring(this.time)
-				// 	}, 1000)
-				// }else if(this.peopleNum>=2 && !this.meetingInfo.start){
-				// 	clearInterval(this.destroy_timer)
-				// 	this.destroy_timer = setInterval(() => {
-				// 			this.not_time = this.not_time + 1000
-				// 			this.timer = this.formatDuring(this.not_time)
-				// 	}, 1000)
-				// }
+			   
             });
             antiquity.on('getShareUrl', sharer => {
                 this.sharer = sharer;
@@ -251,18 +262,23 @@
 			    // console.log(msg)
 				// if(this.countDown == '' && localStorage.getItem('countDown') == null){
 					if(msg == 2008){//还剩10分钟会议结束
-						console.log(antiquity.getLostTime());
-						if(this.NOtenTimer == 0){
+						// alert(antiquity.getLostTime())
+						// console.log(antiquity.getLostTime());
+						this.countDown = antiquity.getLostTime();
+						console.log(111111111,this.countDown)
+						if(this.countDown>=0){
+							if(this.NOtenTimer == 0){
+								this.tenFENTimer = setInterval(()=>{
+									this.countDown --;
+									if(this.countDown <= 0){
+										this.countDown = 0
+									}
+									// console.log('十分钟倒计时',this.countDown)
+								},1000)
+							}
 							this.NOtenTimer = 1;
-							this.countDown = antiquity.getLostTime();
-							this.tenFENTimer = setInterval(()=>{
-								this.countDown --;
-								if(this.countDown <= 0){
-									this.countDown = 0
-								}
-								// console.log('十分钟倒计时',this.countDown)
-							},1000)
 						}
+						
 					}
 				// }
 			});
@@ -272,9 +288,6 @@
 					if(msg == "会议结束了" || msg == "管理员关闭了该会议室" || msg == "余额不足，会议室已关闭"){//30分钟体验时间到了，关闭会议室
 						console.log('开始显示倒计时',9999999999999999999999999999999999999999999999999999999999999999)
 						this.endMeeting = 1
-						setInterval(()=>{
-							this.TenSeconds --
-						},1000)
 						clearInterval(this.tenFENTimer);
 						setTimeout(()=>{
 							this.LeaveMeeting()
@@ -294,7 +307,7 @@
         async mounted() {
 			setTimeout(() => {
 				this.playerNum = 4
-			}, 2000);
+			}, 3000);
             if(Boolean(antiquity.getBrowserInfo.match(/firefox/gi)) || Boolean(antiquity.getBrowserInfo.match(/msie/gi)) || Boolean(antiquity.getBrowserInfo.match(/opera/gi))){
                 this.meetingShow = false;
                 return false
@@ -314,6 +327,15 @@
                 //从异常到正常时触发
                 this.breakLine = false;
                 this.$Toast.success({message: '正常尝试连接网络中，请稍等~'});
+				antiquity.on('getMembers', members => {
+				    this.members = members;
+				    this.peopleNum = members.length;
+				    this.micNum = members.filter(item => {
+				        if (item.mic === 0) {
+				            return item;
+				        }
+				    }).length;
+				});
                 if((Date.parse(new Date())-this.offlineTime)/1000 >= 13){
                     window.location.reload();
                 }
@@ -559,6 +581,7 @@
                 },3000)
             },
             LeaveMeeting(){
+				alert('会议已结束,即将离开会议')
                 antiquity.leaveMeeting()
                 console.log('离开会议',antiquity)
 				this.$Toast.success({message: '正在离开会议....'});

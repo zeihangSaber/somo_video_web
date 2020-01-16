@@ -1,6 +1,6 @@
 <template>
-    <div class="ctrlMiddle" v-if="data.name">
-        <div class="ctrlMiddleName" v-if="!isShare">{{data.name ? data.name : data.uid}}</div>
+    <div class="ctrlMiddle" >
+        <div class="ctrlMiddleName" v-if="!isShare">{{data.name == null ? data.uid : data.name}}</div>
 		<div  v-if="isShare">{{data.name ? data.name : data.uid}}<span>-屏幕共享中</span></div>
         <i class="font_family icon-mic" v-if="data.mic === 0"></i>
         <svg v-else class="icon" aria-hidden="true">

@@ -44,7 +44,7 @@
                 "
               />
               <p>
-                <span>{{ item.name }}</span>
+                <span>{{ item.name == null?item.uid:item.name }}</span>
                 <svg
                   v-if="item.role === 4"
                   class="icon"

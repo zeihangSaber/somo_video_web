@@ -414,7 +414,9 @@ export default {
         value: "2"
       };
       antiquity.ajax.ruleSet(data).then(res => {
-        this.$Toast.success({message:"全体包括新参会方已被静音"})
+		this.members.forEach((item)=>{
+			this.$Toast.success({message:"全体包括新参会方已被静音"})
+		})
         this.micAll = false;
       });
     },

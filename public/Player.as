@@ -1,10 +1,13 @@
 package {
 
 import flash.display.MovieClip;
+import flash.display.DisplayObject;
 import flash.external.ExternalInterface;
 import flash.net.NetConnection;
-import flash.events.NetStatusEvent;
 import flash.net.NetStream;
+import flash.events.NetStatusEvent;
+import flash.events.IOErrorEvent;
+import flash.events.StatusEvent;
 import flash.media.Video;
 import flash.media.VideoCodec;
 import flash.media.VideoStatus;
@@ -32,7 +35,6 @@ public class Player extends MovieClip {
         ExternalInterface.addCallback("play", playVideo);
         ExternalInterface.addCallback("disconnect", disconnect);
 
-        ExternalInterface.addCallback("saber", saber);
         ExternalInterface.addCallback("setBufferTime", setBufferTime);
 
         ExternalInterface.call("setSWFIsReady");
@@ -58,10 +60,6 @@ public class Player extends MovieClip {
         nc.close();
     }
 
-    public function saber():void {
-        this.lancer();
-    }
-
     public function setBufferTime(num: int): void {
         _bufferTime = num;
     }
@@ -84,25 +82,28 @@ public class Player extends MovieClip {
 
     private function displayPlaybackVideo(name:String):void {
         nsPlayer = new NetStream(nc);
-        var vs:VideoStreamSettings = new VideoStreamSettings();
-        vs.setKeyFrameInterval(24);
-        vs.setMode(640, 480, 24);
-        // vs.setQuality(16384*2, 1);
+        // var vs:VideoStreamSettings = new VideoStreamSettings();
+        // vs.setKeyFrameInterval(24);
+        // vs.setMode(640, 480, 24);
+        // nsPlayer.videoStreamSettings = vs;
 
-        setInterval(function ():void {
-            ExternalInterface.call("console.log", "bufferLength:" + nsPlayer.bufferLength + "~~~bufferTime:" + nsPlayer.bufferTime + "~~~bufferTimeMax:" + nsPlayer.bufferTimeMax);
-            ExternalInterface.call("console.log", "currentFPS:" + nsPlayer.currentFPS + "~~~liveDelay:" + nsPlayer.liveDelay);
-            ExternalInterface.call("console.log", "connected:" + nc.connected);
-        }, 1000);
+        // setInterval(function ():void {
+        //     ExternalInterface.call("console.log", "bufferLength:" + nsPlayer.bufferLength + "~~~bufferTime:" + nsPlayer.bufferTime + "~~~bufferTimeMax:" + nsPlayer.bufferTimeMax);
+        //     ExternalInterface.call("console.log", "currentFPS:" + nsPlayer.currentFPS + "~~~liveDelay:" + nsPlayer.liveDelay);
+        //     ExternalInterface.call("console.log", "connected:" + nsPlayer.info);
+        // }, 1000);
+
+        nsPlayer.addEventListener(NetStatusEvent.NET_STATUS, function (event: NetStatusEvent): void {
+            ExternalInterface.call("console.log", event.info.code);
+            ExternalInterface.call("handlePlayer", name, event.info.code);
+        });
 
         nsPlayer.bufferTime = _bufferTime;
-        nsPlayer.bufferTimeMax = 2;
+        nsPlayer.bufferTimeMax = 1;
         nsPlayer.inBufferSeek  = false;
         nsPlayer.checkPolicyFile = false;
-        nsPlayer.videoStreamSettings = vs;
         nsPlayer.play(name);
 
-        // nsPlayer.receiveVideoFPS(5);
         vidPlayer = getPlayer();
         vidPlayer.attachNetStream(nsPlayer);
         addChild(vidPlayer);
@@ -114,12 +115,7 @@ public class Player extends MovieClip {
         vidPlayer.smoothing = false;
         vidPlayer.x = _screenX;
         vidPlayer.y = _screenY;
-
         return vidPlayer;
-    }
-
-    private function lancer(): void {
-        ExternalInterface.call("console.log", "bufferLength~~~~~~~~~~~~~~~~~~" + nsPlayer.bufferLength);
     }
 
 }

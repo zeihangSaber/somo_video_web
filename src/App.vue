@@ -113,14 +113,11 @@
 </template>
 
 <script>
-    import animate from 'animate.css';
     import Player from './components/player';
     import Ctrl from './components/controls';//左边的顶部和底部
-    import SideBox from './components/side';//右边模块的组件
-    // import share from './components/share';
+    import SideBox from './components/side';// 右边模块的组件
     import playerStatus from "./components/playerStatus";
     import antiquity, {myDevice, myCookie, myMid, Password, MeetingStatus, myCamera, myMic} from './utils/Antiquity';
-	import StayAwake from 'stayawake.js';
     export default {
         name: 'app',
         components: {
@@ -179,22 +176,17 @@
             };
         },
         beforeCreate() {
-				// StayAwake.init();
-				// StayAwake.enable();
 				window.onbeforeunload = (e) => {
-					clearTimeout(this.destroy_timer)
+					clearTimeout(this.destroy_timer);
 					clearTimeout(this.destroy_timer_)
-					// if(this.joinStatus == 1){
-					// 	e.returnValue = ("确定离开当前页面吗？");
-					// }
 				};
 
         },
         created() {
-			console.log(antiquity.permission)
-            console.log("浏览器数据：~~~~",antiquity.getBrowserInfo)
+			console.log(antiquity.permission);
+            console.log("浏览器数据：~~~~",antiquity.getBrowserInfo);
 			if(Boolean(antiquity.getBrowserInfo.match(/safari/gi)) && sessionStorage.getItem('safari') != 1){
-				sessionStorage.setItem('safari',1)
+				sessionStorage.setItem('safari', 1);
 				history.go(0)
 			}
 			// safari
@@ -203,9 +195,9 @@
                 return false
             }
             antiquity.on("getMsg", (msg) => {
-				console.log(msg)
+				console.log(msg);
 				msg.time = this._time();
-                this.message.push(msg)
+                this.message.push(msg);
 				if(this.isShowMessage == false){
 					this.msgBox = '';
 					this.msgBox = [
@@ -219,8 +211,8 @@
                 this.meetingInfo = meetingInfo;
             });
             antiquity.on('getMembers', members => {
-				this.metering ++
-				if(this.metering == 10){
+				this.metering ++;
+				if (this.metering == 10) {
 					this.members = members;
 					this.peopleNum = members.length;
 					this.micNum = members.filter(item => {
@@ -247,12 +239,10 @@
 					    }
 					}, 2000);
 				}
-			   
+
             });
             antiquity.on('getShareUrl', sharer => {
                 this.sharer = sharer;
-				console.log('ooooo',this.meetingInfo);
-
 				this.meeting_time(1)
             });
             antiquity.on('getSpeaker', speaker => {
@@ -261,11 +251,11 @@
 			antiquity.on('countDown', msg => {
 			    // console.log(msg)
 				// if(this.countDown == '' && localStorage.getItem('countDown') == null){
-					if(msg == 2008){//还剩10分钟会议结束
+					if(msg == 2008) {//还剩10分钟会议结束
 						// alert(antiquity.getLostTime())
 						// console.log(antiquity.getLostTime());
 						this.countDown = antiquity.getLostTime();
-						console.log(111111111,this.countDown)
+						console.log(111111111,this.countDown);
 						if(this.countDown>=0){
 							if(this.NOtenTimer == 0){
 								this.tenFENTimer = setInterval(()=>{
@@ -278,7 +268,7 @@
 							}
 							this.NOtenTimer = 1;
 						}
-						
+
 					}
 				// }
 			});
@@ -286,7 +276,6 @@
                 antiquity.on('getToast', msg => {
 					console.log(111111111111111,this.meetingInfo)
 					if(msg == "会议结束了" || msg == "管理员关闭了该会议室" || msg == "余额不足，会议室已关闭"){//30分钟体验时间到了，关闭会议室
-						console.log('开始显示倒计时',9999999999999999999999999999999999999999999999999999999999999999)
 						this.endMeeting = 1
 						clearInterval(this.tenFENTimer);
 						setTimeout(()=>{
@@ -437,8 +426,8 @@
         },
         methods: {
 			meeting_time (share){
-				clearTimeout(this.destroy_timer_)
-				clearTimeout(this.destroy_timer)
+				clearTimeout(this.destroy_timer_);
+				clearTimeout(this.destroy_timer);
 				if(this.meetingInfo.start!=0){
 					this.destroy_timer = setInterval(() => {
 							let timestamp = (new Date()).getTime();//当前时间戳
@@ -480,7 +469,7 @@
 			// 结束主讲
 			setSpeaker(item) {
 			  // const speaker = this.meetingInfo.speaker === 1 ? 0 : 1;
-			  console.log(this.meetingInfo.uid)
+			  console.log(this.meetingInfo.uid);
 			  const data = {
 				admin: this.meetingInfo.mine.uid,
 				uid: this.meetingInfo.mine.uid,
@@ -645,8 +634,8 @@
                             }
                             this.waiting = false;
                         });
-                        console.log('antiquity',this.meetingInfo)
-                        console.log("myMic,myCamera",myCamera,myMic)
+                        console.log('antiquity',this.meetingInfo);
+                        console.log("myMic,myCamera",myCamera,myMic);
                         if(this.meetingInfo.hasCam && this.meetingInfo.hasMic){
                             antiquity.publish(this.meetingInfo.video_url, myCamera, myMic);
                         }else if (!this.meetingInfo.hasCam && this.meetingInfo.hasMic){

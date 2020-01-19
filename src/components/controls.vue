@@ -30,7 +30,7 @@
 		<div v-show="isShowCtrl" :class="`ctrlLeft ${slideCount === 1 ? 'disable_' : ''}`" @click="$emit('prevSlide')" v-if="maxSlide > 1"><i class="font_family icon-left"></i></div>
 		<div v-show="isShowCtrl" :class="`ctrlRight ${slideCount === maxSlide ? 'disable_' : ''}`" @click="$emit('nextSlide')" v-if="maxSlide > 1"><i class="font_family icon-right"></i></div>
 		<div v-show="isShowCtrl" class="ctrlPoint" v-if="maxSlide > 1">
-			<div :class="`point ${index === slideCount ? 'active' : ''}`" v-for="index of maxSlide" @click="() => $emit('selectSlide', index)"></div>
+			<div style="color: #FFFFFF;">{{slideCount + '/' + maxSlide}}</div>
 		</div>
 		<div  :class="isShowCtrl?'ctrlFooter':'ctrlFooter ctrlFooter_'">
 			<div v-if="countDownshow" :class="isShowCtrl?'tenMinute':'tenMinute_'" >会议剩余时长:{{tentime}}</div>
@@ -95,27 +95,35 @@
 					<div class="set_main_box">
 						<div class="set_main_title">弹幕消息:</div>
 						<div class="set_gongneng">
-							<!-- <div> -->
-								<div v-if="barrage" @click="$emit('barrageFalse')" class="barrage_">
-									<svg class="icon" aria-hidden="true">
-										<use xlink:href="#iconfuxuan-xuanzhongx"></use>
-									</svg>
-									<span style="margin-left: 4px;">开启</span>
-								</div>
-								<div v-if="!barrage" @click="$emit('barrageTrue')" class="barrage_">
-									<svg class="icon" aria-hidden="true">
-										<use xlink:href="#iconbianzubeifenx"></use>
-									</svg>
-									<span style="margin-left: 4px;">开启</span>
-								</div>
-							<!-- </div> -->
-							<!-- <div>
-								<svg class="icon" aria-hidden="true" v-if="!barrage">
-									<use xlink:href="#icon-select"></use>
+							<div v-if="barrage" @click="$emit('barrageFalse')" class="barrage_">
+								<svg class="icon" aria-hidden="true">
+									<use xlink:href="#iconfuxuan-xuanzhongx"></use>
 								</svg>
-								<i class="font_family set_icon icon-select-no" v-else></i>
-								<span>关闭</span>
-							</div> -->
+								<span style="margin-left: 4px;">开启</span>
+							</div>
+							<div v-if="!barrage" @click="$emit('barrageTrue')" class="barrage_">
+								<svg class="icon" aria-hidden="true">
+									<use xlink:href="#iconbianzubeifenx"></use>
+								</svg>
+								<span style="margin-left: 4px;">开启</span>
+							</div>
+						</div>
+					</div>
+					<div class="set_main_box">
+						<div class="set_main_title">无视频过滤:</div>
+						<div class="set_gongneng">
+							<div v-if="filtrationBtn" @click="$emit('filtrationTrue')" class="barrage_">
+								<svg class="icon" aria-hidden="true">
+									<use xlink:href="#iconfuxuan-xuanzhongx"></use>
+								</svg>
+								<span style="margin-left: 4px;">开启</span>
+							</div>
+							<div v-if="!filtrationBtn" @click="$emit('filtrationFalse')" class="barrage_">
+								<svg class="icon" aria-hidden="true">
+									<use xlink:href="#iconbianzubeifenx"></use>
+								</svg>
+								<span style="margin-left: 4px;">开启</span>
+							</div>
 						</div>
 					</div>
 					<div class="set_main_box" v-if="howMany == 'two'">
@@ -132,7 +140,6 @@
 							</div>
 						</div>
 					</div>
-					
 					<div class="set_main_box" title="仅在两路会议时生效" v-if="howMany != 'two'">
 						<div class="set_main_title">视频清晰度:</div>
 						<div class="set_gongneng" style="opacity: 0.4;">
@@ -144,10 +151,6 @@
 							</div>
 						</div>
 					</div>
-					
-					
-					
-					
 					<div class="set_main_box">
 						<div class="set_main_title">视频布局:</div>
 						<div class="set_gongneng">
@@ -199,13 +202,14 @@
 		  myMic:'',
 		  myCamera:'',
 		  CameraStatus:'',
-		  MicStatus:'',
+		  MicStatus:1,
 		  MicTitle:'',
 		  CameraTitle:'',
 		  countDownshow:0
 		};
 	  },
 	  props: [
+		"filtrationBtn",
 		"countDown",
 		"howMany",
 		"isShowCtrl",
@@ -362,7 +366,7 @@
 		},
 		handleMic(e) {
 			if(e != 1){
-				this.myMic = !this.myMic
+				// this.myMic = !this.myMic
 				this.data.mine.mic === 0
 				? antiquity.muteAudio()
 				: antiquity.unmuteAudio();
@@ -443,7 +447,7 @@
 }
 .set_box{
 	width: 230px;
-	height: 201px;
+	height: 222px;
 	background:#FFFFFF;
 	border-radius:8px;
 	position: absolute;

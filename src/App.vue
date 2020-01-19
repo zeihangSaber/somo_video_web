@@ -16,7 +16,6 @@
 					:countDown="countDown"
                     :isShowCtrl="isShowCtrl"
                     :message="message"
-                    @handleSide="handleSide"
                     :timer="timer"
                     :data="meetingInfo"
                     :peopleNum="peopleNum"
@@ -34,6 +33,8 @@
                     :speaker="speaker"
                     :msgBox="msgBox"
                     :inviteHint=invite_hint
+					:filtrationBtn=filtrationBtn
+					@handleSide="handleSide"
                     @handleMessage="handleMessage"
                     @ShowShare="ShowShare"
                     @handleParty="handleParty"
@@ -45,9 +46,12 @@
                     @barrageTrue="() => (barrage = true)"
                     @barrageFalse="() => (barrage = false)"
                     @selectSlide="(num) => slideCount = num"
+					@filtrationTrue="() => (filtrationBtn = false)"
+					@filtrationFalse="() => (filtrationBtn = true)"
                     ></ctrl>
             </transition>
-			<div class="leftBig_box" ref="setBox" :style="`max-width: ${max_width};`">
+			<div class="leftBig_box" ref="setBox" :style="`max-width: ${max_width};`" >
+				<div v-if="penetrate" class="penetrate" @dblclick="handleSide()"></div>
                 <div :class="`playerBigBox ${howMany} `" ref="playerBigBox">
                     <!-- 自己的推流  v-if="howMany != 'two'&&howMany != 'fir'"-->
                     <div :class="`dragBox ${mineFlag}`" style="display: flex;">
@@ -134,6 +138,8 @@
                         speaker: 0
                     }
                 },
+				penetrate:false,
+				filtrationBtn:true,
                 meetingShow:true,
                 members: [],
                 peopleNum: 0,
@@ -207,6 +213,9 @@
 					];
 				}
             });
+			antiquity.on("permission", (msg) => {
+				this.penetrate = true
+			});
             antiquity.on('getMidInfo', meetingInfo => {
                 this.meetingInfo = meetingInfo;
             });
@@ -425,6 +434,9 @@
             },
         },
         methods: {
+			storageDetail(){
+				alert(1111)
+			},
 			meeting_time (share){
 				clearTimeout(this.destroy_timer_);
 				clearTimeout(this.destroy_timer);
@@ -440,28 +452,6 @@
 							this.timer = this.formatDuring(this.myTime)
 					}, 1000)
 				}
-			},
-			//判断浏览器种类函数-处理兼容性
-			myBrowser(){
-			    var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
-			    if (userAgent.indexOf("Safari") > -1) {
-			        return "Safari";
-			    } //判断是否Safari浏览器
-			},
-			close(){
-				alert("guan")
-				// Antiquity.ajax.close({
-				// 	// "uid": this.meetingInfo.mine.uid,
-				// 	// "dt": this.meetingInfo.mine.dt,
-				// 	// "device": this.meetingInfo.mine.device,
-				// 	// "cookie": myCookie,
-				// 	"mid": myMid,
-				// 	reason: 2,
-				// 	// "uid", "dt", "device", "cookie"
-				// }).then(res=>{
-				// 	alert('关闭会议成功')
-				// 	window.location.href = 'https://182.61.17.228/joinConference';
-				// })
 			},
 			bigBox(){
 				this.invite_hint = 0
@@ -655,6 +645,13 @@
 <style lang="less">
     @import "./common/base";
     @import "./common/common";
+	.penetrate{
+		width: 100%;
+		height: 100%;
+		// background: rgba(0,0,0,0.5);
+		position: absolute;
+		z-index: 10;
+	}
 	.end_speaker>i{
 		margin-right: 4px;
 	}
@@ -744,6 +741,7 @@
 		 align-items: center;
 		 padding-top: 36rpx;
 		 box-sizing: border-box;
+		 position: relative;
 	}
 	.videoBox{
 		width: 100%;

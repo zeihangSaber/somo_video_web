@@ -261,7 +261,6 @@
             antiquity.on('getShareUrl', sharer => {
                 this.sharer = sharer;
 				console.log('ooooo',this.meetingInfo);
-
 				this.meeting_time(1)
             });
             antiquity.on('getSpeaker', speaker => {
@@ -352,9 +351,9 @@
             this.$nextTick(() => {
                 this.init();
             });
-            this.showCtrlTime = setTimeout(()=>{
-                this.isShowCtrl = false
-            },3000);
+            // this.showCtrlTime = setTimeout(()=>{
+            //     this.isShowCtrl = false
+            // },3000);
         },
 		watch:{
 			// meetingInfo(){
@@ -389,7 +388,6 @@
 			// playerNum 几分屏
 			// members   成员
 			// slideCount几个切屏
-
             realMembers() {
 			    console.log('既是主讲又分享了~~~~~~~~~~', this.speaker)
 			    if (this.speaker && this.sharer && this.speaker.shareUrl) return [this.speaker, ...this.members]
@@ -445,9 +443,6 @@
             },
         },
         methods: {
-			storageDetail(){
-				alert(1111)
-			},
 			meeting_time (share){
 				clearTimeout(this.destroy_timer_)
 				clearTimeout(this.destroy_timer)
@@ -560,15 +555,15 @@
             Enter(e){
                 clearTimeout(this.showCtrlTime)
                 this.isShowCtrl = true
-                this.showCtrlTime = setTimeout(()=>{
-                    this.isShowCtrl = false
-                },3000)
+                // this.showCtrlTime = setTimeout(()=>{
+                //     this.isShowCtrl = false
+                // },3000)
             },
             Leave(e){
                 clearTimeout(this.showCtrlTime)
-                this.showCtrlTime = setTimeout(()=>{
-                    this.isShowCtrl = false
-                },3000)
+                // this.showCtrlTime = setTimeout(()=>{
+                //     this.isShowCtrl = false
+                // },3000)
             },
             LeaveMeeting(){
 				alert('会议已结束,即将离开会议')
@@ -743,7 +738,7 @@
 	}
 	.leftBig_box{
 		 width: 100%;
-		 height: calc(100vh - 36px);
+		 // height: calc(100vh - 36px);
 		 margin: 0 auto;
 		 margin-top: 36px;
 		 background: #000000;
@@ -941,13 +936,16 @@
         position: relative;
         .flex(flex-start, flex-start);
         overflow: hidden;
-
+		padding: 12px;
+		box-sizing: border-box;
+		background: #EEEEEE;
         .content {
             min-width: 1080px;
             position: relative;
             height: 100%;
             flex: 1;
             background-color: #000000;
+			overflow: hidden;
         }
     }
 

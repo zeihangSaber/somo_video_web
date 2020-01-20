@@ -1,15 +1,15 @@
 <template>
     <div class="ctrlMiddle" >
         <div class="ctrlMiddleName" v-if="!isShare">{{data.name == null ? data.uid : data.name}}</div>
+		<div v-if="data.role === 4" class="tag">(主持人){{data.mic}}</div>
 		<div  v-if="isShare">{{data.name ? data.name : data.uid}}<span>-屏幕共享中</span></div>
-        <i class="font_family icon-mic" v-if="data.mic === 0"></i>
+        <i v-if="data.mic === 0" class="font_family icon-mic" ></i>
         <svg v-else class="icon" aria-hidden="true">
             <use xlink:href="#icon-mic-no"></use>
         </svg>
 		<svg v-if="data.speaker == 1" class="icon speaker_icon" aria-hidden="true">
 		    <use xlink:href="#iconzhujiang"></use>
 		</svg>
-        <div v-if="data.role === 4" class="tag">主持人</div>
     </div>
 </template>
 
@@ -51,10 +51,10 @@
         color: #fff;
         font-size: 16px;
         position: absolute;
-        left: 0;
-        top: 0px;
-        background-color: rgba(0, 0, 0, 0.6);
-        border-radius: 0 20px 20px 0;
+        left: 12px;
+        top: 12px;
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 17px;
         z-index: 500;
         .flex(center, center);
         svg {
@@ -62,16 +62,20 @@
         }
         .icon-mic {
             color: #fff;
-            font-size: 24px;
+			margin-left: 5px;
+            font-size: 20px;
         }
+		.icon{
+			font-size: 20px;
+		}
         .tag {
-            .fontStyle(10px, #fff);
-            width: 48px;
-            height: 20px;
+            .fontStyle(16px, #fff);
+            // width: 48px;
+            // height: 20px;
             line-height: 23px;
             text-align: center;
-            background-color: #118BFB;
-            border-radius: 4px;
+            // background-color: #118BFB;
+            // border-radius: 4px;
             margin-left: 5px;
         }
     }

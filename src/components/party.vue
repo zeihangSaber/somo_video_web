@@ -21,7 +21,7 @@
           "
           @click="searchShow()"
         ></i>
-        <i class="font_family icon-close" @click="$emit('handleParty')"></i>
+        <!-- <i class="font_family icon-close" @click="$emit('handleParty')"></i> -->
       </div>
     </div>
     <div class="box">

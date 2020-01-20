@@ -1,12 +1,13 @@
 <template>
 	<div class="ctrlBox">
+		<!-- 顶部 -->
 		<div class="ctrlHeader" v-show="isShowCtrl">
 			<i></i>
 			<div class="center">
 				<span class="bigSpan">会议号：{{this.data.code}}</span>
 				<span class="bigSpan" v-if="password != ''">密码：{{password}}</span>
-				<span class="bigSpan">
-					<i v-if="this.data.locked" class="font_family icon-lock"></i>
+				<span class="bigSpan" v-if="this.data.locked">
+					<i class="font_family icon-lock"></i>
 				</span>
 				<span v-show="this.data.name">
 					{{ this.data.name }}
@@ -24,34 +25,48 @@
 					<i class="font_family icon-time"></i>
 					{{timer || '00:00:00'}}
 				</span>
+				<div class="fullScreen" @click="$emit('handleSide')">
+					<img v-if="changeScreen" class="NOfullScreen_icon" src="../assets/NOfullScreen.png" alt="">
+					<img v-if="!changeScreen" class="fullScreen_icon" src="../assets/fullScreen.png" alt="">
+				</div>
 			</div>
 			<!-- <i class="font_family icon-wifi-high" style="font-size: 16px !important;"></i> -->
 		</div>
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		<div v-show="isShowCtrl" :class="`ctrlLeft ${slideCount === 1 ? 'disable_' : ''}`" @click="$emit('prevSlide')" v-if="maxSlide > 1"><i class="font_family icon-left"></i></div>
 		<div v-show="isShowCtrl" :class="`ctrlRight ${slideCount === maxSlide ? 'disable_' : ''}`" @click="$emit('nextSlide')" v-if="maxSlide > 1"><i class="font_family icon-right"></i></div>
 		<div v-show="isShowCtrl" class="ctrlPoint" v-if="maxSlide > 1">
 			<div style="color: #FFFFFF;">{{slideCount + '/' + maxSlide}}</div>
 		</div>
+		<!-- 底部 -->
 		<div  :class="isShowCtrl?'ctrlFooter':'ctrlFooter ctrlFooter_'">
 			<div v-if="countDownshow" :class="isShowCtrl?'tenMinute':'tenMinute_'" >会议剩余时长:{{tentime}}</div>
+			<div>{{timer || '00:00:00'}}</div>
 			<div v-show="isShowCtrl">
-				<i></i>
 				<div class="center">
 					<button @click="handleMic()"  v-if="myMic == true || myMic == undefined">
 						<i  :class="`font_family ${data.mine && data.mine.mic === 1 ? 'icon-mic-no' : 'icon-mic'}`"></i>
-						静音
+						<!-- 静音 -->
 					</button>
 					<button v-if="myMic == false" @click="handleMic(MicStatus)" :title="MicTitle">
 						<i class="font_family icon-mic-no"></i>
-						静音
+						<!-- 静音 -->
 					</button>
 					<button @click="handleCamera" v-if="myCamera == true || myCamera == undefined">
 						<i :class="`font_family ${data.mine && data.mine.camera === 1 ? 'icon-camera-no' : 'icon-camera'}`"></i>
-						视频
+						<!-- 视频 -->
 					</button>
 					<button v-if="myCamera == false" @click="handleCamera(CameraStatus)" :title="CameraTitle">
 						<i class="font_family icon-camera-no"></i>
-						视频
+						<!-- 视频 -->
 					</button>
 					<button style="margin: 0;position: relative;">
 						<!--${ShowShare ? 'active' : ''}-->
@@ -59,7 +74,8 @@
 						        v-clipboard:copy="sysAppIds"
 						        v-clipboard:success="onCopy"
 						        v-clipboard:error="onError">
-								<i :class="`font_family icon-sharing`"></i>邀请
+								<i :class="`font_family icon-sharing`"></i>
+								<!-- 邀请 -->
 						</button>
 						<div class="invite_hint" v-if="inviteHint">
 							<svg  class="icon invite_hint_icon" aria-hidden="true">
@@ -67,23 +83,27 @@
 							</svg>
 						</div>
 					</button>
-					<button @click="$emit('handleMessage')">
-						<i :class="`font_family icon-barrage ${showSide && showMessage ? 'active' : ''}`"></i>消息
+					<!-- <button @click="$emit('handleMessage')">
+						<i :class="`font_family icon-barrage ${showSide && showMessage ? 'active' : ''}`"></i>
+						消息
 					</button>
 					<button @click="$emit('handleParty')">
-						<i :class="`font_family icon-members ${showSide && showParty ? 'active' : ''}`"></i>参会方
-					</button>
+						<i :class="`font_family icon-members ${showSide && showParty ? 'active' : ''}`"></i>
+						参会方
+					</button> -->
 					<button @click="() => showSetting = !showSetting">
-						<i :class="`font_family icon-setting ${showSetting ? 'active' : ''}`"></i>设置
+						<i :class="`font_family icon-setting ${showSetting ? 'active' : ''}`"></i>
+						<!-- 设置 -->
 					</button>
 					<button @click="$emit('LeaveMeeting')">
-						<i style="color:#FF5245" class="font_family icon-tuichu-normal "></i>离开
+						<i style="color:#FF5245" class="font_family icon-tuichu-normal "></i>
+						<!-- 离开 -->
 					</button>
 				</div>
 			</div>
-			<button :class="isShowCtrl?'zoomIn':'zoomIn_yc'" @click="$emit('handleSide')">
+			<!-- <button :class="isShowCtrl?'zoomIn':'zoomIn_yc'" @click="$emit('handleSide')">
 				<i :class="`font_family ${changeScreen ? 'icon-zoomOut' : 'icon-zoomIn'}`" style="font-size: 37px;"></i>
-			</button>
+			</button> -->
 		</div>
 		<transition enter-active-class="animated flipInY fast" leave-active-class="animated flipOutY fast">
 			<div v-show="isShowCtrl" class="set_box" v-if="showSetting">
@@ -438,8 +458,8 @@
 	width: 100px;
 	height: 100px;
 	position: absolute;
-	top: -100px;
-	left: -27.5%;
+	top: -107px;
+	right: 25.5%;
 }
 .set_icon{
 	font-size: 16px !important;
@@ -451,8 +471,8 @@
 	background:#FFFFFF;
 	border-radius:8px;
 	position: absolute;
-	bottom: 115px;
-	left: 55%;
+	bottom: 70px;
+	right: 1%;
 	z-index: 110000;
 	.set_main{
 		padding: 0 48px 0 32px;
@@ -510,19 +530,35 @@
     left: 0;
     top: 0;
     width: 100%;
-    background-color: rgba(0, 0, 0, 1);
+    background-color: #FFFFFF;
     z-index: 9999;
-    color: #fff;
+    color: #444444;
     line-height: 36px;
     .flex(space-between, center);
     text-align: center;
     .bigSpan {
-      font-weight: bolder;
+      font-weight: 400;
     }
+	.fullScreen{
+		position: absolute;
+		right: 10px;
+		top: 6px;
+		.fullScreen_icon{
+			width:60px;
+			height:24px;
+		}
+		.NOfullScreen_icon{
+			width:88px;
+			height:24px;
+		}
+	}
     .center {
       flex: 1;
       span {
-        margin: 0 20px;
+        margin: 0 8px;
+		i{
+			color: #999999;
+		}
       }
     }
   }
@@ -585,33 +621,33 @@
   }
   .ctrlFooter {
     padding: 0 20px;
-    height: 80px;
+	width: 100%;
+    height: 52px;
     position: absolute;
     left: 0;
     bottom: 0;
-    width: 100%;
 	// background: pink;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: #2D2F33;
     z-index: 9999;
     color: #fff;
     line-height: 80px;
-    .flex(center, center);
+    .flex(space-between, center);
     .center {
       flex: 1;
       text-align: center;
-      .flex(center, center);
-      padding-bottom: 5px;
+      .flex(space-between, center);
+      // padding-bottom: 5px;
       button {
         background-color: transparent;
         outline: none;
         border: none;
-        color: #fff;
+        color: #DDDDDD;
         font-size: 16px;
         font-weight: normal;
-        margin: 0 20px;
+        // margin: 0 20px;
         i {
           display: block;
-          font-size: 44px;
+          font-size: 36px;
         }
 		.cs{
 			color: #FFFFFF !important;

@@ -1,8 +1,8 @@
 <template>
     <div
         class="playerBox"
-        v-if="data.uid !== meetingInfo.mine.uid"
-        :id="data.uid === meetingInfo.mine.uid ? 'mine' : ''"
+        v-if="data.uid !== myUid"
+        :id="data.uid === myUid ? 'mine' : ''"
     >
         <player-status :data="data" :isShare="isShare"></player-status>
         <div class="grail" ref="grail">
@@ -35,7 +35,7 @@
                     }
                 },
             },
-            meetingInfo: {},
+            myUid: 0,
             howMany: "zero",
             isShare: false,
             mineFlag: false
@@ -83,7 +83,7 @@
                 // this.ksInit();
             },
             createVideo() {
-                if (this.data.uid === this.meetingInfo.mine.uid) return;
+                if (this.data.uid === this.myUid) return;
                 let dom = document.createElement("video");
                 dom.className = "video-js vjs-default-skin";
                 this.$refs.grail.append(dom);

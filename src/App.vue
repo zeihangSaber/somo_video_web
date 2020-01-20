@@ -1,7 +1,6 @@
 <template>
     <div id="app">
-        <div class="content" @mousemove="Enter($event)" @mouseenter="Enter($event)" @mouseleave="Leave($event)"
-             ref="content">
+        <div class="content" @mousemove="Enter($event)" @mouseenter="Enter($event)" @mouseleave="Leave($event)" ref="content">
             <!-- 30分钟 -->
             <div v-if="endMeeting" class="timeUseUP_box">
                 <div class="timeUseUP">
@@ -12,6 +11,7 @@
             <div class="breakLine" v-if="breakLine">
                 您的网络已断开，请检查网络设置
             </div>
+            <ctrl :data="meetingInfo"></ctrl>
             <div class="playerBigBox" style="padding-bottom: 0"></div>
             <swiper>
                 <div ref="draggable"></div>

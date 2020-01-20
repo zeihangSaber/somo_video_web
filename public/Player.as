@@ -27,7 +27,6 @@ public class Player extends MovieClip {
 
     internal var _bufferTime:int = 1;
 
-
     public function Player() {
         ExternalInterface.addCallback("setScreenSize", setScreenSize);
         ExternalInterface.addCallback("setScreenPosition", setScreenPosition);
@@ -82,16 +81,11 @@ public class Player extends MovieClip {
 
     private function displayPlaybackVideo(name:String):void {
         nsPlayer = new NetStream(nc);
-        // var vs:VideoStreamSettings = new VideoStreamSettings();
-        // vs.setKeyFrameInterval(24);
-        // vs.setMode(640, 480, 24);
-        // nsPlayer.videoStreamSettings = vs;
-
-        // setInterval(function ():void {
-        //     ExternalInterface.call("console.log", "bufferLength:" + nsPlayer.bufferLength + "~~~bufferTime:" + nsPlayer.bufferTime + "~~~bufferTimeMax:" + nsPlayer.bufferTimeMax);
-        //     ExternalInterface.call("console.log", "currentFPS:" + nsPlayer.currentFPS + "~~~liveDelay:" + nsPlayer.liveDelay);
-        //     ExternalInterface.call("console.log", "connected:" + nsPlayer.info);
-        // }, 1000);
+        setInterval(function ():void {
+            ExternalInterface.call("console.log", "bufferLength:" + nsPlayer.bufferLength + "~~~bufferTime:" + nsPlayer.bufferTime + "~~~bufferTimeMax:" + nsPlayer.bufferTimeMax);
+            ExternalInterface.call("console.log", "currentFPS:" + nsPlayer.currentFPS + "~~~liveDelay:" + nsPlayer.liveDelay);
+            ExternalInterface.call("console.log", "connected:" + nsPlayer.info);
+        }, 1000);
 
         nsPlayer.addEventListener(NetStatusEvent.NET_STATUS, function (event: NetStatusEvent): void {
             ExternalInterface.call("console.log", event.info.code);

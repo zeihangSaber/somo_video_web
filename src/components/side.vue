@@ -40,6 +40,7 @@ export default {
     width: 320px !important;
     background-color: #f4f4f4;
     height: 100%;
+	margin-left: 12px;
     .flex(space-around, flex-start);
     flex-direction: column;
     .head {

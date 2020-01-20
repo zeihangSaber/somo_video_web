@@ -16,6 +16,7 @@
             <swiper>
                 <div ref="draggable"></div>
             </swiper>
+			<SideBox></SideBox>
         </div>
         <div class="mask_app" v-if="!meetingShow">
             <div class="mask_content">
@@ -278,7 +279,6 @@
 <style lang="less">
     @import "./common/base";
     @import "./common/common";
-
     .penetrate {
         width: 100%;
         height: 100%;
@@ -578,13 +578,16 @@
         position: relative;
         .flex(flex-start, flex-start);
         overflow: hidden;
-
+		padding: 12px;
+		box-sizing: border-box;
+		background: #EEEEEE;
         .content {
             min-width: 1080px;
             position: relative;
             height: 100%;
             flex: 1;
             background-color: #000000;
+			overflow: hidden;
         }
     }
 

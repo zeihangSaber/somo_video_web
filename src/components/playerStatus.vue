@@ -1,7 +1,7 @@
 <template>
     <div class="ctrlMiddle" >
         <div class="ctrlMiddleName" v-if="!isShare">{{data.name == null ? data.uid : data.name}}</div>
-		<div v-if="data.role === 4" class="tag">(主持人){{data.mic}}</div>
+		<div v-if="data.role === 4" class="tag">(主持人)</div>
 		<div  v-if="isShare">{{data.name ? data.name : data.uid}}<span>-屏幕共享中</span></div>
         <i v-if="data.mic === 0" class="font_family icon-mic" ></i>
         <svg v-else class="icon" aria-hidden="true">
@@ -17,7 +17,7 @@
     export default {
 		data(){
 			return{
-				
+
 			}
 		},
         props: {

@@ -2,25 +2,23 @@
     <div class="bigBox">
         <div class="title">
             <p class="p">消息(<span>{{message.length}}</span>)</p>
-            <!-- <i class="font_family icon-close" @click="$emit('handleMessage')"></i> -->
         </div>
         <div class="box">
             <div class="top">
-                <!-- <div class="time">{{time}}</div> -->
                 <div class="topBox" ref="topBox">
                     <div ref="topBox_">
-                        <div class="msgBox" v-for="itme in message">
-                            <div v-if="itme.uid != meetingInfo.mine.uid" class="msg rests_msg">
+                        <div class="msgBox" v-for="item in message">
+                            <div v-if="item.uid != meetingInfo.uid" class="msg rests_msg">
 								<div class="user_name-time">
-									<div class="msgBox-name">{{itme.name}}</div>
-									<span class="msg_time">{{itme.time}}</span>
+									<div class="msgBox-name">{{item.name}}</div>
+									<span class="msg_time">{{item.time}}</span>
 								</div>
 
-                                <div class="msgBox-content others_content">{{itme.text}}</div>
+                                <div class="msgBox-content others_content">{{item.text}}</div>
                             </div>
-                            <div v-if="itme.uid == meetingInfo.mine.uid" class="ME-msg msg">
-                                <div class="msgBox-name"><span class="msg_time my_time">{{itme.time}}</span>{{itme.name}}</div>
-                                <div class="msgBox-content my_content">{{itme.text}}</div>
+                            <div v-if="item.uid == meetingInfo.uid" class="ME-msg msg">
+                                <div class="msgBox-name"><span class="msg_time my_time">{{item.time}}</span>{{item.name}}</div>
+                                <div class="msgBox-content my_content">{{item.text}}</div>
                             </div>
                         </div>
                     </div>
@@ -32,7 +30,7 @@
 					<div class="textarea_box"><textarea class="textarea" wrap="virtual" maxlength="70" placeholder="在此处输入消息…" rows="3" v-model="msgContent"></textarea></div>
 					<button :disabled=disabled @click="send_msg()">
 						<i class="font_family icon-fasong" ></i><br>
-						{{msgContent.length}}/70
+						{{msgContent.length}} / 70
 					</button>
 				</div>
             </div>
@@ -42,20 +40,36 @@
 <script>
     import antiquity from "../utils/Antiquity";
     export default {
-        props: ["barrage", "meetingInfo", "message"],
+        props: {
+            meetingInfo: {
+                default() {
+                    return {
+                        uid: 0,
+                        mid: 0,
+                        name: '还没取名得小可爱'
+                    }
+                }
+            }
+        },
         data() {
             return {
                 time: '',
                 msgContent: '',
-				height:''
+				height:'',
+                message:[]
             }
         },
+        beforeCreate() {
+            antiquity.on("getMsg", () => {
+                this.message = antiquity.getMsg();
+            });
+        },
         mounted() {
-            this._time()
+            this.message = antiquity.getMsg();
         },
 		watch:{
 			message: function () {
-			    this.Talk(2)
+			    this.Talk(2);
                 const newArr = [
                     this.message[this.message.length - 3],
                     this.message[this.message.length - 2],
@@ -77,7 +91,7 @@
         },
         methods: {
             Talk(type) {
-				this.height = parseInt(this.$refs.topBox.scrollTop + this.$refs.topBox.clientHeight)
+				this.height = parseInt(this.$refs.topBox.scrollTop + this.$refs.topBox.clientHeight);
                 // 自己发消息时触发
 				if (type == 1){
 					setTimeout(() => {
@@ -91,36 +105,21 @@
             },
             send_msg() {
                 this.Talk(1);
-				event.preventDefault()
 				if(!Base64.encode(this.msgContent)){
 					return
 				}
                 antiquity.ajax.broadcast({
-                    "mid": this.meetingInfo.id,
+                    "mid": this.meetingInfo.mid,
                     "text": Base64.encode(this.msgContent)
                 }).then((res) => {
                     this.message.push({
-                        name: this.meetingInfo.mine.name,
+                        name: this.meetingInfo.name,
                         text: this.msgContent,
-                        uid: this.meetingInfo.mine.uid,
-						time:this._time()
+                        uid: this.meetingInfo.uid,
+						time: antiquity.moment().format('hh:mm:ss')
                     });
                     this.msgContent = ''
                 })
-            },
-            // 实时获取当前电脑时间
-            _time() {
-                    let t = new Date();
-                    let hour = t.getHours(); //得到小时
-                    let minu = t.getMinutes(); //得到分钟
-                    let sec = t.getSeconds(); //得到秒
-                    if (minu < 10) {
-                        minu = '0' + minu
-                    }
-                    if (sec < 10) {
-                        sec = '0' + sec
-                    }
-                    return hour + ':' + minu + ':' + sec
             },
         }
     }

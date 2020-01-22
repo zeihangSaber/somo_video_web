@@ -1,21 +1,11 @@
 <template>
-    <div class="myAside"  v-if=" showParty|| showMessage">
-        <div class="head">
-            <div class="volce">
-                <p class="name" v-show="this.data.name">{{ this.data.name }}</p>
-                <p class="info">
-                    <span class="code">会议号：{{this.data.code}}</span>
-                    <span v-if="data.pwd">密码：{{this.data.pwd}}</span>
-                </p>
-            </div>
-            <!-- <div class="myImg" :style="`background-image: url(${data.avarter ? data.avarter : ''});`"></div> -->
-        </div>
+    <div class="myAside" v-if="showSide">
         <div class="foot">
             <transition enter-active-class="animated slideInRight faster" leave-active-class="animated slideOutRight faster">
-                <party v-if="showParty" :data="data" @handleParty="() => $emit('handleParty')" :members="members" :hasControl="data.control"></party>
+                <party :data="meetingInfo" :hasControl="meetingInfo.control"></party>
             </transition>
             <transition enter-active-class="animated slideInRight faster" leave-active-class="animated slideOutRight faster">
-                <message v-if="showMessage" @handleMsg="(arr) => $emit('handleMsg', arr)" @handleMessage="() => $emit('handleMessage')" :barrage="barrage" :meetingInfo="data" :message="message"></message>
+                <message :meetingInfo="meetingInfo"></message>
             </transition>
         </div>
     </div>
@@ -25,8 +15,17 @@ import Message from "./message"
 import Party from "./party"
 export default {
     name: "side",
-    props: ["data", "members", "showMessage", "showParty", "barrage", "message"],
-    components: {Message, Party},
+    props: {
+        meetingInfo: {
+            default() {
+                return {
+                    control: false
+                }
+            }
+        },
+        showSide: Boolean
+    },
+    components: { Message, Party },
     data() {
         return {
 

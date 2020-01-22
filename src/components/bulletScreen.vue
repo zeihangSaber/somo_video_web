@@ -1,6 +1,6 @@
 <template>
 		<div class="bulletScreenZ" >
-		    <div v-for="item in realMsg" class="bulletScreen-msg">
+		    <div v-for="item in message" class="bulletScreen-msg">
 		        <span class="bulletScreen-name">{{item.name}}：</span>
 		        <span class="bulletScreen-main">{{item.text}}</span>
 		    </div>
@@ -8,18 +8,18 @@
 </template>
 
 <script>
+	import antiquity from "../utils/Antiquity";
+
 	export default{
-		props: ["msgBox"],
 		data(){
 			return{
-
+				message: []
 			}
 		},
-		computed: {
-			realMsg() {
-				console.log(this.msgBox);
-				return this.msgBox.filter(item => item)
-			}
+		beforeCreate() {
+			antiquity.on("getMsg", () => {
+				this.message = antiquity.getMsg(3);
+			});
 		}
 	}
 </script>

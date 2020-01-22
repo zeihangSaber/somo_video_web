@@ -2,18 +2,17 @@
     <div
         class="playerBox"
         v-if="data.uid !== myUid"
-        :id="data.uid === myUid ? 'mine' : ''"
     >
-        <player-status :data="data" :isShare="isShare"></player-status>
+        <player-status :data="data" :isShare="data.isShare"></player-status>
         <div class="grail" ref="grail">
-            <my-player :data="this.data" :isShare="this.isShare" @handleIsPlay="(arg) => this.isPlay = arg"></my-player>
-<!--            <div :id="`player_${data.uid}_tc`" class="vjs-tech"></div>-->
-<!--            <div :id="`player_${data.uid}_ali`" ref="ali" class="vjs-tech"></div>-->
-<!--            <video :id="`player_${data.uid}_ks`" ref="ks"></video>-->
+            <my-player :data="this.data" :isShare="data.isShare" @handleIsPlay="(arg) => this.isPlay = arg"></my-player>
+            <!--<div :id="`player_${data.uid}_tc`" class="vjs-tech"></div>-->
+            <!--<div :id="`player_${data.uid}_ali`" ref="ali" class="vjs-tech"></div>-->
+            <!--<video :id="`player_${data.uid}_ks`" ref="ks"></video>-->
         </div>
-        <div :class="`${(data.camera === 0 && isPlay) ? 'hasCamera' : 'noCamera'} ${(isShare || !isPlay) && data.camera !== 1 ? 'deepBg' : ''}`">
-            <img v-if="(isShare || !isPlay) && data.camera !== 1" src="https://182.61.17.228/common/logoGif.gif">
-            <i v-if="data.camera === 1" :class="`font_family icon-camera-none ${(data.camera === 0 && isPlay) || isShare ? 'hasCamera' : '_noCamera'}`"></i>
+        <div :class="`${(data.camera === 0 && isPlay) ? 'hasCamera' : 'noCamera'} ${(data.isShare || !isPlay) && data.camera !== 1 ? 'deepBg' : ''}`">
+            <img v-if="(data.isShare || !isPlay) && data.camera !== 1" src="https://182.61.17.228/common/logoGif.gif">
+            <i v-if="data.camera === 1" :class="`font_family icon-camera-none ${(data.camera === 0 && isPlay) || data.isShare ? 'hasCamera' : '_noCamera'}`"></i>
         </div>
         <div class="holder"></div>
     </div>
@@ -31,7 +30,8 @@
                         name: "wait",
                         role: -1,
                         camera: 1,
-                        url: "rtmp://58.200.131.2:1935/livetv/hunantv"
+                        url: "rtmp://58.200.131.2:1935/livetv/hunantv",
+                        isShare: false
                     }
                 },
             },
@@ -63,7 +63,7 @@
         computed: {
             src() {
                 console.log(`~~~~~~~~~~~~~~~, 流地址发生变化`);
-                return this.isShare ? this.data.shareUrl : this.data.url
+                return this.data.isShare ? this.data.shareUrl : this.data.url
             }
         },
         mounted() {
@@ -287,7 +287,7 @@
             }
         }
         .holder {
-            padding-bottom: 56.25%;
+            padding-bottom: 75%;
             width: 0;
         }
     }
@@ -344,7 +344,7 @@
         }
     }
     .vjs-playing {
-        width: 133.33333%;
-        height: 133.33333%;
+        width: 150%;
+        height: 150%;
     }
 </style>

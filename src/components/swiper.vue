@@ -1,10 +1,20 @@
 <template>
-    <div class="swiper">
-        <slot></slot>
+    <div class="swiper" ref="swiper">
+        <div :class="activeSection === sliderList.isMine ? 'boxIn' : 'boxOut'" :style="`position: absolute; top: ${top}px; left: ${left}px; height: ${Height}px; width: ${Width}px`">
+            <slot></slot>
+        </div>
         <div id="fullPage" ref="fullPage">
             <template>
-                <div v-for="slider of sliderList">
-                    <player v-for="player of slider" :data="player" :key="player.uid"></player>
+                <div class="section" v-for="(slider, index) in sliderList">
+                    <div
+                        :class="slider.isSpeaker || slider.isSharer || peopleNum < 3 ? 'swiperOne' : 'bigSwiper'"
+                        :style="`height: ${height}`"
+                    >
+                        <div v-if="slider.hasMine" ref="bug" :class="`playerBox ${peopleNum === 2 ? 'sliderTwo' : ''}`"></div>
+                        <template v-if="activeSection === index">
+                            <player v-for="player of slider" :data="player" :key="player.uid" :myUid="meetingInfo.myUid"></player>
+                        </template>
+                    </div>
                 </div>
             </template>
         </div>
@@ -16,21 +26,69 @@
     import Player from "../components/player"
     import fullPage from "fullpage.js"
     export default {
+        props: {
+            meetingInfo: {
+                default() {
+                    return {
+                        myUid: 0
+                    }
+                }
+            },
+            sliderCount: Number
+        },
         data() {
             return {
-                sliderList: []
+                sliderList: [[]],
+                fullPage: null,
+                height: "100%",
+                activeSection: 0,
+                peopleNum: 1,
+                top: 0,
+                left: 0,
+                Height: 0,
+                Width: 0
             }
         },
         created() {
-            antiquity.on("newSlider", () => {
-                this.sliderList = antiquity.getSlides(4);
-                console.log("sliderList~~~~~~~~~~~~~~~~~", this.sliderList);
+            antiquity.on("newSlider", async () => {
+                this.sliderList = antiquity.getSlides(this.sliderCount);
+                await this.$nextTick();
+                await this.$nextTick();
+                await this.$nextTick();
+                const { peopleNum } = antiquity.getPeopleNum();
+                this.peopleNum = peopleNum;
+                this.left = this.$refs.bug[0].offsetLeft;
+                this.top = this.$refs.bug[0].offsetTop;
+                this.Height = this.$refs.bug[0].offsetHeight;
+                this.Width = this.$refs.bug[0].offsetWidth;
+                this.activeSection = this.fullPage.getActiveSection().index
             })
         },
-        mounted() {
-            this.$nextTick(() => {
-                new fullPage(this.$refs.fullPage, {})
+        async mounted() {
+            await this.$nextTick();
+            await this.$nextTick();
+            await this.$nextTick();
+            this.fullPage = new fullPage(this.$refs.fullPage, {
+                afterLoad: () => {
+                    this.height = `${this.$refs.swiper.offsetHeight}px`;
+                },
+                afterResize: (width, height) => {
+                    this.height = `${this.$refs.swiper.offsetHeight}px`;
+                    this.left = this.$refs.bug[0].offsetLeft;
+                    this.top = this.$refs.bug[0].offsetTop;
+                    this.Height = this.$refs.bug[0].offsetHeight;
+                    this.Width = this.$refs.bug[0].offsetWidth;
+                    this.activeSection = this.fullPage.getActiveSection().index
+                }
             })
+        },
+        watch: {
+            async sliderList() {
+                await this.$nextTick();
+                await this.$nextTick();
+                await this.$nextTick();
+                this.fullPage && this.fullPage.reBuild()
+            }
         },
         components: {
             Player: Player
@@ -43,5 +101,10 @@
     .swiper {
         width: 100%;
         height: 100%;
+    }
+    .bigSwiper {
+        .flex(flex-start, flex-start);
+        align-content: flex-start;
+        flex-wrap: wrap;
     }
 </style>

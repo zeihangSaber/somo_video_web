@@ -11,13 +11,25 @@
             <div class="breakLine" v-if="breakLine">
                 您的网络已断开，请检查网络设置
             </div>
-            <ctrl :data="meetingInfo"></ctrl>
-            <div class="playerBigBox" style="padding-bottom: 0"></div>
-            <swiper>
-                <div ref="draggable"></div>
-            </swiper>
-			<SideBox></SideBox>
+            <ctrl
+                :data="meetingInfo"
+                :sliderCount="sliderCount"
+                :filtrationBtn="filtrationBtn"
+                :showSide="isShowSide"
+                @handleSide="isShowSide = !isShowSide"
+                @handleCount="(num) => sliderCount = num"
+                @handleFiltration="() => filtrationBtn = !filtrationBtn"
+            ></ctrl>
+            <div :class="`playerBigBox ${howMany}`">
+                <swiper :meetingInfo="{myUid: meetingInfo.mine.uid}" :sliderCount="sliderCount">
+                    <div style="height: 100%; width: 100%;" ref="draggable"></div>
+                </swiper>
+            </div>
         </div>
+        <SideBox
+            :showSide="isShowSide"
+            :meetingInfo="{locked: meetingInfo.locked, control: meetingInfo.control, muteAll: meetingInfo.muteAll, mid:meetingInfo.id, uid: meetingInfo.mine.uid, name: meetingInfo.mine.name}"
+        ></SideBox>
         <div class="mask_app" v-if="!meetingShow">
             <div class="mask_content">
                 <img src="https://182.61.17.228/common/somo_log.png">
@@ -28,6 +40,7 @@
 </template>
 
 <script>
+    import animate from 'animate.css';
     import Player from './components/player';
     import Ctrl from './components/controls';//左边的顶部和底部
     import SideBox from './components/side';// 右边模块的组件
@@ -46,9 +59,11 @@
         },
         data() {
             return {
+                // 会议信息
                 meetingInfo: {
                     mine: {
-                        speaker: 0
+                        speaker: 0,
+                        uid: 0
                     }
                 },
                 // 权限
@@ -59,28 +74,41 @@
                 meetingShow: true,
                 // 控制台
                 isShowCtrl: true,
-                showCtrlTime: "",
+                // 显示控制台得时间
+                showCtrlTime: 3000,
                 // 全屏
                 changeScreen: false,
                 // 侧边
                 isShowSide: true,
                 // 信息
                 isShowMessage: true,
+                // 参会列表
                 isShowParty: true,
+                // 分享
                 isShowShare: false,
-                barrage: false,
+                // 界面初始化
+                waiting: true,
+                // 是否断网
+                breakLine: false,
+                // 几分屏
+                sliderCount: 4,
+
                 timer: '',
                 time: '',
-                not_time: 1000,
-                waiting: true,
                 joinStatus: 1,
                 screenStatus: 0,
                 destroy_timer: '',
                 endMeeting: 0,
                 countDown: 0,
                 NOtenTimer: 0,
-                breakLine: false,// 断网
             };
+        },
+        computed: {
+            howMany() {
+                if (this.sliderCount === 4) return 'four';
+                if (this.sliderCount === 9) return 'nine';
+                return 'fir'
+            }
         },
         beforeCreate() {
             if (Boolean(antiquity.getBrowserInfo.match(/safari/gi)) && sessionStorage.getItem('safari') != 1) {
@@ -153,12 +181,12 @@
                     this.destroy_timer = setInterval(() => {
                         let timestamp = (new Date()).getTime();//当前时间戳
                         this.time = timestamp - this.meetingInfo.start;
-                        this.timer = this.formatDuring(this.time)
+                        this.timer = this.formatDuring(this.time);
                     }, 1000)
                 } else if (this.meetingInfo.start == 0) {
                     this.destroy_timer_ = setInterval(() => {
-                        this.myTime = this.myTime + 1000
-                        this.timer = this.formatDuring(this.myTime)
+                        this.myTime = this.myTime + 1000;
+                        this.timer = this.formatDuring(this.myTime);
                     }, 1000)
                 }
             },
@@ -188,7 +216,6 @@
                     } else if (document.webkitCancelFullScreen) {
                         document.webkitCancelFullScreen();
                     }
-                    // antiquity.rtmp.reset()
                     this.changeScreen = false;
                 } else {
                     // 全屏
@@ -224,61 +251,76 @@
                 this.slideCount !== this.maxSlide && ++this.slideCount;
             },
             Enter(e) {
-                clearTimeout(this.showCtrlTime)
-                this.isShowCtrl = true
+                clearTimeout(this.showCtrlTime);
+                this.isShowCtrl = true;
                 this.showCtrlTime = setTimeout(() => {
                     this.isShowCtrl = false
                 }, 3000)
             },
             Leave(e) {
-                clearTimeout(this.showCtrlTime)
+                clearTimeout(this.showCtrlTime);
                 this.showCtrlTime = setTimeout(() => {
                     this.isShowCtrl = false
                 }, 3000)
             },
             LeaveMeeting() {
-                antiquity.leaveMeeting()
+                antiquity.leaveMeeting();
                 this.$Toast.success({message: '正在离开会议....'});
             },
-            init() {
-                this.$nextTick(async () => {
-                    this.shareData = {
-                        mid: myMid,
+            async init() {
+                await this.$nextTick();
+                this.shareData = {
+                    mid: myMid,
+                    password: Password,
+                };
+                const { vmt: { video_url } } = await antiquity
+                    .joinMeeting({
+                        code: myMid,
                         password: Password,
-                    };
-                    // this.isShowShare_ = MeetingStatus;
-                    await antiquity
-                        .joinMeeting({
-                            code: myMid,
-                            password: Password,
-                            width: 480,
-                            height: 360,
-                            dom: this.$refs.draggable
-                        })
-                        .then(res => {
-                            if (res.code == 1) {
-                                this.joinStatus = 0
-                                this.$Toast.success({message: '会议号不存在,请重新输入'});
-                                return
-                            }
-                            this.waiting = false;
-                        });
-                    antiquity.publish('', myCamera && this.meetingInfo.hasCam, myMic && this.meetingInfo.hasMic);
-                });
-            },
+                        width: 480,
+                        height: 360,
+                        dom: this.$refs.draggable
+                    })
+                    .then(res => {
+                        if (res.code == 1) {
+                            this.joinStatus = 0
+                            this.$Toast.success({message: '会议号不存在,请重新输入'});
+                            return
+                        }
+                        this.waiting = false;
+                        return res
+                    });
+                console.log(video_url, "video_url~~~~~~~~~~~~~~~~~~")
 
+                const {hasCam, hasMic} = await antiquity.hasCm();
+                console.log(myCamera, myMic, '~~~~~~~~~~~~~~~~~~~~~~he he');
+                antiquity.publish(video_url, myCamera && hasCam, myMic && hasMic);
+            },
         },
         destroyed() {
             clearInterval(this.destroy_timer);
             clearInterval(this.destroy_timer_);
             clearInterval(this.tenFENTimer)
         },
-    };
+    }
 </script>
 
 <style lang="less">
     @import "./common/base";
     @import "./common/common";
+    .boxOut {
+        position: absolute;
+        width: 360px;
+        height: 240px;
+        z-index: -200;
+    }
+    .boxIn {
+        position: absolute;
+        width: 360px;
+        height: 240px;
+        z-index: 200;
+    }
+
     .penetrate {
         width: 100%;
         height: 100%;
@@ -382,7 +424,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        padding-top: 36 rpx;
+        padding-top: 36px;
         box-sizing: border-box;
         position: relative;
     }
@@ -411,14 +453,9 @@
 
     .playerBigBox {
         width: 100%;
-        height: 0;
+        height: 100%;
         background: #2E2E2E;
-        padding-bottom: 56.25%;
         position: relative;
-        overflow: hidden;
-        .flex(flex-start, flex-start);
-        align-content: flex-start;
-        flex-wrap: wrap;
 
         &.fir {
             .playerBox {
@@ -458,6 +495,7 @@
         &.four {
             .playerBox {
                 width: 49.8%;
+                height: 49.8%;
                 margin: 0.1%;
                 position: relative;
             }
@@ -471,9 +509,9 @@
         &.nine {
             .playerBox {
                 width: 33.133%;
+                height: 33.133%;
                 margin: 0.1%;
             }
-
             .dragBox {
                 width: 33.133%;
                 // height: 33.133%;
@@ -486,7 +524,6 @@
             overflow: hidden;
             background-color: #444;
             position: relative;
-
             &.space {
                 background-color: #ccc;
             }
@@ -517,13 +554,6 @@
                     color: #666;
                 }
             }
-        }
-
-        .boxOut {
-            position: absolute;
-            width: 360px;
-            height: 240px;
-            z-index: -200;
         }
 
         .waiting {
@@ -559,7 +589,6 @@
     .icon-close {
         cursor: pointer;
         color: #999999;
-
         &:disabled {
             cursor: not-allowed;
             color: #ccc !important;
@@ -588,6 +617,7 @@
             flex: 1;
             background-color: #000000;
 			overflow: hidden;
+            padding: 36px 0 52px;
         }
     }
 

@@ -109,6 +109,9 @@
                 this.members = antiquity.getList();
             })
         },
+        mounted() {
+            this.members = antiquity.getList();
+        },
         methods: {
             searchShow() {
                 this.search_show = !this.search_show;

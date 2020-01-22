@@ -19,9 +19,10 @@
                 @handleSide="isShowSide = !isShowSide"
                 @handleCount="(num) => sliderCount = num"
                 @handleFiltration="() => filtrationBtn = !filtrationBtn"
+                @LeaveMeeting="LeaveMeeting"
             ></ctrl>
             <div :class="`playerBigBox ${howMany}`">
-                <swiper :meetingInfo="{myUid: meetingInfo.mine.uid}" :sliderCount="sliderCount">
+                <swiper :meetingInfo="{myUid: meetingInfo.mine.uid}" :sliderCount="sliderCount" :showSide="isShowSide">
                     <div style="height: 100%; width: 100%;" ref="draggable"></div>
                 </swiper>
             </div>
@@ -266,6 +267,7 @@
             LeaveMeeting() {
                 antiquity.leaveMeeting();
                 this.$Toast.success({message: '正在离开会议....'});
+                antiquity.toOfficial();
             },
             async init() {
                 await this.$nextTick();

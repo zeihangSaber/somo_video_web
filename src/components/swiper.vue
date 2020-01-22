@@ -17,6 +17,8 @@
                     </div>
                 </div>
             </template>
+<!--            <div class="section"></div>-->
+<!--            <div class="section"></div>-->
         </div>
     </div>
 </template>
@@ -34,9 +36,19 @@
                     }
                 }
             },
-            sliderCount: Number
+            sliderCount: Number,
+            showSide: Boolean
         },
         data() {
+            const moveSectionDown = antiquity.debounce((eve) => {
+                this.fullPage && this.fullPage.moveSectionDown();
+                console.log(eve);
+
+            });
+            const moveSectionUp = antiquity.debounce((eve) => {
+                this.fullPage && this.fullPage.moveSectionUp();
+                console.log(eve);
+            });
             return {
                 sliderList: [[]],
                 fullPage: null,
@@ -46,33 +58,65 @@
                 top: 0,
                 left: 0,
                 Height: 0,
-                Width: 0
+                Width: 0,
+                moveSectionDown: moveSectionDown,
+                moveSectionUp: moveSectionUp
             }
         },
         created() {
             antiquity.on("newSlider", async () => {
                 this.sliderList = antiquity.getSlides(this.sliderCount);
-                await this.$nextTick();
-                await this.$nextTick();
-                await this.$nextTick();
                 const { peopleNum } = antiquity.getPeopleNum();
                 this.peopleNum = peopleNum;
+                await this.$nextTick();
+                await this.$nextTick();
+                await this.$nextTick();
                 this.left = this.$refs.bug[0].offsetLeft;
                 this.top = this.$refs.bug[0].offsetTop;
                 this.Height = this.$refs.bug[0].offsetHeight;
                 this.Width = this.$refs.bug[0].offsetWidth;
-                this.activeSection = this.fullPage.getActiveSection().index
+                this.activeSection = this.fullPage.getActiveSection().index;
+                this.fullPage && this.fullPage.reBuild();
             })
         },
         async mounted() {
             await this.$nextTick();
             await this.$nextTick();
             await this.$nextTick();
-            this.fullPage = new fullPage(this.$refs.fullPage, {
-                afterLoad: () => {
-                    this.height = `${this.$refs.swiper.offsetHeight}px`;
-                },
-                afterResize: (width, height) => {
+            window.addEventListener('mousewheel', this.handleScroll, false);
+            setTimeout(() => {
+                this.fullPage = new fullPage(this.$refs.fullPage, {
+                    afterLoad: () => {
+                        this.height = `${this.$refs.swiper.offsetHeight}px`;
+                    },
+                    afterResize: (width, height) => {
+                        this.height = `${this.$refs.swiper.offsetHeight}px`;
+                        this.left = this.$refs.bug[0].offsetLeft;
+                        this.top = this.$refs.bug[0].offsetTop;
+                        this.Height = this.$refs.bug[0].offsetHeight;
+                        this.Width = this.$refs.bug[0].offsetWidth;
+                        this.activeSection = this.fullPage.getActiveSection().index
+                    }
+                })
+            }, 2000)
+        },
+        watch: {
+            async sliderList() {
+                await this.$nextTick();
+                await this.$nextTick();
+                await this.$nextTick();
+                this.left = this.$refs.bug[0].offsetLeft;
+                this.top = this.$refs.bug[0].offsetTop;
+                this.Height = this.$refs.bug[0].offsetHeight;
+                this.Width = this.$refs.bug[0].offsetWidth;
+                this.activeSection = this.fullPage.getActiveSection().index;
+                this.fullPage && this.fullPage.reBuild()
+            },
+            async showSide() {
+                await this.$nextTick();
+                await this.$nextTick();
+                await this.$nextTick();
+                if (this.$refs.bug && this.$refs.bug[0]) {
                     this.height = `${this.$refs.swiper.offsetHeight}px`;
                     this.left = this.$refs.bug[0].offsetLeft;
                     this.top = this.$refs.bug[0].offsetTop;
@@ -80,18 +124,19 @@
                     this.Width = this.$refs.bug[0].offsetWidth;
                     this.activeSection = this.fullPage.getActiveSection().index
                 }
-            })
-        },
-        watch: {
-            async sliderList() {
-                await this.$nextTick();
-                await this.$nextTick();
-                await this.$nextTick();
-                this.fullPage && this.fullPage.reBuild()
             }
         },
         components: {
             Player: Player
+        },
+        methods: {
+            handleScroll(e) {
+                // if (e.deltaY > 0) {
+                //     this.moveSectionDown(e)
+                // } else {
+                //     this.moveSectionUp(e)
+                // }
+            }
         }
     }
 </script>

@@ -75,7 +75,7 @@
                 this.top = this.$refs.bug[0].offsetTop;
                 this.Height = this.$refs.bug[0].offsetHeight;
                 this.Width = this.$refs.bug[0].offsetWidth;
-                this.activeSection = this.fullPage.getActiveSection().index;
+                this.resetActiveIndex();
                 this.fullPage && this.fullPage.reBuild();
             })
         },
@@ -88,6 +88,7 @@
                 this.fullPage = new fullPage(this.$refs.fullPage, {
                     afterLoad: () => {
                         this.height = `${this.$refs.swiper.offsetHeight}px`;
+                        this.resetActiveIndex();
                     },
                     afterResize: (width, height) => {
                         this.height = `${this.$refs.swiper.offsetHeight}px`;
@@ -95,10 +96,11 @@
                         this.top = this.$refs.bug[0].offsetTop;
                         this.Height = this.$refs.bug[0].offsetHeight;
                         this.Width = this.$refs.bug[0].offsetWidth;
-                        this.activeSection = this.fullPage.getActiveSection().index
+
+                        this.resetActiveIndex();
                     }
                 })
-            }, 2000)
+            }, 1250)
         },
         watch: {
             async sliderList() {
@@ -109,8 +111,8 @@
                 this.top = this.$refs.bug[0].offsetTop;
                 this.Height = this.$refs.bug[0].offsetHeight;
                 this.Width = this.$refs.bug[0].offsetWidth;
-                this.activeSection = this.fullPage.getActiveSection().index;
-                this.fullPage && this.fullPage.reBuild()
+                this.resetActiveIndex();
+                this.fullPage && this.fullPage.reBuild();
             },
             async showSide() {
                 await this.$nextTick();
@@ -122,7 +124,7 @@
                     this.top = this.$refs.bug[0].offsetTop;
                     this.Height = this.$refs.bug[0].offsetHeight;
                     this.Width = this.$refs.bug[0].offsetWidth;
-                    this.activeSection = this.fullPage.getActiveSection().index
+                    this.resetActiveIndex()
                 }
             }
         },
@@ -130,12 +132,19 @@
             Player: Player
         },
         methods: {
-            handleScroll(e) {
-                // if (e.deltaY > 0) {
-                //     this.moveSectionDown(e)
-                // } else {
-                //     this.moveSectionUp(e)
-                // }
+            async resetActiveIndex() {
+                try {
+                    await this.$nextTick();
+                    await this.$nextTick();
+                    await this.$nextTick();
+                    this.activeSection = this.fullPage.getActiveSection().index;
+                    console.log(this.activeSection, this.sliderList, "activeSection~~~~~~~~~~~~~~~~~~~~~")
+                } catch (e) {
+                    console.log(e);
+                    setTimeout(() => {
+                        this.resetActiveIndex()
+                    }, 500)
+                }
             }
         }
     }

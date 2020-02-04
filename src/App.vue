@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div id="app" :class="`${changeScreen ? 'full':''}`">
         <div class="content" @mousemove="Enter($event)" @mouseenter="Enter($event)" @mouseleave="Leave($event)" ref="content">
             <!-- 30分钟 -->
             <div v-if="endMeeting" class="timeUseUP_box">
@@ -16,14 +16,27 @@
                 :sliderCount="sliderCount"
                 :filtrationBtn="filtrationBtn"
                 :showSide="isShowSide"
+                :changeScreen="changeScreen"
                 @handleSide="isShowSide = !isShowSide"
+                @handleScreen="(flag) => changeScreen = flag"
                 @handleCount="(num) => sliderCount = num"
                 @handleFiltration="() => filtrationBtn = !filtrationBtn"
                 @LeaveMeeting="LeaveMeeting"
             ></ctrl>
             <div :class="`playerBigBox ${howMany}`">
-                <swiper :meetingInfo="{myUid: meetingInfo.mine.uid}" :sliderCount="sliderCount" :showSide="isShowSide">
-                    <div style="height: 100%; width: 100%;" ref="draggable"></div>
+                <swiper
+                    :meetingInfo="{myUid: meetingInfo.mine.uid}"
+                    :sliderCount="sliderCount"
+                    :showSide="isShowSide"
+                    :changeScreen="changeScreen"
+                    @handleSide="(flag) => isShowSide = flag"
+                    @handleScreen="(flag) => changeScreen = flag"
+                >
+                    <div style="width: 100%; height: 100%;" ref="draggable">
+                        <div class="noCamera" v-if="!meetingInfo.mine.camera || !meetingInfo.mine.hasCam">
+                            <i class="font_family icon-camera-none"></i>
+                        </div>
+                    </div>
                 </swiper>
             </div>
         </div>
@@ -43,8 +56,8 @@
 <script>
     import animate from 'animate.css';
     import Player from './components/player';
-    import Ctrl from './components/controls';//左边的顶部和底部
-    import SideBox from './components/side';// 右边模块的组件
+    import Ctrl from './components/controls';
+    import SideBox from './components/side';
     import swiper from './components/swiper';
     import playerStatus from "./components/playerStatus";
     import antiquity, {myDevice, myCookie, myMid, Password, MeetingStatus, myCamera, myMic} from './utils/Antiquity';
@@ -129,6 +142,7 @@
             });
             antiquity.on('getMidInfo', meetingInfo => {
                 this.meetingInfo = meetingInfo;
+                console.log("meetingInfo~~~~~~~~~~~~~~~", this.meetingInfo);
             });
             antiquity.on('line', flag => {
                 this.breakLine = flag;
@@ -220,7 +234,6 @@
                     this.changeScreen = false;
                 } else {
                     // 全屏
-                    // antiquity.rtmp.reset()
                     this.changeScreen = true;
                     const el = document.documentElement;
                     const rfs = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullScreen;
@@ -318,6 +331,7 @@
     }
     .boxIn {
         position: absolute;
+        overflow: hidden;
         width: 360px;
         height: 240px;
         z-index: 200;
@@ -620,6 +634,12 @@
             background-color: #000000;
 			overflow: hidden;
             padding: 36px 0 52px;
+        };
+        &.full {
+            padding: 0;
+            .content {
+                padding: 0;
+            }
         }
     }
 
@@ -692,4 +712,20 @@
         text-align: center;
         z-index: 100;
     }
+
+    .noCamera{
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+        background-color: #444;
+        width: 100%;
+        height: 100%;
+        .flex(center, center);
+        .icon-camera-none {
+            font-size: 80px;
+            color: #666;
+        }
+    }
+
 </style>

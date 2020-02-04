@@ -27,7 +27,9 @@
             <div class="line"></div>
             <div class="bottom" @keydown.enter="send_msg">
 				<div class="send_box">
-					<div class="textarea_box"><textarea class="textarea" wrap="virtual" maxlength="70" placeholder="在此处输入消息…" rows="3" v-model="msgContent"></textarea></div>
+					<div class="textarea_box">
+                        <textarea class="textarea" wrap="virtual" maxlength="70" placeholder="在此处输入消息…" rows="3" v-model="msgContent"></textarea>
+                    </div>
 					<button :disabled=disabled @click="send_msg()">
 						<i class="font_family icon-fasong" ></i><br>
 						{{msgContent.length}} / 70
@@ -37,6 +39,7 @@
         </div>
     </div>
 </template>
+
 <script>
     import antiquity from "../utils/Antiquity";
     export default {
@@ -62,22 +65,12 @@
         beforeCreate() {
             antiquity.on("getMsg", () => {
                 this.message = antiquity.getMsg();
+                this.Talk(2);
             });
         },
         mounted() {
             this.message = antiquity.getMsg();
         },
-		watch:{
-			message: function () {
-			    this.Talk(2);
-                const newArr = [
-                    this.message[this.message.length - 3],
-                    this.message[this.message.length - 2],
-                    this.message[this.message.length - 1]
-                ];
-                this.$emit('handleMsg', newArr)
-            }
-		},
         computed: {
             disabled() {
                 let disabled;
@@ -96,11 +89,11 @@
 				if (type == 1){
 					setTimeout(() => {
 					    this.$refs.topBox.scrollTop = this.$refs.topBox_.offsetHeight;
-					}, 100)
+					}, 150)
 				}else if(type == 2 && this.$refs.topBox.scrollHeight == this.height){
 					setTimeout(() => {
 					    this.$refs.topBox.scrollTop = this.$refs.topBox_.offsetHeight;
-					}, 100)
+					}, 150)
 				}
             },
             send_msg() {
@@ -112,18 +105,20 @@
                     "mid": this.meetingInfo.mid,
                     "text": Base64.encode(this.msgContent)
                 }).then((res) => {
-                    this.message.push({
-                        name: this.meetingInfo.name,
-                        text: this.msgContent,
-                        uid: this.meetingInfo.uid,
-						time: antiquity.moment().format('hh:mm:ss')
-                    });
+                    // this.message.push({
+                    //     name: this.meetingInfo.name,
+                    //     text: this.msgContent,
+                    //     uid: this.meetingInfo.uid,
+					// 	time: antiquity.moment().format('hh:mm:ss')
+                    // });
+                    console.log(this.message, "message~~~~~~~~~~~~~~~~");
                     this.msgContent = ''
                 })
             },
         }
     }
 </script>
+
 <style lang="less" scoped>
     @import "../common/common";
 	.rests_msg{
@@ -207,10 +202,9 @@
             }
             .topBox {
                 height: 100%;
-                overflow-y: overlay;
+                overflow-y: auto;
                 // padding-right: 20px;
                 // box-sizing: border-box;
-
             }
             .myScroll(topBox)
         }

@@ -1,5 +1,5 @@
 <template>
-    <div class="ctrlBox">
+    <div v-if="!changeScreen || fullShow" :class="`ctrlBox ${changeScreen ? 'full' : ''}`">
         <!-- 顶部 -->
         <div class="ctrlHeader">
             <span></span>
@@ -22,7 +22,7 @@
 					{{ this.micNum }}
 				</span>
             </div>
-            <img @click="() => $emit('handleSide')" :src="`./${ changeScreen ? 'noFullScreen' : 'fullScreen'}.png`" />
+            <img @click="fullScreen" :src="`./${ changeScreen ? 'noFullScreen' : 'fullScreen'}.png`" />
         </div>
         <!--分页器-->
         <div class="ctrlPoint" v-if="maxSlide > 1">
@@ -34,7 +34,7 @@
         <!-- 底部 -->
         <div class="ctrlFooter">
             <div v-if="countDownshow" class="tenMinute">会议剩余时长:{{tentime}}</div>
-            <div>{{timer || '00:00:00'}}</div>
+            <div>{{time}}</div>
             <div>
                 <div class="center">
                     <button @click="handleMic">
@@ -130,6 +130,7 @@
 <script>
     import antiquity,{ Password } from "../utils/Antiquity";
     import bulletScreen from "./bulletScreen";
+    import {fullScreen, noFullScreen} from "../utils/fullScreen";
     let interval;
     export default {
         name: "app",
@@ -156,7 +157,12 @@
             "message"
         ],
         data() {
+            const mouseMove = antiquity.debounce(() => {
+                this.secThd();
+            });
             return {
+                mouseMove: mouseMove,
+                fullShow: true,
                 barrage: false,
                 showSetting: false,
                 def: false,
@@ -175,7 +181,9 @@
                 CameraTitle:'',
                 countDownshow:0,
                 micNum: 0,
-                peopleNum: 0
+                peopleNum: 0,
+                startThd: 0,
+                timeThd: null
             };
         },
         computed: {
@@ -199,7 +207,7 @@
             antiquity.on('getMembers', () => {
                 const { peopleNum, micNum } = antiquity.getPeopleNum();
                 this.peopleNum = peopleNum;
-                this.micNum = micNum
+                this.micNum = micNum;
             })
         },
         created() {
@@ -216,12 +224,16 @@
                 this.myCamera = msg
             });
         },
-        mounted() {
+        async mounted() {
             this.new_playerNum = this.playerNum;
             if(this.new_playerNum == 6){
                 this.new_playerNum = 4
             }
-            this.password = Password
+            this.password = Password;
+            await this.$nextTick();
+            await this.$nextTick();
+            await this.$nextTick();
+            window.addEventListener('mousemove', this.mouseMove, false);
         },
         watch:{
             countDown:function(){
@@ -254,6 +266,15 @@
                 if(!this.data.hasCam){
                     this.CameraStatus = 2;
                     this.CameraTitle = '当前无法检测到麦克风设备'
+                }
+                if (this.data.start3) {
+                    this.startThd = new Date().getTime() - this.data.start3;
+                    this.time = antiquity.moment(this.startThd).format("hh:mm:ss");
+                    clearInterval(interval);
+                    interval = setInterval(() => {
+                        this.startThd = this.startThd + 1000;
+                        this.time = antiquity.moment(this.startThd).format("hh:mm:ss");
+                    }, 1000);
                 }
             },
             playerNum:function(){
@@ -314,6 +335,9 @@
 
             },
             handleCamera(e) {
+                if (!this.data.hasCam) {
+                    return this.$Toast.success({ message: "请安装摄像头" });
+                }
                 if(e == 1){
                     history.go(0)
                 }else if(e == 2){
@@ -324,10 +348,30 @@
                         : antiquity.unmuteVideo(this.data.video_url);
                 }
 
+            },
+            fullScreen() {
+                if (!this.changeScreen) {
+                    fullScreen();
+                    this.secThd();
+                    this.$emit("handleSide", false);
+                    this.$emit("handleScreen", true);
+                } else {
+                    noFullScreen();
+                    this.$emit("handleSide", true);
+                    this.$emit("handleScreen", false);
+                }
+            },
+            secThd() {
+                this.fullShow = true;
+                clearTimeout(this.timeThd);
+                this.timeThd = setTimeout(() => {
+                    this.fullShow = false
+                }, 3000)
             }
         },
         destroyed() {
             clearInterval(interval);
+            clearTimeout(this.timeThd);
         },
         components: {
             bulletScreen
@@ -568,6 +612,15 @@
                     left: -10px;
                     top: -8px;
                 }
+            }
+        }
+        &.full {
+            .ctrlHeader {
+                background-color:rgba(45,47,51,.9);
+                color: #fff;
+            }
+            .ctrlFooter {
+                background-color:rgba(45,47,51,.9);
             }
         }
     }

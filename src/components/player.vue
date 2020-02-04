@@ -5,7 +5,13 @@
     >
         <player-status :data="data" :isShare="data.isShare"></player-status>
         <div class="grail" ref="grail">
-            <my-player :data="this.data" :isShare="data.isShare" @handleIsPlay="(arg) => this.isPlay = arg"></my-player>
+            <my-player
+                v-if="showFlag"
+                :data="this.data"
+                :isShare="data.isShare"
+                @handleReset="reset"
+                @handleIsPlay="(arg) => this.isPlay = arg"
+            ></my-player>
             <!--<div :id="`player_${data.uid}_tc`" class="vjs-tech"></div>-->
             <!--<div :id="`player_${data.uid}_ali`" ref="ali" class="vjs-tech"></div>-->
             <!--<video :id="`player_${data.uid}_ks`" ref="ks"></video>-->
@@ -45,7 +51,8 @@
                 player: null,
                 isPlay: false,
                 count: 0,
-                timer: null
+                timer: null,
+                showFlag: true
             };
         },
         components: {
@@ -76,11 +83,16 @@
             });
         },
         methods: {
-            reset() {
+            async reset() {
                 // if (this.data.uid === this.meetingInfo.mine.uid) return;
                 // this.player && this.player.reset();
                 // this.isPlay = false;
                 // this.ksInit();
+                this.showFlag = false;
+                await this.$nextTick();
+                await this.$nextTick();
+                await this.$nextTick();
+                this.showFlag = true;
             },
             createVideo() {
                 if (this.data.uid === this.myUid) return;
@@ -255,37 +267,6 @@
     @import "../common/common";
     .playerBox {
        position: relative;
-        .ctrlMiddle {
-            padding: 0 16px 0 12px;
-            height: 32px;
-            line-height: 32px;
-            color: #fff;
-            font-size: 18px;
-            position: absolute;
-            left: 0;
-            top: 0px;
-            background-color: rgba(0, 0, 0, 0.6);
-            border-radius: 0 20px 20px 0;
-            z-index: 500;
-            .flex(center, center);
-            svg {
-                margin-left: 5px;
-            }
-            .icon-mic {
-                color: #fff;
-                font-size: 24px;
-            }
-            .tag {
-                .fontStyle(10px, #fff);
-                width: 48px;
-                height: 20px;
-                line-height: 23px;
-                text-align: center;
-                background-color: #118BFB;
-                border-radius: 4px;
-                margin-left: 5px;
-            }
-        }
         .holder {
             padding-bottom: 75%;
             width: 0;

@@ -20,6 +20,9 @@
 			antiquity.on("getMsg", () => {
 				this.message = antiquity.getMsg(3);
 			});
+		},
+		mounted() {
+			this.message = antiquity.getMsg(3);
 		}
 	}
 </script>

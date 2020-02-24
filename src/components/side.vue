@@ -2,7 +2,7 @@
     <div class="myAside" v-if="showSide">
         <div class="foot">
             <transition enter-active-class="animated slideInRight faster" leave-active-class="animated slideOutRight faster">
-                <party :data="meetingInfo" :hasControl="meetingInfo.control"></party>
+                <party :data="meetingInfo"></party>
             </transition>
             <transition enter-active-class="animated slideInRight faster" leave-active-class="animated slideOutRight faster">
                 <message :meetingInfo="meetingInfo"></message>

@@ -2,22 +2,23 @@
     <div class="bigBox">
         <div class="title">
             <p class="p" v-if="search_show == 0">
-                参会方( {{ members.length }} )<!---->
+                参会方 ({{ members.length }})<!---->
             </p>
             <input v-if="search_show == 1" type="text" placeholder="搜索账号名称" v-model="search" @input="search_member" class="searchInput"/>
-<!--            <div>-->
-<!--                <i :class="search_show === 1 ? 'font_family icon-chazhaoanniu search_act' : 'font_family icon-chazhaoanniu search'"@click="searchShow()"></i>-->
-<!--                <i class="font_family icon-close" @click="$emit('handleParty')"></i>-->
-<!--            </div>-->
         </div>
         <div class="box">
             <div class="top">
                 <div class="input">
                     <div class="member">
-                        <div class="item" v-for="item of search ? s_members : members" :key="item.uid" @mouseenter="enter($event)" @mouseleave="leave($event)">
+                        <div
+                            :class="`item ${activeItemIndex === index && meetingInfo.mine.role === 4 ? 'itemMouse' : ''}`"
+                            v-for="(item, index) of search ? s_members : members" :key="item.uid"
+                            @mouseenter="activeItemIndex = index"
+                            @mouseleave="activeItemIndex = -2"
+                        >
                             <img :src="item.avarter ? item.avarter : 'https://182.61.17.228/common/defaultHead.png'"/>
                             <p>
-                                <span>{{ item.name == null?item.uid:item.name }}</span>
+                                <span>{{ item.name ? item.name : item.uid }}</span>
                                 <svg v-if="item.role === 4" class="icon" aria-hidden="true" style="font-size: 34px;margin-left: 2px;">
                                     <use xlink:href="#iconzhuchiren" style="font-size: 42px;" />
                                 </svg>
@@ -25,31 +26,9 @@
                                     <use xlink:href="#iconzhujiang" style="font-size: 32px;" />
                                 </svg>
                             </p>
-                            <button class="permissionBtn more" @click="more(item)">
+                            <button class="permissionBtn more" @click="more($event, item)">
                                 更多
-                                <div v-if="permissionShow" class="permission">
-                                    <span class="permission_header"></span>
-                                    <div class="permission_content">
-                                        <div @click="setMic(item)" v-if="item.role !== 4">
-                                            {{ item.mic === 1 ? "取消静音" : "静音" }}
-                                        </div>
-                                        <div v-if="permissionType.setSpeaker" @click="setSpeaker(item)">
-                                            {{ item.speaker === 1 ? "结束主讲" : "设为主讲" }}
-                                        </div>
-                                        <div v-if="permissionType.setRole" @click="()=>(roleShow = true)">
-                                            设为主持人
-                                        </div>
-                                        <div v-if="permissionType.setCamera" @click="setCamera(item)">
-                                            {{ item.camera === 1 ? "请求开启摄像头" : "关闭摄像头" }}
-                                        </div>
-                                        <div v-if="permissionType.setKick" @click="()=>(kickShow = true)">
-                                            移除
-                                        </div>
-                                    </div>
-                                </div>
                             </button>
-                            <Confirm v-if="roleShow" :item="pitchonItem" :confirmTitle="'设为主持人'" :confirmText="`确认将【${pitchonItem.name}】设为主持人？`" v-on:cancel="() => (roleShow = false)" v-on:affirm="setRole"></Confirm>
-                            <Confirm v-if="kickShow" :item="pitchonItem" :confirmTitle="'移除'" :confirmText="`确认要移除【${pitchonItem.name}】？`" v-on:cancel="() => (kickShow = false)" v-on:affirm="setKick"></Confirm>
                             <div class="noPermissionBtn">
                                 <i :class="`font_family ${item.camera === 0 ? 'icon-camera-user' : 'icon-camera-user-no'}`"></i>
                             </div>
@@ -57,22 +36,47 @@
                                 <i :class="`font_family ${item.mic === 0 ? 'icon-user-mic' : 'icon-user-mic-no'}`"></i>
                             </div>
                         </div>
+                        <div
+                            :style="`top: ${permissionTop}px;`"
+                            v-if="permissionShow"
+                            class="permission"
+                            @mouseleave="permissionShow = false">
+                            <div class="permission_content">
+                                <div @click="setMic(selectItem)" v-if="selectItem.role !== 4">
+                                    {{ selectItem.mic === 1 ? "取消静音" : "静音" }}
+                                </div>
+                                <div v-if="permissionType.setSpeaker" @click="setSpeaker(selectItem)">
+                                    {{ selectItem.speaker === 1 ? "结束主讲" : "设为主讲" }}
+                                </div>
+                                <div v-if="permissionType.setRole" @click="()=>(roleShow = true)">
+                                    设为主持人
+                                </div>
+                                <div v-if="permissionType.setCamera" @click="setCamera(selectItem)">
+                                    {{ selectItem.camera === 1 ? "请求开启摄像头" : "关闭摄像头" }}
+                                </div>
+                                <div v-if="permissionType.setKick" @click="()=>(kickShow = true)">
+                                    移除
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="line" v-if="hasControl"></div>
-            <div class="bottom" v-if="hasControl">
-                <button :disabled="!hasControl" @click="() => (micAll = true)" :class="data.muteAll ? 'lockMeeting' : ''">
+            <div class="line" v-if="meetingInfo.control"></div>
+            <div class="bottom" v-if="meetingInfo.control">
+                <button :disabled="!meetingInfo.control" @click="() => (micAll = true)" :class="data.muteAll ? 'lockMeeting' : ''">
                     全体静音
                 </button>
-                <button :disabled="!hasControl" @click="handleRemoveMicAllOn" style="width:108px;">
+                <button :disabled="!meetingInfo.control" @click="handleRemoveMicAllOn" style="width:108px;">
                     解除全体静音
                 </button>
-                <button :disabled="!hasControl" @click="handleLock" :class="data.locked ? 'lockMeeting' : 'lockMeeting noLockMeeting'">
+                <button :disabled="!meetingInfo.control" @click="handleLock" :class="data.locked ? 'lockMeeting' : 'lockMeeting noLockMeeting'">
                     {{ data.locked ? "解锁会议" : "锁定会议" }}
                 </button>
             </div>
         </div>
+        <Confirm v-if="roleShow" :item="selectItem" :confirmTitle="'设为主持人'" :confirmText="`确认将【${selectItem.name}】设为主持人？`" v-on:cancel="() => (roleShow = false)" v-on:affirm="setRole"></Confirm>
+        <Confirm v-if="kickShow" :item="selectItem" :confirmTitle="'移除'" :confirmText="`确认要移除【${selectItem.name}】？`" v-on:cancel="() => (kickShow = false)" v-on:affirm="setKick"></Confirm>
         <Confirm v-if="micAll" :item="''" :confirmTitle="'全体静音'" :confirmText="'操作全体静音后，全体成员包括新参会者都会被静音'" v-on:cancel="() => (micAll = false)" v-on:affirm="setMicAllOff"></Confirm>
     </div>
 </template>
@@ -82,40 +86,52 @@
     export default {
         name: "party",
         components: { Confirm },
-        props: ["hasControl", "data"],
+        props: ["data"],
         data() {
             return {
+                // 会议信息
+                meetingInfo: {
+                    control: false
+                },
                 members: [],
                 search_show: 0,
                 s_members: [],
                 search: "",
-                pitchonItem:"", //被选中
+                // 被选中
+                selectItem:"", 
                 micAll: false,
                 kickShow:false,
                 lockedShow: false,
                 roleShow:false,
-                lockedName: "",
+                // 是否显示菜单
                 permissionShow: false,
+                // 菜单初始化
                 permissionType: {
                     setSpeaker: true,
                     setRole: true,
                     setCamera: true,
                     setKick: true
-                }
+                },
+                // 选中的索引
+                activeItemIndex: -2,
+                // 定位用
+                permissionTop: 0
             };
         },
         beforeCreate() {
             antiquity.on("getMembers", () => {
                 this.members = antiquity.getList();
-            })
+            });
+            antiquity.on('getMidInfo', meetingInfo => {
+                this.meetingInfo = meetingInfo;
+            });
+
         },
         mounted() {
             this.members = antiquity.getList();
+            this.meetingInfo = antiquity.getMidInfo();
         },
         methods: {
-            searchShow() {
-                this.search_show = !this.search_show;
-            },
             search_member() {
                 this.s_members = [];
                 if (this.search != "") {
@@ -124,56 +140,22 @@
                             this.s_members.push(item);
                         }
                     });
-                    // console.log(this.members)
                 }
             },
-            enter(event) {
-                // event.target.className = "item itemMouse";
-                if (this.hasControl) {
-                    event.target.className = "item itemMouse";
-                }
-            },
-            leave(event) {
-                event.target.className = "item";
-                this.permissionShow = false;
-                if (this.hasControl) {
-                    //不是主持人的时候
-                    this.permissionShow = false;
-                    event.target.className = "item";
-                }
-            },
-            more(item) {
-                this.pitchonItem = item;
+            more($event, item) {
+                this.permissionTop = $event.target.parentNode.offsetTop + 40;
+                this.selectItem = item;
                 this.permissionType = {
                     setSpeaker: true,
-                    setRole: true,
-                    setCamera: true,
-                    setKick: true
+                    setRole: item.uid !== antiquity.uid && item.dt !== 3,
+                    setCamera: item.uid !== antiquity.uid && item.dt !== 3,
+                    setKick: item.uid !== antiquity.uid
                 };
-                if (item.uid === antiquity.uid) {
-                    this.permissionType = {
-                        setSpeaker: true,
-                        setRole: false,
-                        setCamera: false,
-                        setKick: false
-                    };
-                    this.permissionShow = true;
-                    return;
-                }
-                if (item.dt === 3) {
-                    this.permissionType = {
-                        setSpeaker: false,
-                        setRole: true,
-                        setCamera: false,
-                        setKick: true
-                    };
-                }
                 this.permissionShow = true;
             },
             setMic(item) {
                 const micState = item.mic;
                 const value = `[${item.uid}]`;
-                console.log(micState, value);
                 antiquity.ajax
                     .ruleSet({
                         admin: antiquity.uid,
@@ -183,7 +165,6 @@
                     .then(res => {
                         console.log(res);
                     });
-                //   console.log(antiquity);
             },
             setSpeaker(item) {
                 const speaker = item.speaker === 1 ? 0 : 1;
@@ -191,26 +172,22 @@
                     admin: antiquity.uid,
                     uid: item.uid,
                     dt: item.dt,
-                    device: item.device,
                     speaker
                 };
                 antiquity.ajax.speakerSet(data).then(res => {
-                    console.log(res);
+                    console.log('主讲更换成功');
                 });
-                console.log(antiquity.ajax);
             },
             setRole(item) {
                 const data = {
                     admin: antiquity.uid,
                     uid: item.uid,
                     dt: item.dt,
-                    device: item.device,
                     role: 4
                 };
                 antiquity.ajax.roleSet(data).then(res => {
                     this.roleShow = false
                 });
-                console.log(item);
             },
             setCamera(item) {
                 const cameraState = item.camera;
@@ -224,19 +201,16 @@
                     .then(res => {
                         console.log(res);
                     });
-                console.log(item);
             },
             setKick(item) {
                 const data = {
                     admin: antiquity.uid,
                     uid: item.uid,
                     dt: item.dt,
-                    device: item.device
                 };
                 antiquity.ajax.kick(data).then(res => {
                     this.kickShow = false
                 });
-                console.log(item);
             },
             setMicAllOff() {
                 const data = {
@@ -247,7 +221,7 @@
                 antiquity.ajax.ruleSet(data).then(res => {
                     this.members.forEach((item)=>{
                         this.$Toast.success({message:"全体包括新参会方已被静音"})
-                    })
+                    });
                     this.micAll = false;
                 });
             },
@@ -327,6 +301,7 @@
             flex: 1;
             .input {
                 height: 100%;
+                position: relative;
                 input {
                     background-color: #f4f4f4;
                     border-radius: 16px;
@@ -349,7 +324,6 @@
                         margin-bottom: 16px;
                         border-radius: 4px;
                         height: 44px;
-
                         img {
                             width: 28px;
                             height: 28px;
@@ -357,11 +331,9 @@
                             border: 0;
                             border-radius: 20px;
                         }
-
                         p {
                             flex: 1;
                             .flex(flex-start, center);
-
                             span {
                                 max-width: 125px;
                                 overflow: hidden;
@@ -374,23 +346,19 @@
                                 color: rgba(30, 33, 38, 1);
                             }
                         }
-
                         i {
                             margin-left: 4px;
                         }
-
                         .icon-camera-user,
                         .icon-user-mic {
                             color: #c5c6c8;
                             font-size: 20px;
                         }
-
                         .icon-camera-user-no,
                         .icon-user-mic-no {
                             color: #ff6b6f;
                             font-size: 20px;
                         }
-
                         .permissionBtn {
                             z-index: 10;
                             display: none;
@@ -405,46 +373,9 @@
                             padding: 4px 8px;
                             outline: none;
                         }
-
                         .more {
                             background-color: #118bfb;
                         }
-
-                        .permission {
-                            position: absolute;
-                            right: 12px;
-                            top: 15px;
-                            .permission_header {
-                                border-radius: 1px;
-                                position: relative;
-                                top: 7px;
-                                left: 27%;
-                                display: inline-block;
-                                width: 6px;
-                                height: 6px;
-                                background-color: #666666;
-                                transform: rotate(45deg);
-                            }
-
-                            .permission_content {
-                                border-radius: 6px;
-                                min-width: 90px;
-                                background-color: #666666;
-                                padding: 10px;
-
-                                div {
-                                    font-size: 10px;
-                                    color: rgba(255, 255, 255, 1);
-                                    line-height: 14px;
-                                    margin-top: 10px;
-                                }
-
-                                :first-child {
-                                    margin-top: 0px;
-                                }
-                            }
-                        }
-
                         .speaker {
                             background-color: #ff9802;
                             padding: 3px 6px;
@@ -452,7 +383,6 @@
                             color: rgba(255, 255, 255, 1);
                             border-radius: 2px;
                         }
-
                         .handle {
                             padding: 3px 5px;
                             background-color: rgba(18, 139, 251, 1);
@@ -462,12 +392,44 @@
                             border-radius: 2px;
                         }
                     }
+                    .permission {
+                        position: absolute;
+                        right: 12px;
+                        top: 15px;
+                        .permission_header {
+                            border-radius: 1px;
+                            position: relative;
+                            top: 7px;
+                            left: 27%;
+                            display: inline-block;
+                            width: 6px;
+                            height: 6px;
+                            background-color: #666666;
+                            transform: rotate(45deg);
+                        }
+                        .permission_content {
+                            border-radius: 6px;
+                            min-width: 90px;
+                            background-color: #666666;
+                            padding: 10px;
+                            div {
+                                font-size: 10px;
+                                color: rgba(255, 255, 255, 1);
+                                line-height: 14px;
+                                margin-top: 10px;
+                            }
+                            :first-child {
+                                margin-top: 0px;
+                            }
+                        }
+                    }
                 }
                 .myScroll(member);
             }
 
             .itemMouse {
                 background-color: #f4f4f4;
+                width: 100%;
 
                 .noPermissionBtn {
                     display: none !important;

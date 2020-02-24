@@ -14,6 +14,7 @@
     "js-base64": "^2.5.1",
     "rtmp-zeihang": "^0.0.3",
     "stayawake.js": "^1.0.2",
+    "video.js": "^7.6.6",
     "vue": "^2.6.10",
     "vue-clipboard2": "^0.3.1"
   },

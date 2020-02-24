@@ -18,3 +18,13 @@ export function fullScreen() {
         rfs.call(el);
     }
 }
+export function checkFull(){
+    let isFull =
+        document.fullscreenElement ||
+        document.mozFullScreenElement ||
+        document.webkitFullscreenElement;
+    isFull = !!isFull;
+
+    if(isFull === undefined) isFull = false;
+    return isFull;
+}

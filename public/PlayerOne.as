@@ -14,7 +14,7 @@ import flash.media.VideoStatus;
 import flash.media.VideoStreamSettings;
 import flash.utils.*;
 
-public class Player extends MovieClip {
+public class PlayerOne extends MovieClip {
 
     internal var nc:NetConnection;
     internal var nsPlayer:NetStream;
@@ -27,7 +27,7 @@ public class Player extends MovieClip {
 
     internal var _bufferTime:int = 1;
 
-    public function Player() {
+    public function PlayerOne() {
         ExternalInterface.addCallback("setScreenSize", setScreenSize);
         ExternalInterface.addCallback("setScreenPosition", setScreenPosition);
 
@@ -81,14 +81,11 @@ public class Player extends MovieClip {
 
     private function displayPlaybackVideo(name:String):void {
         nsPlayer = new NetStream(nc);
-
-        setInterval(function ():void {
-            // ExternalInterface.call("console.log", "bufferLength:" + nsPlayer.bufferLength + "~~~bufferTime:" + nsPlayer.bufferTime + "~~~bufferTimeMax:" + nsPlayer.bufferTimeMax);
-            // ExternalInterface.call("console.log", "currentFPS:" + nsPlayer.currentFPS + "~~~liveDelay:" + nsPlayer.liveDelay);
-            // ExternalInterface.call("console.log", "connected:" + nsPlayer.info);
-            ExternalInterface.call("console.log", "videoStreamSettings:" + nsPlayer.videoStreamSettings);
-            ExternalInterface.call("console.log", "videoStreamSettings:" + nsPlayer.videoStreamSettings);
-        }, 1000);
+        // setInterval(function ():void {
+        //     ExternalInterface.call("console.log", "bufferLength:" + nsPlayer.bufferLength + "~~~bufferTime:" + nsPlayer.bufferTime + "~~~bufferTimeMax:" + nsPlayer.bufferTimeMax);
+        //     ExternalInterface.call("console.log", "currentFPS:" + nsPlayer.currentFPS + "~~~liveDelay:" + nsPlayer.liveDelay);
+        //     ExternalInterface.call("console.log", "connected:" + nsPlayer.info);
+        // }, 1000);
 
         nsPlayer.addEventListener(NetStatusEvent.NET_STATUS, function (event: NetStatusEvent): void {
             ExternalInterface.call("console.log", event.info.code);

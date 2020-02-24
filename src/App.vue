@@ -1,6 +1,6 @@
 <template>
     <div id="app" :class="`${changeScreen ? 'full':''}`">
-        <div class="content" @mousemove="Enter($event)" @mouseenter="Enter($event)" @mouseleave="Leave($event)" ref="content">
+        <div class="content" @mousemove="Enter($event)" ref="content">
             <!-- 30分钟 -->
             <div v-if="endMeeting" class="timeUseUP_box">
                 <div class="timeUseUP">
@@ -25,18 +25,22 @@
             ></ctrl>
             <div :class="`playerBigBox ${howMany}`">
                 <swiper
-                    :meetingInfo="{myUid: meetingInfo.mine.uid}"
                     :sliderCount="sliderCount"
                     :showSide="isShowSide"
                     :changeScreen="changeScreen"
                     @handleSide="(flag) => isShowSide = flag"
+                    @handleRatio="(num) => ratio = num"
                     @handleScreen="(flag) => changeScreen = flag"
                 >
-                    <div style="width: 100%; height: 100%;" ref="draggable">
-                        <div class="noCamera" v-if="!meetingInfo.mine.camera || !meetingInfo.mine.hasCam">
-                            <i class="font_family icon-camera-none"></i>
+                    <player-status v-if="peopleNum !== 2" :data="meetingInfo.mine" :isShare="false"></player-status>
+                    <div class="grail">
+                        <div :style="`width: ${ratio * 100}%; height: ${ratio * 100}%;`" class="draggable" ref="draggable">
+                            <div class="noCamera" v-if="meetingInfo.mine.camera === 1">
+                                <i class="font_family icon-camera-none"></i>
+                            </div>
                         </div>
                     </div>
+                    <div class="holder"></div>
                 </swiper>
             </div>
         </div>
@@ -106,7 +110,9 @@
                 breakLine: false,
                 // 几分屏
                 sliderCount: 4,
-
+                // 宽高比
+                ratio: 1.5,
+                peopleNum: 0,
                 timer: '',
                 time: '',
                 joinStatus: 1,
@@ -142,15 +148,17 @@
             });
             antiquity.on('getMidInfo', meetingInfo => {
                 this.meetingInfo = meetingInfo;
-                console.log("meetingInfo~~~~~~~~~~~~~~~", this.meetingInfo);
             });
             antiquity.on('line', flag => {
-                this.breakLine = flag;
+                this.breakLine = !flag;
+            });
+            antiquity.on('getMembers', () => {
+                const { peopleNum } = antiquity.getPeopleNum();
+                this.peopleNum = peopleNum;
             });
             antiquity.on('countDown', msg => {
                 if (msg == 2008) {//还剩10分钟会议结束
                     this.countDown = antiquity.getLostTime();
-                    console.log(111111111, this.countDown);
                     if (this.countDown >= 0) {
                         if (this.NOtenTimer == 0) {
                             this.tenFENTimer = setInterval(() => {
@@ -308,7 +316,6 @@
                 console.log(video_url, "video_url~~~~~~~~~~~~~~~~~~")
 
                 const {hasCam, hasMic} = await antiquity.hasCm();
-                console.log(myCamera, myMic, '~~~~~~~~~~~~~~~~~~~~~~he he');
                 antiquity.publish(video_url, myCamera && hasCam, myMic && hasMic);
             },
         },
@@ -335,6 +342,26 @@
         width: 360px;
         height: 240px;
         z-index: 200;
+        .flex(center, center);
+        .grail {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #444;
+            .flex(center, center);
+            overflow: hidden;
+        }
+        .holder {
+            padding-bottom: 75%;
+            width: 0;
+        }
+        &.twoPeople {
+            border: 2px solid #666;
+            border-radius: 4px;
+        }
+
     }
 
     .penetrate {
@@ -566,7 +593,7 @@
                 .flex(center, center);
 
                 .icon-camera-none {
-                    font-size: 80px;
+                    font-size: 60px;
                     color: #666;
                 }
             }
@@ -628,6 +655,7 @@
 		background: #EEEEEE;
         .content {
             min-width: 1080px;
+            min-height: 720px;
             position: relative;
             height: 100%;
             flex: 1;
@@ -710,7 +738,7 @@
         color: rgba(255, 96, 89, 1);
         line-height: 44px;
         text-align: center;
-        z-index: 100;
+        z-index: 1000;
     }
 
     .noCamera{
@@ -727,5 +755,13 @@
             color: #666;
         }
     }
-
+    body {
+        min-width: 1080px;
+        min-height: 720px;
+        overflow: auto;
+    }
+    .draggable {
+        width: 200%;
+        height: 200%;
+    }
 </style>

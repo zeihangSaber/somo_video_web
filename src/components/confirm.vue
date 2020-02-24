@@ -3,8 +3,8 @@
     <h3>{{ confirmTitle }}</h3>
     <h4>{{ confirmText }}</h4>
     <div class="confirm_btn">
-      <button @click="cancel" style="margin-left:0px">取消</button>
-      <button class="affirm" style="margin-right:0px" @click="affirm">确认</button>
+      <button @click="cancel" style="margin-left:0;">取消</button>
+      <button class="affirm" style="margin-right:0;" @click="affirm">确认</button>
     </div>
   </div>
 </template>

@@ -65,7 +65,7 @@
         beforeCreate() {
             antiquity.on("getMsg", () => {
                 this.message = antiquity.getMsg();
-                this.Talk(2);
+                this.Talk();
             });
         },
         mounted() {
@@ -84,17 +84,11 @@
         },
         methods: {
             Talk(type) {
-				this.height = parseInt(this.$refs.topBox.scrollTop + this.$refs.topBox.clientHeight);
                 // 自己发消息时触发
-				if (type == 1){
-					setTimeout(() => {
-					    this.$refs.topBox.scrollTop = this.$refs.topBox_.offsetHeight;
-					}, 150)
-				}else if(type == 2 && this.$refs.topBox.scrollHeight == this.height){
-					setTimeout(() => {
-					    this.$refs.topBox.scrollTop = this.$refs.topBox_.offsetHeight;
-					}, 150)
-				}
+                setTimeout(() => {
+                    console.log('滚动事件', this.$refs.topBox.scrollTop, this.$refs.topBox_.offsetHeight);
+                    this.$refs.topBox.scrollTop = this.$refs.topBox_.offsetHeight;
+                }, 300)
             },
             send_msg() {
                 this.Talk(1);
@@ -105,16 +99,22 @@
                     "mid": this.meetingInfo.mid,
                     "text": Base64.encode(this.msgContent)
                 }).then((res) => {
-                    // this.message.push({
-                    //     name: this.meetingInfo.name,
-                    //     text: this.msgContent,
-                    //     uid: this.meetingInfo.uid,
-					// 	time: antiquity.moment().format('hh:mm:ss')
-                    // });
-                    console.log(this.message, "message~~~~~~~~~~~~~~~~");
-                    this.msgContent = ''
+                    antiquity.addMsg({
+                        name: this.meetingInfo.name,
+                        text: this.msgContent,
+                        uid: this.meetingInfo.uid,
+                        time: antiquity.moment().format('hh:mm:ss')
+                    });
+                    antiquity.emit("getMsg");
+                    this.msgContent = '';
+                    setTimeout(() => {
+                        this.msgContent = '';
+                    }, 100);
                 })
             },
+        },
+        destroyed() {
+            // clearTimeout(this.timer)
         }
     }
 </script>

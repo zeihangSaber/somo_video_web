@@ -35,7 +35,7 @@
                     <player-status v-if="peopleNum !== 2" :data="meetingInfo.mine" :isShare="false"></player-status>
                     <div class="grail">
                         <div :style="`width: ${ratio * 100}%; height: ${ratio * 100}%;`" class="draggable" ref="draggable">
-                            <div class="noCamera" v-if="meetingInfo.mine.camera === 1">
+                            <div class="noCamera" v-if="meetingInfo.mine && meetingInfo.mine.camera === 1">
                                 <i class="font_family icon-camera-none"></i>
                             </div>
                         </div>
@@ -50,7 +50,7 @@
         ></SideBox>
         <div class="mask_app" v-if="!meetingShow">
             <div class="mask_content">
-                <img src="https://182.61.17.228/common/somo_log.png">
+                <img src="https://test.video.somo.tech/common/somo_log.png">
                 <div class="text">当前浏览器无法使用flash插件<br>建议使用Google Chrome 65.0及以上版本的浏览器</div>
             </div>
         </div>
@@ -81,7 +81,9 @@
                 meetingInfo: {
                     mine: {
                         speaker: 0,
-                        uid: 0
+                        camera: 0,
+                        uid: 0,
+                        name: ''
                     }
                 },
                 // 权限
@@ -148,6 +150,13 @@
             });
             antiquity.on('getMidInfo', meetingInfo => {
                 this.meetingInfo = meetingInfo;
+                if (!this.meetingInfo.mine) {
+                    this.meetingInfo.mine = {
+                        uid: 0,
+                        name: '',
+                        camera: 0
+                    }
+                }
             });
             antiquity.on('line', flag => {
                 this.breakLine = !flag;

@@ -1,7 +1,7 @@
 <template>
     <div class="swiper" ref="swiper">
         <div
-            :class="`${(sectionIndex === sliderList.isMine && !sliderList.set.skrMod) || (sliderList.set.iMSkr && sliderList.set.isSkr === sectionIndex) ? 'boxIn' : 'boxOut'} ${peopleNum === 2 && !sliderList.set.iMSkr ? 'twoPeople' : ''}`"
+            :class="`${(sectionIndex === sliderList.isMine) || (sliderList.set.skrMod && sliderList.set.iMSkr && sliderList.set.isSkr === sectionIndex) ? 'boxIn' : 'boxOut'} ${peopleNum === 2 && !sliderList.set.skrMod ? 'twoPeople' : ''}`"
             :style="`position: absolute; top: ${top}px; left: ${left}px; height: ${Height}px; width: ${Width}px`"
         >
             <slot></slot>
@@ -12,6 +12,7 @@
             v-for="(slider, index) in sliderList"
         >
             <div v-if="slider.hasMine && !sliderList.set.skrMod" ref="bug" :class="`playerBox ${peopleNum === 2 && !sliderList.set.skrMod ? 'sliderTwo' : ''}`"></div>
+            <div v-if="slider.hasMine && sliderList.set.skrMod" ref="bug" class="playerBox lancer"></div>
             <div v-if="sliderList.set.iMSkr && sliderList.set.isSkr === sectionIndex" ref="bug" :class="`playerBox saber`"></div>
             <template v-if="sectionIndex === index">
                 <player

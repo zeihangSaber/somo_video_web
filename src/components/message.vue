@@ -92,6 +92,7 @@
             },
             send_msg() {
                 this.Talk(1);
+                if (!this.msgContent.trim()) return setTimeout(() => this.msgContent = '');
 				if(!Base64.encode(this.msgContent)){
 					return
 				}
@@ -106,10 +107,7 @@
                         time: antiquity.moment().format('hh:mm:ss')
                     });
                     antiquity.emit("getMsg");
-                    this.msgContent = '';
-                    setTimeout(() => {
-                        this.msgContent = '';
-                    }, 100);
+                    setTimeout(() => this.msgContent = '')
                 })
             },
         },

@@ -15,7 +15,7 @@
             ></my-player>
         </div>
         <div v-if="!isShare" :class="`${(data.camera === 0 && isPlay) ? 'hasCamera' : 'noCamera'}`">
-            <img style="width: 100px; height: 100px;" v-if="(isShare || !isPlay) && data.camera !== 1" src="https://182.61.17.228/common/logoGif.gif">
+            <img style="width: 100px; height: 100px;" v-if="(isShare || !isPlay) && data.camera !== 1" src="https://test.video.somo.tech/common/logoGif.gif">
             <i v-if="data.camera === 1" :class="`font_family icon-camera-none ${(data.camera === 0 && isPlay) || isShare ? 'hasCamera' : '_noCamera'}`"></i>
         </div>
         <div v-if="!playState.humanState" class="noCamera">

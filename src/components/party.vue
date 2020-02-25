@@ -16,7 +16,7 @@
                             @mouseenter="activeItemIndex = index"
                             @mouseleave="activeItemIndex = -2"
                         >
-                            <img :src="item.avarter ? item.avarter : 'https://182.61.17.228/common/defaultHead.png'"/>
+                            <img :src="item.avarter ? item.avarter : 'https://test.video.somo.tech/common/defaultHead.png'"/>
                             <p>
                                 <span>{{ item.name ? item.name : item.uid }}</span>
                                 <svg v-if="item.role === 4" class="icon" aria-hidden="true" style="font-size: 34px;margin-left: 2px;">
@@ -98,7 +98,7 @@
                 s_members: [],
                 search: "",
                 // 被选中
-                selectItem:"", 
+                selectItem:"",
                 micAll: false,
                 kickShow:false,
                 lockedShow: false,

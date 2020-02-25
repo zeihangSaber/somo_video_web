@@ -127,8 +127,8 @@
         <bullet-screen v-if="barrage"></bullet-screen>
         <help @handleHelp="showHelp = false" v-if="showHelp"></help>
         <div v-if="isFir" class="isFir">
-            <img class="notebook" src="https://182.61.17.228/common/notebook.png">
-            <img @click="isFir = false" class="guidance" src="https://182.61.17.228/common/guidance.png">
+            <img class="notebook" src="https://test.video.somo.tech/common/notebook.png">
+            <img @click="isFir = false" class="guidance" src="https://test.video.somo.tech/common/guidance.png">
         </div>
     </div>
 </template>
@@ -160,7 +160,7 @@
                 barrage: false,
                 showSetting: false,
                 def: false,
-                time: "",
+                time: "00:00:00",
                 password:'',
                 myMic:'',
                 myCamera:'',
@@ -188,6 +188,7 @@
                 const { peopleNum, micNum } = antiquity.getPeopleNum();
                 this.peopleNum = peopleNum;
                 this.micNum = micNum;
+                // this.timeReset();
             });
         },
         created() {
@@ -216,15 +217,7 @@
                 console.log(this.data);
                 this.myMic = this.data.hasMic;
                 this.myCamera = this.data.hasCam;
-                if (this.data.start3) {
-                    this.startThd = new Date().getTime() - this.data.start3;
-                    this.time = antiquity.moment(this.startThd).format("hh:mm:ss");
-                    clearInterval(interval);
-                    interval = setInterval(() => {
-                        this.startThd = this.startThd + 1000;
-                        this.time = antiquity.moment(this.startThd).format("hh:mm:ss");
-                    }, 1000);
-                }
+                // this.timeReset();
             },
         },
         methods: {
@@ -271,6 +264,18 @@
                 this.timeThd = setTimeout(() => {
                     this.fullShow = false
                 }, 3000)
+            },
+            // 三人计时
+            timeReset() {
+                if (this.data.start3) {
+                    this.startThd = new Date().getTime() - this.data.start3;
+                    this.time = antiquity.moment(this.startThd).format("hh:mm:ss");
+                    clearInterval(interval);
+                    interval = setInterval(() => {
+                        this.startThd = this.startThd + 1000;
+                        this.time = antiquity.moment(this.startThd).format("hh:mm:ss");
+                    }, 1000);
+                }
             }
         },
         destroyed() {

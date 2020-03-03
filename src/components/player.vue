@@ -12,6 +12,7 @@
                 @handleReset="reset"
                 @handleIsPlay="(arg) => this.isPlay = arg"
                 :ratio="ratio"
+                :ratioIos="ratioIos"
             ></my-player>
         </div>
         <div v-if="!isShare" :class="`${(data.camera === 0 && isPlay) ? 'hasCamera' : 'noCamera'}`">
@@ -56,7 +57,8 @@
             howMany: "zero",
             isShare: false,
             mineFlag: false,
-            ratio: Number
+            ratio: Number,
+            ratioIos: Number
         },
         data() {
             return {

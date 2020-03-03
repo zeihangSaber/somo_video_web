@@ -1,5 +1,5 @@
 <template>
-    <div :style="`width: ${isShare ? 100 : ratio * 100}%; height: ${isShare ? 100 : ratio * 100}%;`" class="vjs-playing" ref="player">
+    <div :style="data.os === 2 ? `width: ${ratioIos * 100}%; height: 100%;` : `width: ${isShare ? 100 : ratio * 100}%; height: ${isShare ? 100 : ratio * 100}%;`" class="vjs-playing" ref="player">
         <object>
             <embed
                 src="./PlayerOne.swf"
@@ -36,7 +36,8 @@
                 },
             },
             isShare: false,
-            ratio: Number
+            ratio: Number,
+            ratioIos: Number,
         },
         data() {
             let playing = once(() => {
@@ -143,6 +144,10 @@
                         this.player.setScreenPosition(-84, 0);
                     } else {
                         this.player.setScreenPosition(0, 0);
+                    }
+                    if (this.data.os === 2 && this.isShare) {
+                        this.player.setScreenSize(270 * 1.85 , 480 * 1.85);
+                        this.player.setScreenPosition(0, -258);
                     }
                     this.player.setBufferTime(this.bufferTime);
                     this.$refs.embed.setAttribute("width", "100%");

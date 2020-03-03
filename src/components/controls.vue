@@ -8,19 +8,19 @@
                     帮助手册
                 </p>
                 <div class="center">
-                    <span class="bigSpan">会议号：{{this.data.code}}</span>
+                    <span class="bigSpan">会议号：{{this.midInfo.code}}</span>
                     <span class="bigSpan" v-if="password != ''">密码：{{password}}</span>
-                    <span class="bigSpan" v-if="this.data.locked">
+                    <span class="bigSpan" v-if="this.midInfo.locked">
 					<i class="font_family icon-lock"></i>
 				</span>
-                    <span v-show="this.data.name">
-					{{ this.data.name }}
+                    <span v-show="this.midInfo.name">
+					{{ this.midInfo.name }}
 				</span>
                     <span>
 					<i class="font_family icon-people-num"></i>
 					{{ this.peopleNum }}
 				</span>
-                    <span v-if="this.data.muteAll">全体静音</span>
+                    <span v-if="this.midInfo.muteAll">全体静音</span>
                     <span>
 					<i class="font_family icon-noMute"></i>
 					{{ this.micNum }}
@@ -33,15 +33,15 @@
             </div>
             <!-- 底部 -->
             <div class="ctrlFooter">
-                <div>{{time}}</div>
+                <div>{{time ? time : '00:00:00'}}</div>
                 <div>
                     <div class="center">
                         <button @click="handleMic">
-                            <i :class="`font_family ${data.mine && data.mine.mic === 1 ? 'icon-mic-no' : 'icon-mic'}`"></i>
+                            <i :class="`font_family ${midInfo.mine && midInfo.mine.mic === 1 ? 'icon-mic-no' : 'icon-mic'}`"></i>
                             <!-- 静音 -->
                         </button>
                         <button @click="handleCamera">
-                            <i :class="`font_family ${data.mine && data.mine.camera === 1 ? 'icon-camera-no' : 'icon-camera'}`"></i>
+                            <i :class="`font_family ${midInfo.mine && midInfo.mine.camera === 1 ? 'icon-camera-no' : 'icon-camera'}`"></i>
                             <!-- 视频 -->
                         </button>
                         <button
@@ -138,11 +138,11 @@
     import bulletScreen from "./bulletScreen";
     import help from "./help";
     import {fullScreen, noFullScreen} from "../utils/fullScreen";
+    import once from "../utils/once";
     let interval;
     export default {
         name: "app",
         props: [
-            "data",
             "sliderCount",
             "filtrationBtn",
             "showSide",
@@ -152,7 +152,14 @@
             const mouseMove = antiquity.debounce(() => {
                 this.secThd();
             });
+            const timeSet = once(() => {
+                if (!this.midInfo.start3) {
+                    this.midInfo.start3 = new Date().getTime();
+                }
+                this.timeReset();
+            });
             return {
+                midInfo: {},
                 mouseMove: mouseMove,
                 isFir: false,
                 showHelp: false,
@@ -160,7 +167,7 @@
                 barrage: false,
                 showSetting: false,
                 def: false,
-                time: "00:00:00",
+                time: "",
                 password:'',
                 myMic:'',
                 myCamera:'',
@@ -170,33 +177,38 @@
                 peopleNum: 0,
                 startThd: 0,
                 // 定时器
-                timeThd: null
+                timeThd: null,
+                timeSet: timeSet
             };
         },
         computed: {
             sysAppIds() {
                 return `
                     您好：蓝猫微会视频会议正在进行中，特邀请您参加。
-                    会议号：${this.data.code}。
-                    会议链接：https://182.61.17.228/sharePage?invite_code=${this.data.code}&verification_code=${Password}
+                    会议号：${this.midInfo.code}。
+                    会议链接：https://182.61.17.228/sharePage?invite_code=${this.midInfo.code}&verification_code=${Password}
                     您可以直接输入会议号加入会议， 也可以点击会议链接直接入会。
                 `;
             }
         },
         beforeCreate() {
+            this.midInfo = antiquity.getMidInfo();
             antiquity.on('getMembers', () => {
                 const { peopleNum, micNum } = antiquity.getPeopleNum();
                 this.peopleNum = peopleNum;
                 this.micNum = micNum;
-                // this.timeReset();
+                if (peopleNum >= 2) this.timeSet();
+                this.timeReset();
             });
+            antiquity.on('getMidInfo', () => {
+                this.midInfo = antiquity.getMidInfo();
+            })
         },
         created() {
-            this.myMic = this.data.hasMic;
-            this.myCamera = this.data.hasCam;
+            this.myMic = this.midInfo.hasMic;
+            this.myCamera = this.midInfo.hasCam;
             antiquity.on("permission", (msg) => {
-                console.log(msg);
-                if(msg == false){//点击了拒绝按钮
+                if(msg == false) {//点击了拒绝按钮
                     antiquity.muteAudio();
                     antiquity.muteVideo()
                 }
@@ -213,15 +225,14 @@
             this.isFir = !window.localStorage.getItem('isFir');
         },
         watch:{
-            data:function(){
-                console.log(this.data);
-                this.myMic = this.data.hasMic;
-                this.myCamera = this.data.hasCam;
-                // this.timeReset();
+            midInfo() {
+                this.myMic = this.midInfo.hasMic;
+                this.myCamera = this.midInfo.hasCam;
+                this.timeReset();
             },
         },
         methods: {
-            setDef(){
+            setDef() {
                 this.def = !this.def;
                 antiquity.setDef(this.def ? 720 : 480);
             },
@@ -234,17 +245,17 @@
                 this.$Toast.success({ message: "复制失败" });
             },
             handleMic() {
-                this.data.mine.mic === 0
+                this.midInfo.mine.mic === 0
                     ? antiquity.muteAudio()
                     : antiquity.unmuteAudio();
             },
             handleCamera() {
-                if (!this.data.hasCam) {
+                if (!this.midInfo.hasCam) {
                     return this.$Toast.success({ message: "请安装摄像头" });
                 }
-                this.data.mine.camera === 0
+                this.midInfo.mine.camera === 0
                     ? antiquity.muteVideo()
-                    : antiquity.unmuteVideo(this.data.video_url);
+                    : antiquity.unmuteVideo(this.midInfo.video_url);
             },
             fullScreen() {
                 if (!this.changeScreen) {
@@ -267,13 +278,15 @@
             },
             // 三人计时
             timeReset() {
-                if (this.data.start3) {
-                    this.startThd = new Date().getTime() - this.data.start3;
-                    this.time = antiquity.moment(this.startThd).format("hh:mm:ss");
+                if (this.midInfo.start3) {
+                    this.startThd = (new Date().getTime() - this.midInfo.start3);
+                    const time = antiquity.moment(this.startThd).format("hh:mm:ss").split(":");
+                    this.time = `${String(time[0] - 8).padStart(2, '0')}:${time[1]}:${time[2]}`;
                     clearInterval(interval);
                     interval = setInterval(() => {
                         this.startThd = this.startThd + 1000;
-                        this.time = antiquity.moment(this.startThd).format("hh:mm:ss");
+                        const time = antiquity.moment(this.startThd).format("hh:mm:ss").split(":");
+                        this.time = `${String(time[0] - 8).padStart(2, '0')}:${time[1]}:${time[2]}`;
                     }, 1000);
                 }
             }

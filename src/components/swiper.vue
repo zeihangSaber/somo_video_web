@@ -2,7 +2,7 @@
     <div class="swiper" ref="swiper">
         <div
             :class="`${(sectionIndex === sliderList.isMine) || (sliderList.set.skrMod && sliderList.set.iMSkr && sliderList.set.isSkr === sectionIndex) ? 'boxIn' : 'boxOut'} ${peopleNum === 2 && !sliderList.set.skrMod ? 'twoPeople' : ''}`"
-            :style="`position: absolute; top: ${top}px; left: ${left}px; height: ${Height}px; width: ${Width}px`"
+            :style="`position: absolute; top: ${top}px; left: ${left}px; height: ${Height}px; width: ${Width}px; min-height: 180px; min-width: 300px;`"
         >
             <slot></slot>
         </div>
@@ -22,6 +22,7 @@
                     :key="player.uid"
                     :myUid="meetingInfo.mine.uid"
                     :ratio="ratio"
+                    :ratioIos="ratioIos"
                 ></player>
             </template>
         </div>
@@ -62,6 +63,7 @@
             const resizeScreen = antiquity.debounce(() => {
                 this.resetBugBox();
                 this.ratio = this.$refs.swiper.offsetWidth / (this.$refs.swiper.offsetHeight / 3 * 4);
+                this.ratioIos = this.$refs.swiper.offsetHeight / 16 * 9 / this.$refs.swiper.offsetWidth;
                 this.$emit("handleRatio", this.ratio);
                 if (!checkFull()) {
                     this.$emit('handleScreen', false);
@@ -83,6 +85,7 @@
                 resizeScreen: resizeScreen,
                 flash: false,
                 ratio: 1.5,
+                ratioIos: 1,
                 permission: false,
                 meetingInfo: {
                     hasCam: false,
@@ -147,6 +150,7 @@
                 this.resetBugBox();
             }), false);
             this.resetBugBox();
+            this.ratioIos = this.$refs.swiper.offsetHeight / 16 * 9 / this.$refs.swiper.offsetWidth;
         },
         watch: {
             async showSide() {
@@ -156,7 +160,7 @@
                 await this.$nextTick();
                 await this.$nextTick();
                 await this.$nextTick();
-                this.ratio = this.$refs.swiper.offsetWidth / (this.$refs.swiper.offsetHeight / 3 * 4);
+                this.ratio = Math.max(this.$refs.swiper.offsetWidth / (this.$refs.swiper.offsetHeight / 3 * 4), 1) ;
                 this.$emit("handleRatio", this.ratio);
             },
             async sliderCount() {

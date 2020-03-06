@@ -16,10 +16,10 @@
             <div v-if="sliderList.set.iMSkr && sliderList.set.isSkr === sectionIndex" ref="bug" :class="`playerBox saber`"></div>
             <template v-if="sectionIndex === index">
                 <player
-                    v-for="player of slider"
+                    v-for="(player, index) of slider"
                     :isShare="slider.isSharer"
                     :data="player"
-                    :key="player.uid"
+                    :key="index"
                     :myUid="meetingInfo.mine.uid"
                     :ratio="ratio"
                     :ratioIos="ratioIos"

@@ -1,5 +1,5 @@
 <template>
-    <div :style="data.os === 2 ? `width: ${ratioIos * 100}%; height: 100%;` : `width: ${isShare ? 100 : ratio * 100}%; height: ${isShare ? 100 : ratio * 100}%;`" class="vjs-playing" ref="player">
+    <div :style="data.os === 2 && isShare ? `width: ${ratioIos * 100}%; height: 100%;` : `width: ${isShare ? 100 : ratio * 100}%; height: ${isShare ? 100 : ratio * 100}%;`" class="vjs-playing" ref="player">
         <object>
             <embed
                 src="./PlayerOne.swf"
@@ -55,6 +55,7 @@
                 bufferTime: 1,
                 playing: playing,
                 errorReset: errorReset,
+                uid: 0
             }
         },
         async mounted() {
@@ -85,6 +86,7 @@
             src() {
                 // this.resetNew();
                 this.$emit("handleReset");
+                alert(333)
             }
         },
         methods: {
@@ -158,11 +160,12 @@
                     console.log("创建链接~~~~~~~~~~~~~~~~~~~", this.src);
                     if (this.isShare) {
                         let src = this.src.split("/ppt/");
-                        this.player.play(`${src[0]}/ppt/`, src[1])
+                        this.player.play(`${src[0]}/ppt/`, src[1]);
                     } else {
                         let src = this.src.split("/video/");
-                        this.player.play(`${src[0]}/video/`, src[1])
+                        this.player.play(`${src[0]}/video/`, src[1]);
                     }
+                    if (this.src.includes("null")) window.location.reload();
                 }, 300)
             }
         },

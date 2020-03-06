@@ -102,14 +102,14 @@
             }
         },
         mounted() {
-            this.$nextTick(() => {
-                antiquity.addMsg({
-                    name: this.data.name,
-                    text: '临时信息：' + this.src,
-                    uid: this.data.uid,
-                    time: antiquity.moment().format('hh:mm:ss')
-                });
-            });
+            // this.$nextTick(() => {
+            //     antiquity.addMsg({
+            //         name: this.data.name,
+            //         text: '临时信息：' + this.src,
+            //         uid: this.data.uid,
+            //         time: antiquity.moment().format('hh:mm:ss')
+            //     });
+            // });
         },
         methods: {
             async reset() {

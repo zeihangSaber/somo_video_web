@@ -12,10 +12,12 @@
                 <img src="https://test.video.somo.tech/common/help/help_win_Chome_3.png">
                 <h3>第四步：将“禁止网站运行flash”打开，关闭“设置”页</h3>
                 <img src="https://test.video.somo.tech/common/help/help_win_Chome_4.png">
-                <h3>第五步：若结束以上操作后，无法出现图中“点击即可启用Adobe flash player”，请刷新页面</h3>
+                <h3>第五步：点击上方导航栏的锁定按钮，选择并确认摄像头、麦克风、flash、声音状态为【允许】</h3>
                 <img src="https://test.video.somo.tech/common/help/help_win_Chome_5.png">
+                <h3>第六步：若结束以上操作后，无法出现图中“点击即可启用Adobe flash player”，请刷新页面</h3>
+                <img src="https://test.video.somo.tech/common/help/help_win_Chome_6.png">
             </div>
-            <div v-if="isWin && name === 'edge'">
+            <div v-else-if="isWin && name === 'edge'">
                 <h3>第一步：点击右上方“更多”选项，点击“设置”</h3>
                 <img src="https://test.video.somo.tech/common/help/help_win_edge_1.png">
                 <h3>第二步：在“设置”项内，点击“高级”，将“使用Adobe flash player”设为开启</h3>
@@ -23,7 +25,17 @@
                 <h3>第三步：若结束以上操作后，无法出现图中“选择以设置Adobe flash player”，请刷新页面</h3>
                 <img src="https://test.video.somo.tech/common/help/help_win_edge_3.png">
             </div>
-            <div v-if="isMac && name === 'Chrome'">
+            <div v-else-if="isWin && name === 'QQBrowser'">
+                <h3>第一步：点击右上方“更多”选项，点击“设置”</h3>
+                <img src="https://test.video.somo.tech/common/help/help_win_QQBrowser_1.png">
+                <h3>第二步：找到“安全与隐私”，点击“内容设置”</h3>
+                <img src="https://test.video.somo.tech/common/help/help_win_QQBrowser_2.png">
+                <h3>第三步：找到“插件”，勾选“运行所有插件内容”</h3>
+                <img src="https://test.video.somo.tech/common/help/help_win_QQBrowser_3.png">
+                <h3>第四步：以上操作完成后，刷新页面，出现flash设置框，点击“允许”即可使用</h3>
+                <img src="https://test.video.somo.tech/common/help/help_win_QQBrowser_4.png">
+            </div>
+            <div v-else-if="isMac && name === 'Chrome'">
                 <h3>第一步：点击“Chrome--偏好设置”</h3>
                 <img src="https://test.video.somo.tech/common/help/help_mac_Chome_1.png">
                 <h3>第二步：在“设置”页面内，点击“高级--网站设置”</h3>
@@ -35,7 +47,7 @@
                 <h3>第五步：若结束以上操作后，无法出现图中“点击即可启用Adobe flash player”，请刷新页面</h3>
                 <img src="https://test.video.somo.tech/common/help/help_mac_Chome_5.png">
             </div>
-            <div v-if="isMac && name === 'Safari'">
+            <div v-else-if="isMac && name === 'Safari'">
                 <h3>一、Safari浏览器（检查摄像头是否开启）</h3>
                 <h3>第一步：点击“Safari浏览器--偏好设置”</h3>
                 <img src="https://test.video.somo.tech/common/help/help_mac_Safari_1.png">
@@ -64,14 +76,18 @@
         },
         mounted() {
             let agent = navigator.userAgent;
-            if (agent.indexOf("Safari")) {
-                this.name = "Safari"
+
+            if (agent.includes("Safari")) {
+                this.name = "Safari";
+                console.log("Safari~~~~~~~~~~~~~~~~~~~~~~~~");
             }
-            if (agent.indexOf("QQBrowser")) {
+            if (agent.includes("QQBrowser")) {
                 this.name = "QQBrowser"
             }
-            if (agent.indexOf("Chrome")) {
-                this.name = "Chrome"
+            console.log(agent);
+            if (agent.includes("Chrome")) {
+                this.name = "Chrome";
+                console.log("Chrome~~~~~~~~~~~~~~~~~~~~~~~");
             }
         },
         created() {

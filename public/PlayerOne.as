@@ -66,14 +66,14 @@ public class PlayerOne extends MovieClip {
     private function connect(url:String, name:String, callback:Function):void {
         nc = new NetConnection();
         nc.addEventListener(NetStatusEvent.NET_STATUS, function (event:NetStatusEvent):void {
-            ExternalInterface.call("console.log", "try to connect to " + url);
-            ExternalInterface.call("console.log", "Player." + event.info.code);
+            // ExternalInterface.call("console.log", "try to connect to " + url);
+            // ExternalInterface.call("console.log", "Player." + event.info.code);
             if (event.info.code == "NetConnection.Connect.Success") {
                 callback(name);
             }
-            if (event.info.code == "NetConnection.Connect.Closed") {
-                ExternalInterface.call("console.log", "播发器连接断开~~~~~~~~~~~~~~");
-            }
+            // if (event.info.code == "NetConnection.Connect.Closed") {
+            //     ExternalInterface.call("console.log", "播发器连接断开~~~~~~~~~~~~~~");
+            // }
         });
         nc.proxyType = "best";
         nc.connect(url);
@@ -88,7 +88,7 @@ public class PlayerOne extends MovieClip {
         // }, 1000);
 
         nsPlayer.addEventListener(NetStatusEvent.NET_STATUS, function (event: NetStatusEvent): void {
-            ExternalInterface.call("console.log", event.info.code);
+            // ExternalInterface.call("console.log", event.info.code);
             ExternalInterface.call("handlePlayer", name, event.info.code);
         });
 

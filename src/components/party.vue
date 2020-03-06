@@ -125,7 +125,6 @@
             antiquity.on('getMidInfo', meetingInfo => {
                 this.meetingInfo = meetingInfo;
             });
-
         },
         mounted() {
             this.members = antiquity.getList();

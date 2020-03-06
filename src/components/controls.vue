@@ -8,7 +8,7 @@
                     帮助手册
                 </p>
                 <div class="center">
-                    <span class="bigSpan">会议号：{{this.midInfo.code}}</span>
+                    <span class="bigSpan">会议号：{{this.midInfo.code | midFilter}}</span>
                     <span class="bigSpan" v-if="password != ''">密码：{{password}}</span>
                     <span class="bigSpan" v-if="this.midInfo.locked">
 					<i class="font_family icon-lock"></i>
@@ -81,17 +81,17 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="set_main_box">
-                            <div class="set_main_title">无视频过滤:</div>
-                            <div class="set_fun">
-                                <div @click="() => $emit('handleFiltration')" class="barrage_">
-                                    <svg class="icon" aria-hidden="true">
-                                        <use :xlink:href="`${filtrationBtn ? '#iconfuxuan-xuanzhongx' : '#iconbianzubeifenx'}`"></use>
-                                    </svg>
-                                    <span style="margin-left: 4px;">开启</span>
-                                </div>
-                            </div>
-                        </div>
+<!--                        <div class="set_main_box">-->
+<!--                            <div class="set_main_title">无视频过滤:</div>-->
+<!--                            <div class="set_fun">-->
+<!--                                <div @click="() => $emit('handleFiltration')" class="barrage_">-->
+<!--                                    <svg class="icon" aria-hidden="true">-->
+<!--                                        <use :xlink:href="`${filtrationBtn ? '#iconfuxuan-xuanzhongx' : '#iconbianzubeifenx'}`"></use>-->
+<!--                                    </svg>-->
+<!--                                    <span style="margin-left: 4px;">开启</span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
                         <div class="set_main_box">
                             <div class="set_main_title">视频清晰度:</div>
                             <div class="set_fun">

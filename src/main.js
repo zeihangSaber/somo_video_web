@@ -11,9 +11,9 @@ Vue.filter("midFilter", (mid) => {
     if (mid.length < 7) {
         return mid
     } else if (mid.length < 12) {
-        return `${mid.slice(0, 3)}-${mid.slice(3, 6)}-${mid.slice(6)}`
+        return `${mid.slice(0, 3)} ${mid.slice(3, 6)} ${mid.slice(6)}`
     } else {
-        return `${mid.slice(0, 3)}-${mid.slice(0, 7)}-${mid.slice(7)}`
+        return `${mid.slice(0, 3)} ${mid.slice(0, 7)} ${mid.slice(7)}`
     }
 });
 

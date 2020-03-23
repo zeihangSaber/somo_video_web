@@ -186,7 +186,7 @@
                 return `
                     您好：蓝猫微会视频会议正在进行中，特邀请您参加。
                     会议号：${this.midInfo.code}。
-                    会议链接：https://182.61.17.228/sharePage?invite_code=${this.midInfo.code}&verification_code=${Password}
+                    会议链接：https://www.somo.tech/sharePage?invite_code=${this.midInfo.code}&verification_code=${Password}
                     您可以直接输入会议号加入会议， 也可以点击会议链接直接入会。
                 `;
             }
